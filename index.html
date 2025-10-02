@@ -44,6 +44,17 @@
     .thumb{aspect-ratio:16/10;border:1px dashed var(--edge);border-radius:12px;background:#0e1012 url('assets/forge.png') center/cover no-repeat;opacity:.92}
     @media(max-width:900px){.hero{grid-template-columns:1fr}.grid{grid-template-columns:1fr}}
     .micro{font-size:12px;color:#96a1ab}
+    .joke-panel{background:#121417;border:1px solid var(--edge);border-radius:16px;padding:24px;margin:24px 0}
+    .joke-panel h2{margin:0 0 16px;font-size:24px}
+    .joke-content{min-height:120px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+    .joke-setup{font-size:18px;margin:0 0 12px;color:var(--ink)}
+    .joke-punchline{font-size:18px;margin:0;color:var(--accent);font-weight:600}
+    .joke-placeholder{color:var(--muted);font-style:italic}
+    .btn:hover{opacity:.85;transform:translateY(-1px);transition:all .2s}
+    .btn:active{transform:translateY(0)}
+    .btn:disabled{opacity:.5;cursor:not-allowed}
+    .loading{display:inline-block;width:20px;height:20px;border:3px solid var(--edge);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
   </style>
 </head>
 <body>
@@ -82,6 +93,16 @@
       </div>
     </section>
 
+    <section id="joke-generator" class="joke-panel">
+      <h2>Random Joke Generator</h2>
+      <div class="joke-content" id="jokeContent">
+        <p class="joke-placeholder">Click the button below to get a random joke!</p>
+      </div>
+      <div style="text-align:center;margin-top:16px">
+        <button class="btn primary" id="jokeBtn">Get a Joke</button>
+      </div>
+    </section>
+
     <section id="contact">
       <h2>Contact</h2>
       <div class="panel">
@@ -97,6 +118,33 @@
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
     const email='EMAIL_PLACEHOLDER';const el=document.getElementById('emailLink');el.textContent=email;el.href='mailto:'+email;
+    
+    // Joke Generator
+    const jokeBtn = document.getElementById('jokeBtn');
+    const jokeContent = document.getElementById('jokeContent');
+    
+    async function fetchJoke() {
+      jokeBtn.disabled = true;
+      jokeContent.innerHTML = '<div class="loading"></div>';
+      
+      try {
+        const response = await fetch('https://official-joke-api.appspot.com/random_joke');
+        if (!response.ok) throw new Error('Failed to fetch joke');
+        
+        const joke = await response.json();
+        jokeContent.innerHTML = `
+          <p class="joke-setup">${joke.setup}</p>
+          <p class="joke-punchline">${joke.punchline}</p>
+        `;
+      } catch (error) {
+        jokeContent.innerHTML = '<p class="joke-placeholder">Oops! Failed to load joke. Please try again.</p>';
+        console.error('Error fetching joke:', error);
+      } finally {
+        jokeBtn.disabled = false;
+      }
+    }
+    
+    jokeBtn.addEventListener('click', fetchJoke);
   </script>
 </body>
 </html>
