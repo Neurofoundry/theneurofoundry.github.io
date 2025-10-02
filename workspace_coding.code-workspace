@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"uri": "vscode-remote://codespaces+musical-space-computing-machine-v6jpqjxpw4p4hx94j/workspaces/theneurofoundry.github.io"
+		}
+	],
+	"remoteAuthority": "codespaces+musical-space-computing-machine-v6jpqjxpw4p4hx94j",
+	"settings": {
+		"workbench.editor.alwaysShowEditorActions": true,
+		"CodeGPT.apiKey": "Ollama"
+	},
+	"extensions": {
+		"recommendations": [
+			"danielsanmedium.dscodegpt"
+		]
+	}
+}
