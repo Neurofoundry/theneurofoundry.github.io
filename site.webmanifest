@@ -1,0 +1,15 @@
+{
+  "name": "Neurofoundry",
+  "short_name": "Neurofoundry",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f1113",
+  "theme_color": "#0f1113",
+  "icons": [
+    {
+      "src": "assets/logo.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    }
+  ]
+}
