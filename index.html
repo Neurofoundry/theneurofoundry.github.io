@@ -1,102 +1,35 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Neurofoundry — Code. Design. Momentum.</title>
-  <meta name="description" content="Neurofoundry: Warpath-grade coding, design, and local-first AI systems for companies that want speed and clarity.">
-  <link rel="icon" href="assets/logo.png">
-  <!-- Open Graph / Twitter -->
-  <meta property="og:title" content="Neurofoundry — Code. Design. Momentum.">
-  <meta property="og:description" content="Warpath-grade coding, design, and local-first AI systems. If it doesn’t create momentum, it returns to the forge.">
-  <meta property="og:image" content="assets/og.jpg">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://www.theneurofoundry.com/">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Neurofoundry — Code. Design. Momentum.">
-  <meta name="twitter:description" content="Warpath-grade coding, design, and local-first AI systems.">
-  <meta name="twitter:image" content="assets/og.jpg">
-  <meta name="theme-color" content="#0f1113">
-  <link rel="manifest" href="site.webmanifest">
-  <style>
-    :root{--bg:#0f1113;--panel:#15181b;--ink:#e6e9ee;--muted:#9aa3ad;--accent:#e0473c;--edge:#2a2f34;}
-    *{box-sizing:border-box}
-    body{margin:0;background:linear-gradient(180deg,var(--bg),#0b0c0e);color:var(--ink);font:16px/1.6 system-ui,Segoe UI,Roboto,Arial,sans-serif;}
-    a{color:var(--ink);text-decoration:none}
-    .wrap{max-width:1100px;margin:0 auto;padding:24px}
-    header{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--edge);}
-    header .brand{display:flex;gap:12px;align-items:center}
-    header .brand img{height:28px}
-    header nav a{margin-left:18px;color:var(--muted)}
-    .hero{display:grid;grid-template-columns:1.2fr .8fr;gap:28px;align-items:center;padding:48px 0;}
-    .hero h1{font-size:44px;line-height:1.1;margin:0 0 12px;font-weight:800}
-    .hero p{color:var(--muted);margin:0 0 22px}
-    .badge{display:inline-flex;align-items:center;gap:8px;background:#191c20;border:1px solid var(--edge);padding:6px 10px;border-radius:999px;font-size:12px;color:#cbd3dc}
-    .eyedot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 18px var(--accent;}
-    .cta{display:flex;gap:12px}
-    .btn{padding:12px 18px;border-radius:10px;border:1px solid var(--edge);background:#191c20;color:var(--ink);cursor:pointer}
-    .btn.primary{background:#241314;border-color:#3a1d1f}
-    .panel{background:#121417;border:1px solid var(--edge);border-radius:16px;padding:18px}
-    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-    .tag{font-size:12px;color:#b7c0cb;background:#101215;border:1px solid var(--edge);padding:6px 10px;border-radius:999px;display:inline-block;margin:4px 6px 0 0}
-    .section{padding:18px 0 8px}
-    footer{border-top:1px solid var(--edge);margin-top:36px;padding:16px 0;color:var(--muted);font-size:14px}
-    .thumb{aspect-ratio:16/10;border:1px dashed var(--edge);border-radius:12px;background:#0e1012 url('assets/forge.png') center/cover no-repeat;opacity:.92}
-    @media(max-width:900px){.hero{grid-template-columns:1fr}.grid{grid-template-columns:1fr}}
-    .micro{font-size:12px;color:#96a1ab}
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <header>
-      <div class="brand">
-        <img src="assets/logo.png" alt="Neurofoundry logo" />
-        <span class="micro">Foundrealism • Warpath Engine</span>
-      </div>
-      <nav>
-        <a href="#services">Services</a>
-        <a href="#work">Work</a>
-        <a href="#manifesto">Manifesto</a>
-        <a href="#contact">Contact</a>
-      </nav>
-    </header>
+<style>
+  /* Existing styles... */
 
-    <section class="hero">
-      <div>
-        <span class="badge"><span class="eyedot"></span> Warpath-grade delivery</span>
-        <h1>Code, design, and infrastructure that <em>move</em> the needle.</h1>
-        <p>I help companies ship faster — industrial visuals, precise systems, and zero filler.</p>
-        <div class="cta">
-          <a class="btn primary" href="#contact">Start a project</a>
-          <a class="btn" href="#work">See work</a>
-        </div>
-        <div class="section">
-          <span class="tag">Python & PowerShell</span>
-          <span class="tag">FastAPI & Local AI</span>
-          <span class="tag">Brand Systems</span>
-          <span class="tag">Foundrealism</span>
-        </div>
-      </div>
-      <div class="panel">
-        <div class="thumb"></div>
-      </div>
-    </section>
-
-    <section id="contact">
-      <h2>Contact</h2>
-      <div class="panel">
-        <p class="micro">Email: <a id="emailLink" href="#">EMAIL_PLACEHOLDER</a></p>
-        <iframe src="TALLY_FORM_URL" width="100%" height="320" frameborder="0" style="border:1px solid var(--edge);border-radius:12px;background:#0f1113"></iframe>
-      </div>
-    </section>
-
-    <footer>
-      <div>© <span id="year"></span> Neurofoundry. All rights reserved.</div>
-    </footer>
-  </div>
-  <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
-    const email='EMAIL_PLACEHOLDER';const el=document.getElementById('emailLink');el.textContent=email;el.href='mailto:'+email;
-  </script>
-</body>
-</html>
+  .hero h1 em {
+    position: relative;
+    background: linear-gradient(90deg, var(--accent), #ff7d5a 60%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    animation: pulseMove 1.2s infinite alternate;
+  }
+  @keyframes pulseMove {
+    0% {
+      text-shadow: 0 0 6px #e0473c, 0 0 18px #ff7d5a88;
+      transform: translateY(0) scale(1);
+      letter-spacing: 0.03em;
+    }
+    48% {
+      text-shadow: 0 0 22px #e0473c, 0 0 38px #ff7d5a99;
+      transform: translateY(-1px) scale(1.07) skewX(-2deg);
+      letter-spacing: 0.09em;
+    }
+    52% {
+      text-shadow: 0 0 10px #e0473c, 0 0 12px #ff7d5a55;
+      transform: translateY(2px) scale(0.96) skewX(2deg);
+      letter-spacing: 0em;
+    }
+    100% {
+      text-shadow: 0 0 6px #e0473c, 0 0 18px #ff7d5a88;
+      transform: translateY(0) scale(1);
+      letter-spacing: 0.03em;
+    }
+  }
+</style>
