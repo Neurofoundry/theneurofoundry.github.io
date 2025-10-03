@@ -1,5 +1,4 @@
-
-(function() {
+document.addEventListener("DOMContentLoaded", function() {
   const container = document.getElementById("introContainer");
   container.innerHTML = `
     <video id="introVid" autoplay muted playsinline>
@@ -31,7 +30,7 @@
       node.setAttribute("filter", "url(#glow)");
       svg.appendChild(node);
     }
-    svg.innerHTML += \`
+    svg.innerHTML += `
       <defs>
         <filter id="glow" x="-40%" y="-40%" width="200%" height="200%">
           <feGaussianBlur stdDeviation="7" result="coloredBlur"/>
@@ -40,7 +39,7 @@
             <feMergeNode in="SourceGraphic"/>
           </feMerge>
         </filter>
-      </defs>\`;
+      </defs>`;
   }
 
   function loop() {
@@ -63,4 +62,4 @@
     container.querySelector("#introOverlay").style.opacity = 0;
     setTimeout(() => container.remove(), 700);
   }, 12000);
-})();
+});
