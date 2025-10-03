@@ -1,161 +1,232 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Neurofoundry — Code. Design. Momentum.</title>
-  <meta name="description" content="Neurofoundry: Warpath-grade coding, design, and local-first AI systems for companies that want speed and clarity.">
-  <link rel="icon" href="assets/logo.png">
-  <!-- Open Graph / Twitter -->
-  <meta property="og:title" content="Neurofoundry — Code. Design. Momentum.">
-  <meta property="og:description" content="Warpath-grade coding, design, and local-first AI systems. If it doesn’t create momentum, it returns to the forge.">
-  <meta property="og:image" content="assets/og.jpg">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://www.theneurofoundry.com/">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Neurofoundry — Code. Design. Momentum.">
-  <meta name="twitter:description" content="Warpath-grade coding, design, and local-first AI systems.">
-  <meta name="twitter:image" content="assets/og.jpg">
-  <meta name="theme-color" content="#0f1113">
-  <link rel="manifest" href="site.webmanifest">
-  <style>
-    :root{--bg:#0f1113;--panel:#15181b;--ink:#e6e9ee;--muted:#9aa3ad;--accent:#e0473c;--edge:#2a2f34;}
-    *{box-sizing:border-box}
-    body{margin:0;background:linear-gradient(180deg,var(--bg),#0b0c0e);color:var(--ink);font:16px/1.6 system-ui,Segoe UI,Roboto,Arial,sans-serif;}
-    a{color:var(--ink);text-decoration:none}
-    .wrap{max-width:1100px;margin:0 auto;padding:24px}
-    header{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--edge);}
-    header .brand{display:flex;gap:12px;align-items:center}
-    header .brand img{height:28px}
-    header nav a{margin-left:18px;color:var(--muted)}
-    .hero{display:grid;grid-template-columns:1.2fr .8fr;gap:28px;align-items:center;padding:48px 0;}
-    .hero h1{font-size:44px;line-height:1.1;margin:0 0 12px;font-weight:800}
-    .hero h1 em {
-      position: relative;
-      background: linear-gradient(90deg, var(--accent), #e0473c 60%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      color: transparent;
-      animation: pulseMove 1.6s infinite alternate;
-    }
-    @keyframes pulseMove {
-      0% {
-        text-shadow: 0 0 8px #e0473c, 0 0 16px #e0473c44;
-        transform: translateY(0) scale(1);
-        letter-spacing: 0.03em;
-      }
-      48% {
-        text-shadow: 0 0 18px #e0473c, 0 0 38px #e0473c55;
-        transform: translateY(-1px) scale(1.06) skewX(-2deg);
-        letter-spacing: 0.08em;
-      }
-      52% {
-        text-shadow: 0 0 10px #e0473c, 0 0 12px #e0473c22;
-        transform: translateY(1px) scale(0.98) skewX(2deg);
-        letter-spacing: 0em;
-      }
-      100% {
-        text-shadow: 0 0 8px #e0473c, 0 0 16px #e0473c44;
-        transform: translateY(0) scale(1);
-        letter-spacing: 0.03em;
-      }
-    }
-    .hero p{color:var(--muted);margin:0 0 22px}
-    .badge{display:inline-flex;align-items:center;gap:8px;background:#191c20;border:1px solid var(--edge);padding:6px 10px;border-radius:999px;font-size:12px;color:#cbd3dc}
-    .eyedot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 18px var(--accent);}
-    .cta{display:flex;gap:12px}
-    .btn{padding:12px 18px;border-radius:10px;border:1px solid var(--edge);background:#191c20;color:var(--ink);cursor:pointer}
-    .btn.primary{background:#241314;border-color:#3a1d1f}
-    .panel{background:#121417;border:1px solid var(--edge);border-radius:16px;padding:18px}
-    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-    .tag{font-size:12px;color:#b7c0cb;background:#101215;border:1px solid var(--edge);padding:6px 10px;border-radius:999px;display:inline-block;margin:4px 6px 0 0}
-    .section{padding:18px 0 8px}
-    footer{border-top:1px solid var(--edge);margin-top:36px;padding:16px 0;color:var(--muted);font-size:14px}
-    .thumb{aspect-ratio:16/10;border:1px dashed var(--edge);border-radius:12px;background:#0e1012 url('assets/forge.png') center/cover no-repeat;opacity:.92}
-    @media(max-width:900px){.hero{grid-template-columns:1fr}.grid{grid-template-columns:1fr}}
-    .micro{font-size:12px;color:#96a1ab}
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Neurofoundry — Code. Design. Momentum.</title>
+<meta name="description" content="Warpath-grade coding, design, and local-first AI systems." />
+<meta name="theme-color" content="#0f1113" />
+<link rel="icon" href="anvil.png" />
+
+<style>
+  :root{
+    --bg:#0f1113; --ink:#e6e9ee; --muted:#9aa3ad; --accent:#e0473c; --edge:#2a2f34;
+    --chip-bg:#1c1210; --chip-edge:#62302d;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; color:var(--ink);
+    background:radial-gradient(1200px 1200px at 50% -200px,#0f1113,#0c0d0f 70%,#0b0c0e 100%);
+    font:16px/1.6 Inter, Segoe UI, Roboto, Arial, sans-serif; letter-spacing:.1px;
+  }
+
+  /* Frame */
+  .wrap{max-width:1120px;margin:0 auto;padding:0 28px}
+
+  header{position:sticky;top:0;z-index:20;background:#0b0c0e;border-bottom:2px solid var(--accent);box-shadow:0 2px 6px rgba(0,0,0,.35)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .brand{display:flex;align-items:center;gap:10px}
+  .brand img{height:22px}
+  .brand span{font-weight:700;letter-spacing:.4px}
+  .links{display:flex;align-items:center;gap:18px}
+  .navlink{color:#ccc;font-size:14px;font-weight:500;text-decoration:none}
+  .navlink:hover,.navlink.active{color:var(--accent)}
+
+  /* Buttons — compact span + beveled pill */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;
+    padding:8px 14px;border-radius:999px;min-width:0;
+    font:600 14px/1 Inter, Segoe UI, Roboto, sans-serif;
+    cursor:pointer;text-decoration:none;transition:.15s ease;
+    border:1px solid transparent;background:#191c20;color:var(--ink);
+  }
+  .btn.primary{
+    background:linear-gradient(180deg,#ff7b6e 0%,#e9584d 48%,#d23d33 100%);
+    border-color:#a2362f;color:#fff;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.55), inset 0 -3px 6px rgba(0,0,0,.35), 0 6px 14px rgba(224,71,60,.18);
+  }
+  .btn.primary:hover{filter:brightness(1.03)}
+  .btn.primary:active{transform:translateY(1px);box-shadow:inset 0 2px 6px rgba(0,0,0,.45),0 3px 8px rgba(224,71,60,.14)}
+
+  /* Hero */
+  .hero{position:relative;padding:56px 0 28px}
+  .hero::after{
+    content:"";position:absolute;inset:0 auto auto 50%;width:min(1200px,92vw);aspect-ratio:1/1;transform:translateX(-50%);
+    background:url("brain.png") center/contain no-repeat;opacity:.06;pointer-events:none;z-index:0
+  }
+  .hero-inner{position:relative;z-index:1}
+  .chips{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px}
+  .chip{
+    display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;font-size:13px;color:#f2d3ce;
+    background:var(--chip-bg);border:1px solid var(--chip-edge);transition:all .18s ease
+  }
+  .chip::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent)}
+  .chip:hover{border-color:var(--accent);color:#fff0ee;box-shadow:0 0 12px rgba(224,71,60,.35)}
+  h1{
+    margin:0 0 14px;font-size:48px;line-height:1.1;font-weight:800;
+    background:linear-gradient(90deg,#fff,#ffc9c3 45%,#ff7a66 70%,#e0473c 100%);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent
+  }
+  .sub{color:var(--muted);margin:0 0 26px}
+  .cta{display:flex;gap:16px}
+
+  section{position:relative;z-index:1}
+  .section-title{font-size:24px;font-weight:800;margin:56px 0 16px}
+  .rule{height:1px;background:#1b1e22;margin:28px 0 32px}
+
+  /* Showcase cards with red overlay */
+  .grid{display:grid;gap:18px;grid-template-columns:repeat(3,1fr)}
+  .card{
+    position:relative;border-radius:16px;border:1px solid #2a2f34;overflow:hidden;
+    background:linear-gradient(180deg,rgba(15,17,19,.85),rgba(10,11,13,.95));
+    box-shadow:0 0 18px rgba(224,71,60,.06), inset 0 0 8px rgba(224,71,60,.03);
+    transition:.25s ease;
+  }
+  .card:hover{box-shadow:0 0 24px rgba(224,71,60,.15), inset 0 0 12px rgba(224,71,60,.06)}
+  .thumb{display:block;width:100%;aspect-ratio:16/10;object-fit:cover}
+  .card::before{
+    content:"";position:absolute;inset:0;border-radius:16px;pointer-events:none;
+    background:linear-gradient(180deg,rgba(255,100,88,.32),rgba(180,18,12,.28));
+    mix-blend-mode:screen; /* gives the luminous red wash */
+  }
+  .card::after{
+    content:"";position:absolute;inset:0;border-radius:16px;pointer-events:none;
+    box-shadow:inset 0 0 0 1px rgba(0,0,0,.35), inset 0 -10px 30px rgba(0,0,0,.35);
+  }
+  .card:hover::before{background:linear-gradient(180deg,rgba(255,110,96,.42),rgba(200,22,14,.36))}
+
+  /* Contact split (form + Architect image) */
+  .contact-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;align-items:stretch}
+  .contact{
+    background:linear-gradient(180deg,rgba(15,17,19,.85),rgba(10,11,13,.95));
+    border:1px solid #2a2f34;border-radius:16px;padding:22px;
+    box-shadow:0 0 18px rgba(224,71,60,.06), inset 0 0 8px rgba(224,71,60,.03)
+  }
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .row .full{grid-column:1/-1}
+  label{font-size:13px;color:#c9d0d8;margin-bottom:6px;display:block}
+  input,textarea{width:100%;padding:12px 14px;border-radius:10px;border:1px solid #2a2f34;background:#121417;color:var(--ink)}
+  textarea{min-height:120px;resize:vertical}
+  .submit{margin-top:10px}
+
+  .architect{
+    display:flex;align-items:center;justify-content:center;padding:8px;border-radius:16px;overflow:hidden;
+    border:1px solid #2a2f34;background:radial-gradient(ellipse at top left,#161819 20%,#0e0f10 100%);
+    box-shadow:0 0 18px rgba(224,71,60,.06), inset 0 0 8px rgba(224,71,60,.03)
+  }
+  .architect img{max-width:100%;max-height:100%;object-fit:contain;filter:drop-shadow(0 10px 30px rgba(224,71,60,.25))}
+
+  @media (max-width:980px){
+    .grid{grid-template-columns:1fr}
+    .cta{flex-wrap:wrap}
+    .row{grid-template-columns:1fr}
+    .contact-grid{grid-template-columns:1fr}
+  }
+
+  /* Legal bar */
+  .legal{margin-top:56px;background:#0b0c0e;border-top:2px solid #15181b;color:#c6ccd4}
+  .legal .wrap{display:flex;align-items:center;justify-content:center;padding:14px 28px}
+  .legal small{opacity:.75}
+</style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div class="brand">
-        <img src="assets/logo.png" alt="Neurofoundry logo" />
-        <span class="micro"> • Warpath Engine</span>
-      </div>
-      <nav>
-        <a href="#services">Services</a>
-        <a href="#work">Work</a>
-        <a href="#manifesto">Manifesto</a>
-        <a href="#contact">Contact</a>
-      </nav>
-    </header>
 
-    <section class="hero">
-      <div>
-        <span class="badge"><span class="eyedot"></span> Warpath-grade delivery</span>
-        <h1>Code, design, and infrastructure that <em>move</em> the needle.</h1>
-        <p>I help companies ship faster — industrial visuals, precise systems, and zero filler.</p>
-        <div class="cta">
-          <a class="btn primary" href="#contact">Start a project</a>
-          <a class="btn" href="#work">See work</a>
-        </div>
-        <div class="section">
-          <span class="tag">Python & PowerShell</span>
-          <span class="tag">FastAPI & Local AI</span>
-          <span class="tag">Brand Systems</span>
-          <span class="tag"></span>
-        </div>
-      </div>
-      <div class="panel">
-        <div class="thumb"></div>
-      </div>
-    </section>
-
-    <section id="contact">
-      <h2>Contact</h2>
-      <div class="panel">
-        <form id="bizForm" autocomplete="off" style="display:grid;gap:14px;">
-          <input name="name" type="text" placeholder="Your Name" required />
-          <input name="email" type="email" placeholder="Email" required />
-          <input name="company" type="text" placeholder="Company (optional)" />
-          <textarea name="msg" placeholder="What do you need help with?" required rows="3"></textarea>
-          <div>
-            <span id="randQ" class="micro"></span><br/>
-            <input id="randA" name="randA" type="text" placeholder="Your answer" required style="margin-top:4px;" />
-          </div>
-          <button class="btn primary" type="submit">Send</button>
-        </form>
-        <div id="bizThanks" class="micro" style="display:none;padding-top:12px;">Thanks! I'll get back to you fast.</div>
-      </div>
-    </section>
-
-    <footer>
-      <div>© <span id="year"></span> Neurofoundry. All rights reserved.</div>
-    </footer>
+<header>
+  <div class="wrap nav">
+    <div class="brand">
+      <img src="anvil.png" alt="anvil" />
+      <span>theneurofoundry.com</span>
+    </div>
+    <nav class="links">
+      <a class="navlink active" href="#">Home</a>
+      <a class="navlink" href="#research">Research</a>
+      <a class="navlink" href="#products">Products</a>
+      <a class="navlink" href="#team">Team</a>
+      <a class="navlink" href="#contact">Contact</a>
+      <a class="btn primary" href="#signup">Sign Up</a>
+      <a class="btn primary" href="#login">Login</a>
+    </nav>
   </div>
-  <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
-    // Contact form logic
-    const randQuestions = [
-      "What is 3 + 2?",
-      "Spell the word 'forge' backwards.",
-      "What color is an orange?",
-      "Type any random word.",
-      "How many letters in 'Neurofoundry'?",
-    ];
-    function pickRandQ() {
-      const q = randQuestions[Math.floor(Math.random() * randQuestions.length)];
-      document.getElementById('randQ').textContent = q;
-    }
-    pickRandQ();
-    document.getElementById('bizForm').onsubmit = function(e) {
-      e.preventDefault();
-      // Backend integration can go here (send to email, etc.)
-      document.getElementById('bizForm').style.display = 'none';
-      document.getElementById('bizThanks').style.display = '';
-    };
-  </script>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="chips">
+        <span class="chip">Python &amp; PowerShell</span>
+        <span class="chip">FastAPI &amp; Local AI</span>
+        <span class="chip">Brand Systems</span>
+        <span class="chip">Automation Pipelines</span>
+        <span class="chip">Agentic UI</span>
+        <span class="chip">On-Prem AI</span>
+      </div>
+
+      <h1>Source your Own Systems. The Engine is the Mind— Forge your Future Today.</h1>
+      <p class="sub">Code that clarifies, systems that ensure, connections that convert.</p>
+
+      <div class="cta">
+        <a class="btn primary" href="#projects">Projects</a>
+        <a class="btn primary" href="#work">See my work</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Showcase -->
+  <section id="work">
+    <h2 class="section-title">Showcase</h2>
+    <div class="grid">
+      <!-- Keep your existing src filenames; styles apply globally -->
+      <figure class="card"><img class="thumb" src="showcase-drone.jpg" alt="Autonomous drone schematic"></figure>
+      <figure class="card"><img class="thumb" src="showcase-brain.jpg" alt="Neural network point cloud"></figure>
+      <figure class="card"><img class="thumb" src="showcase-factory.jpg" alt="Robotic automation line"></figure>
+    </div>
+  </section>
+
+  <!-- Contact split -->
+  <section id="contact">
+    <h2 class="section-title">Contact</h2>
+    <div class="rule"></div>
+
+    <div class="contact-grid">
+      <form class="contact" action="https://formsubmit.co/contact@theneurofoundry.com" method="POST">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_subject" value="Neurofoundry site contact">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_next" value="https://theneurofoundry.com/thanks.html">
+        <input type="text" name="_honey" style="display:none">
+
+        <div class="row">
+          <div>
+            <label for="name">Name</label>
+            <input id="name" name="name" required>
+          </div>
+          <div>
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" required>
+          </div>
+          <div class="full">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" required></textarea>
+          </div>
+        </div>
+        <div class="submit">
+          <button class="btn primary" type="submit">Send</button>
+        </div>
+      </form>
+
+      <figure class="architect">
+        <img src="architect.png" alt="The Architect — masked figure at the anvil">
+      </figure>
+    </div>
+  </section>
+</main>
+
+<footer class="legal">
+  <div class="wrap">
+    <small>© 2025 Neurofoundry. All rights reserved. “Neurofoundry,” Warpath/Aegis lore, visual style, and likeness are copyrighted and protected trademarks/trade dress. Unauthorized use prohibited.</small>
+  </div>
+</footer>
+
 </body>
 </html>
