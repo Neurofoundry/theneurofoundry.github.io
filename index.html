@@ -1,291 +1,730 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Neurofoundry — Code. Design. Momentum.</title>
-  <meta name="description" content="Warpath-grade coding, design, and local-first AI systems." />
+  <title>Neurofoundry — Particle Effect Experiment</title>
+  <meta name="description" content="Dark theme with reversible video and occasional particle splashes." />
   <meta name="theme-color" content="#0f1113" />
-  <link rel="icon" type="image/png" sizes="32x32" href="./anvil.png?v=2">
-  <link rel="icon" type="image/png" sizes="192x192" href="./anvil.png?v=2">
-  <link rel="apple-touch-icon" href="./anvil.png?v=2">
-  <link rel="shortcut icon" href="./anvil.png?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="./1.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="./1.png" />
+  <link rel="apple-touch-icon" href="./1.png" />
+  <link rel="shortcut icon" href="./1.png" />
+
+  <!--
+    This variant returns to the original dark palette and adds a lightweight
+    particle effect that sprays small dots from the right edge every 30
+    seconds. The provided architect image is used in both the header and
+    contact section. No changes are committed.
+  -->
 
   <style>
     :root {
-      --bg: #0f1113; --ink: #e6e9ee; --muted: #9aa3ad; --accent: #e0473c; --edge: #2a2f34;
-      --chip-bg: #1c1210; --chip-edge: #62302d;
+      --bg: #0f1113;
+      --ink: #e6e9ee;
+      --muted: #9aa3ad;
+      --accent: #e0473c;
+      --edge: #2a2f34;
+      --chip-bg: #1c1210;
+      --chip-edge: #62302d;
     }
-    * { box-sizing: border-box }
-    html, body { height: 100% }
+    * {
+      box-sizing: border-box;
+    }
+    html,
     body {
-      margin: 0; color: var(--ink);
-      background: radial-gradient(1200px 1200px at 50% -200px, #0f1113, #0c0d0f 70%, #0b0c0e 100%);
-      font: 16px/1.6 Inter, Segoe UI, Roboto, Arial, sans-serif; letter-spacing: .1px;
+      height: 100%;
     }
-
-    .wrap { max-width: 1120px; margin: 0 auto; padding: 0 28px }
-
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: radial-gradient(
+        1200px 1200px at 50% -200px,
+        #0f1113,
+        #0c0d0f 70%,
+        #0b0c0e 100%
+      );
+      font: 16px/1.6 Inter, Segoe UI, Roboto, Arial, sans-serif;
+      letter-spacing: 0.1px;
+    }
+    .wrap {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 28px;
+    }
     header {
-      position: sticky; top: 0; z-index: 20; background: #0b0c0e;
-      border-bottom: 2px solid var(--accent); box-shadow: 0 2px 6px rgba(0, 0, 0, .35);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: #0b0c0e;
+      border-bottom: 2px solid var(--accent);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
     }
-    .nav { display: flex; align-items: center; justify-content: space-between; height: 64px }
-    .brand { display: flex; align-items: center; gap: 10px }
-    .brand img { height: 22px }
-    .brand span { font-weight: 700; letter-spacing: .4px }
-    .links { display: flex; align-items: center; gap: 18px }
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand img {
+      height: 32px;
+      border-radius: 4px;
+    }
+    .brand span {
+      font-weight: 700;
+      letter-spacing: 0.4px;
+    }
+    .links {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
     .navlink {
-      color: #ccc; font-size: 14px; font-weight: 500; text-decoration: none;
+      color: #ccc;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      position: relative;
     }
-    .navlink:hover, .navlink.active { color: var(--accent) }
-
+    .navlink.active {
+      color: var(--accent);
+    }
+    .navlink.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      width: 100%;
+      height: 2px;
+      background: var(--accent);
+      border-radius: 1px;
+    }
+    .navlink:hover {
+      color: var(--accent);
+    }
     .btn {
-      display: inline-flex; align-items: center; justify-content: center;
-      padding: 8px 14px; border-radius: 999px; min-width: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 14px;
+      border-radius: 999px;
+      min-width: 0;
       font: 600 14px/1 Inter, Segoe UI, Roboto, sans-serif;
-      cursor: pointer; text-decoration: none; transition: .15s ease;
-      border: 1px solid transparent; background: #191c20; color: var(--ink);
+      cursor: pointer;
+      text-decoration: none;
+      transition: 0.15s ease;
+      border: 1px solid transparent;
+      background: #191c20;
+      color: var(--ink);
     }
     .btn.primary {
-      background: linear-gradient(180deg, #ff7b6e 0%, #e9584d 48%, #d23d33 100%);
-      border-color: #a2362f; color: #fff;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.55), inset 0 -3px 6px rgba(0,0,0,.35), 0 6px 14px rgba(224,71,60,.18);
+      background: linear-gradient(
+        180deg,
+        #ff7b6e 0%,
+        #e9584d 48%,
+        #d23d33 100%
+      );
+      border-color: #a2362f;
+      color: #fff;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.55),
+        inset 0 -3px 6px rgba(0, 0, 0, 0.35),
+        0 6px 14px rgba(224, 71, 60, 0.18);
     }
-    .btn.primary:hover { filter: brightness(1.03) }
+    .btn.primary:hover {
+      filter: brightness(1.03);
+    }
     .btn.primary:active {
       transform: translateY(1px);
-      box-shadow: inset 0 2px 6px rgba(0,0,0,.45), 0 3px 8px rgba(224,71,60,.14);
+      box-shadow:
+        inset 0 2px 6px rgba(0, 0, 0, 0.45),
+        0 3px 8px rgba(224, 71, 60, 0.14);
     }
-
     .hero {
       position: relative;
       padding: 56px 0 28px;
       overflow: hidden;
     }
-
-    #bg-video {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+    /* The hero section contains an absolute-positioned background video (#brainPulse). */
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+    }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      color: #f2d3ce;
+      background: var(--chip-bg);
+      border: 1px solid var(--chip-edge);
+      transition: all 0.18s ease;
+    }
+    .chip::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 12px var(--accent);
+    }
+    .chip:hover {
+      border-color: var(--accent);
+      color: #fff0ee;
+      box-shadow: 0 0 12px rgba(224, 71, 60, 0.35);
+    }
+    h1 {
+      margin: 0 0 14px;
+      font-size: 48px;
+      line-height: 1.1;
+      font-weight: 800;
+      background: linear-gradient(
+        90deg,
+        #fff,
+        #ffc9c3 45%,
+        #ff7a66 70%,
+        #e0473c 100%
+      );
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .sub {
+      color: var(--muted);
+      margin: 0 0 26px;
+    }
+    .cta {
+      display: flex;
+      gap: 16px;
+    }
+    section {
+      position: relative;
+      z-index: 1;
+    }
+    .section-title {
+      font-size: 24px;
+      font-weight: 800;
+      margin: 56px 0 16px;
+    }
+    .rule {
+      height: 1px;
+      background: #1b1e22;
+      margin: 28px 0 32px;
+    }
+    .grid {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .card {
+      position: relative;
+      border-radius: 16px;
+      border: 1px solid #2a2f34;
+      overflow: hidden;
+      background: linear-gradient(
+        180deg,
+        rgba(15, 17, 19, 0.85),
+        rgba(10, 11, 13, 0.95)
+      );
+      box-shadow:
+        0 0 18px rgba(224, 71, 60, 0.06),
+        inset 0 0 8px rgba(224, 71, 60, 0.03);
+      transition: 0.25s ease;
+    }
+    .card:hover {
+      box-shadow:
+        0 0 24px rgba(224, 71, 60, 0.15),
+        inset 0 0 12px rgba(224, 71, 60, 0.06);
+      transform: translateY(-4px) scale(1.02);
+    }
+    .thumb {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16/10;
       object-fit: cover;
+    }
+
+    /* Generic styling for the reversible video when placed in the main body. */
+    .video-background {
+      display: block;
+      width: 100%;
+      /* Maintain a consistent aspect ratio similar to the grid thumbnails */
+      aspect-ratio: 16/10;
+      object-fit: cover;
+      border-radius: 16px;
+      /* Provide breathing room above and below the video */
+      margin: 32px 0;
+    }
+
+    /* Video used as a background in the work section. It is positioned absolutely so
+       that the showcase grid and heading appear above it. */
+    .work-video {
+      position: absolute;
+      /* Enlarge the video by increasing its width while keeping the full height visible.
+         The video is centered using translate transforms so the showcase content remains aligned.
+         This approach avoids clipping the top and bottom; the excess width spills horizontally. */
+      object-fit: contain;
+      object-position: center;
+      width: 175%;
+      height: auto;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       opacity: 0.06;
       z-index: 0;
       pointer-events: none;
     }
 
-    .hero-inner {
-      position: relative;
+    /* Lightning canvas overlay in the hero */
+    #lightningCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
       z-index: 1;
     }
-
-    .chips {
-      display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 18px;
-    }
-    .chip {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 8px 14px; border-radius: 999px; font-size: 13px; color: #f2d3ce;
-      background: var(--chip-bg); border: 1px solid var(--chip-edge); transition: all .18s ease;
-    }
-    .chip::before {
-      content: ""; width: 8px; height: 8px; border-radius: 50%;
-      background: var(--accent); box-shadow: 0 0 12px var(--accent);
-    }
-    .chip:hover {
-      border-color: var(--accent); color: #fff0ee;
-      box-shadow: 0 0 12px rgba(224,71,60,.35);
-    }
-
-    h1 {
-      margin: 0 0 14px; font-size: 48px; line-height: 1.1; font-weight: 800;
-      background: linear-gradient(90deg, #fff, #ffc9c3 45%, #ff7a66 70%, #e0473c 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    }
-    .sub { color: var(--muted); margin: 0 0 26px }
-    .cta { display: flex; gap: 16px }
-
-    section { position: relative; z-index: 1 }
-    .section-title { font-size: 24px; font-weight: 800; margin: 56px 0 16px }
-    .rule { height: 1px; background: #1b1e22; margin: 28px 0 32px }
-
-    .grid {
-      display: grid; gap: 18px;
-      grid-template-columns: repeat(3, 1fr);
-    }
-    .card {
-      position: relative; border-radius: 16px; border: 1px solid #2a2f34; overflow: hidden;
-      background: linear-gradient(180deg, rgba(15,17,19,.85), rgba(10,11,13,.95));
-      box-shadow: 0 0 18px rgba(224,71,60,.06), inset 0 0 8px rgba(224,71,60,.03);
-      transition: .25s ease;
-    }
-    .card:hover {
-      box-shadow: 0 0 24px rgba(224,71,60,.15), inset 0 0 12px rgba(224,71,60,.06);
-    }
-    .thumb {
-      display: block; width: 100%; aspect-ratio: 16/10; object-fit: cover;
-    }
     .card::before {
-      content: ""; position: absolute; inset: 0; border-radius: 16px; pointer-events: none;
-      background: linear-gradient(180deg, rgba(255,100,88,.32), rgba(180,18,12,.28));
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      pointer-events: none;
+      background: linear-gradient(
+        180deg,
+        rgba(255, 100, 88, 0.32),
+        rgba(180, 18, 12, 0.28)
+      );
       mix-blend-mode: screen;
     }
     .card::after {
-      content: ""; position: absolute; inset: 0; border-radius: 16px; pointer-events: none;
-      box-shadow: inset 0 0 0 1px rgba(0,0,0,.35), inset 0 -10px 30px rgba(0,0,0,.35);
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      pointer-events: none;
+      box-shadow:
+        inset 0 0 0 1px rgba(0, 0, 0, 0.35),
+        inset 0 -10px 30px rgba(0, 0, 0, 0.35);
     }
     .card:hover::before {
-      background: linear-gradient(180deg, rgba(255,110,96,.42), rgba(200,22,14,.36));
+      background: linear-gradient(
+        180deg,
+        rgba(255, 110, 96, 0.42),
+        rgba(200, 22, 14, 0.36)
+      );
     }
-
     .contact-grid {
-      display: grid; grid-template-columns: 1.1fr .9fr; gap: 18px; align-items: stretch;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 18px;
+      align-items: stretch;
     }
     .contact {
-      background: linear-gradient(180deg, rgba(15,17,19,.85), rgba(10,11,13,.95));
-      border: 1px solid #2a2f34; border-radius: 16px; padding: 22px;
-      box-shadow: 0 0 18px rgba(224,71,60,.06), inset 0 0 8px rgba(224,71,60,.03);
-    }
-    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px }
-    .row .full { grid-column: 1/-1 }
-    label {
-      font-size: 13px; color: #c9d0d8; margin-bottom: 6px; display: block;
-    }
-    input, textarea {
-      width: 100%; padding: 12px 14px; border-radius: 10px;
-      border: 1px solid #2a2f34; background: #121417; color: var(--ink);
-    }
-    textarea { min-height: 120px; resize: vertical }
-    .submit { margin-top: 10px }
-
-    .architect {
-      display: flex; align-items: center; justify-content: center; padding: 8px;
-      border-radius: 16px; overflow: hidden;
+      background: linear-gradient(
+        180deg,
+        rgba(15, 17, 19, 0.85),
+        rgba(10, 11, 13, 0.95)
+      );
       border: 1px solid #2a2f34;
-      background: radial-gradient(ellipse at top left, #161819 20%, #0e0f10 100%);
-      box-shadow: 0 0 18px rgba(224,71,60,.06), inset 0 0 8px rgba(224,71,60,.03);
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow:
+        0 0 18px rgba(224, 71, 60, 0.06),
+        inset 0 0 8px rgba(224, 71, 60, 0.03);
+    }
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .row .full {
+      grid-column: 1/-1;
+    }
+    label {
+      font-size: 13px;
+      color: #c9d0d8;
+      margin-bottom: 6px;
+      display: block;
+    }
+    input,
+    textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid #2a2f34;
+      background: #121417;
+      color: var(--ink);
+      transition: border 0.2s ease, box-shadow 0.2s ease;
+    }
+    input:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(224, 71, 60, 0.4);
+    }
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+    .submit {
+      margin-top: 10px;
+    }
+    .architect {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid #2a2f34;
+      background: radial-gradient(
+        ellipse at top left,
+        #161819 20%,
+        #0e0f10 100%
+      );
+      box-shadow:
+        0 0 18px rgba(224, 71, 60, 0.06),
+        inset 0 0 8px rgba(224, 71, 60, 0.03);
     }
     .architect img {
-      max-width: 100%; max-height: 100%; object-fit: contain;
-      filter: drop-shadow(0 10px 30px rgba(224,71,60,.25));
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 30px rgba(224, 71, 60, 0.25));
     }
-
     @media (max-width: 980px) {
-      .grid { grid-template-columns: 1fr }
-      .cta { flex-wrap: wrap }
-      .row { grid-template-columns: 1fr }
-      .contact-grid { grid-template-columns: 1fr }
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      .cta {
+        flex-wrap: wrap;
+      }
+      .row {
+        grid-template-columns: 1fr;
+      }
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
     }
-
     .legal {
-      margin-top: 56px; background: #0b0c0e;
-      border-top: 2px solid #15181b; color: #c6ccd4;
+      margin-top: 56px;
+      background: #0b0c0e;
+      border-top: 2px solid #15181b;
+      color: #c6ccd4;
     }
     .legal .wrap {
-      display: flex; align-items: center; justify-content: center; padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 28px;
     }
-    .legal small { opacity: .75 }
+    .legal small {
+      opacity: 0.75;
+    }
+    .status-message {
+      margin-top: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--accent);
+      display: none;
+    }
+    /* Spark effect styles: individual sparks are positioned fixed and animated via JS */
+    .spark {
+      position: fixed;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--accent);
+      pointer-events: none;
+    }
   </style>
 </head>
-
 <body>
-
-<header>
-  <div class="wrap nav">
-    <div class="brand">
-      <img src="anvils2.png" alt="anvil" />
-      <span>theneurofoundry.com</span>
-    </div>
-    <nav class="links">
-      <a class="navlink active" href="#">Home</a>
-      <a class="navlink" href="#research">Research</a>
-      <a class="navlink" href="#products">Products</a>
-      <a class="navlink" href="#team">Team</a>
-      <a class="navlink" href="#contact">Contact</a>
-      <a class="btn primary" href="#signup">Sign Up</a>
-      <a class="btn primary" href="#login">Login</a>
-    </nav>
-  </div>
-</header>
-
-<main class="wrap">
-  <section class="hero">
-    <video autoplay loop muted playsinline id="bg-video">
-      <source src="video.mp4" type="video/mp4">
-    </video>
-
-    <div class="hero-inner">
-      <div class="chips">
-        <span class="chip">Python &amp; PowerShell</span>
-        <span class="chip">FastAPI &amp; Integrations</span>
-        <span class="chip">Brand Systems</span>
-        <span class="chip">Automation Pipelines</span>
-        <span class="chip">Custom User Interface</span>
-        <span class="chip">AI Systems</span>
+  <header>
+    <div class="wrap nav">
+      <div class="brand">
+        <img src="1.png" alt="anvil" />
+        <span>theneurofoundry.com</span>
       </div>
-
-      <h1>Source your Own Systems. The Engine is the Mind— Forge your Future Today.</h1>
-      <p class="sub">Code that clarifies, systems that ensure, connections that convert.</p>
-
-      <div class="cta">
-        <a class="btn primary" href="#projects">Projects</a>
-        <a class="btn primary" href="#work">See my work</a>
+      <nav class="links">
+        <a class="navlink active" href="#">Home</a>
+        <a class="navlink" href="#research">Research</a>
+        <a class="navlink" href="#products">Products</a>
+        <a class="navlink" href="#team">Team</a>
+        <a class="navlink" href="#contact">Contact</a>
+        <a class="btn primary" href="#signup">Sign Up</a>
+        <a class="btn primary" href="#login">Login</a>
+      </nav>
+    </div>
+  </header>
+  <main class="wrap">
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="chips">
+          <span class="chip">Python &amp; PowerShell</span>
+          <span class="chip">FastAPI &amp; Integrations</span>
+          <span class="chip">Brand Systems</span>
+          <span class="chip">Automation Pipelines</span>
+          <span class="chip">Custom User Interface</span>
+          <span class="chip">AI Systems</span>
+        </div>
+        <h1>Source your Own Systems. The Engine is the Mind— Forge your Future Today.</h1>
+        <p class="sub">
+          Code that clarifies, systems that ensure, connections that convert.
+        </p>
+        <div class="cta">
+          <a class="btn primary" href="#projects">Projects</a>
+          <a class="btn primary" href="#work">See my work</a>
+        </div>
       </div>
-    </div>
-  </section>
-
-  <!-- Showcase -->
-  <section id="work">
-    <h2 class="section-title">Showcase</h2>
-    <div class="grid">
-      <figure class="card"><img class="thumb" src="gif2.gif" alt="Autonomous drone schematic"></figure>
-      <figure class="card"><img class="thumb" src="gif1.gif" alt="Neural network point cloud"></figure>
-      <figure class="card"><img class="thumb" src="gif3.gif" alt="Robotic automation line"></figure>
-    </div>
-  </section>
-
-  <!-- Contact -->
-  <section id="contact">
-    <h2 class="section-title">Contact</h2>
-    <div class="rule"></div>
-    <div class="contact-grid">
-      <form class="contact" action="https://formsubmit.co/contact@theneurofoundry.com" method="POST">
-        <input type="hidden" name="_captcha" value="false">
-        <input type="hidden" name="_subject" value="Neurofoundry site contact">
-        <input type="hidden" name="_template" value="table">
-        <input type="hidden" name="_next" value="https://theneurofoundry.com/thanks.html">
-        <input type="text" name="_honey" style="display:none">
-
-        <div class="row">
-          <div>
-            <label for="name">Name</label>
-            <input id="name" name="name" required>
+    </section>
+    <section id="work" style="position: relative;">
+      <!-- Background video positioned absolutely so the showcase sits on top -->
+      <video id="brainPulse" class="work-video" autoplay muted playsinline>
+        <source src="video555.mp4" type="video/mp4" />
+      </video>
+      <h2 class="section-title">Showcase</h2>
+      <div class="grid">
+        <figure class="card">
+          <img class="thumb" src="gif2.gif" alt="Autonomous drone schematic" />
+        </figure>
+        <figure class="card">
+          <img class="thumb" src="gif1.gif" alt="Neural network point cloud" />
+        </figure>
+        <figure class="card">
+          <img class="thumb" src="gif3.gif" alt="Robotic automation line" />
+        </figure>
+      </div>
+    </section>
+    <section id="contact">
+      <h2 class="section-title">Contact</h2>
+      <div class="rule"></div>
+      <div class="contact-grid">
+        <form
+          class="contact"
+          action="https://formsubmit.co/contact@theneurofoundry.com"
+          method="POST"
+        >
+          <input type="hidden" name="_captcha" value="false" />
+          <input type="hidden" name="_subject" value="Neurofoundry site contact" />
+          <input type="hidden" name="_template" value="table" />
+          <input type="hidden" name="_next" value="https://theneurofoundry.com/thanks.html" />
+          <input type="text" name="_honey" style="display: none" />
+          <div class="row">
+            <div>
+              <label for="name">Name</label>
+              <input id="name" name="name" placeholder="Your name" required />
+            </div>
+            <div>
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" placeholder="you@example.com" required />
+            </div>
+            <div class="full">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" placeholder="Let us know how we can help you..." required></textarea>
+            </div>
           </div>
-          <div>
-            <label for="email">Email</label>
-            <input id="email" name="email" type="email" required>
+          <div class="submit">
+            <button class="btn primary" type="submit">Send</button>
           </div>
-          <div class="full">
-            <label for="message">Message</label>
-            <textarea id="message" name="message" required></textarea>
+          <div id="statusMessage" class="status-message">
+            Thank you for getting in touch! We'll respond as soon as possible.
           </div>
-        </div>
-        <div class="submit">
-          <button class="btn primary" type="submit">Send</button>
-        </div>
-      </form>
-
-      <figure class="architect">
-        <img src="1.png" alt="The Architect — masked figure at the anvil">
-      </figure>
+        </form>
+        <figure class="architect">
+          <img src="1.png" alt="Architect" />
+        </figure>
+      </div>
+    </section>
+  </main>
+  <footer class="legal">
+    <div class="wrap">
+      <small
+        >© 2025 Neurofoundry. All rights reserved. “Neurofoundry,” Warpath/Aegis lore, visual style, and likeness are copyrighted &amp; protected trademarks. Unauthorized use prohibited.</small
+      >
     </div>
-  </section>
-</main>
+  </footer>
+  <!-- Scripts for reversible video and particle effect -->
+  <script>
+    // Smooth reversible video loop using requestAnimationFrame for backward playback.
+    const video = document.getElementById("brainPulse");
+    let reversing = false;
+    let reverseRafId = null;
 
-<footer class="legal">
-  <div class="wrap">
-    <small>© 2025 Neurofoundry. All rights reserved. “Neurofoundry,” Warpath/Aegis lore, visual style, and likeness are copyrighted & protected trademarks. Unauthorized use prohibited.</small>
-  </div>
-</footer>
+    function playForward() {
+      reversing = false;
+      if (reverseRafId !== null) {
+        cancelAnimationFrame(reverseRafId);
+        reverseRafId = null;
+      }
+      // Reset and play from the beginning
+      video.pause();
+      video.playbackRate = 1;
+      video.currentTime = 0;
+      video.play();
+    }
 
+    function playBackward() {
+      reversing = true;
+      video.pause();
+      if (reverseRafId !== null) {
+        cancelAnimationFrame(reverseRafId);
+      }
+      // Step backwards smoothly using requestAnimationFrame
+      function step() {
+        // Adjust currentTime by a small amount per frame
+        video.currentTime = Math.max(0, video.currentTime - 0.033);
+        if (video.currentTime <= 0.033) {
+          playForward();
+        } else {
+          reverseRafId = requestAnimationFrame(step);
+        }
+      }
+      step();
+    }
+
+    // When approaching the end, trigger backward playback
+    video.addEventListener("timeupdate", () => {
+      if (!reversing) {
+        const remaining = video.duration - video.currentTime;
+        if (remaining <= 0.05) {
+          playBackward();
+        }
+      }
+    });
+
+    // Start forward playback once metadata is loaded
+    video.addEventListener("loadedmetadata", () => {
+      playForward();
+    });
+    // Spark effect
+    function createSparkBurst() {
+      // Choose an origin at the absolute right edge, mid‑height of the viewport
+      const originX = window.innerWidth - 1;
+      const originY = window.innerHeight * 0.5;
+      const count = 8 + Math.floor(Math.random() * 8);
+      for (let i = 0; i < count; i++) {
+        const spark = document.createElement("span");
+        spark.className = "spark";
+        // Position at origin
+        spark.style.left = originX + "px";
+        spark.style.top = originY + "px";
+        // Randomize trajectory: primarily left/upwards but with spread
+        const angleBase = Math.PI; // leftwards direction
+        const spread = Math.PI / 4; // 45° spread
+        const randomAngle = angleBase + (Math.random() - 0.5) * spread;
+        const distance = 300 + Math.random() * 200;
+        const dx = Math.cos(randomAngle) * distance;
+        const dy = Math.sin(randomAngle) * distance;
+        const duration = 600 + Math.random() * 400; // duration in ms
+        spark.style.transition = `transform ${duration}ms linear, opacity ${duration}ms ease-out`;
+        document.body.appendChild(spark);
+        // Trigger layout and then animate
+        requestAnimationFrame(() => {
+          spark.style.transform = `translate(${dx}px, ${dy}px)`;
+          spark.style.opacity = 0;
+        });
+        // Remove spark after it finishes
+        setTimeout(() => {
+          spark.remove();
+        }, duration + 50);
+      }
+    }
+    // Schedule bursts: trigger on load and then at random intervals between 15–30 seconds
+    function scheduleBurst() {
+      createSparkBurst();
+      const nextDelay = (15 + Math.random() * 15) * 1000;
+      setTimeout(scheduleBurst, nextDelay);
+    }
+    window.addEventListener("load", scheduleBurst);
+
+    // Lightning effect: draw bolts emanating from the hero centre on a canvas.
+    // Grab the lightning canvas if it exists. When the video is moved outside the hero, this canvas may not be present.
+    const lightningCanvas = document.getElementById("lightningCanvas");
+    const lightningCtx = lightningCanvas ? lightningCanvas.getContext("2d") : null;
+
+    function resizeLightningCanvas() {
+      if (!lightningCanvas || !lightningCtx) return;
+      // Synchronize the canvas dimensions with its displayed size
+      lightningCanvas.width = lightningCanvas.clientWidth;
+      lightningCanvas.height = lightningCanvas.clientHeight;
+    }
+    // Resize on load and when the window is resized
+    window.addEventListener("load", () => {
+      if (lightningCanvas) resizeLightningCanvas();
+    });
+    window.addEventListener("resize", () => {
+      if (lightningCanvas) resizeLightningCanvas();
+    });
+
+    // Draw a single lightning burst only if the canvas exists
+    function drawLightning() {
+      if (!lightningCanvas || !lightningCtx) return;
+      lightningCtx.clearRect(0, 0, lightningCanvas.width, lightningCanvas.height);
+      const centerX = lightningCanvas.width / 2;
+      const centerY = lightningCanvas.height / 2;
+      // Choose between 4 and 6 primary branches for a more complex bolt
+      const branches = 4 + Math.floor(Math.random() * 3);
+      // Lightning parameters
+      const baseStep = lightningCanvas.height * 0.04;
+      const angleVariance = Math.PI / 3; // wider variance for crackle
+      for (let b = 0; b < branches; b++) {
+        let x = centerX;
+        let y = centerY;
+        lightningCtx.beginPath();
+        lightningCtx.moveTo(x, y);
+        // Vary the number of segments for each branch (16–22)
+        const segments = 16 + Math.floor(Math.random() * 7);
+        // Center directions spread evenly around the upper half of the circle
+        const angleBase = (-Math.PI / 2) + (b - (branches - 1) / 2) * (Math.PI / 10);
+        for (let i = 0; i < segments; i++) {
+          // Randomize direction heavily to create jagged edges
+          const randAngle = angleBase + (Math.random() - 0.5) * angleVariance;
+          const stepLength = baseStep * (0.8 + Math.random() * 0.4);
+          x += Math.cos(randAngle) * stepLength;
+          y += Math.sin(randAngle) * stepLength;
+          lightningCtx.lineTo(x, y);
+        }
+        lightningCtx.strokeStyle = "rgba(255, 255, 255, 0.85)";
+        lightningCtx.lineWidth = 1.8;
+        lightningCtx.shadowBlur = 10;
+        lightningCtx.shadowColor = "rgba(255, 255, 255, 0.8)";
+        lightningCtx.stroke();
+      }
+      // Fade out after a brief moment
+      setTimeout(() => {
+        if (lightningCtx) lightningCtx.clearRect(0, 0, lightningCanvas.width, lightningCanvas.height);
+      }, 600);
+    }
+    // Schedule lightning bursts at random intervals between 15 and 30 seconds
+    function scheduleLightning() {
+      if (!lightningCanvas) return;
+      drawLightning();
+      const delay = (15 + Math.random() * 15) * 1000;
+      setTimeout(scheduleLightning, delay);
+    }
+    window.addEventListener("load", () => {
+      if (lightningCanvas) {
+        resizeLightningCanvas();
+        scheduleLightning();
+      }
+    });
+
+  </script>
 </body>
 </html>
