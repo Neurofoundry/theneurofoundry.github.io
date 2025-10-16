@@ -15,7 +15,7 @@ servers:
   # endpoint.  This example points at the Cloudflare tunnel for the Neuroforge
   # bridge.  When running behind a tunnel or proxy be sure to configure
   # appropriate TLS and routing settings.
-  - url: https://forge.theneurofoundry.com
+  - url: https://theneurofoundry.com
 
 components:
   securitySchemes:
