@@ -11,10 +11,6 @@ info:
     instance.  Update the ``servers`` section below to reflect your public
     domain when deploying.
 servers:
-  # Replace the URL below with the publicly accessible address of your bridge
-  # endpoint.  This example points at the Cloudflare tunnel for the Neuroforge
-  # bridge.  When running behind a tunnel or proxy be sure to configure
-  # appropriate TLS and routing settings.
   - url: https://theneurofoundry.com
 
 components:
