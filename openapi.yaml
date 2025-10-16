@@ -1,0 +1,183 @@
+openapi: 3.1.1
+info:
+  title: Neuroforge B.R.I.D.G.E API
+  version: "1.3.1"
+  description: |
+    This specification defines the public API for the Neuroforge B.R.I.D.G.E service.
+    The API allows authorised clients, such as GPT‑based agents, to upload
+    (via base64‑encoded JSON payloads), list, retrieve and inspect locally stored
+    assets on the Neurofoundry system.  The API uses a simple API key for
+    authentication and should be hosted at the public URL of your bridge
+    instance.  Update the ``servers`` section below to reflect your public
+    domain when deploying.
+servers:
+  # Replace the URL below with the publicly accessible address of your bridge
+  # endpoint.  This example points at the Cloudflare tunnel for the Neuroforge
+  # bridge.  When running behind a tunnel or proxy be sure to configure
+  # appropriate TLS and routing settings.
+  - url: https://forge.theneurofoundry.com
+
+components:
+  securitySchemes:
+    api_key:
+      type: apiKey
+      in: header
+      name: x-api-key
+
+  schemas:
+    BridgeUploadRequest:
+      type: object
+      required: [filename]
+      properties:
+        filename:
+          type: string
+        base64_data:
+          type: string
+          description: Base64‑encoded payload (data URI is allowed)
+        tags:
+          type: array
+          items:
+            type: string
+        content_type:
+          type: string
+          default: application/octet-stream
+
+    BridgeUploadResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: ["ok", "error"]
+        message:
+          type: string
+        path:
+          type: string
+        size_bytes:
+          type: integer
+        tags:
+          type: array
+          items:
+            type: string
+        timestamp:
+          type: string
+          format: date-time
+
+    BridgeListResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        folder:
+          type: string
+        count:
+          type: integer
+        files:
+          type: array
+          items:
+            type: string
+
+    BridgeRoutingResponse:
+      type: object
+      properties:
+        folders:
+          type: object
+          additionalProperties: { type: string }
+        acronyms:
+          type: object
+          additionalProperties: { type: string }
+        ext_map:
+          type: object
+          additionalProperties: { type: string }
+        mime_map:
+          type: object
+          additionalProperties: { type: string }
+
+security:
+  - api_key: []
+
+paths:
+  /bridge/health:
+    get:
+      operationId: bridge_health
+      summary: Health check
+      security: []
+      responses:
+        "200":
+          description: Service is reachable
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string }
+                  service: { type: string }
+                  config_dir: { type: string }
+
+  /bridge/upload:
+    post:
+      operationId: bridge_upload
+      summary: Upload or store a file via B.R.I.D.G.E
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BridgeUploadRequest"
+      responses:
+        "200":
+          description: Upload accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BridgeUploadResponse"
+
+  /bridge/list:
+    get:
+      operationId: bridge_list
+      summary: List all files in a routed folder
+      parameters:
+        - name: key
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Folder listing
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BridgeListResponse"
+
+  /bridge/read:
+    get:
+      operationId: bridge_read
+      summary: Retrieve a stored file
+      parameters:
+        - name: filename
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: key
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: File stream
+        "404":
+          description: File not found
+
+  /bridge/routing:
+    get:
+      operationId: bridge_routing
+      summary: Retrieve current routing configuration
+      responses:
+        "200":
+          description: Routing data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BridgeRoutingResponse"
