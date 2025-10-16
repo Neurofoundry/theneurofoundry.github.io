@@ -11,7 +11,7 @@ info:
     instance.  Update the ``servers`` section below to reflect your public
     domain when deploying.
 servers:
-  - url: https://theneurofoundry.com
+  - url: https://theneurofoundry.com/bridge
 
 components:
   securitySchemes:
