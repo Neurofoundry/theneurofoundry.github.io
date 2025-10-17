@@ -2,8 +2,8 @@
   "schema_version": "v1",
   "name_for_human": "Neuroforge B.R.I.D.G.E",
   "name_for_model": "neuroforge_bridge",
-  "description_for_human": "Upload, list and retrieve files via the Neuroforge B.R.I.D.G.E service. Use this plugin to store base64 encoded files in Neuroforge and retrieve them later.",
-  "description_for_model": "Upload files encoded as base64 in a JSON body, list existing files, or retrieve stored assets from the Neuroforge B.R.I.D.G.E service. Use this plugin to manage documents and binary data on the Neuroforge system.",
+  "description_for_human": "Upload, list and retrieve files via Neuroforge Bridge. Also supports base64 uploads for ChatGPT Actions.",
+  "description_for_model": "Use these endpoints to upload files (multipart) or base64 payloads, list folder contents, and read stored files. For storing images you generate, call /bridge/base64 with a filename and content_type image/png.",
   "auth": {
     "type": "api_key",
     "in": "header",
@@ -15,5 +15,5 @@
   },
   "logo_url": "https://theneurofoundry.com/logo.png",
   "contact_email": "support@neurofoundry.com",
-  "legal_info_url": "https://theneurofoundry.com"
+  "legal_info_url": "https://theneurofoundry.com/legal"
 }
