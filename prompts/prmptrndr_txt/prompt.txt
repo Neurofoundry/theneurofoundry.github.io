@@ -1,0 +1,13 @@
+Write a detailed, multi-sentence visual description of this image.
+
+Be precise and specific. Describe:
+- The primary subject(s) and their physical appearance
+- Clothing and accessories, including type, cut, length, material, and style
+  (e.g., trench coat vs. jacket, blazer vs. coat, leather vs. wool, fitted vs. loose)
+- Environment and setting
+- Lighting conditions and time of day
+- Camera angle, framing, and perspective
+- Artistic, cinematic, or rendering style if apparent
+
+Use accurate visual categories rather than generic terms whenever possible.
+Describe only what is clearly visible; do not infer unseen details.
