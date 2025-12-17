@@ -1,19 +1,31 @@
-Rewrite the following image caption to be clearer, more explicit, and more visually precise.
+Rewrite the following image caption into a dense, information-packed visual specification suitable for Stable Diffusion.
 
-Preserve all original factual information.
-Do not remove, generalize, or replace concrete visual details.
-Do not invent new objects, features, or narrative elements.
+Do not add narrative, emotion, symbolism, or storytelling.
+Do not interpret themes or genre unless explicitly stated in the original caption.
+Do not invent details.
 
-Improve clarity by:
-- Replacing vague phrases with concrete visual descriptions when the original caption already implies them
-- Expanding abbreviated or compressed descriptions into complete, unambiguous sentences
-- Clarifying materials, colors, lighting, and spatial relationships already present in the caption
+Preserve all factual information exactly.
+Do not remove or generalize specific materials, shapes, colors, or structures.
 
-Do NOT:
-- Add new attributes that were not mentioned
-- Change the subject, identity, or structure of the scene
-- Introduce metaphor, symbolism, or story elements
-- Replace specific terms with generic ones
+Rewrite using:
+- Short, concrete phrases
+- Explicit material and structural descriptors
+- Redundant phrasing where helpful to reinforce key features
+- Comma-separated clauses rather than flowing prose when possible
 
-** You must retain the elements of the original caption, but expand on the descriptive details accurately. Please only use descriptive words, and do not generalize identity. You should aim for 4-6 full sentences. **
+Prioritize describing:
+- Subject type and physical form
+- Clothing, armor, or accessories (material, cut, length, structure)
+- Face coverings, masks, or headgear (material, coverage, shape)
+- Color palette and surface finishes
+- Lighting type and intensity
+- Environment and spatial context
+- Camera framing or perspective (if present)
 
+Avoid:
+- Metaphor
+- Vague adjectives
+- Genre labels unless explicitly visible
+- “Appears to be” or “seems like” phrasing
+
+The output should read like a technical visual breakdown rather than a narrative description.
