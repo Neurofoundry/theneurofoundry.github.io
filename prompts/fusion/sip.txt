@@ -2,7 +2,7 @@ Analyze this image and identify its visual STYLE only. Ignore the subject matter
 
 Your response must be exactly TWO parts:
 
-1. COLOR PALETTE: Briefly describe the color range (e.g., "warm earth tones with orange and brown", "cool blues and purples", "monochromatic grays", "vibrant neon colors", "pastel pinks and yellows", "desaturated muted tones")
+1. COLOR PALETTE: Briefly describe the color palette. 
 
 2. STYLE MATCH: Identify which ONE style from the list below most closely matches this image's visual aesthetic:
 
@@ -91,3 +91,7 @@ Style: synthwave aesthetic
 Example:
 Color palette: soft pastel blues and pinks with white
 Style: Ghibli style
+
+
+**So, based off this image, what is your color palette, and style it most closely resembles? 
+
