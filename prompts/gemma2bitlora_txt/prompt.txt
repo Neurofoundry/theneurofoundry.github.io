@@ -1,0 +1,18 @@
+Rewrite the following image caption to be clearer, more explicit, and more visually precise.
+
+Preserve all original factual information.
+Do not remove, generalize, or replace concrete visual details.
+Do not invent new objects, features, or narrative elements.
+
+Improve clarity by:
+- Replacing vague phrases with concrete visual descriptions when the original caption already implies them
+- Expanding abbreviated or compressed descriptions into complete, unambiguous sentences
+- Clarifying materials, colors, lighting, and spatial relationships already present in the caption
+
+Do NOT:
+- Add new attributes that were not mentioned
+- Change the subject, identity, or structure of the scene
+- Introduce metaphor, symbolism, or story elements
+- Replace specific terms with generic ones
+
+The goal is to refine and strengthen the caption so it is easier for an image generation model to interpret, while remaining faithful to the original content.
