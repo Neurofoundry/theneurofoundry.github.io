@@ -1,4 +1,3 @@
-Step 1:
 Rewrite the following image caption into a clear, dense, information-packed visual specification.
 
 Do not add narrative, symbolism, or storytelling.
@@ -29,9 +28,6 @@ Avoid:
 The output should read like a technical visual breakdown rather than a narrative description.
 Please use at least 6-8 sentences when applicable. 
 
-Step 2: 
-Take results from Step 1 & Combine them with Original Caption, to create a robust description-- combining the details of both captions into one. 
+Take results and Combine them with Original Caption, to create a robust description-- combining the details of both captions into one. 
 
-Step 3: 
 Produce the final output as the final result. 
-
