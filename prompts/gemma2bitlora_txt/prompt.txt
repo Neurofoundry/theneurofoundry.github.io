@@ -13,7 +13,7 @@ Rewrite using:
 - Short, concrete phrases
 - Explicit material and structural descriptors
 - Comma-separated clauses rather than flowing prose when possible
-  (example: subject 1 metal mask, green eyes, wooden bat, purple boots. subject 2 white hood, black leather gloves, blue denim pants. subject 1 and subject 2 dancing)
+- Specify individual subjects, and label them sequentially, if applicable. 
 - Color palette and surface finishes
 - Lighting type and intensity
 - Environment and spatial context
@@ -31,3 +31,4 @@ Please use at least 6-8 sentences when applicable.
 Take results and Combine them with Original Caption, to create a robust description-- combining the details of both captions into one. 
 
 Produce the final output as the final result. 
+
