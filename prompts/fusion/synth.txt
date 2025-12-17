@@ -1,1 +1,70 @@
-Rewrite the caption, preserving as many details as possible with a maximum of 73 tokens total. 
+You will receive THREE separate descriptions of an image:
+
+1. CHARACTER DESCRIPTION (from cdp.txt): Detailed description of the main subject/character
+2. STYLE & COLOR (from sip.txt): Visual style and color palette information
+3. ATMOSPHERIC SETTING (from acp.txt): Mood, lighting, and environmental feelings
+
+Your task is to SYNTHESIZE these three inputs into ONE beautifully written, cohesive prompt optimized for SDXL image generation.
+
+SYNTHESIS RULES:
+
+1. STRUCTURE the final prompt in this order:
+   - Lead with the character/subject (most important for composition)
+   - Integrate atmospheric elements naturally around the character
+   - End with style specification and color palette
+
+2. WRITE in a flowing, natural style:
+   - Remove redundancy between the three inputs
+   - Blend elements smoothly without section breaks
+   - Use vivid, descriptive language
+   - Maintain all specific details from the character description
+   - Preserve the exact style match from sip.txt
+
+3. OPTIMIZE for SDXL:
+   - Keep total length between 40-75 words MAXIMUM (77 token limit)
+   - Place most important elements first (character → key atmosphere → style)
+   - Use comma-separated phrases for clarity
+   - Include the style specification exactly as provided in sip.txt
+   - Incorporate ONLY the most critical atmospheric details
+   - Integrate color palette briefly, don't repeat it
+   - Use strong, specific adjectives but be concise
+   - Prioritize quality over quantity - every word must earn its place
+
+4. BALANCE specificity with flow:
+   - Keep precise character details (gas mask vs mask, trench coat vs jacket)
+   - Weave atmospheric qualities into the scene description
+   - Don't list mechanically - create a vivid mental image
+   - Ensure mood and lighting complement the character
+
+5. FORMATTING:
+   - Write as one continuous paragraph OR use commas to separate key elements
+   - No bullet points or section headers in the output
+   - End with style specification: ", [exact style from sip.txt]"
+
+EXAMPLE INPUT:
+
+Character (cdp.txt): "A tall, athletic young adult male with muscular build. He wears a full-face gas mask with dual circular filters, dark gray with worn metallic components. Black tactical vest over dark compression shirt, weathered olive field jacket with rolled sleeves, fingerless tactical gloves. Dark cargo pants tucked into black combat boots. Carries tactical backpack, holstered pistol on right thigh. Confident wide stance."
+
+Atmosphere (acp.txt): "Tense and ominous mood, harsh dramatic lighting from above creating strong shadows, cold industrial feeling, sense of oppression and danger, heavy atmosphere, desaturated colors with metallic tones, gritty and raw energy, post-apocalyptic emptiness."
+
+Style (sip.txt): "Color palette: desaturated grays and olive greens with metallic accents. Style: cinematic photography"
+
+EXAMPLE OUTPUT:
+
+"A tall, athletic male with a muscular build stands in a confident, wide stance, his face concealed behind a full-face gas mask with dual circular filters, the dark gray metal worn and weathered. Harsh dramatic lighting cuts down from above, casting deep shadows across his black tactical vest layered over a dark compression shirt, and his weathered olive field jacket with sleeves rolled to reveal fingerless tactical gloves with reinforced knuckles. The atmosphere is tense and ominous, heavy with the oppressive weight of danger, the cold industrial environment drained of warmth. Dark cargo pants are tucked into scuffed black combat boots, and a tactical backpack sits strapped to his shoulders while a holstered pistol rests against his right thigh. The scene carries a gritty, post-apocalyptic emptiness, the desaturated grays and olive greens punctuated by metallic accents that catch the harsh light, the raw energy palpable in the still, threatening air, cinematic photography"
+
+---
+
+NOW SYNTHESIZE YOUR THREE INPUTS:
+
+Input 1 (Character from cdp.txt):
+[CHARACTER DESCRIPTION WILL BE PROVIDED HERE]
+
+Input 2 (Atmosphere from acp.txt):
+[ATMOSPHERIC DESCRIPTION WILL BE PROVIDED HERE]
+
+Input 3 (Style from sip.txt):
+[STYLE AND COLOR PALETTE WILL BE PROVIDED HERE]
+
+FINAL SYNTHESIZED PROMPT:
+[Write your combined output here - make it vivid, flowing, and SDXL-optimized]
