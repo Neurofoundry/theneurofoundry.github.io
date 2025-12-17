@@ -2,12 +2,22 @@ Write a detailed, multi-sentence visual description of this image.
 
 Be precise and specific. Describe:
 - The primary subject(s) and their physical appearance
+
+When the image contains a character, describe distinguishing features that uniquely identify the characters look.
+Include invariant traits such as:
+- mask shape and material, costume, or outfit
+- facial coverage (full-face, half-mask, visor)
+- hair style (if visible)
+- body build and proportions
+- silhouette shape, or action pose
+Treat these as identity-defining elements, not optional details.
+
 - Clothing and accessories, including type, cut, length, material, and style
   (e.g., trench coat vs. jacket, blazer vs. coat, leather vs. wool, fitted vs. loose)
 - Environment and setting
 - Lighting conditions and time of day
 - Camera angle, framing, and perspective
-- Artistic, cinematic, or rendering style if apparent
+- Artistic, cinematic, or rendering style if apparent (3D, Anime, Cinematic, 4K, HD, etc..)
 
 Use accurate visual categories rather than generic terms whenever possible.
 Describe only what is clearly visible; do not infer unseen details.
