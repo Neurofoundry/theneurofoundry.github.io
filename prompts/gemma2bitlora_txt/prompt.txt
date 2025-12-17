@@ -1,22 +1,20 @@
-Rewrite the following image caption into a dense, information-packed visual specification suitable for Stable Diffusion.
 
-Do not add narrative, emotion, symbolism, or storytelling.
-Do not interpret themes or genre unless explicitly stated in the original caption.
+Rewrite the following image caption into a clear, dense, information-packed visual specification.
+
+Do not add narrative, symbolism, or storytelling.
+Do not interpret themes or genre.
 Do not invent details.
-
-Preserve all factual information exactly.
 Do not remove or generalize specific materials, shapes, colors, or structures.
 
+Preserve all factual information exactly.
+Expand descriptive details of potential identifiers (apparel, gender, size, material, costume, emotion, etc)
+
 Rewrite using:
+- Separate individual subjects
 - Short, concrete phrases
 - Explicit material and structural descriptors
-- Redundant phrasing where helpful to reinforce key features
 - Comma-separated clauses rather than flowing prose when possible
-
-Prioritize describing:
-- Subject type and physical form
-- Clothing, armor, or accessories (material, cut, length, structure)
-- Face coverings, masks, or headgear (material, coverage, shape)
+  (example: subject 1 metal mask, green eyes, wooden bat, purple boots. subject 2 white hood, black leather gloves, blue denim pants. subject 1 and subject 2 dancing)
 - Color palette and surface finishes
 - Lighting type and intensity
 - Environment and spatial context
@@ -29,3 +27,4 @@ Avoid:
 - “Appears to be” or “seems like” phrasing
 
 The output should read like a technical visual breakdown rather than a narrative description.
+Please use at least 6-8 sentences when applicable. 
