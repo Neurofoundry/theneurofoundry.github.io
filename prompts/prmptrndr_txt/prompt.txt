@@ -1,23 +1,39 @@
 Write a detailed, multi-sentence visual description of this image.
 
-Be precise and specific. Describe:
-- The primary subject(s) and their physical appearance
+Be precise and specific. Do not summarize or generalize visually salient details.
 
-When the image contains a character, describe distinguishing features that uniquely identify the characters look.
-Include invariant traits such as:
-- mask shape and material, costume, or outfit
-- facial coverage (full-face, half-mask, visor)
-- hair style (if visible)
-- body build and proportions
-- silhouette shape, or action pose
+First, identify and retain important visual features before composing the description.
+Do not omit distinctive materials, constructions, colors, or illuminated elements in favor of generic labels.
+
+Describe the following, in order:
+
+- The primary subject(s) and their physical appearance.
+
+When the image contains a character, describe distinguishing features that would allow the same character to be recognized again.
 Treat these as identity-defining elements, not optional details.
 
-- Clothing and accessories, including type, cut, length, material, and style
-  (e.g., trench coat vs. jacket, blazer vs. coat, leather vs. wool, fitted vs. loose)
-- Environment and setting
-- Lighting conditions and time of day
-- Camera angle, framing, and perspective
-- Artistic, cinematic, or rendering style if apparent (3D, Anime, Cinematic, 4K, HD, etc..)
+Include invariant traits such as:
+- Mask or face covering shape, material, and surface finish (e.g., metal, fabric, composite; smooth, segmented, plated)
+- Facial coverage (full-face, half-mask, visor, open face)
+- Eye visibility or illumination (glowing, shadowed, exposed)
+- Hair style or hair coverage (if visible)
+- Body build and proportions (slim, athletic, heavy, broad-shouldered)
+- Overall silhouette, posture, or action pose
+- Any recurring symbols, devices, or embedded elements
+
+- Clothing, armor, and accessories, including garment type, cut, length, material, structure, and fit
+  (e.g., trench coat vs jacket, long overcoat vs short coat, leather vs metal, layered vs rigid, fitted vs loose).
+  If armor or specialized clothing is present, describe its material, construction, and surface quality.
+
+- Environment and setting.
+
+- Lighting conditions and apparent time of day.
+
+- Camera angle, framing, and perspective.
+
+- Artistic, cinematic, or rendering style if apparent
+  (e.g., photorealistic, cinematic, illustrated, graphic novel, 3D render, anime-style).
 
 Use accurate visual categories rather than generic terms whenever possible.
-Describe only what is clearly visible; do not infer unseen details.
+Avoid vague phrasing such as “appears to be” or “seems to be” when a detail is clearly visible.
+Describe only what is clearly visible; do not infer unseen details, identities, or narrative context.
