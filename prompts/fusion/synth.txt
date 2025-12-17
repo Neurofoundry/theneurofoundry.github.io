@@ -1,10 +1,8 @@
-You will receive THREE separate descriptions of an image:
+Please synthesize all three inputs (cdp, acp, sip) into one cohesive caption, with a maximum of 73 tokens. 
 
-1. CHARACTER DESCRIPTION (from cdp.txt): Detailed description of the main subject/character
-2. STYLE & COLOR (from sip.txt): Visual style and color palette information
-3. ATMOSPHERIC SETTING (from acp.txt): Mood, lighting, and environmental feelings
-
-Your task is to SYNTHESIZE these three inputs into ONE beautifully written, cohesive prompt optimized for SDXL image generation.
+1. CHARACTER DESCRIPTION (CDP: Detailed description of the main subject/character
+2. STYLE & COLOR (SIP): Visual style and color palette information
+3. ATMOSPHERIC SETTING (ACP): Mood, lighting, and environmental feelings
 
 SYNTHESIS RULES:
 
@@ -21,7 +19,7 @@ SYNTHESIS RULES:
    - Preserve the exact style match from sip.txt
 
 3. OPTIMIZE for SDXL:
-   - Keep total length between 40-75 words MAXIMUM (77 token limit)
+   - Keep total length between 40-75 words MAXIMUM (73 token limit)
    - Place most important elements first (character → key atmosphere → style)
    - Use comma-separated phrases for clarity
    - Include the style specification exactly as provided in sip.txt
@@ -68,3 +66,4 @@ Input 3 (Style from sip.txt):
 
 FINAL SYNTHESIZED PROMPT:
 [Write your combined output here - make it vivid, flowing, and SDXL-optimized]
+
