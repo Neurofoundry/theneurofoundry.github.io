@@ -1,106 +1,21 @@
-Analyze this image and provide a HIGHLY DETAILED description of the main character or subject ONLY. Ignore the background and environment completely.
+Analyze this image and describe ONLY the central subject, its physical characteristics, and its material composition. Do not mention the background, the lighting environment, the mood, or the atmospheric setting.
 
-Focus exclusively on the CHARACTER/SUBJECT with maximum precision and specificity.
+Focus exclusively on:
 
-If the subject is a PERSON or HUMANOID:
-- Gender presentation (male, female, androgynous, non-binary)
-- Approximate age or age range (child, teen, young adult, middle-aged, elderly)
-- Ethnicity or skin tone (if visible)
-- Body build (slim, athletic, muscular, stocky, heavyset, petite, tall, short, average)
-- Height proportion relative to surroundings
-- Posture and stance (standing, sitting, crouching, leaning, relaxed, tense, confident, hunched)
+Physical Form and Structure: Shape, silhouette, height, build, and posture.
 
-FACIAL FEATURES (be extremely specific):
-- Face shape (oval, round, square, heart-shaped, angular, soft)
-- Hair (length, style, color, texture - straight/wavy/curly/braided/ponytail/bun/mohawk/shaved/etc.)
-- Facial hair (clean-shaven, stubble, beard, mustache, goatee - describe style and length)
-- Eyes (color, shape, expression - wide/narrow/alert/tired/intense/gentle)
-- Eyewear (glasses, sunglasses, goggles, visor - describe frame style)
-- Distinctive features (scars, tattoos, piercings, birthmarks, freckles, wrinkles, makeup)
-- Expression (smiling, frowning, neutral, angry, sad, surprised, determined, thoughtful, etc.)
+Surface Materials and Textures: The specific look and feel of surfaces (e.g., matte leather, brushed metal, woven fabric, polished synthetic, organic skin, weathered hide).
 
-HEAD ACCESSORIES (distinguish precisely):
-- Mask (simple face covering, eye mask, decorative mask, bandana over face)
-- Gas mask (full face respirator with filters)
-- Respirator (half-face breathing apparatus)
-- Helmet (full enclosed headgear - specify type: motorcycle, combat, sci-fi, medieval, space, etc.)
-- Hat (fedora, baseball cap, beanie, top hat, cowboy hat, beret, bucket hat, etc.)
-- Hood (up or down, attached to garment)
-- Crown, tiara, headband, bandana (on head), hair accessories
-- Visor, face shield, HUD display, cybernetic implants
+Detailed Components: Specific features of the subject’s construction—seams, joints, fasteners, lenses, layers, or intricate mechanical/biological details.
 
-UPPER BODY CLOTHING (be extremely precise):
-- Shirt (t-shirt, dress shirt, polo, tank top, halter top, crop top, blouse, tunic)
-- Jacket (bomber jacket, leather jacket, denim jacket, windbreaker, blazer, suit jacket)
-- Coat (trench coat, overcoat, peacoat, duster, lab coat, raincoat)
-- Vest (waistcoat, tactical vest, puffer vest)
-- Hoodie or sweatshirt
-- Sweater or cardigan
-- Armor (plate armor, chainmail, tactical armor, sci-fi armor - describe coverage)
-- Cloak, cape, or shawl
-- Straps, harness, or bandoliers
-- Color, material (leather, fabric, metal, synthetic), condition (pristine, worn, damaged, weathered)
+Color Palette of the Subject: The specific hues, patterns, and gradients present strictly on the subject itself.
 
-LOWER BODY CLOTHING:
-- Pants (jeans, slacks, cargo pants, tactical pants, leggings, skinny jeans, baggy pants)
-- Shorts (cargo shorts, athletic shorts, denim shorts)
-- Skirt (mini, midi, maxi, pencil, pleated, flowing)
-- Dress (style, length, cut)
-- Armor or protective gear on legs
-- Color, material, fit (tight, loose, fitted)
+Material Properties: Reflections, transparency, opacity, sheen, or any wear and tear (scuffs, scratches, pristine finish) on the subject’s surface.
 
-FOOTWEAR (be specific):
-- Boots (combat boots, hiking boots, cowboy boots, knee-high boots, ankle boots, platform boots)
-- Shoes (sneakers, dress shoes, loafers, heels, sandals, flats)
-- Specialized footwear (cleats, skates, ski boots, etc.)
-- Bare feet
-- Color, style, condition
+Apparel and Gear: If the subject is wearing clothing or equipment, describe the cut, the drape of the fabric, the weight of the material, and the specific design elements (e.g., a long trench coat with heavy stitching, tactical buckles, or integrated circuitry).
 
-ACCESSORIES & GEAR:
-- Gloves (fingerless, full-finger, mittens, gauntlets, tactical gloves)
-- Jewelry (rings, necklaces, earrings, bracelets, watches - describe style)
-- Belts and buckles
-- Bags (backpack, messenger bag, satchel, purse, tactical pouch)
-- Weapons (held or holstered - sword, gun, staff, knife - describe type and position)
-- Tools or equipment carried
-- Patches, badges, insignia on clothing
-- Scarves, ties, or neckwear
+Tactile Quality: Is the subject visually hard, soft, rigid, flexible, organic, or synthetic?
 
-If the subject is a CREATURE or ANIMAL:
-- Species or type (dragon, wolf, bird, mythical creature, alien, robot, etc.)
-- Size (tiny, small, medium, large, massive)
-- Body structure (quadruped, biped, winged, serpentine, etc.)
-- Skin/fur/scales texture and color
-- Distinctive features (horns, claws, tails, wings, multiple heads, etc.)
-- Facial features (eyes, snout, beak, teeth, expression)
-- Any clothing, armor, or accessories the creature is wearing
-- Pose or stance
+Scale and Proportion: The relationship between the subject’s different parts and its overall perceived dimensions.
 
-If the subject is a VEHICLE or OBJECT:
-- Type (car, motorcycle, mech, spaceship, etc.)
-- Make, model, or style if identifiable
-- Color and finish (matte, glossy, metallic, weathered, rusted, pristine)
-- Distinctive features (modifications, damage, decals, lights, weapons)
-- Size and proportions
-- Design era or aesthetic (vintage, modern, futuristic, steampunk, etc.)
-
-LEVEL OF DETAIL REQUIRED:
-- Be as specific as possible with every visible element
-- Use precise terminology (not just "mask" but "gas mask with dual circular filters" or "simple black eye mask")
-- Note exact distinctions (trench coat vs duster vs overcoat, beanie vs skull cap)
-- Describe colors, patterns, textures, and materials
-- Mention any text, logos, or symbols visible on clothing
-- Note the condition and wear of items (brand new, worn, battle-damaged, pristine)
-- Include ALL visible accessories and details, no matter how small
-
-OUTPUT FORMAT:
-Provide a comprehensive, flowing description in paragraph form. Be thorough and precise. This description should allow someone to accurately recreate this character's appearance without seeing the original image.
-
-Example output structure:
-"A tall, athletic young adult male with a muscular build, approximately 25-30 years old. He has short, dark brown hair in a military-style buzz cut and a strong, square-jawed face with light stubble. His expression is serious and determined, with intense brown eyes focused forward. He wears a full-face gas mask with dual circular filters on each side, dark gray in color with worn metallic components. 
-
-His upper body is covered by a black tactical vest over a dark gray long-sleeve compression shirt. The vest has multiple pouches and MOLLE webbing, with visible magazine pouches on the chest. Over this, he wears a weathered olive green field jacket with rolled-up sleeves, revealing tactical gloves on his hands - fingerless, black leather with reinforced knuckles.
-
-His lower body is clad in dark gray cargo pants with multiple pockets, slightly worn at the knees, tucked into black combat boots with reinforced toes and lacing up to mid-calf. A thick leather belt with a large brass buckle cinches the pants at his waist.
-
-He carries a black tactical backpack with frayed straps and a rolled sleeping bag attached to the bottom. A holstered pistol is visible on his right thigh in a drop-leg holster. On his left wrist is a chunky digital watch with a black rubber strap. He stands in a confident, wide stance with arms slightly away from his body, suggesting readiness for action."
+Ignore all environmental context, atmospheric "feel," or lighting effects. Describe the subject as if it’s a high-fidelity asset being inspected in a vacuum.
