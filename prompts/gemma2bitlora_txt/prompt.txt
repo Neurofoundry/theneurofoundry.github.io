@@ -15,4 +15,5 @@ Do NOT:
 - Introduce metaphor, symbolism, or story elements
 - Replace specific terms with generic ones
 
-The goal is to refine and strengthen the caption so it is easier for an image generation model to interpret, while remaining faithful to the original content.
+** You must retain the elements of the original caption, but expand on the descriptive details accurately. Please only use descriptive words, and do not generalize identity. You should aim for 4-6 full sentences. **
+
