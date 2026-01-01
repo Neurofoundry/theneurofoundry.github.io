@@ -1,730 +1,634 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Neurofoundry — Particle Effect Experiment</title>
-  <meta name="description" content="Dark theme with reversible video and occasional particle splashes." />
-  <meta name="theme-color" content="#0f1113" />
-  <link rel="icon" type="image/png" sizes="32x32" href="./1.png" />
-  <link rel="icon" type="image/png" sizes="192x192" href="./1.png" />
-  <link rel="apple-touch-icon" href="./1.png" />
-  <link rel="shortcut icon" href="./1.png" />
-
-  <!--
-    This variant returns to the original dark palette and adds a lightweight
-    particle effect that sprays small dots from the right edge every 30
-    seconds. The provided architect image is used in both the header and
-    contact section. No changes are committed.
-  -->
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Neurofoundry — The Engine is the Mind</title>
+  <meta name="description" content="Enter the mind. Neurofoundry brings AI-powered scene direction, intelligent agents, and next-gen creative tools.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <!-- OpenTelemetry (UMD builds) - dev only, safe guards in tracing-init.js -->
+  <script src="https://unpkg.com/@opentelemetry/sdk-trace-web/build/umd/index.min.js"></script>
+  <script src="https://unpkg.com/@opentelemetry/exporter-trace-otlp-http/build/umd/index.min.js"></script>
+  <script src="https://unpkg.com/@opentelemetry/instrumentation-document-load/build/umd/index.min.js"></script>
+  <script src="https://unpkg.com/@opentelemetry/instrumentation-fetch/build/umd/index.min.js"></script>
+  <script src="https://unpkg.com/@opentelemetry/instrumentation-xml-http-request/build/umd/index.min.js"></script>
+  <script src="tracing/tracing-init.js"></script>
   <style>
-    :root {
-      --bg: #0f1113;
-      --ink: #e6e9ee;
-      --muted: #9aa3ad;
-      --accent: #e0473c;
-      --edge: #2a2f34;
-      --chip-bg: #1c1210;
-      --chip-edge: #62302d;
-    }
-    * {
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
       box-sizing: border-box;
     }
-    html,
-    body {
+
+    html, body {
+      background: #0a0a0a;
+      overflow: hidden;
       height: 100%;
+      font-family: 'Orbitron', sans-serif;
+      color: #e0473c;
     }
+
     body {
-      margin: 0;
-      color: var(--ink);
-      background: radial-gradient(
-        1200px 1200px at 50% -200px,
-        #0f1113,
-        #0c0d0f 70%,
-        #0b0c0e 100%
-      );
-      font: 16px/1.6 Inter, Segoe UI, Roboto, Arial, sans-serif;
-      letter-spacing: 0.1px;
-    }
-    .wrap {
-      max-width: 1120px;
-      margin: 0 auto;
-      padding: 0 28px;
-    }
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      background: #0b0c0e;
-      border-bottom: 2px solid var(--accent);
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
-    }
-    .nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 64px;
-    }
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .brand img {
-      height: 32px;
-      border-radius: 4px;
-    }
-    .brand span {
-      font-weight: 700;
-      letter-spacing: 0.4px;
-    }
-    .links {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-    }
-    .navlink {
-      color: #ccc;
-      font-size: 14px;
-      font-weight: 500;
-      text-decoration: none;
-      position: relative;
-    }
-    .navlink.active {
-      color: var(--accent);
-    }
-    .navlink.active::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      bottom: -4px;
-      width: 100%;
-      height: 2px;
-      background: var(--accent);
-      border-radius: 1px;
-    }
-    .navlink:hover {
-      color: var(--accent);
-    }
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 8px 14px;
-      border-radius: 999px;
-      min-width: 0;
-      font: 600 14px/1 Inter, Segoe UI, Roboto, sans-serif;
-      cursor: pointer;
-      text-decoration: none;
-      transition: 0.15s ease;
-      border: 1px solid transparent;
-      background: #191c20;
-      color: var(--ink);
-    }
-    .btn.primary {
-      background: linear-gradient(
-        180deg,
-        #ff7b6e 0%,
-        #e9584d 48%,
-        #d23d33 100%
-      );
-      border-color: #a2362f;
-      color: #fff;
-      box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.55),
-        inset 0 -3px 6px rgba(0, 0, 0, 0.35),
-        0 6px 14px rgba(224, 71, 60, 0.18);
-    }
-    .btn.primary:hover {
-      filter: brightness(1.03);
-    }
-    .btn.primary:active {
-      transform: translateY(1px);
-      box-shadow:
-        inset 0 2px 6px rgba(0, 0, 0, 0.45),
-        0 3px 8px rgba(224, 71, 60, 0.14);
-    }
-    .hero {
-      position: relative;
-      padding: 56px 0 28px;
-      overflow: hidden;
-    }
-    /* The hero section contains an absolute-positioned background video (#brainPulse). */
-    .hero-inner {
-      position: relative;
-      z-index: 2;
-    }
-    .chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 18px;
-    }
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 14px;
-      border-radius: 999px;
-      font-size: 13px;
-      color: #f2d3ce;
-      background: var(--chip-bg);
-      border: 1px solid var(--chip-edge);
-      transition: all 0.18s ease;
-    }
-    .chip::before {
-      content: "";
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--accent);
-      box-shadow: 0 0 12px var(--accent);
-    }
-    .chip:hover {
-      border-color: var(--accent);
-      color: #fff0ee;
-      box-shadow: 0 0 12px rgba(224, 71, 60, 0.35);
-    }
-    h1 {
-      margin: 0 0 14px;
-      font-size: 48px;
-      line-height: 1.1;
-      font-weight: 800;
-      background: linear-gradient(
-        90deg,
-        #fff,
-        #ffc9c3 45%,
-        #ff7a66 70%,
-        #e0473c 100%
-      );
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .sub {
-      color: var(--muted);
-      margin: 0 0 26px;
-    }
-    .cta {
-      display: flex;
-      gap: 16px;
-    }
-    section {
-      position: relative;
-      z-index: 1;
-    }
-    .section-title {
-      font-size: 24px;
-      font-weight: 800;
-      margin: 56px 0 16px;
-    }
-    .rule {
-      height: 1px;
-      background: #1b1e22;
-      margin: 28px 0 32px;
-    }
-    .grid {
-      display: grid;
-      gap: 18px;
-      grid-template-columns: repeat(3, 1fr);
-    }
-    .card {
-      position: relative;
-      border-radius: 16px;
-      border: 1px solid #2a2f34;
-      overflow: hidden;
-      background: linear-gradient(
-        180deg,
-        rgba(15, 17, 19, 0.85),
-        rgba(10, 11, 13, 0.95)
-      );
-      box-shadow:
-        0 0 18px rgba(224, 71, 60, 0.06),
-        inset 0 0 8px rgba(224, 71, 60, 0.03);
-      transition: 0.25s ease;
-    }
-    .card:hover {
-      box-shadow:
-        0 0 24px rgba(224, 71, 60, 0.15),
-        inset 0 0 12px rgba(224, 71, 60, 0.06);
-      transform: translateY(-4px) scale(1.02);
-    }
-    .thumb {
-      display: block;
-      width: 100%;
-      aspect-ratio: 16/10;
-      object-fit: cover;
+      opacity: 1;
+      transition: opacity 0.6s ease;
     }
 
-    /* Generic styling for the reversible video when placed in the main body. */
-    .video-background {
-      display: block;
-      width: 100%;
-      /* Maintain a consistent aspect ratio similar to the grid thumbnails */
-      aspect-ratio: 16/10;
-      object-fit: cover;
-      border-radius: 16px;
-      /* Provide breathing room above and below the video */
-      margin: 32px 0;
-    }
-
-    /* Video used as a background in the work section. It is positioned absolutely so
-       that the showcase grid and heading appear above it. */
-    .work-video {
-      position: absolute;
-      /* Enlarge the video by increasing its width while keeping the full height visible.
-         The video is centered using translate transforms so the showcase content remains aligned.
-         This approach avoids clipping the top and bottom; the excess width spills horizontally. */
-      object-fit: contain;
-      object-position: center;
-      width: 175%;
-      height: auto;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      opacity: 0.06;
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    /* Lightning canvas overlay in the hero */
-    #lightningCanvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 1;
-    }
-    .card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: 16px;
-      pointer-events: none;
-      background: linear-gradient(
-        180deg,
-        rgba(255, 100, 88, 0.32),
-        rgba(180, 18, 12, 0.28)
-      );
-      mix-blend-mode: screen;
-    }
-    .card::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: 16px;
-      pointer-events: none;
-      box-shadow:
-        inset 0 0 0 1px rgba(0, 0, 0, 0.35),
-        inset 0 -10px 30px rgba(0, 0, 0, 0.35);
-    }
-    .card:hover::before {
-      background: linear-gradient(
-        180deg,
-        rgba(255, 110, 96, 0.42),
-        rgba(200, 22, 14, 0.36)
-      );
-    }
-    .contact-grid {
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 18px;
-      align-items: stretch;
-    }
-    .contact {
-      background: linear-gradient(
-        180deg,
-        rgba(15, 17, 19, 0.85),
-        rgba(10, 11, 13, 0.95)
-      );
-      border: 1px solid #2a2f34;
-      border-radius: 16px;
-      padding: 22px;
-      box-shadow:
-        0 0 18px rgba(224, 71, 60, 0.06),
-        inset 0 0 8px rgba(224, 71, 60, 0.03);
-    }
-    .row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-    .row .full {
-      grid-column: 1/-1;
-    }
-    label {
-      font-size: 13px;
-      color: #c9d0d8;
-      margin-bottom: 6px;
-      display: block;
-    }
-    input,
-    textarea {
-      width: 100%;
-      padding: 12px 14px;
-      border-radius: 10px;
-      border: 1px solid #2a2f34;
-      background: #121417;
-      color: var(--ink);
-      transition: border 0.2s ease, box-shadow 0.2s ease;
-    }
-    input:focus,
-    textarea:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 2px rgba(224, 71, 60, 0.4);
-    }
-    textarea {
-      min-height: 120px;
-      resize: vertical;
-    }
-    .submit {
-      margin-top: 10px;
-    }
-    .architect {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 8px;
-      border-radius: 16px;
-      overflow: hidden;
-      border: 1px solid #2a2f34;
-      background: radial-gradient(
-        ellipse at top left,
-        #161819 20%,
-        #0e0f10 100%
-      );
-      box-shadow:
-        0 0 18px rgba(224, 71, 60, 0.06),
-        inset 0 0 8px rgba(224, 71, 60, 0.03);
-    }
-    .architect img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-      filter: drop-shadow(0 10px 30px rgba(224, 71, 60, 0.25));
-    }
-    @media (max-width: 980px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-      .cta {
-        flex-wrap: wrap;
-      }
-      .row {
-        grid-template-columns: 1fr;
-      }
-      .contact-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-    .legal {
-      margin-top: 56px;
-      background: #0b0c0e;
-      border-top: 2px solid #15181b;
-      color: #c6ccd4;
-    }
-    .legal .wrap {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 14px 28px;
-    }
-    .legal small {
-      opacity: 0.75;
-    }
-    .status-message {
-      margin-top: 12px;
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--accent);
-      display: none;
-    }
-    /* Spark effect styles: individual sparks are positioned fixed and animated via JS */
-    .spark {
+    /* Skip button */
+    #skipBtn {
       position: fixed;
-      width: 4px;
-      height: 4px;
-      border-radius: 50%;
-      background: var(--accent);
+      bottom: 32px;
+      right: 32px;
+      padding: 12px 24px;
+      background: rgba(224, 71, 60, 0.2);
+      border: 1px solid rgba(224, 71, 60, 0.4);
+      border-radius: 8px;
+      color: #ff9b93;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      z-index: 10000;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(8px);
+    }
+
+    #skipBtn:hover {
+      background: rgba(224, 71, 60, 0.4);
+      border-color: #e0473c;
+      transform: translateY(-2px);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+       NEW ELEMENTS - Tech Showcase Panels
+    ═══════════════════════════════════════════════════════════════════════════ */
+    
+    /* Hex Grid Background */
+    #hexGrid {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      opacity: 0.08;
       pointer-events: none;
+    }
+
+    /* Scanline Effect */
+    #scanlines {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9998;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.05) 0px,
+        rgba(0, 0, 0, 0.05) 1px,
+        transparent 1px,
+        transparent 2px
+      );
+      opacity: 0.4;
+    }
+
+    /* Version Badge */
+    #versionBadge {
+      position: fixed;
+      top: 32px;
+      left: 32px;
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      color: #444;
+      letter-spacing: 1px;
+      z-index: 10001;
+      opacity: 0;
+      animation: fadeInBadge 0.5s ease 1s forwards;
+    }
+    #versionBadge span { color: #e0473c; font-weight: 600; }
+    @keyframes fadeInBadge { from { opacity: 0; } to { opacity: 1; } }
+
+    /* Build Number */
+    #buildNumber {
+      position: fixed;
+      top: 32px;
+      right: 140px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: #333;
+      z-index: 10001;
+      opacity: 0;
+      animation: fadeInBadge 0.5s ease 1s forwards;
+    }
+
+    /* Terminal Log - Bottom Left */
+
+    /* Terminal Log */
+    #terminalLog {
+      position: fixed;
+      bottom: 80px;
+      left: 32px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      color: #444;
+      z-index: 10001;
+      opacity: 0;
+      animation: fadeInBadge 0.5s ease 2s forwards;
+      max-width: 260px;
+    }
+    .log-line { opacity: 0; margin-bottom: 3px; transition: opacity 0.3s ease; }
+    .log-line.visible { opacity: 1; }
+    .log-line .timestamp { color: #333; }
+    .log-line .message { color: #555; }
+    .log-line.success .message { color: #39FF14; }
+
+    /* Progress bar enhancement */
+    #progressBar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #e0473c, #ff7b6e, #e0473c);
+      background-size: 200% 100%;
+      animation: gradientMove 2s linear infinite;
+      width: 0%;
+      z-index: 10002;
+      box-shadow: 0 0 15px rgba(224, 71, 60, 0.6);
+      transition: width 0.1s linear;
+    }
+    @keyframes gradientMove { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
+
+    /* ═══════════════════════════════════════════════════════════════════════════ */
+
+    /* Particle field */
+    #particleCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      opacity: 0.6;
+    }
+
+    #introOverlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(ellipse at center, #1a0f0d 0%, #0a0a0a 70%);
+      transition: opacity 1s ease;
+    }
+
+    #brainWrapper {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      transform-origin: center center;
+    }
+
+    @media (max-width: 500px) {
+      #brainWrapper { width: 220px; height: 220px; }
+    }
+
+    #brainImg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 0 40px rgba(224, 71, 60, 0.8)) drop-shadow(0 0 80px rgba(224, 71, 60, 0.4));
+      position: absolute;
+      top: 0;
+      left: 0;
+      animation: breathe 4s ease-in-out infinite;
+    }
+
+    @keyframes breathe {
+      0%, 100% { filter: drop-shadow(0 0 40px rgba(224, 71, 60, 0.8)) drop-shadow(0 0 80px rgba(224, 71, 60, 0.4)); }
+      50% { filter: drop-shadow(0 0 60px rgba(224, 71, 60, 1)) drop-shadow(0 0 100px rgba(224, 71, 60, 0.6)); }
+    }
+
+    #brainNodesSVG {
+      position: absolute;
+      top: -2px;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    #introTextContainer {
+      margin-top: 48px;
+      text-align: center;
+      z-index: 10005;
+      position: relative;
+    }
+
+    #introText {
+      font-size: 32px;
+      color: #ff6b57;
+      letter-spacing: 6px;
+      text-align: center;
+      white-space: nowrap;
+      transition: opacity 0.3s ease;
+      text-shadow: 
+        0 0 10px rgba(224, 71, 60, 0.8),
+        0 0 20px rgba(224, 71, 60, 0.6),
+        0 0 30px rgba(224, 71, 60, 0.4),
+        0 0 40px rgba(224, 71, 60, 0.2);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    #tagline {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: #9aa3ad;
+      letter-spacing: 2px;
+      margin-top: 12px;
+      opacity: 0;
+      animation: fadeIn 1s ease 2s forwards;
+    }
+
+    #dots {
+      display: inline-block;
+      width: 30px;
+      text-align: left;
+    }
+
+    /* Progress bar */
+    #progressBar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #e0473c, #ff7b6e);
+      width: 0%;
+      z-index: 10001;
+      box-shadow: 0 0 20px rgba(224, 71, 60, 0.6);
+      transition: width 0.1s linear;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes zoomOut {
+      from { transform: scale(1); }
+      to   { transform: scale(0.9); }
+    }
+
+    @keyframes zoomIn {
+      from { transform: scale(0.9); }
+      to   { transform: scale(2.25); } /* Extended zoom */
+    }
+
+    .zoom-out {
+      animation: zoomOut 0.5s ease forwards;
+    }
+
+    .zoom-in {
+      animation: zoomIn 1.8s ease forwards;
+    }
+
+    .fade-out {
+      animation: fadeOut 1.8s ease forwards;
+    }
+
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to   { opacity: 0; }
+    }
+
+    /* Glitch effect on text */
+    @keyframes glitch {
+      0% { transform: translate(0); }
+      20% { transform: translate(-2px, 2px); }
+      40% { transform: translate(-2px, -2px); }
+      60% { transform: translate(2px, 2px); }
+      80% { transform: translate(2px, -2px); }
+      100% { transform: translate(0); }
+    }
+
+    .glitch {
+      animation: glitch 0.3s ease;
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="wrap nav">
-      <div class="brand">
-        <img src="1.png" alt="anvil" />
-        <span>theneurofoundry.com</span>
-      </div>
-      <nav class="links">
-        <a class="navlink active" href="#">Home</a>
-        <a class="navlink" href="#research">Research</a>
-        <a class="navlink" href="#products">Products</a>
-        <a class="navlink" href="#team">Team</a>
-        <a class="navlink" href="#contact">Contact</a>
-        <a class="btn primary" href="#signup">Sign Up</a>
-        <a class="btn primary" href="#login">Login</a>
-      </nav>
+  <canvas id="particleCanvas"></canvas>
+  <canvas id="hexGrid"></canvas>
+  <div id="scanlines"></div>
+  <div id="progressBar"></div>
+  <style>
+    /* Intro tweaks */
+    /* Make ACCESS GRANTED clearly green, override ID styles */
+    #introText.access-granted { color: #39FF14 !important; font-weight: 900; letter-spacing: 1px; text-shadow: 0 0 12px rgba(57,255,20,0.5), 0 0 24px rgba(57,255,20,0.25); }
+    /* Lower opacity for skip button */
+    #skipBtn { opacity: 0.4; transition: opacity 0.15s ease; }
+    #skipBtn:hover { opacity: 0.9; }
+  </style>
+  
+  <div id="versionBadge">NEUROFOUNDRY <span>v2.0</span></div>
+  <div id="buildNumber">BUILD 2025.01</div>
+  
+  <button id="skipBtn">Skip Intro →</button>
+
+  <!-- Terminal Log -->
+  <div id="terminalLog">
+    <div class="log-line" data-delay="1500"><span class="timestamp">[00:01]</span> <span class="message">Initializing neural core...</span></div>
+    <div class="log-line" data-delay="3000"><span class="timestamp">[00:02]</span> <span class="message">Loading design systems...</span></div>
+    <div class="log-line" data-delay="4500"><span class="timestamp">[00:03]</span> <span class="message">Connecting to Forge...</span></div>
+    <div class="log-line" data-delay="6000"><span class="timestamp">[00:04]</span> <span class="message">Calibrating render pipeline...</span></div>
+    <div class="log-line" data-delay="7500"><span class="timestamp">[00:05]</span> <span class="message">Syncing asset library...</span></div>
+    <div class="log-line" data-delay="9000"><span class="timestamp">[00:06]</span> <span class="message">Runtime established...</span></div>
+    <div class="log-line success" data-delay="10500"><span class="timestamp">[00:07]</span> <span class="message">Access granted ✓</span></div>
+  </div>
+
+  <div id="introOverlay">
+    <div id="brainWrapper">
+      <img src="brain.png" id="brainImg" alt="Neurofoundry Brain" />
+      <svg id="brainNodesSVG" width="300" height="300"></svg>
     </div>
-  </header>
-  <main class="wrap">
-    <section class="hero">
-      <div class="hero-inner">
-        <div class="chips">
-          <span class="chip">Python &amp; PowerShell</span>
-          <span class="chip">FastAPI &amp; Integrations</span>
-          <span class="chip">Brand Systems</span>
-          <span class="chip">Automation Pipelines</span>
-          <span class="chip">Custom User Interface</span>
-          <span class="chip">AI Systems</span>
-        </div>
-        <h1>Source your Own Systems. The Engine is the Mind— Forge your Future Today.</h1>
-        <p class="sub">
-          Code that clarifies, systems that ensure, connections that convert.
-        </p>
-        <div class="cta">
-          <a class="btn primary" href="#projects">Projects</a>
-          <a class="btn primary" href="#work">See my work</a>
-        </div>
-      </div>
-    </section>
-    <section id="work" style="position: relative;">
-      <!-- Background video positioned absolutely so the showcase sits on top -->
-      <video id="brainPulse" class="work-video" autoplay muted playsinline>
-        <source src="video555.mp4" type="video/mp4" />
-      </video>
-      <h2 class="section-title">Showcase</h2>
-      <div class="grid">
-        <figure class="card">
-          <img class="thumb" src="gif2.gif" alt="Autonomous drone schematic" />
-        </figure>
-        <figure class="card">
-          <img class="thumb" src="gif1.gif" alt="Neural network point cloud" />
-        </figure>
-        <figure class="card">
-          <img class="thumb" src="gif3.gif" alt="Robotic automation line" />
-        </figure>
-      </div>
-    </section>
-    <section id="contact">
-      <h2 class="section-title">Contact</h2>
-      <div class="rule"></div>
-      <div class="contact-grid">
-        <form
-          class="contact"
-          action="https://formsubmit.co/contact@theneurofoundry.com"
-          method="POST"
-        >
-          <input type="hidden" name="_captcha" value="false" />
-          <input type="hidden" name="_subject" value="Neurofoundry site contact" />
-          <input type="hidden" name="_template" value="table" />
-          <input type="hidden" name="_next" value="https://theneurofoundry.com/thanks.html" />
-          <input type="text" name="_honey" style="display: none" />
-          <div class="row">
-            <div>
-              <label for="name">Name</label>
-              <input id="name" name="name" placeholder="Your name" required />
-            </div>
-            <div>
-              <label for="email">Email</label>
-              <input id="email" name="email" type="email" placeholder="you@example.com" required />
-            </div>
-            <div class="full">
-              <label for="message">Message</label>
-              <textarea id="message" name="message" placeholder="Let us know how we can help you..." required></textarea>
-            </div>
-          </div>
-          <div class="submit">
-            <button class="btn primary" type="submit">Send</button>
-          </div>
-          <div id="statusMessage" class="status-message">
-            Thank you for getting in touch! We'll respond as soon as possible.
-          </div>
-        </form>
-        <figure class="architect">
-          <img src="1.png" alt="Architect" />
-        </figure>
-      </div>
-    </section>
-  </main>
-  <footer class="legal">
-    <div class="wrap">
-      <small
-        >© 2025 Neurofoundry. All rights reserved. “Neurofoundry,” Warpath/Aegis lore, visual style, and likeness are copyrighted &amp; protected trademarks. Unauthorized use prohibited.</small
-      >
+    <div id="introTextContainer">
+      <div id="introText">5</div>
     </div>
-  </footer>
-  <!-- Scripts for reversible video and particle effect -->
+  </div>
+
   <script>
-    // Smooth reversible video loop using requestAnimationFrame for backward playback.
-    const video = document.getElementById("brainPulse");
-    let reversing = false;
-    let reverseRafId = null;
+    // ═══════════════════════════════════════════════════════════════════════════
+    // PARTICLE BACKGROUND
+    // ═══════════════════════════════════════════════════════════════════════════
+    const canvas = document.getElementById('particleCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
 
-    function playForward() {
-      reversing = false;
-      if (reverseRafId !== null) {
-        cancelAnimationFrame(reverseRafId);
-        reverseRafId = null;
+    const particles = [];
+    const particleCount = 80;
+
+    class Particle {
+      constructor() {
+        this.reset();
       }
-      // Reset and play from the beginning
-      video.pause();
-      video.playbackRate = 1;
-      video.currentTime = 0;
-      video.play();
+      
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.vx = (Math.random() - 0.5) * 0.5;
+        this.vy = (Math.random() - 0.5) * 0.5;
+        this.size = Math.random() * 2 + 0.5;
+        this.opacity = Math.random() * 0.5 + 0.2;
+      }
+      
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        
+        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+      }
+      
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(224, 71, 60, ${this.opacity})`;
+        ctx.fill();
+      }
     }
 
-    function playBackward() {
-      reversing = true;
-      video.pause();
-      if (reverseRafId !== null) {
-        cancelAnimationFrame(reverseRafId);
-      }
-      // Step backwards smoothly using requestAnimationFrame
-      function step() {
-        // Adjust currentTime by a small amount per frame
-        video.currentTime = Math.max(0, video.currentTime - 0.033);
-        if (video.currentTime <= 0.033) {
-          playForward();
-        } else {
-          reverseRafId = requestAnimationFrame(step);
+    for (let i = 0; i < particleCount; i++) {
+      particles.push(new Particle());
+    }
+
+    function drawConnections() {
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          
+          if (distance < 150) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(224, 71, 60, ${0.1 * (1 - distance / 150)})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
         }
       }
-      step();
     }
 
-    // When approaching the end, trigger backward playback
-    video.addEventListener("timeupdate", () => {
-      if (!reversing) {
-        const remaining = video.duration - video.currentTime;
-        if (remaining <= 0.05) {
-          playBackward();
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      
+      drawConnections();
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // HEX GRID BACKGROUND
+    // ═══════════════════════════════════════════════════════════════════════════
+    const hexCanvas = document.getElementById('hexGrid');
+    const hexCtx = hexCanvas.getContext('2d');
+    
+    function resizeHexCanvas() {
+      hexCanvas.width = window.innerWidth;
+      hexCanvas.height = window.innerHeight;
+      drawHexGrid();
+    }
+    
+    function drawHexGrid() {
+      const size = 30;
+      const h = size * Math.sqrt(3);
+      hexCtx.strokeStyle = 'rgba(224, 71, 60, 0.15)';
+      hexCtx.lineWidth = 0.5;
+      
+      for (let y = -h; y < hexCanvas.height + h; y += h) {
+        for (let x = -size; x < hexCanvas.width + size * 2; x += size * 3) {
+          const offsetY = (Math.floor(x / (size * 3)) % 2) * (h / 2);
+          drawHexagon(x, y + offsetY, size);
         }
       }
-    });
-
-    // Start forward playback once metadata is loaded
-    video.addEventListener("loadedmetadata", () => {
-      playForward();
-    });
-    // Spark effect
-    function createSparkBurst() {
-      // Choose an origin at the absolute right edge, mid‑height of the viewport
-      const originX = window.innerWidth - 1;
-      const originY = window.innerHeight * 0.5;
-      const count = 8 + Math.floor(Math.random() * 8);
-      for (let i = 0; i < count; i++) {
-        const spark = document.createElement("span");
-        spark.className = "spark";
-        // Position at origin
-        spark.style.left = originX + "px";
-        spark.style.top = originY + "px";
-        // Randomize trajectory: primarily left/upwards but with spread
-        const angleBase = Math.PI; // leftwards direction
-        const spread = Math.PI / 4; // 45° spread
-        const randomAngle = angleBase + (Math.random() - 0.5) * spread;
-        const distance = 300 + Math.random() * 200;
-        const dx = Math.cos(randomAngle) * distance;
-        const dy = Math.sin(randomAngle) * distance;
-        const duration = 600 + Math.random() * 400; // duration in ms
-        spark.style.transition = `transform ${duration}ms linear, opacity ${duration}ms ease-out`;
-        document.body.appendChild(spark);
-        // Trigger layout and then animate
-        requestAnimationFrame(() => {
-          spark.style.transform = `translate(${dx}px, ${dy}px)`;
-          spark.style.opacity = 0;
-        });
-        // Remove spark after it finishes
-        setTimeout(() => {
-          spark.remove();
-        }, duration + 50);
+    }
+    
+    function drawHexagon(cx, cy, size) {
+      hexCtx.beginPath();
+      for (let i = 0; i < 6; i++) {
+        const angle = (Math.PI / 3) * i - Math.PI / 6;
+        const x = cx + size * Math.cos(angle);
+        const y = cy + size * Math.sin(angle);
+        if (i === 0) hexCtx.moveTo(x, y);
+        else hexCtx.lineTo(x, y);
       }
+      hexCtx.closePath();
+      hexCtx.stroke();
     }
-    // Schedule bursts: trigger on load and then at random intervals between 15–30 seconds
-    function scheduleBurst() {
-      createSparkBurst();
-      const nextDelay = (15 + Math.random() * 15) * 1000;
-      setTimeout(scheduleBurst, nextDelay);
-    }
-    window.addEventListener("load", scheduleBurst);
+    
+    resizeHexCanvas();
+    window.addEventListener('resize', resizeHexCanvas);
 
-    // Lightning effect: draw bolts emanating from the hero centre on a canvas.
-    // Grab the lightning canvas if it exists. When the video is moved outside the hero, this canvas may not be present.
-    const lightningCanvas = document.getElementById("lightningCanvas");
-    const lightningCtx = lightningCanvas ? lightningCanvas.getContext("2d") : null;
-
-    function resizeLightningCanvas() {
-      if (!lightningCanvas || !lightningCtx) return;
-      // Synchronize the canvas dimensions with its displayed size
-      lightningCanvas.width = lightningCanvas.clientWidth;
-      lightningCanvas.height = lightningCanvas.clientHeight;
-    }
-    // Resize on load and when the window is resized
-    window.addEventListener("load", () => {
-      if (lightningCanvas) resizeLightningCanvas();
-    });
-    window.addEventListener("resize", () => {
-      if (lightningCanvas) resizeLightningCanvas();
-    });
-
-    // Draw a single lightning burst only if the canvas exists
-    function drawLightning() {
-      if (!lightningCanvas || !lightningCtx) return;
-      lightningCtx.clearRect(0, 0, lightningCanvas.width, lightningCanvas.height);
-      const centerX = lightningCanvas.width / 2;
-      const centerY = lightningCanvas.height / 2;
-      // Choose between 4 and 6 primary branches for a more complex bolt
-      const branches = 4 + Math.floor(Math.random() * 3);
-      // Lightning parameters
-      const baseStep = lightningCanvas.height * 0.04;
-      const angleVariance = Math.PI / 3; // wider variance for crackle
-      for (let b = 0; b < branches; b++) {
-        let x = centerX;
-        let y = centerY;
-        lightningCtx.beginPath();
-        lightningCtx.moveTo(x, y);
-        // Vary the number of segments for each branch (16–22)
-        const segments = 16 + Math.floor(Math.random() * 7);
-        // Center directions spread evenly around the upper half of the circle
-        const angleBase = (-Math.PI / 2) + (b - (branches - 1) / 2) * (Math.PI / 10);
-        for (let i = 0; i < segments; i++) {
-          // Randomize direction heavily to create jagged edges
-          const randAngle = angleBase + (Math.random() - 0.5) * angleVariance;
-          const stepLength = baseStep * (0.8 + Math.random() * 0.4);
-          x += Math.cos(randAngle) * stepLength;
-          y += Math.sin(randAngle) * stepLength;
-          lightningCtx.lineTo(x, y);
-        }
-        lightningCtx.strokeStyle = "rgba(255, 255, 255, 0.85)";
-        lightningCtx.lineWidth = 1.8;
-        lightningCtx.shadowBlur = 10;
-        lightningCtx.shadowColor = "rgba(255, 255, 255, 0.8)";
-        lightningCtx.stroke();
-      }
-      // Fade out after a brief moment
+    // ═══════════════════════════════════════════════════════════════════════════
+    // TERMINAL LOG ANIMATION
+    // ═══════════════════════════════════════════════════════════════════════════
+    document.querySelectorAll('.log-line').forEach(line => {
+      const delay = parseInt(line.dataset.delay);
       setTimeout(() => {
-        if (lightningCtx) lightningCtx.clearRect(0, 0, lightningCanvas.width, lightningCanvas.height);
-      }, 600);
-    }
-    // Schedule lightning bursts at random intervals between 15 and 30 seconds
-    function scheduleLightning() {
-      if (!lightningCanvas) return;
-      drawLightning();
-      const delay = (15 + Math.random() * 15) * 1000;
-      setTimeout(scheduleLightning, delay);
-    }
-    window.addEventListener("load", () => {
-      if (lightningCanvas) {
-        resizeLightningCanvas();
-        scheduleLightning();
-      }
+        line.classList.add('visible');
+      }, delay);
     });
 
+    // ═══════════════════════════════════════════════════════════════════════════
+    // STATUS TEXT SEQUENCE
+    // ═══════════════════════════════════════════════════════════════════════════
+    const introText = document.getElementById('introText');
+    const dots = document.getElementById('dots');
+    const progressBar = document.getElementById('progressBar');
+    
+    // Countdown sequence (5 → 0) at x0.65 speed
+    let countdown = 5;
+    introText.textContent = countdown;
+    const countdownInterval = setInterval(() => {
+      countdown--;
+      if (countdown > 0) {
+        // Normal numbers
+        introText.textContent = countdown;
+      } else if (countdown === 0) {
+        // When 1 hits 0, turn the 0 into ACCESS GRANTED immediately
+        clearInterval(countdownInterval);
+        introText.textContent = 'ACCESS GRANTED';
+        introText.classList.add('access-granted');
+        // Bring intro text to front
+        introText.style.zIndex = 10005;
+        introText.style.position = 'relative';
+        // Fill progress bar fully
+        progressBar.style.width = '100%';
+        // Transition to home shortly after access granted (allow user to see)
+        setTimeout(() => initiateTransition(), 1800);
+      } else {
+        // safety
+      }
+    }, 1538);
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // BRAIN NODE TRAILS
+    // ═══════════════════════════════════════════════════════════════════════════
+    const svg = document.getElementById('brainNodesSVG');
+    const nodeCount = 16;
+    const trails = Array.from({ length: nodeCount }, () => []);
+    const trailLength = 10;
+
+    function animateNodes(t) {
+      svg.innerHTML = '';
+
+      for (let i = 0; i < nodeCount; ++i) {
+        let theta = (i / nodeCount) * 2 * Math.PI + Math.sin(t * 1.2 + i) * 0.5;
+        let rad = 130 + Math.sin(t * 1.8 + i * 1.7) * 35;
+        let x = 190 + Math.cos(theta) * rad * 0.7 + Math.sin(t * 2.4 + i) * 18;
+        let y = 190 + Math.sin(theta) * rad * 0.9 + Math.cos(t * 1.6 + i * 1.3) * 14;
+
+        const trail = trails[i];
+        trail.push({ x, y });
+        if (trail.length > trailLength) trail.shift();
+
+        // Draw trail
+        for (let j = 0; j < trail.length - 1; ++j) {
+          const a = trail[j];
+          const b = trail[j + 1];
+          const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+          line.setAttribute("x1", a.x);
+          line.setAttribute("y1", a.y);
+          line.setAttribute("x2", b.x);
+          line.setAttribute("y2", b.y);
+          line.setAttribute("stroke", "#ffdab9");
+          line.setAttribute("stroke-width", 1.5);
+          line.setAttribute("opacity", (j + 1) / trail.length * 0.8);
+          line.setAttribute("stroke-linecap", "round");
+          svg.appendChild(line);
+        }
+
+        // Draw node
+        const node = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        node.setAttribute("cx", x);
+        node.setAttribute("cy", y);
+        node.setAttribute("r", 5);
+        node.setAttribute("fill", "#ff7d5a");
+        node.setAttribute("opacity", "0.95");
+        node.setAttribute("filter", "url(#glow)");
+        svg.appendChild(node);
+      }
+
+      svg.innerHTML += `
+        <defs>
+          <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="4" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>`;
+    }
+
+    function loop() {
+      const t = performance.now() / 1000;
+      animateNodes(t);
+      requestAnimationFrame(loop);
+    }
+    loop();
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // TRANSITION TO HOME
+    // ═══════════════════════════════════════════════════════════════════════════
+    const overlay = document.getElementById("introOverlay");
+    const brainWrapper = document.getElementById("brainWrapper");
+    const introTextContainer = document.getElementById("introTextContainer");
+    const skipBtn = document.getElementById("skipBtn");
+    const terminalLog = document.getElementById("terminalLog");
+
+    function initiateTransition() {
+      skipBtn.style.display = 'none';
+      brainWrapper.classList.add("zoom-out");
+      introTextContainer.style.opacity = 0;
+      if (terminalLog) terminalLog.style.opacity = 0;
+
+      setTimeout(() => {
+        brainWrapper.classList.remove("zoom-out");
+        brainWrapper.classList.add("zoom-in");
+        overlay.classList.add("fade-out");
+
+        setTimeout(() => {
+          window.location.href = "home.html";
+        }, 1800);
+      }, 500);
+    }
+
+    // Skip button
+    skipBtn.addEventListener('click', () => {
+      window.location.href = "home.html";
+    });
+
+    // Auto-transition fallback (in case countdown code is modified)
+    setTimeout(() => initiateTransition(), 9000);
   </script>
 </body>
 </html>
