@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Interactive Node Workflow - Vortex Overlay</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: #0f1113;
+      color: #e6e9ee;
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+    }
+    .stage {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+    }
+    .canvas {
+      position: relative;
+      width: 900px;
+      height: 700px;
+      margin: 0 auto;
+      background: url('brain.png') center center/contain no-repeat, linear-gradient(135deg, #181a1d 0%, #0f1113 100%);
+      border-radius: 32px;
+      box-shadow: 0 8px 32px rgba(224,71,60,0.12);
+      overflow: hidden;
+      border: none;
+    }
+    .cluster {
+      position: absolute;
+      inset: 0;
+      transform-origin: 50% 55%;
+    }
+    .cluster-main {
+      z-index: 3;
+    }
+    .cluster-secondary {
+      z-index: 2;
+      opacity: 0.8;
+      transform: translate(70px, 40px) scale(0.65);
+    }
+    .node {
+      position: absolute;
+      border-radius: 46% 54% 48% 52%;
+      background: radial-gradient(circle at 35% 35%, #ffe0db 0%, #ff9b93 35%, #e0473c 70%, rgba(224,71,60,0.15) 100%);
+      color: #fff;
+      text-align: center;
+      font-weight: 700;
+      font-size: 1.1em;
+      cursor: grab;
+      box-shadow:
+        0 0 12px rgba(224,71,60,0.5),
+        0 0 28px rgba(224,71,60,0.35),
+        0 0 60px rgba(224,71,60,0.2);
+      user-select: none;
+      transition: box-shadow 0.2s, transform 0.2s, background 0.3s;
+      border: none;
+      outline: none;
+      z-index: 2;
+      letter-spacing: 0.5px;
+      opacity: 0.9;
+      filter: blur(0.4px);
+      mix-blend-mode: screen;
+      transform: scaleY(0.9);
+    }
+    .node.dragging {
+      opacity: 0.7;
+      z-index: 10;
+      cursor: grabbing;
+    }
+    .node:hover {
+      box-shadow:
+        0 0 18px rgba(255,122,24,0.6),
+        0 0 40px rgba(224,71,60,0.35),
+        0 0 80px rgba(224,71,60,0.25);
+      transform: scaleY(0.9) scale(1.06);
+      background: radial-gradient(circle at 30% 30%, #fff1ee 0%, #ffb5ab 35%, #ff7a18 70%, rgba(224,71,60,0.2) 100%);
+      z-index: 3;
+    }
+    .node:active {
+      box-shadow: 0 0 0 12px rgba(255,122,24,0.22), 0 8px 32px rgba(224,71,60,0.24);
+      transform: scaleY(0.9) scale(0.97);
+    }
+    .node.me {
+      width: 90px; height: 90px;
+      font-size: 1.1em; line-height: 90px;
+      background: radial-gradient(circle at 35% 35%, #ffe7e1 0%, #ffb2a7 35%, #e0473c 75%, rgba(224,71,60,0.2) 100%);
+      color: #fff;
+      box-shadow:
+        0 0 16px rgba(255,122,24,0.55),
+        0 0 36px rgba(224,71,60,0.4),
+        0 0 80px rgba(224,71,60,0.25);
+    }
+    .node.lead {
+      width: 70px; height: 70px; font-size: 1em; line-height: 70px;
+      background: radial-gradient(circle at 35% 35%, #ffe0db 0%, #ff9b93 40%, #e0473c 80%, rgba(224,71,60,0.15) 100%);
+      color: #fff;
+      box-shadow:
+        0 0 10px rgba(224,71,60,0.45),
+        0 0 24px rgba(224,71,60,0.3);
+    }
+    .node.lead1 { }
+    .node.lead2 { }
+    .node.worker {
+      width: 50px; height: 50px; font-size: 0.9em; line-height: 50px;
+      background: radial-gradient(circle at 35% 35%, #ffd8d2 0%, #ff8c80 45%, #c9382f 80%, rgba(224,71,60,0.12) 100%);
+      color: #fff;
+      box-shadow:
+        0 0 8px rgba(224,71,60,0.4),
+        0 0 18px rgba(224,71,60,0.22);
+    }
+    @keyframes impulse {
+      0%, 100% {
+        box-shadow:
+          0 0 10px rgba(224,71,60,0.35),
+          0 0 22px rgba(224,71,60,0.2);
+      }
+      50% {
+        box-shadow:
+          0 0 14px rgba(255,122,24,0.6),
+          0 0 34px rgba(224,71,60,0.35);
+      }
+    }
+    .node.lead { animation: impulse 4.5s ease-in-out infinite; }
+    .node.worker { animation: impulse 6s ease-in-out infinite; }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 #ff7a18; }
+      70% { box-shadow: 0 0 0 16px #ff7a1822; }
+      100% { box-shadow: 0 0 0 0 #ff7a18; }
+    }
+    .node.me {
+      animation: pulse 2s infinite;
+    }
+    #lines {
+      position: absolute;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .lines {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .vortex-particles {
+      position: absolute;
+      inset: 0;
+      z-index: 6;
+      pointer-events: none;
+      mix-blend-mode: screen;
+      filter: blur(0.2px);
+      animation: vortex-orbit 18s linear infinite;
+    }
+    @keyframes vortex-orbit {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <div class="canvas" id="canvas">
+      <div class="cluster cluster-main" data-cluster="c1">
+        <div class="node me" id="c1-me"></div>
+        <div class="node lead lead1" id="c1-lead1"></div>
+        <div class="node lead lead2" id="c1-lead2"></div>
+        <div class="node worker" id="c1-worker-0"></div>
+        <div class="node worker" id="c1-worker-1"></div>
+        <div class="node worker" id="c1-worker-2"></div>
+        <div class="node worker" id="c1-worker-3"></div>
+        <div class="node worker" id="c1-worker-4"></div>
+        <div class="node worker" id="c1-worker-5"></div>
+      </div>
+      <div class="cluster cluster-secondary" data-cluster="c2">
+        <div class="node me" id="c2-me"></div>
+        <div class="node lead lead1" id="c2-lead1"></div>
+        <div class="node lead lead2" id="c2-lead2"></div>
+        <div class="node worker" id="c2-worker-0"></div>
+        <div class="node worker" id="c2-worker-1"></div>
+        <div class="node worker" id="c2-worker-2"></div>
+        <div class="node worker" id="c2-worker-3"></div>
+        <div class="node worker" id="c2-worker-4"></div>
+        <div class="node worker" id="c2-worker-5"></div>
+      </div>
+      <canvas id="lines-main" class="lines" width="900" height="700"></canvas>
+      <canvas id="lines-secondary" class="lines" width="900" height="700"></canvas>
+      <canvas id="vortex-particles" class="vortex-particles" width="900" height="700"></canvas>
+    </div>
+  </div>
+  <script>
+    // dynamic center based on the canvas element so the brain and topical fields stay centered
+    const radius = 180;
+    const clusterConfigs = [
+      { prefix: 'c1-', linesId: 'lines-main', dash: 'rgba(80, 40, 24, 0.7)', shadow: 'rgba(80, 40, 24, 0.45)' },
+      { prefix: 'c2-', linesId: 'lines-secondary', dash: 'rgba(60, 32, 20, 0.55)', shadow: 'rgba(60, 32, 20, 0.35)' }
+    ];
+
+    function getCanvasCenter() {
+      const canvasEl = document.getElementById('canvas');
+      const rect = canvasEl.getBoundingClientRect();
+      // use coordinates relative to the canvas for positioning
+      const cx = rect.width / 2;
+      const cy = rect.height / 2;
+      return { cx, cy, rect };
+    }
+
+    function positionWorkers(prefix, cx, cy) {
+      for (let i = 0; i < 6; i++) {
+        const angle = (i / 6) * 2 * Math.PI - Math.PI / 2;
+        const el = document.getElementById(prefix + 'worker-' + i);
+        if (!el) continue;
+        const w = el.offsetWidth || 50;
+        const h = el.offsetHeight || 50;
+        const x = cx + radius * Math.cos(angle) - w / 2;
+        const y = cy + radius * Math.sin(angle) - h / 2;
+        el.style.left = x + 'px';
+        el.style.top = y + 'px';
+      }
+    }
+
+    function positionCoreNodes(prefix, cx, cy) {
+      // central 'me' node
+      const me = document.getElementById(prefix + 'me');
+      if (me) {
+        const w = me.offsetWidth || 90;
+        const h = me.offsetHeight || 90;
+        me.style.left = (cx - w / 2) + 'px';
+        me.style.top = (cy - h / 2) + 'px';
+      }
+      // lead nodes slightly left/right above center
+      const lead1 = document.getElementById(prefix + 'lead1');
+      const lead2 = document.getElementById(prefix + 'lead2');
+      if (lead1) {
+        const lw = lead1.offsetWidth || 70;
+        const lh = lead1.offsetHeight || 70;
+        lead1.style.left = (cx - 140 - lw / 2) + 'px';
+        lead1.style.top = (cy - 30 - lh / 2) + 'px';
+      }
+      if (lead2) {
+        const lw = lead2.offsetWidth || 70;
+        const lh = lead2.offsetHeight || 70;
+        lead2.style.left = (cx + 140 - lw / 2) + 'px';
+        lead2.style.top = (cy - 30 - lh / 2) + 'px';
+      }
+    }
+
+    function layoutAll() {
+      const { cx, cy } = getCanvasCenter();
+      clusterConfigs.forEach(cfg => {
+        positionWorkers(cfg.prefix, cx, cy);
+        positionCoreNodes(cfg.prefix, cx, cy);
+      });
+      // update particle canvas center sizing if needed
+      particleCanvas.width = document.getElementById('canvas').clientWidth;
+      particleCanvas.height = document.getElementById('canvas').clientHeight;
+      // also resize lines canvases
+      clusterConfigs.forEach(cfg => {
+        const c = document.getElementById(cfg.linesId);
+        c.width = document.getElementById('canvas').clientWidth;
+        c.height = document.getElementById('canvas').clientHeight;
+        cfg.ctx = c.getContext('2d');
+      });
+    }
+
+    // initial layout
+    window.addEventListener('load', () => {
+      layoutAll();
+    });
+    window.addEventListener('resize', () => {
+      layoutAll();
+    });
+    let dragNode = null, offsetX = 0, offsetY = 0;
+    document.querySelectorAll('.node').forEach(node => {
+      node.addEventListener('mousedown', function(e) {
+        dragNode = this;
+        dragNode.classList.add('dragging');
+        const rect = dragNode.getBoundingClientRect();
+        offsetX = e.clientX - rect.left;
+        offsetY = e.clientY - rect.top;
+        document.body.style.userSelect = 'none';
+      });
+    });
+    document.addEventListener('mousemove', function(e) {
+      if (!dragNode) return;
+      const canvasRect = document.getElementById('canvas').getBoundingClientRect();
+      const x = e.clientX - canvasRect.left - offsetX;
+      const y = e.clientY - canvasRect.top - offsetY;
+      dragNode.style.left = x + 'px';
+      dragNode.style.top = y + 'px';
+    });
+    document.addEventListener('mouseup', function() {
+      if (dragNode) {
+        dragNode.classList.remove('dragging');
+      }
+      dragNode = null;
+      document.body.style.userSelect = '';
+    });
+    function getCenter(id) {
+      const el = document.getElementById(id);
+      const rect = el.getBoundingClientRect();
+      const parentRect = document.getElementById('canvas').getBoundingClientRect();
+      return [rect.left - parentRect.left + rect.width / 2, rect.top - parentRect.top + rect.height / 2];
+    }
+    const connectionsBase = [
+      ['me', 'lead1'],
+      ['me', 'lead2'],
+      ['lead1', 'worker-0'],
+      ['worker-0', 'lead2'],
+      ['worker-0', 'worker-1'],
+      ['worker-1', 'worker-2'],
+      ['worker-2', 'worker-3'],
+      ['worker-3', 'worker-4'],
+      ['worker-4', 'worker-5'],
+      ['worker-5', 'worker-0']
+    ];
+    function buildConnections(prefix) {
+      return connectionsBase.map(([from, to]) => [prefix + from, prefix + to]);
+    }
+    clusterConfigs.forEach(cfg => {
+      const canvas = document.getElementById(cfg.linesId);
+      cfg.ctx = canvas.getContext('2d');
+      cfg.connections = buildConnections(cfg.prefix);
+    });
+    function drawLines(cfg, anim = 0) {
+      const ctx = cfg.ctx;
+      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      cfg.connections.forEach(([from, to], i) => {
+        const [x1, y1] = getCenter(from);
+        const [x2, y2] = getCenter(to);
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        const mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
+        ctx.quadraticCurveTo(mx, my - 40, x2, y2);
+        ctx.strokeStyle = cfg.dash;
+        ctx.lineWidth = 3 + Math.sin(anim / 12 + i) * 1.4;
+        ctx.setLineDash([10, 9]);
+        ctx.lineDashOffset = -anim * 6;
+        ctx.shadowColor = cfg.shadow;
+        ctx.shadowBlur = 8;
+        ctx.globalAlpha = 0.75 + 0.15 * Math.sin(anim / 18 + i);
+        ctx.stroke();
+        ctx.restore();
+      });
+    }
+    const particleCanvas = document.getElementById('vortex-particles');
+    const pCtx = particleCanvas.getContext('2d');
+    const particleCount = 140;
+    const palette = [
+      [88, 188, 255],
+      [140, 96, 255],
+      [255, 92, 240],
+      [110, 210, 255]
+    ];
+    const particles = Array.from({ length: particleCount }, (_, i) => {
+      const radius = 90 + Math.random() * 230;
+      const angle = Math.random() * Math.PI * 2;
+      const size = 0.6 + Math.random() * 2.4;
+      const speed = (Math.random() * 0.6 + 0.2) * 0.0012;
+      const color = palette[i % palette.length];
+      return {
+        radius,
+        angle,
+        size,
+        speed,
+        color,
+        seed: Math.random() * Math.PI * 2
+      };
+    });
+    function drawParticles(time) {
+      pCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+      pCtx.globalCompositeOperation = 'lighter';
+      const cx = particleCanvas.width / 2;
+      const cy = particleCanvas.height / 2;
+      particles.forEach((p) => {
+        p.angle += p.speed;
+        const wobble = Math.sin(time * 0.001 + p.seed) * 6;
+        const x = cx + Math.cos(p.angle) * p.radius + wobble;
+        const y = cy + Math.sin(p.angle) * p.radius * 0.7;
+        const pulse = 0.35 + 0.65 * Math.sin(time * 0.002 + p.seed);
+        const alpha = 0.25 + 0.55 * pulse;
+        const glow = p.size * (4 + pulse * 5);
+        const [r, g, b] = p.color;
+        const grad = pCtx.createRadialGradient(x, y, 0, x, y, glow);
+        grad.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${alpha})`);
+        grad.addColorStop(0.6, `rgba(${r}, ${g}, ${b}, ${alpha * 0.35})`);
+        grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        pCtx.fillStyle = grad;
+        pCtx.beginPath();
+        pCtx.arc(x, y, glow, 0, Math.PI * 2);
+        pCtx.fill();
+        pCtx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        pCtx.beginPath();
+        pCtx.arc(x, y, p.size, 0, Math.PI * 2);
+        pCtx.fill();
+      });
+    }
+    let animFrame = 0;
+    function animateLines() {
+      clusterConfigs.forEach(cfg => drawLines(cfg, animFrame));
+      drawParticles(performance.now());
+      animFrame++;
+      requestAnimationFrame(animateLines);
+    }
+    window.addEventListener('resize', () => { layoutAll(); });
+    setTimeout(animateLines, 100);
+    // connections are defined per-cluster
+  </script>
+</body>
+</html>

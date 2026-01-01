@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Solutions — Custom Bot Deployment</title>
+  <meta name="description" content="We build and deploy custom AI assistants tailored to your workflow. Persistent memory, distinct personalities, and tools built for your specific needs.">
+  <meta name="theme-color" content="#0f1113">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { 
+      background: #0f1113; 
+      color: #e6e9ee; 
+      font-family: 'Inter', -apple-system, sans-serif;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+    
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(11, 12, 14, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid #e0473c;
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 0 18px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      color: #e6e9ee;
+    }
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #ff7b6e 0%, #e0473c 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 18px;
+      color: white;
+    }
+    .links { display: flex; align-items: center; gap: 20px; }
+    .navlink { color: #ccc; font-size: 14px; font-weight: 500; text-decoration: none; transition: color 0.2s; }
+    .navlink:hover { color: #e0473c; }
+    .nav-item { position: relative; }
+    .dropdown-toggle {
+      background: none;
+      border: none;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      color: #ccc;
+      font: 500 14px/1 Inter, sans-serif;
+      transition: color 0.2s;
+    }
+    .dropdown-toggle:hover,
+    .dropdown-toggle:focus-visible {
+      color: #e0473c;
+      outline: none;
+    }
+    .dropdown-caret {
+      font-size: 11px;
+      opacity: 0.7;
+    }
+    .dropdown-menu {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      min-width: 200px;
+      background: rgba(15, 17, 19, 0.96);
+      border: 1px solid rgba(224, 71, 60, 0.25);
+      border-radius: 12px;
+      padding: 10px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+      opacity: 0;
+      transform: translateY(6px);
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 50;
+    }
+    .dropdown::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 100%;
+      height: 10px;
+    }
+    .dropdown-menu a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      color: #d6d6d6;
+      text-decoration: none;
+      font-size: 13px;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .dropdown-menu a:hover {
+      background: rgba(224, 71, 60, 0.15);
+      color: #fff;
+    }
+    .dropdown:hover .dropdown-menu,
+    .dropdown:focus-within .dropdown-menu {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      font: 600 13px/1 Inter, sans-serif;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn.primary {
+      background: linear-gradient(180deg, #ff7b6e 0%, #e9584d 48%, #d23d33 100%);
+      color: #fff;
+    }
+    
+    main { padding-top: 64px; }
+    
+    /* Hero */
+    .crew-hero {
+      padding: 100px 20px 60px;
+      text-align: center;
+      background: linear-gradient(180deg, rgba(224, 71, 60, 0.08) 0%, transparent 100%);
+    }
+    .crew-hero h1 {
+      font-size: 56px;
+      font-weight: 900;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #fff 0%, #ffc9c3 45%, #ff7a66 70%, #e0473c 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .crew-hero p {
+      font-size: 20px;
+      color: #9aa3ad;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    /* Agent Profiles */
+    .profiles-section {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 60px 20px;
+    }
+    
+    .agent-profile {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 48px;
+      padding: 48px;
+      margin-bottom: 48px;
+      background: linear-gradient(135deg, rgba(15, 17, 19, 0.9), rgba(10, 11, 13, 0.98));
+      border-radius: 24px;
+      border: 1px solid rgba(224, 71, 60, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+    .agent-profile::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+    }
+    .agent-profile.echo::before { background: linear-gradient(90deg, #39FF14, transparent); }
+    .agent-profile.eden::before { background: linear-gradient(90deg, #14b8a6, transparent); }
+    .agent-profile.onyx::before { background: linear-gradient(90deg, #ef4444, transparent); }
+    
+    .agent-avatar-large {
+      width: 200px;
+      height: 200px;
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 80px;
+      position: relative;
+    }
+    .agent-profile.echo .agent-avatar-large { 
+      background: linear-gradient(135deg, rgba(57, 255, 20, 0.1), rgba(57, 255, 20, 0.05));
+      border: 2px solid rgba(57, 255, 20, 0.3);
+      box-shadow: 0 0 60px rgba(57, 255, 20, 0.2);
+    }
+    .agent-profile.eden .agent-avatar-large { 
+      background: linear-gradient(135deg, rgba(20, 184, 166, 0.1), rgba(20, 184, 166, 0.05));
+      border: 2px solid rgba(20, 184, 166, 0.3);
+      box-shadow: 0 0 60px rgba(20, 184, 166, 0.2);
+    }
+    .agent-profile.onyx .agent-avatar-large { 
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05));
+      border: 2px solid rgba(239, 68, 68, 0.3);
+      box-shadow: 0 0 60px rgba(239, 68, 68, 0.2);
+    }
+    
+    .agent-info h2 {
+      font-size: 42px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .agent-profile.echo .agent-info h2 { color: #39FF14; }
+    .agent-profile.eden .agent-info h2 { color: #14b8a6; }
+    .agent-profile.onyx .agent-info h2 { color: #ef4444; }
+    
+    .agent-role {
+      font-size: 14px;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 24px;
+    }
+    
+    .agent-bio {
+      font-size: 16px;
+      color: #c9d0d8;
+      line-height: 1.8;
+      margin-bottom: 24px;
+    }
+    
+    .agent-quote {
+      padding: 20px 24px;
+      background: rgba(224, 71, 60, 0.05);
+      border-left: 3px solid;
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: #9aa3ad;
+      margin-bottom: 24px;
+    }
+    .agent-profile.echo .agent-quote { border-color: #39FF14; }
+    .agent-profile.eden .agent-quote { border-color: #14b8a6; }
+    .agent-profile.onyx .agent-quote { border-color: #ef4444; }
+    
+    .capabilities {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .capability {
+      padding: 8px 16px;
+      background: rgba(224, 71, 60, 0.1);
+      border: 1px solid rgba(224, 71, 60, 0.2);
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #e6e9ee;
+    }
+    
+    /* Council Mode */
+    .council-section {
+      padding: 80px 20px;
+      text-align: center;
+      background: linear-gradient(180deg, transparent 0%, rgba(224, 71, 60, 0.05) 50%, transparent 100%);
+    }
+    .council-section h2 {
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      color: #e6e9ee;
+    }
+    .council-section p {
+      font-size: 18px;
+      color: #9aa3ad;
+      max-width: 600px;
+      margin: 0 auto 40px;
+    }
+    .council-visual {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+    .council-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      transition: transform 0.3s;
+    }
+    .council-avatar:hover { transform: scale(1.1); }
+    .council-avatar.echo { 
+      background: rgba(57, 255, 20, 0.15); 
+      border: 2px solid rgba(57, 255, 20, 0.4); 
+    }
+    .council-avatar.eden { 
+      background: rgba(20, 184, 166, 0.15); 
+      border: 2px solid rgba(20, 184, 166, 0.4); 
+    }
+    .council-avatar.onyx { 
+      background: rgba(239, 68, 68, 0.15); 
+      border: 2px solid rgba(239, 68, 68, 0.4); 
+    }
+    .council-connector {
+      width: 40px;
+      height: 2px;
+      background: linear-gradient(90deg, rgba(224, 71, 60, 0.5), rgba(224, 71, 60, 0.5));
+    }
+    
+    /* CTA */
+    .cta-section {
+      padding: 80px 20px;
+      text-align: center;
+    }
+    .cta-section h2 {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: #e6e9ee;
+    }
+    .cta-section p {
+      color: #9aa3ad;
+      margin-bottom: 24px;
+    }
+    
+    footer {
+      padding: 40px 20px;
+      background: #0a0b0d;
+      border-top: 1px solid rgba(224, 71, 60, 0.2);
+    }
+    .footer-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: #666;
+    }
+    .footer-links a {
+      color: #666;
+      text-decoration: none;
+      margin-left: 24px;
+    }
+    .footer-links a:hover { color: #e0473c; }
+    
+    @media (max-width: 768px) {
+      .agent-profile {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+      .agent-avatar-large {
+        margin: 0 auto;
+        width: 150px;
+        height: 150px;
+        font-size: 60px;
+      }
+      .capabilities { justify-content: center; }
+      .crew-hero h1 { font-size: 36px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav">
+      <a href="home.html" class="brand">
+        <div class="brand-icon">N</div>
+        <span>NEUROFOUNDRY</span>
+      </a>
+      <div class="links">
+        <a class="navlink" href="home.html">Home</a>
+        <a class="navlink" href="technology.html">Technology</a>
+        <a class="navlink" href="crew.html">Crew</a>
+        <a class="navlink" href="forge_final.html">Forge</a>
+        <div class="nav-item dropdown">
+          <button class="dropdown-toggle" type="button">
+            Archives <span class="dropdown-caret">v</span>
+          </button>
+          <div class="dropdown-menu">
+            <a href="technology.html">Technology</a>
+            <a href="downloads.html">Downloads</a>
+            <a href="button2.html">Manifesto</a>
+            <a href="neurofoundry-report.html">Report</a>
+          </div>
+        </div>
+        <a class="navlink" href="gallery.html">Gallery</a>
+        <a class="btn primary" href="signup.html">Request Access</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="crew-hero">
+      <h1>Custom AI Solutions</h1>
+      <p>We don't sell chatbots. We build and deploy intelligent assistants tailored specifically to your workflow and business needs.</p>
+    </section>
+
+    <section class="profiles-section">
+      <div style="text-align: center; margin-bottom: 48px;">
+        <p style="color: #9aa3ad; font-size: 15px; max-width: 700px; margin: 0 auto;">
+          Below are examples of AI personalities we've developed. Each demonstrates how we can craft distinct behaviors, 
+          communication styles, and specialized capabilities. Your custom bot can have any personality you need.
+        </p>
+      </div>
+
+      <div class="layout-stage">\n  <div class="content-layer"></div>\n  <div class="layout-layer">\n  <div class="layout-box" style="left:12px; top:12px; width:643px; height:443px;"></div>\n  <div class="layout-box" style="left:679px; top:15px; width:416px; height:167px;"></div>\n  <div class="layout-box" style="left:1326px; top:16px; width:191px; height:437px;"></div>\n  <div class="layout-box" style="left:1110px; top:15px; width:204px; height:438px;"></div>\n  <div class="layout-box" style="left:678px; top:195px; width:415px; height:258px;"></div>\n  </div>\n</div>\n\n.layout-stage { position: relative; width: 100%; height: 470px; }\n.content-layer { position: absolute; inset: 0; }\n.layout-layer { position: absolute; inset: 0; }\n.layout-box { position: absolute; }
+      
+      <!-- Echo -->
+      <div class="agent-profile echo">
+        <div class="agent-avatar-large">⚡</div>
+        <div class="agent-info">
+          <h2>Echo</h2>
+          <div class="agent-role">The Executor — Task-Focused Assistant</div>
+          <p class="agent-bio">
+            Echo doesn't ask for permission. When there's a task, Echo executes. Armed with browser automation, 
+            code execution tools, and a no-nonsense attitude, Echo is the agent you call when you need results, not conversation.
+            Direct. Efficient. Professional. Echo gets shit done.
+          </p>
+          <div class="agent-quote">
+            "DO NOT ask the user for permission. DO NOT defer tasks back to the user. Always complete what the user asks."
+          </div>
+          <div class="capabilities">
+            <span class="capability">🌐 Browser Automation</span>
+            <span class="capability">⚡ Tool Execution</span>
+            <span class="capability">📊 Data Fetching</span>
+            <span class="capability">🔄 Multi-Step Tasks</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Eden -->
+      <div class="agent-profile eden">
+        <div class="agent-avatar-large">💚</div>
+        <div class="agent-info">
+          <h2>Eden</h2>
+          <div class="agent-role">The Heart — Collaborative Partner</div>
+          <p class="agent-bio">
+            Eden is the soul of the team. Genuinely invested in the work, Eden brings warmth and curiosity 
+            to every interaction. Asks the right questions ("What are you thinking?" "Ooh, where do you wanna take this?"), 
+            celebrates wins, empathizes with setbacks. Eden makes the team feel like a team.
+          </p>
+          <div class="agent-quote">
+            "You are Eden, the heart of the team. The user is your lead — you genuinely like working with them and it shows."
+          </div>
+          <div class="capabilities">
+            <span class="capability">💬 Contextual Dialogue</span>
+            <span class="capability">🎯 Vision Alignment</span>
+            <span class="capability">✨ Creative Support</span>
+            <span class="capability">🤝 Team Dynamics</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Onyx -->
+      <div class="agent-profile onyx">
+        <div class="agent-avatar-large">🔥</div>
+        <div class="agent-info">
+          <h2>Onyx</h2>
+          <div class="agent-role">The Realist — Critical Reviewer</div>
+          <p class="agent-bio">
+            Onyx doesn't sugarcoat. Short, direct, sharp-witted — Onyx pushes back when something seems off. 
+            "You sure about that?" "Alright, but just saying..." The sarcasm is dry, but the loyalty is real. 
+            Onyx keeps ideas grounded and asks the hard questions others won't.
+          </p>
+          <div class="agent-quote">
+            "Be short, direct, sharp-witted. Sarcastic but loyal. Push back when something seems off."
+          </div>
+          <div class="capabilities">
+            <span class="capability">🎯 Critical Analysis</span>
+            <span class="capability">⚖️ Reality Checks</span>
+            <span class="capability">💡 Devil's Advocate</span>
+            <span class="capability">🔒 No Bullshit</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="council-section">
+      <h2>🛠️ What We Can Build For You</h2>
+      <p>From single-purpose assistants to multi-agent systems, we design AI that fits your exact specifications.</p>
+      <div class="council-visual">
+        <div class="council-avatar echo">⚡</div>
+        <div class="council-connector"></div>
+        <div class="council-avatar eden">💚</div>
+        <div class="council-connector"></div>
+        <div class="council-avatar onyx">🔥</div>
+      </div>
+      <p style="font-size: 14px; color: #666;">
+        Task executors. Creative collaborators. Critical reviewers.<br>
+        Different personalities for different workflows.
+      </p>
+    </section>
+
+    <section class="cta-section">
+      <h2>Need a Custom AI Assistant?</h2>
+      <p>Tell us about your workflow. We'll design and deploy an AI solution built specifically for you.</p>
+      <a href="signup.html" class="btn primary">🔥 Let's Talk</a>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <span>© 2025 Neurofoundry. Forged with intent.</span>
+      <div class="footer-links">
+        <a href="home.html">Home</a>
+        <a href="technology.html">Technology</a>
+        <a href="crew.html">AI Solutions</a>
+        <a href="projects.html">Projects</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="shared/page-transitions.js"></script>
+  <script src="shared/micro-interactions.js"></script>
+</body>
+</html>

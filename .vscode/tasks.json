@@ -1,0 +1,50 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Start Implementation",
+			"type": "shell",
+			"command": "echo Starting implementation steps...",
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Auto: Define Features and Timeline",
+			"type": "shell",
+			"command": "echo Defining MVP, features, and timeline...",
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Auto: Assign Roles and Setup Comms",
+			"type": "shell",
+			"command": "echo Assigning team roles and setting up communication channels...",
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Auto: Design Architecture",
+			"type": "shell",
+			"command": "echo Designing system architecture and selecting tech stack...",
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Auto: Setup Dev Environment",
+			"type": "shell",
+			"command": "echo Initializing git repo, configuring issue tracking, and CI/CD pipeline...",
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		}
+	]
+}

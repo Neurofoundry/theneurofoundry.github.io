@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Downloads — Neurofoundry</title>
+  <meta name="description" content="Free tools and utilities from the Neurofoundry lab. Lightweight, useful, no BS.">
+  <meta name="theme-color" content="#0f1113">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body { 
+      background: #0f1113; 
+      color: #e6e9ee; 
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.7;
+    }
+    
+    /* Header */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(11, 12, 14, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid #e0473c;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 0 18px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: 0.5px;
+      text-decoration: none;
+      color: #e6e9ee;
+    }
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #ff7b6e 0%, #e0473c 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 18px;
+      color: white;
+      box-shadow: 0 4px 12px rgba(224, 71, 60, 0.3);
+    }
+    .links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .navlink {
+      color: #ccc;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .navlink:hover { color: #e0473c; }
+    .nav-item { position: relative; }
+    .dropdown-toggle {
+      background: none;
+      border: none;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      color: #ccc;
+      font: 500 14px/1 Inter, sans-serif;
+      transition: color 0.2s;
+    }
+    .dropdown-toggle:hover,
+    .dropdown-toggle:focus-visible {
+      color: #e0473c;
+      outline: none;
+    }
+    .dropdown-caret {
+      font-size: 11px;
+      opacity: 0.7;
+    }
+    .dropdown-menu {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      min-width: 200px;
+      background: rgba(15, 17, 19, 0.96);
+      border: 1px solid rgba(224, 71, 60, 0.25);
+      border-radius: 12px;
+      padding: 10px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+      opacity: 0;
+      transform: translateY(6px);
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 50;
+    }
+    .dropdown::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 100%;
+      height: 10px;
+    }
+    .dropdown-menu a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      color: #d6d6d6;
+      text-decoration: none;
+      font-size: 13px;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .dropdown-menu a:hover {
+      background: rgba(224, 71, 60, 0.15);
+      color: #fff;
+    }
+    .dropdown:hover .dropdown-menu,
+    .dropdown:focus-within .dropdown-menu {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font: 600 13px/1 Inter, sans-serif;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: 2px solid transparent;
+    }
+    .btn.primary {
+      background: linear-gradient(180deg, #ff7b6e 0%, #e9584d 48%, #d23d33 100%);
+      border-color: #a2362f;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(224, 71, 60, 0.3);
+    }
+    .btn.primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(224, 71, 60, 0.4);
+    }
+    
+    /* Main Content */
+    main {
+      padding-top: 64px;
+      min-height: 100vh;
+    }
+    
+    /* Hero */
+    .downloads-hero {
+      padding: 80px 20px 60px;
+      text-align: center;
+      background: linear-gradient(180deg, rgba(224, 71, 60, 0.08) 0%, transparent 100%);
+      position: relative;
+    }
+    .downloads-hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(224, 71, 60, 0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-label {
+      display: inline-block;
+      padding: 8px 20px;
+      background: rgba(224, 71, 60, 0.15);
+      border: 1px solid rgba(224, 71, 60, 0.3);
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #ff9b93;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 24px;
+    }
+    .downloads-hero h1 {
+      font-size: 48px;
+      font-weight: 900;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #fff 0%, #ffc9c3 50%, #e0473c 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .downloads-hero p {
+      font-size: 18px;
+      color: #9aa3ad;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    /* Downloads Grid */
+    .downloads-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 20px 100px;
+    }
+    
+    .downloads-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 32px;
+    }
+    
+    .download-card {
+      background: linear-gradient(135deg, rgba(15, 17, 19, 0.95), rgba(10, 11, 13, 0.98));
+      border: 1px solid rgba(224, 71, 60, 0.2);
+      border-radius: 20px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .download-card:hover {
+      border-color: #e0473c;
+      transform: translateY(-6px);
+      box-shadow: 0 20px 50px rgba(224, 71, 60, 0.2);
+    }
+    
+    .card-image {
+      height: 180px;
+      background: linear-gradient(135deg, rgba(224, 71, 60, 0.1), rgba(224, 71, 60, 0.05));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid rgba(224, 71, 60, 0.15);
+      position: relative;
+      overflow: hidden;
+    }
+    .card-image img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+    .card-image .placeholder-icon {
+      font-size: 64px;
+      opacity: 0.8;
+    }
+    
+    .card-content {
+      padding: 28px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .card-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      background: rgba(57, 255, 20, 0.1);
+      border: 1px solid rgba(57, 255, 20, 0.3);
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 700;
+      color: #39FF14;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+      width: fit-content;
+    }
+    .card-badge.windows {
+      background: rgba(0, 120, 212, 0.1);
+      border-color: rgba(0, 120, 212, 0.3);
+      color: #60b4ff;
+    }
+    .card-badge.utility {
+      background: rgba(168, 85, 247, 0.1);
+      border-color: rgba(168, 85, 247, 0.3);
+      color: #c4a5ff;
+    }
+    
+    .card-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: #e6e9ee;
+      margin-bottom: 8px;
+    }
+    
+    .card-version {
+      font-size: 12px;
+      color: #666;
+      font-family: 'JetBrains Mono', monospace;
+      margin-bottom: 12px;
+    }
+    
+    .card-desc {
+      font-size: 14px;
+      color: #9aa3ad;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      flex: 1;
+    }
+    
+    .card-meta {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(224, 71, 60, 0.1);
+    }
+    .meta-item {
+      font-size: 12px;
+      color: #666;
+    }
+    .meta-item span {
+      color: #9aa3ad;
+      font-weight: 600;
+    }
+    
+    .download-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 24px;
+      background: linear-gradient(180deg, #ff7b6e 0%, #e9584d 48%, #d23d33 100%);
+      border: 2px solid #a2362f;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(224, 71, 60, 0.3);
+    }
+    .download-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(224, 71, 60, 0.4);
+    }
+    
+    /* Empty State / Coming Soon */
+    .coming-soon-card {
+      background: linear-gradient(135deg, rgba(15, 17, 19, 0.6), rgba(10, 11, 13, 0.7));
+      border: 2px dashed rgba(224, 71, 60, 0.2);
+      border-radius: 20px;
+      padding: 60px 40px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 300px;
+    }
+    .coming-soon-card .icon {
+      font-size: 48px;
+      margin-bottom: 20px;
+      opacity: 0.6;
+    }
+    .coming-soon-card h3 {
+      font-size: 18px;
+      color: #666;
+      margin-bottom: 8px;
+    }
+    .coming-soon-card p {
+      font-size: 14px;
+      color: #555;
+    }
+    
+    /* Footer */
+    footer {
+      padding: 40px 20px;
+      background: #0a0b0d;
+      border-top: 1px solid rgba(224, 71, 60, 0.1);
+      text-align: center;
+    }
+    footer p {
+      font-size: 13px;
+      color: #666;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .downloads-hero h1 { font-size: 32px; }
+      .downloads-grid { grid-template-columns: 1fr; }
+      .card-content { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav">
+      <a href="home.html" class="brand">
+        <div class="brand-icon">N</div>
+        <span>NEUROFOUNDRY</span>
+      </a>
+      <div class="links">
+        <a class="navlink" href="home.html">Home</a>
+        <a class="navlink" href="forge_final.html">Forge</a>
+        <div class="nav-item dropdown">
+          <button class="dropdown-toggle" type="button">
+            Archives <span class="dropdown-caret">v</span>
+          </button>
+          <div class="dropdown-menu">
+            <a href="technology.html">Technology</a>
+            <a href="downloads.html">Downloads</a>
+            <a href="button2.html">Manifesto</a>
+            <a href="neurofoundry-report.html">Report</a>
+          </div>
+        </div>
+        <a class="navlink" href="technology.html">Technology</a>
+        <a class="btn primary" href="signup.html">Request Access</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="downloads-hero">
+      <div class="hero-label">⬇️ Free Tools</div>
+      <h1>Downloads</h1>
+      <p>Lightweight utilities we built for ourselves. Simple, useful, no BS. Grab what you need.</p>
+    </section>
+
+    <div class="downloads-container">
+      <div class="downloads-grid">
+        
+        <!-- AEGIS: Skeleton Key -->
+        <div class="download-card">
+          <div class="card-image">
+            <span class="placeholder-icon">🔐</span>
+          </div>
+          <div class="card-content">
+            <div class="card-badge windows">Windows</div>
+            <h3 class="card-title">AEGIS: Skeleton Key</h3>
+            <div class="card-version">v1.0.0</div>
+            <p class="card-desc">
+              Encrypted local key storage. AES-256 encryption, auto-lock, clean UI. 
+              Never lose your API keys again. No cloud, no accounts—just your secrets, locked tight.
+            </p>
+            <div class="card-meta">
+              <div class="meta-item">Size: <span>~32 MB</span></div>
+              <div class="meta-item">Platform: <span>Windows 10/11</span></div>
+            </div>
+            <a href="downloads/SkeletonKey.exe" class="download-btn">
+              ⬇️ Download .exe
+            </a>
+          </div>
+        </div>
+
+        <!-- Coming Soon Placeholder -->
+        <div class="coming-soon-card">
+          <div class="icon">🔧</div>
+          <h3>More Tools Coming</h3>
+          <p>We're always building. Check back soon.</p>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 The Neurofoundry. Tools forged with intent.</p>
+  </footer>
+
+  <script src="shared/page-transitions.js"></script>
+</body>
+</html>

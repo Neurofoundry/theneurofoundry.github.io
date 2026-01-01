@@ -1,0 +1,13 @@
+{
+	"servers": {
+		"cloudmcp-manager": {
+			"command": "npx",
+			"args": [
+				"mcp-remote",
+				"https://107684641433408589115.router.cloudmcp.run/mcp"
+			],
+			"type": "stdio"
+		}
+	},
+	"inputs": []
+}

@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Neurofoundry Report – Engineering Your Own Development</title>
+  <meta name="description" content="A scientific exploration of human neural plasticity, cognitive architecture, and the deliberate engineering of your own mind.">
+  <meta name="theme-color" content="#0f1113">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { 
+      background: #0f1113; 
+      color: #e6e9ee; 
+      font-family: Inter, sans-serif;
+      line-height: 1.8;
+    }
+    
+    header {
+      position: relative;
+      z-index: 20;
+      background: rgba(11, 12, 14, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid #e0473c;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      flex-shrink: 0;
+    }
+    
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 0 18px;
+      width: 100%;
+    }
+    
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: 0.5px;
+      text-decoration: none;
+      color: #e6e9ee;
+    }
+    
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #ff7b6e 0%, #e0473c 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 18px;
+      color: white;
+      box-shadow: 0 4px 12px rgba(224, 71, 60, 0.3);
+    }
+    
+    .links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    
+    .navlink {
+      color: #ccc;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    
+    .navlink:hover { 
+      color: #e0473c; 
+    }
+    .nav-item { position: relative; }
+    .dropdown-toggle {
+      background: none;
+      border: none;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      color: #ccc;
+      font: 500 14px/1 Inter, sans-serif;
+      transition: color 0.2s;
+    }
+    .dropdown-toggle:hover,
+    .dropdown-toggle:focus-visible {
+      color: #e0473c;
+      outline: none;
+    }
+    .dropdown-caret {
+      font-size: 11px;
+      opacity: 0.7;
+    }
+    .dropdown-menu {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      min-width: 200px;
+      background: rgba(15, 17, 19, 0.96);
+      border: 1px solid rgba(224, 71, 60, 0.25);
+      border-radius: 12px;
+      padding: 10px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+      opacity: 0;
+      transform: translateY(6px);
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 50;
+    }
+    .dropdown::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 100%;
+      height: 10px;
+    }
+    .dropdown-menu a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      color: #d6d6d6;
+      text-decoration: none;
+      font-size: 13px;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .dropdown-menu a:hover {
+      background: rgba(224, 71, 60, 0.15);
+      color: #fff;
+    }
+    .dropdown:hover .dropdown-menu,
+    .dropdown:focus-within .dropdown-menu {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 18px;
+      border-radius: 8px;
+      font: 600 13px/1 Inter, sans-serif;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: 2px solid transparent;
+    }
+    
+    .btn.primary {
+      background: linear-gradient(180deg, #ff7b6e 0%, #e9584d 48%, #d23d33 100%);
+      border-color: #a2362f;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(224, 71, 60, 0.3);
+    }
+    
+    .btn.primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(224, 71, 60, 0.4);
+    }
+    .btn.secondary {
+      background: transparent;
+      border: 2px solid rgba(224, 71, 60, 0.5);
+      color: #ff9b93;
+    }
+    .btn.secondary:hover {
+      background: rgba(224, 71, 60, 0.12);
+      border-color: #e0473c;
+      transform: translateY(-1px);
+    }
+    
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      margin-top: 64px;
+    }
+    
+    article {
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 0 32px 60px;
+    }
+    
+    .article-header {
+      padding: 40px 0 24px;
+      text-align: center;
+      border-bottom: 1px solid rgba(224, 71, 60, 0.15);
+    }
+    
+    .article-meta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      font-size: 12px;
+      color: #9aa3ad;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 20px;
+    }
+    
+    .article-meta span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .article-title {
+      font-size: 38px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #fff 0%, #ffc9c3 45%, #ff7a66 70%, #e0473c 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.2;
+    }
+    
+    .article-subtitle {
+      color: #9aa3ad;
+      font-size: 16px;
+      margin: 0;
+      max-width: 760px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .report-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 24px 0 32px;
+      flex-wrap: wrap;
+    }
+    .report-intro {
+      color: #c9d0d8;
+      font-size: 15px;
+      max-width: 640px;
+    }
+    .report-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .report-section {
+      margin-bottom: 28px;
+    }
+    .report-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+    }
+    .report-card {
+      background: linear-gradient(135deg, rgba(15, 17, 19, 0.85), rgba(10, 11, 13, 0.98));
+      border: 1px solid rgba(224, 71, 60, 0.2);
+      border-radius: 14px;
+      padding: 18px;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 180px;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .report-card:hover {
+      border-color: rgba(224, 71, 60, 0.55);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(224, 71, 60, 0.12);
+    }
+    .report-meta {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #9aa3ad;
+    }
+    .report-card h3 {
+      font-size: 18px;
+      color: #e6e9ee;
+      margin: 0;
+    }
+    .report-card p {
+      font-size: 13px;
+      color: #9aa3ad;
+      margin: 0;
+      line-height: 1.6;
+    }
+    .report-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: auto;
+    }
+    .report-tag {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #ff9b93;
+      border: 1px solid rgba(224, 71, 60, 0.3);
+      padding: 4px 8px;
+      border-radius: 999px;
+    }
+    .report-list {
+      display: grid;
+      gap: 10px;
+      border: 1px solid rgba(224, 71, 60, 0.15);
+      border-radius: 12px;
+      padding: 16px;
+      background: rgba(15, 17, 19, 0.6);
+    }
+    .report-row {
+      display: grid;
+      grid-template-columns: 80px 1fr 80px;
+      gap: 12px;
+      font-size: 13px;
+      color: #c9d0d8;
+      align-items: center;
+    }
+    .report-status {
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 11px;
+      color: #9aa3ad;
+      text-align: right;
+    }
+    .report-note {
+      margin-top: 20px;
+      padding: 18px 20px;
+      border: 1px solid rgba(224, 71, 60, 0.2);
+      border-radius: 12px;
+      background: rgba(224, 71, 60, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .report-note h3 {
+      margin: 0 0 6px 0;
+      font-size: 18px;
+      color: #e6e9ee;
+    }
+    .report-note p {
+      margin: 0;
+      font-size: 13px;
+      color: #9aa3ad;
+    }
+    
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #e6e9ee;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid rgba(224, 71, 60, 0.3);
+    }
+    
+    @media (max-width: 1024px) {
+      .report-row {
+        grid-template-columns: 60px 1fr 60px;
+      }
+    }
+    
+    footer {
+      padding: 32px 18px;
+      background: #0a0b0d;
+      border-top: 1px solid #2a2f34;
+      margin-top: 60px;
+      text-align: center;
+    }
+    
+    .footer-content {
+      max-width: 1600px;
+      margin: 0 auto;
+      font-size: 13px;
+      color: #9aa3ad;
+    }
+    
+    .footer-links {
+      margin-top: 12px;
+    }
+    
+    .footer-links a {
+      color: #9aa3ad;
+      text-decoration: none;
+      margin: 0 16px;
+      transition: color 0.2s;
+    }
+    
+    .footer-links a:hover {
+      color: #e0473c;
+    }
+    
+    @media (max-width: 768px) {
+      .article-title {
+        font-size: 32px;
+      }
+      
+      .article-subtitle {
+        font-size: 16px;
+      }
+      
+      .section-title {
+        font-size: 22px;
+      }
+      
+      .nav {
+        padding: 0 12px;
+      }
+      
+      .brand {
+        font-size: 14px;
+      }
+      
+      .links {
+        gap: 12px;
+      }
+      
+      .navlink {
+        font-size: 12px;
+      }
+      
+      .btn {
+        padding: 6px 12px;
+        font-size: 11px;
+      }
+      
+      .article-meta {
+        flex-direction: column;
+        gap: 8px;
+      }
+      .report-toolbar {
+        align-items: flex-start;
+      }
+      .report-actions {
+        width: 100%;
+      }
+      .report-row {
+        grid-template-columns: 1fr;
+        gap: 6px;
+      }
+      .report-status {
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav">
+      <a href="home.html" class="brand">
+        <div class="brand-icon">N</div>
+        <span>theneurofoundry.com</span>
+      </a>
+      <div class="links">
+        <a class="navlink" href="home.html">Home</a>
+        <a class="navlink" href="forge_final.html">Forge</a>
+        <div class="nav-item dropdown">
+          <button class="dropdown-toggle" type="button">
+            Archives <span class="dropdown-caret">v</span>
+          </button>
+          <div class="dropdown-menu">
+            <a href="technology.html">Technology</a>
+            <a href="downloads.html">Downloads</a>
+            <a href="button2.html">Manifesto</a>
+            <a href="neurofoundry-report.html">Report</a>
+          </div>
+        </div>
+        <a class="navlink" href="technology.html">Technology</a>
+        <a class="btn primary" href="signup.html">Request Access</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <article class="report-hub">
+      <div class="article-header">
+        <div class="article-meta">
+          <span>Report</span>
+          <span>Updated 2025</span>
+          <span>Living Archive</span>
+        </div>
+        <h1 class="article-title">The Neurofoundry Report</h1>
+        <p class="article-subtitle">A compact archive for field notes, experiments, and system briefs.</p>
+      </div>
+
+      <div class="report-toolbar">
+        <p class="report-intro">This page is the home for short-form reports and future long reads. New entries will drop here as they ship.</p>
+        <div class="report-actions">
+          <a class="btn primary" href="signup.html">Request Access</a>
+          <a class="btn secondary" href="signup.html">Submit a Topic</a>
+        </div>
+      </div>
+
+      <section class="report-section">
+        <h2 class="section-title">Latest Reports</h2>
+        <div class="report-grid">
+          <a class="report-card" href="#">
+            <div class="report-meta">Draft - Coming soon</div>
+            <h3>Omnisynthesis Notes</h3>
+            <p>Progress snapshots, pipeline tuning, and the next release window.</p>
+            <div class="report-tags">
+              <span class="report-tag">Systems</span>
+              <span class="report-tag">R&amp;D</span>
+            </div>
+          </a>
+          <a class="report-card" href="#">
+            <div class="report-meta">Draft - Coming soon</div>
+            <h3>Thalamus Engine</h3>
+            <p>Runtime ledger updates, scene tooling, and stability benchmarks.</p>
+            <div class="report-tags">
+              <span class="report-tag">Engine</span>
+              <span class="report-tag">Pipeline</span>
+            </div>
+          </a>
+          <a class="report-card" href="#">
+            <div class="report-meta">Draft - Coming soon</div>
+            <h3>DevConsole Builds</h3>
+            <p>Deployment notes, new agent behaviors, and tooling upgrades.</p>
+            <div class="report-tags">
+              <span class="report-tag">Ops</span>
+              <span class="report-tag">Agents</span>
+            </div>
+          </a>
+        </div>
+      </section>
+
+      <section class="report-section">
+        <h2 class="section-title">Archive</h2>
+        <div class="report-list">
+          <div class="report-row">
+            <span class="report-date">2024</span>
+            <span class="report-name">Foundry Foundations</span>
+            <span class="report-status">Draft</span>
+          </div>
+          <div class="report-row">
+            <span class="report-date">2024</span>
+            <span class="report-name">Cognitive Systems Notes</span>
+            <span class="report-status">Draft</span>
+          </div>
+          <div class="report-row">
+            <span class="report-date">2023</span>
+            <span class="report-name">Early Research Threads</span>
+            <span class="report-status">Draft</span>
+          </div>
+        </div>
+      </section>
+
+      <div class="report-note">
+        <div>
+          <h3>Next drop</h3>
+          <p>When a report is ready, it replaces a draft card above.</p>
+        </div>
+        <a class="btn secondary" href="signup.html">Follow Updates</a>
+      </div>
+    </article>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <p>&copy; 2025 The Neurofoundry. Forged with intent.</p>
+      <div class="footer-links">
+        <a href="home.html">Home</a>
+        <a href="projects.html">Projects</a>
+        <a href="neurofoundry-report.html">Report</a>
+        <a href="button2.html">About</a>
+      </div>
+    </div>
+  </footer>
+  <script src="shared/page-transitions.js"></script>
+  <script src="shared/micro-interactions.js"></script>
+</body>
+</html>
