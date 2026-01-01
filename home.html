@@ -768,7 +768,7 @@
       background: linear-gradient(180deg, rgba(10, 11, 13, 0.95) 0%, rgba(15, 17, 19, 0.9) 100%);
       position: relative;
       overflow: hidden;
-      display: none;
+      display: block;
     }
     .video-showcase::before {
       content: '';
@@ -824,7 +824,8 @@
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(224, 71, 60, 0.1);
       background: #0a0b0d;
     }
-    .video-frame iframe {
+    .video-frame iframe,
+    .video-frame video {
       position: absolute;
       top: 0;
       left: 0;
@@ -1158,7 +1159,7 @@
       </div>
       <nav class="links">
         <a class="navlink" href="home.html">Home</a>
-        <a class="navlink" href="forge_final.html">Forge</a>
+        <a class="navlink" href="https://forge.theneurofoundry.com/">Forge</a>
         <div class="nav-item dropdown">
           <button class="dropdown-toggle" type="button">
             Archives <span class="dropdown-caret">v</span>
@@ -1173,24 +1174,6 @@
         <a class="navlink" href="about.html">About</a>
         <a class="btn primary" href="signup.html">Request Access</a>
       </nav>
-    </div>
-    <div id="launchBanner" style="
-      background: linear-gradient(90deg, #0f1113 60%, #23272e 100%);
-      border-bottom: 1.5px solid #e0473c;
-      color: #e6e9ee;
-      font-style: normal;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 18px;
-      box-shadow: 0 0 18px 0 #e0473c33;
-      font-family: 'Inter', sans-serif;
-      font-size: 1.05em;
-      padding: 10px 20px;
-      margin-top: 0;
-    ">
-      <span style="font-size:1.05em; letter-spacing:0.5px; color:#e6e9ee; font-weight:700;">Official Launch</span>
-      <span id="countdown" style="font-size:1.15em; color:#e0473c; font-family:'Inter',monospace; font-weight:800; letter-spacing:1.5px; text-shadow:0 0 8px #e0473c,0 0 2px #fff;">Loading...</span>
     </div>
   </header>
   <main>
@@ -1209,7 +1192,7 @@
           We build systems that think, adapt, and deliver. From neural architectures to production-ready AI solutions-transform your vision into intelligent reality.
         </p>
         <div class="hero-cta">
-          <a class="hero-cta-image" href="forge_final.html">
+          <a class="hero-cta-image" href="https://forge.theneurofoundry.com/">
             <img src="assets/forge_btn.png" alt="Launch the Forge">
           </a>
           <a class="hero-cta-image" href="projects.html">
@@ -1235,11 +1218,10 @@
           <p class="video-subtitle">Watch how ideas transform into intelligent systems-from concept to deployment, in real time.</p>
         </div>
         <div class="video-frame">
-          <!-- Replace YOUR_VIDEO_ID with your actual YouTube video ID -->
-          <iframe 
-            src="https://www.youtube.com/embed/YOUR_VIDEO_ID?rel=0&modestbranding=1&color=white" 
-            title="Neurofoundry Cinematic Intro"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+          <iframe
+            src="https://www.youtube.com/embed/SbL6dWf9k20?rel=0&modestbranding=1&color=white"
+            title="Neurofoundry Video"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen>
           </iframe>
         </div>
@@ -1548,7 +1530,7 @@
         <a href="home.html">Home</a>
         <a href="technology.html">Technology</a>
         <a href="projects.html">Projects</a>
-        <a href="forge_final.html">Forge</a>
+        <a href="https://forge.theneurofoundry.com/">Forge</a>
         <a href="gallery.html">Gallery</a>
       </div>
     </div>
@@ -1623,28 +1605,6 @@
   <script src="shared/micro-interactions.js"></script>
   <script src="shared/neural-particles.js"></script>
   <script src="chatbot-component.js"></script>
-  <script>
-  // Countdown to midnight tonight (local time)
-  function updateCountdown() {
-    const now = new Date();
-    let year = now.getFullYear();
-    let month = now.getMonth();
-    let day = now.getDate();
-    // If already past midnight, set to next day
-    let target = new Date(year, month, day + 1, 0, 0, 0, 0);
-    const diff = target - now;
-    if (diff <= 0) {
-      document.getElementById('countdown').textContent = '00:00:00';
-      return;
-    }
-    const hours = String(Math.floor(diff / 1000 / 60 / 60)).padStart(2, '0');
-    const minutes = String(Math.floor((diff / 1000 / 60) % 60)).padStart(2, '0');
-    const seconds = String(Math.floor((diff / 1000) % 60)).padStart(2, '0');
-    document.getElementById('countdown').textContent = `${hours}:${minutes}:${seconds}`;
-  }
-  setInterval(updateCountdown, 1000);
-  updateCountdown();
-  </script>
 </body>
 </html>
 
