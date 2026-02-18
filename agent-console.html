@@ -339,7 +339,7 @@
             addOutput('user', `[USER] ${input}`);
             
             // Show loading
-            addOutput('system', '[SYSTEM] Processing command... <span class="loading"></span>');
+            addOutput('system', '[SYSTEM] Processing command...', { loading: true });
             
             try {
                 // Call the agent engine
@@ -377,11 +377,24 @@
             document.getElementById('command-input').value = '';
         }
 
-        function addOutput(type, text) {
+        function addOutput(type, text, options = {}) {
             const outputArea = document.getElementById('output-area');
             const line = document.createElement('div');
             line.className = `output-line ${type}`;
-            line.innerHTML = text;
+
+            // Insert text safely
+            const textNode = document.createElement('span');
+            textNode.textContent = text;
+            line.appendChild(textNode);
+
+            // Optionally append loading indicator as a separate element
+            if (options.loading) {
+                const loadingSpan = document.createElement('span');
+                loadingSpan.className = 'loading';
+                line.appendChild(document.createTextNode(' '));
+                line.appendChild(loadingSpan);
+            }
+
             outputArea.appendChild(line);
             outputArea.scrollTop = outputArea.scrollHeight;
         }
