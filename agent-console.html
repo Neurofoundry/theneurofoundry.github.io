@@ -325,7 +325,13 @@
 
         function clearOutput() {
             const output = document.getElementById('output-area');
-            output.innerHTML = '<div class="output-line system">[SYSTEM] Output cleared. Ready for new commands.</div>';
+            // Clear output safely without innerHTML
+            output.textContent = '';
+            // Add cleared message using safe DOM manipulation
+            const line = document.createElement('div');
+            line.className = 'output-line system';
+            line.textContent = '[SYSTEM] Output cleared. Ready for new commands.';
+            output.appendChild(line);
         }
 
         async function executeCommand() {
