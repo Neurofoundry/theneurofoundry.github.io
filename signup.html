@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Request Access — Neurofoundry</title>
+  <script src="/auth-client.js"></script>
   <style>
     * { box-sizing: border-box; }
     body { 
@@ -527,52 +528,91 @@
   </main>
 
   <script>
-    function handleSignup(event) {
+    // Initialize auth client
+    const auth = new window.NeurofoundryAuth();
+
+    // Check if already logged in
+    if (auth.isAuthenticated()) {
+      window.location.href = '/profile.html';
+    }
+
+    // Handle signup form submission
+    async function handleSignup(event) {
       event.preventDefault();
-      
+
       const form = event.target;
       const password = form.password.value;
       const confirmPassword = form.confirmPassword.value;
       const errorMessage = document.getElementById('errorMessage');
-      
+      const submitBtn = form.querySelector('.submit-btn');
+
+      // Validation
       if (password !== confirmPassword) {
         errorMessage.textContent = 'Access keys do not match!';
         errorMessage.classList.add('show');
         return false;
       }
-      
+
       if (password.length < 8) {
         errorMessage.textContent = 'Access key must be at least 8 characters.';
         errorMessage.classList.add('show');
         return false;
       }
-      
+
       if (!form.terms.checked) {
         errorMessage.textContent = 'Please accept the Terms of Service and Privacy Policy.';
         errorMessage.classList.add('show');
         return false;
       }
-      
+
       errorMessage.classList.remove('show');
-      
-      const formData = {
+
+      // Prepare data
+      const userData = {
+        email: form.email.value,
+        password: password,
+        name: `${form.firstName.value} ${form.lastName.value}`,
         firstName: form.firstName.value,
         lastName: form.lastName.value,
-        email: form.email.value,
         username: form.username.value,
-        password: password,
-        accountType: form.accountType.value,
-        newsletter: form.newsletter.checked
+        preferences: {
+          accountType: form.accountType.value,
+          newsletter: form.newsletter.checked
+        }
       };
-      
-      console.log('Initialization data:', formData);
-      alert('Access granted! Welcome to the Foundry, Architect. This would normally connect to backend systems.');
-      
+
+      // Disable button and show loading state
+      submitBtn.disabled = true;
+      submitBtn.textContent = '🔄 Creating Your Access...';
+
+      try {
+        await auth.register(userData);
+
+        // Success - show message and redirect to login
+        alert('Access granted! Welcome to the Foundry, Architect. Please check your email to verify your account.');
+        window.location.href = '/login.html';
+
+      } catch (error) {
+        // Show error message
+        submitBtn.disabled = false;
+        submitBtn.textContent = '🔥 Initialize My Access';
+
+        errorMessage.textContent = error.message || 'Registration failed. Please try again.';
+        errorMessage.classList.add('show');
+      }
+
       return false;
     }
-    
-    function socialSignup(provider) {
-      alert(`Authenticating via ${provider}... OAuth flow would redirect here.`);
+
+    // Handle OAuth signup
+    async function socialSignup(provider) {
+      try {
+        await auth.loginWithOAuth(provider, '/profile.html');
+      } catch (error) {
+        const errorMessage = document.getElementById('errorMessage');
+        errorMessage.textContent = 'OAuth signup failed: ' + (error.message || 'Could not connect to ' + provider);
+        errorMessage.classList.add('show');
+      }
     }
   </script>
   <script src="shared/page-transitions.js"></script>
