@@ -117,8 +117,9 @@ async function sendVerificationEmail(user) {
   verificationUrlObj.searchParams.set('token', token);
   const verificationUrl = verificationUrlObj.toString();
 
+  const fromAddress = process.env.EMAIL_FROM || process.env.SMTP_USER || 'noreply@neurofoundry.local';
   const mailOptions = {
-    from: process.env.EMAIL_FROM || process.env.SMTP_USER || 'noreply@neurofoundry.local',
+    from: fromAddress,
     to: user.email,
     subject: 'Verify your Neurofoundry account',
     html: `
@@ -165,6 +166,7 @@ async function sendVerificationEmail(user) {
   const previewUrl = nodemailer.getTestMessageUrl(info) || null;
   recordSentEmail({
     type: 'verification',
+    from: fromAddress,
     to: user.email,
     messageId: info.messageId,
     previewUrl,
@@ -179,6 +181,7 @@ async function sendVerificationEmail(user) {
   return {
     sent: true,
     type: 'verification',
+    from: fromAddress,
     to: user.email,
     messageId: info.messageId,
     previewUrl,
@@ -211,8 +214,9 @@ async function sendPasswordResetEmail(user) {
 
   const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
 
+  const fromAddress = process.env.EMAIL_FROM || process.env.SMTP_USER || 'noreply@neurofoundry.local';
   const mailOptions = {
-    from: process.env.EMAIL_FROM || process.env.SMTP_USER || 'noreply@neurofoundry.local',
+    from: fromAddress,
     to: user.email,
     subject: 'Reset your Neurofoundry password',
     html: `
@@ -259,6 +263,7 @@ async function sendPasswordResetEmail(user) {
   const previewUrl = nodemailer.getTestMessageUrl(info) || null;
   recordSentEmail({
     type: 'password_reset',
+    from: fromAddress,
     to: user.email,
     messageId: info.messageId,
     previewUrl,
@@ -273,6 +278,7 @@ async function sendPasswordResetEmail(user) {
   return {
     sent: true,
     type: 'password_reset',
+    from: fromAddress,
     to: user.email,
     messageId: info.messageId,
     previewUrl,
