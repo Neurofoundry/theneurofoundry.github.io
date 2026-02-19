@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node server/index.js",
     "dev": "nodemon server/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "smoke:auth": "node tools/smoke-auth-live.mjs",
+    "cf:d1:provision": "node tools/cf-d1-provision.mjs"
   },
   "dependencies": {
     "dotenv": "^17.2.3",

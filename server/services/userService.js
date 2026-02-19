@@ -8,6 +8,82 @@ const { db, dbType } = require('../config/database');
 const bcrypt = require('bcrypt');
 const { v4: uuidv4 } = require('uuid');
 
+const D1_SELECT_USER = `
+  SELECT
+    id,
+    email,
+    name,
+    first_name AS firstName,
+    last_name AS lastName,
+    username,
+    avatar,
+    auth_provider AS authProvider,
+    auth_provider_id AS authProviderId,
+    password,
+    email_verified AS emailVerified,
+    created_at AS createdAt,
+    updated_at AS updatedAt,
+    last_login_at AS lastLoginAt,
+    is_active AS isActive,
+    role,
+    preferences,
+    metadata,
+    verification_token AS verificationToken,
+    verification_token_expires AS verificationTokenExpires,
+    reset_password_token AS resetPasswordToken,
+    reset_password_expires AS resetPasswordExpires
+  FROM users
+`;
+
+function parseJsonField(value, fallback) {
+  if (value === null || value === undefined || value === '') return fallback;
+  if (typeof value === 'object') return value;
+  try {
+    return JSON.parse(value);
+  } catch {
+    return fallback;
+  }
+}
+
+function toD1Bool(value, defaultValue = false) {
+  if (value === null || value === undefined) return defaultValue;
+  if (typeof value === 'boolean') return value;
+  if (typeof value === 'number') return value !== 0;
+  if (typeof value === 'string') return value === '1' || value.toLowerCase() === 'true';
+  return defaultValue;
+}
+
+function normalizeD1User(row) {
+  if (!row) return null;
+  return {
+    ...row,
+    emailVerified: toD1Bool(row.emailVerified, false),
+    isActive: toD1Bool(row.isActive, true),
+    preferences: parseJsonField(row.preferences, {}),
+    metadata: parseJsonField(row.metadata, {})
+  };
+}
+
+function toD1Column(key) {
+  const explicit = {
+    firstName: 'first_name',
+    lastName: 'last_name',
+    authProvider: 'auth_provider',
+    authProviderId: 'auth_provider_id',
+    emailVerified: 'email_verified',
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
+    lastLoginAt: 'last_login_at',
+    isActive: 'is_active',
+    verificationToken: 'verification_token',
+    verificationTokenExpires: 'verification_token_expires',
+    resetPasswordToken: 'reset_password_token',
+    resetPasswordExpires: 'reset_password_expires'
+  };
+  if (explicit[key]) return explicit[key];
+  return key.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
+}
+
 /**
  * Find user by ID
  */
@@ -17,6 +93,9 @@ async function findUserById(userId) {
       const userDoc = await db.collection('users').doc(userId).get();
       if (!userDoc.exists) return null;
       return { id: userDoc.id, ...userDoc.data() };
+    } else if (dbType === 'cloudflare_d1') {
+      const rows = await db.query(`${D1_SELECT_USER} WHERE id = ? LIMIT 1`, [userId]);
+      return normalizeD1User(rows[0] || null);
     } else if (dbType === 'supabase') {
       const { data, error } = await db
         .from('users')
@@ -49,6 +128,9 @@ async function findUserByEmail(email) {
       if (snapshot.empty) return null;
       const doc = snapshot.docs[0];
       return { id: doc.id, ...doc.data() };
+    } else if (dbType === 'cloudflare_d1') {
+      const rows = await db.query(`${D1_SELECT_USER} WHERE email = ? LIMIT 1`, [email]);
+      return normalizeD1User(rows[0] || null);
     } else if (dbType === 'supabase') {
       const { data, error } = await db
         .from('users')
@@ -86,6 +168,12 @@ async function findUserByAuthProvider(provider, providerId) {
       if (snapshot.empty) return null;
       const doc = snapshot.docs[0];
       return { id: doc.id, ...doc.data() };
+    } else if (dbType === 'cloudflare_d1') {
+      const rows = await db.query(
+        `${D1_SELECT_USER} WHERE auth_provider = ? AND auth_provider_id = ? LIMIT 1`,
+        [provider, providerId]
+      );
+      return normalizeD1User(rows[0] || null);
     } else if (dbType === 'supabase') {
       const { data, error } = await db
         .from('users')
@@ -142,6 +230,40 @@ async function createUser(userData) {
 
     if (dbType === 'firebase') {
       await db.collection('users').doc(userId).set(user);
+    } else if (dbType === 'cloudflare_d1') {
+      await db.exec(
+        `INSERT INTO users (
+          id, email, name, first_name, last_name, username, avatar,
+          auth_provider, auth_provider_id, password, email_verified,
+          created_at, updated_at, last_login_at, is_active, role,
+          preferences, metadata, verification_token, verification_token_expires,
+          reset_password_token, reset_password_expires
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          user.id,
+          user.email,
+          user.name,
+          user.firstName,
+          user.lastName,
+          user.username,
+          user.avatar,
+          user.authProvider,
+          user.authProviderId,
+          user.password,
+          user.emailVerified ? 1 : 0,
+          user.createdAt,
+          user.updatedAt,
+          user.lastLoginAt,
+          user.isActive ? 1 : 0,
+          user.role,
+          JSON.stringify(user.preferences || {}),
+          JSON.stringify(user.metadata || {}),
+          user.verificationToken || null,
+          user.verificationTokenExpires || null,
+          user.resetPasswordToken || null,
+          user.resetPasswordExpires || null
+        ]
+      );
     } else if (dbType === 'supabase') {
       const { error } = await db.from('users').insert([{
         id: user.id,
@@ -219,6 +341,33 @@ async function updateUser(userId, updates) {
 
     if (dbType === 'firebase') {
       await db.collection('users').doc(userId).update(updates);
+    } else if (dbType === 'cloudflare_d1') {
+      const assignments = [];
+      const values = [];
+
+      Object.keys(updates).forEach((key) => {
+        const column = toD1Column(key);
+        let value = updates[key];
+
+        if (key === 'preferences' || key === 'metadata') {
+          value = JSON.stringify(value || {});
+        } else if (key === 'emailVerified' || key === 'isActive') {
+          value = value ? 1 : 0;
+        }
+
+        assignments.push(`${column} = ?`);
+        values.push(value);
+      });
+
+      if (assignments.length === 0) {
+        return await findUserById(userId);
+      }
+
+      values.push(userId);
+      await db.exec(
+        `UPDATE users SET ${assignments.join(', ')} WHERE id = ?`,
+        values
+      );
     } else if (dbType === 'supabase') {
       const supabaseUpdates = {};
       Object.keys(updates).forEach(key => {
@@ -287,6 +436,8 @@ async function deleteUser(userId) {
   try {
     if (dbType === 'firebase') {
       await db.collection('users').doc(userId).delete();
+    } else if (dbType === 'cloudflare_d1') {
+      await db.exec('DELETE FROM users WHERE id = ?', [userId]);
     } else if (dbType === 'supabase') {
       const { error } = await db
         .from('users')
@@ -323,6 +474,12 @@ async function verifyEmailToken(token) {
         const doc = snapshot.docs[0];
         user = { id: doc.id, ...doc.data() };
       }
+    } else if (dbType === 'cloudflare_d1') {
+      const rows = await db.query(
+        `${D1_SELECT_USER} WHERE verification_token = ? LIMIT 1`,
+        [token]
+      );
+      user = normalizeD1User(rows[0] || null);
     } else if (dbType === 'supabase') {
       const { data, error } = await db
         .from('users')
@@ -379,6 +536,12 @@ async function resetPassword(token, newPassword) {
         const doc = snapshot.docs[0];
         user = { id: doc.id, ...doc.data() };
       }
+    } else if (dbType === 'cloudflare_d1') {
+      const rows = await db.query(
+        `${D1_SELECT_USER} WHERE reset_password_token = ? LIMIT 1`,
+        [token]
+      );
+      user = normalizeD1User(rows[0] || null);
     } else if (dbType === 'supabase') {
       const { data, error } = await db
         .from('users')

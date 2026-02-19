@@ -6,6 +6,7 @@
 let db = null;
 let dbType = null;
 const { LocalFileStore } = require('../services/localFileStore');
+const { CloudflareD1Client } = require('../services/cloudflareD1Client');
 
 function isPlaceholderValue(value) {
   if (!value) return true;
@@ -19,7 +20,29 @@ function isPlaceholderValue(value) {
 }
 
 // Initialize Firebase if configured
-if (!isPlaceholderValue(process.env.FIREBASE_PROJECT_ID)) {
+if (
+  !db
+  && !isPlaceholderValue(process.env.CLOUDFLARE_ACCOUNT_ID)
+  && !isPlaceholderValue(process.env.CLOUDFLARE_D1_DATABASE_ID)
+  && !isPlaceholderValue(process.env.CLOUDFLARE_API_TOKEN)
+) {
+  try {
+    db = new CloudflareD1Client({
+      accountId: process.env.CLOUDFLARE_ACCOUNT_ID,
+      databaseId: process.env.CLOUDFLARE_D1_DATABASE_ID,
+      apiToken: process.env.CLOUDFLARE_API_TOKEN
+    });
+    dbType = 'cloudflare_d1';
+    db.ensureSchema()
+      .then(() => console.log('✅ Connected to Cloudflare D1'))
+      .catch((error) => console.error('❌ Cloudflare D1 schema/init error:', error.message));
+  } catch (error) {
+    console.error('❌ Cloudflare D1 initialization error:', error.message);
+  }
+}
+
+// Initialize Firebase if configured
+if (!db && !isPlaceholderValue(process.env.FIREBASE_PROJECT_ID)) {
   const admin = require('firebase-admin');
 
   try {
