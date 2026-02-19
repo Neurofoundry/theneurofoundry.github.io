@@ -95,10 +95,28 @@ class NeurofoundryAuth {
       credentials: 'include' // Include cookies
     });
 
-    const data = await response.json();
+    // Handle JSON parsing with better error handling
+    let data;
+    const contentType = response.headers.get('content-type');
+
+    if (contentType && contentType.includes('application/json')) {
+      try {
+        const responseText = await response.text();
+        data = JSON.parse(responseText);
+      } catch (jsonError) {
+        console.error('JSON parse error:', jsonError);
+        console.error('Raw response:', responseText);
+        throw new Error(`Invalid JSON response from server: ${jsonError.message}`);
+      }
+    } else {
+      // If not JSON, try to read as text
+      const text = await response.text();
+      console.warn('Non-JSON response received:', text.substring(0, 200));
+      data = { message: text };
+    }
 
     if (!response.ok) {
-      throw new Error(data.message || 'API request failed');
+      throw new Error(data.message || `HTTP ${response.status}: ${response.statusText}`);
     }
 
     return data;
