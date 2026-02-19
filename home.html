@@ -7,10 +7,86 @@
   <meta name="description" content="AI-powered systems that think, adapt, and deliver. Transform ideas into intelligent reality.">
   <meta name="theme-color" content="#0f1113">
   <meta name="keywords" content="AI, artificial intelligence, machine learning, neural networks, intelligent systems, automation">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.theneurofoundry.com/">
+  <meta property="og:title" content="Neurofoundry - Intelligence Engineered">
+  <meta property="og:description" content="AI-powered systems that think, adapt, and deliver. Transform ideas into intelligent reality.">
+  <meta property="og:image" content="https://www.theneurofoundry.com/banner.png">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://www.theneurofoundry.com/">
+  <meta property="twitter:title" content="Neurofoundry - Intelligence Engineered">
+  <meta property="twitter:description" content="AI-powered systems that think, adapt, and deliver. Transform ideas into intelligent reality.">
+  <meta property="twitter:image" content="https://www.theneurofoundry.com/banner.png">
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://www.theneurofoundry.com/home.html">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Structured Data for SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Neurofoundry",
+    "url": "https://www.theneurofoundry.com",
+    "logo": "https://www.theneurofoundry.com/banner.png",
+    "description": "AI-powered systems that think, adapt, and deliver. Transform ideas into intelligent reality.",
+    "sameAs": [
+      "https://github.com/Neurofoundry"
+    ],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "Customer Service",
+      "url": "https://www.theneurofoundry.com/signup.html"
+    },
+    "offers": {
+      "@type": "AggregateOffer",
+      "offerCount": "3",
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "Neural Architecture Design",
+          "description": "Custom neural network design and intelligent systems architecture"
+        },
+        {
+          "@type": "Offer",
+          "name": "AI Integration Services",
+          "description": "Seamless AI integration into existing workflows and systems"
+        },
+        {
+          "@type": "Offer",
+          "name": "Production Deployment",
+          "description": "Production-grade deployment with monitoring and optimization"
+        }
+      ]
+    }
+  }
+  </script>
+
   <style>
+    /* Improved focus styles for accessibility */
+    *:focus-visible {
+      outline: 3px solid #e0473c;
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+
+    .sr-only-focusable:focus {
+      clip: auto;
+      height: auto;
+      margin: 0;
+      overflow: visible;
+      position: absolute;
+      width: auto;
+      white-space: normal;
+    }
+
     body { background: #0f1113; color: #e6e9ee; margin: 0; font-family: Inter, sans-serif; }
     header {
       position: relative;
@@ -1151,24 +1227,27 @@
     main { padding-top: 0; }
   </style>
   
-  <header>
+  <!-- Skip to main content link for accessibility -->
+  <a href="#main-content" class="sr-only sr-only-focusable" style="position: absolute; top: 10px; left: 10px; z-index: 10000; padding: 10px 20px; background: #e0473c; color: white; text-decoration: none; border-radius: 4px;">Skip to main content</a>
+
+  <header role="banner">
     <div class="nav">
-      <div class="brand">
-        <div class="brand-icon">N</div>
+      <a href="home.html" class="brand" aria-label="Neurofoundry home">
+        <div class="brand-icon" aria-hidden="true">N</div>
         <span>NEUROFOUNDRY</span>
-      </div>
-      <nav class="links">
-        <a class="navlink" href="home.html">Home</a>
-        <a class="navlink" href="https://forge.theneurofoundry.com/">Forge</a>
+      </a>
+      <nav class="links" role="navigation" aria-label="Main navigation">
+        <a class="navlink" href="home.html" aria-current="page">Home</a>
+        <a class="navlink" href="https://forge.theneurofoundry.com/" target="_blank" rel="noopener noreferrer">Forge</a>
         <div class="nav-item dropdown">
-          <button class="dropdown-toggle" type="button">
-            Archives <span class="dropdown-caret">v</span>
+          <button class="dropdown-toggle" type="button" aria-expanded="false" aria-haspopup="true" aria-label="Archives menu">
+            Archives <span class="dropdown-caret" aria-hidden="true">v</span>
           </button>
-          <div class="dropdown-menu">
-            <a href="technology.html">Technology</a>
-            <a href="downloads.html">Downloads</a>
-            <a href="button2.html">Manifesto</a>
-            <a href="neurofoundry-report.html">Report</a>
+          <div class="dropdown-menu" role="menu">
+            <a href="technology.html" role="menuitem">Technology</a>
+            <a href="downloads.html" role="menuitem">Downloads</a>
+            <a href="button2.html" role="menuitem">Manifesto</a>
+            <a href="neurofoundry-report.html" role="menuitem">Report</a>
           </div>
         </div>
         <a class="navlink" href="about.html">About</a>
@@ -1176,38 +1255,38 @@
       </nav>
     </div>
   </header>
-  <main>
-    <section class="hero-section">
-      <video class="hero-video" autoplay loop muted playsinline>
+  <main id="main-content" role="main">
+    <section class="hero-section" aria-label="Hero banner">
+      <video class="hero-video" autoplay loop muted playsinline aria-hidden="true" preload="auto">
         <source src="assets/neurofoundry-hero-bg.mp4" type="video/mp4">
         Your browser does not support the video tag.
       </video>
-      <div class="hero-overlay"></div>
+      <div class="hero-overlay" aria-hidden="true"></div>
       <div class="hero-content">
         <div class="hero-label">
-          <img src="banner.png" alt="Neurofoundry Banner" class="hero-banner">
+          <img src="banner.png" alt="Neurofoundry - Intelligence Engineered" class="hero-banner" loading="eager">
         </div>
         <h1>The Engine is a Mind&mdash;for the Network you Design.</h1>
         <p class="subtitle">
           We build systems that think, adapt, and deliver. From neural architectures to production-ready AI solutions-transform your vision into intelligent reality.
         </p>
-        <div class="hero-cta">
-          <a class="hero-cta-image" href="https://forge.theneurofoundry.com/">
-            <img src="assets/forge_btn.png" alt="Launch the Forge">
+        <div class="hero-cta" role="group" aria-label="Primary actions">
+          <a class="hero-cta-image" href="https://forge.theneurofoundry.com/" aria-label="Launch the Forge application">
+            <img src="assets/forge_btn.png" alt="Launch the Forge" loading="eager">
           </a>
-          <a class="hero-cta-image" href="projects.html">
-            <img src="assets/proj_btn.png" alt="View Projects">
+          <a class="hero-cta-image" href="projects.html" aria-label="View our projects portfolio">
+            <img src="assets/proj_btn.png" alt="View Projects" loading="eager">
           </a>
         </div>
       </div>
     </section>
-    <div class="section-divider"></div>
+    <div class="section-divider" role="separator" aria-hidden="true"></div>
     <div class="skills-bar">
-      <div class="skills">
-        <div class="skill-item">Neural Architecture</div>
-        <div class="skill-item">Real-time Processing</div>
-        <div class="skill-item">Precision Systems</div>
-        <div class="skill-item">Production Ready</div>
+      <div class="skills" role="list" aria-label="Core capabilities">
+        <div class="skill-item" role="listitem">Neural Architecture</div>
+        <div class="skill-item" role="listitem">Real-time Processing</div>
+        <div class="skill-item" role="listitem">Precision Systems</div>
+        <div class="skill-item" role="listitem">Production Ready</div>
       </div>
     </div>
     <section class="video-showcase">
@@ -1220,9 +1299,10 @@
         <div class="video-frame">
           <iframe
             src="https://www.youtube.com/embed/SbL6dWf9k20?rel=0&modestbranding=1&color=white"
-            title="Neurofoundry Video"
+            title="Neurofoundry - See the Architect in Action demonstration video"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen>
+            allowfullscreen
+            loading="lazy">
           </iframe>
         </div>
       </div>
@@ -1271,26 +1351,26 @@
             <h2 class="work-title">Concept -> Creation -> Deployment</h2>
             <p class="work-subtitle">End-to-end intelligent solutions</p>
           </div>
-          <div class="work-grid">
-            <div class="work-card">
-              <img src="thumbnails/design.png" alt="Design Phase">
-              <img src="thumbnails/design_ol.png" alt="" class="card-overlay">
+          <div class="work-grid" role="list" aria-label="Service offerings">
+            <div class="work-card" role="listitem">
+              <img src="thumbnails/design.png" alt="Design Phase - Neural network architecture design" loading="lazy">
+              <img src="thumbnails/design_ol.png" alt="" class="card-overlay" loading="lazy" aria-hidden="true">
               <div class="work-card-content">
                 <h3>Architect</h3>
                 <p>Neural network design and intelligent systems architecture.</p>
               </div>
             </div>
-            <div class="work-card">
-              <img src="thumbnails/deliver.png" alt="Deliver Phase">
-              <img src="thumbnails/deliver_ol.png" alt="" class="card-overlay">
+            <div class="work-card" role="listitem">
+              <img src="thumbnails/deliver.png" alt="Deliver Phase - AI integration into workflows" loading="lazy">
+              <img src="thumbnails/deliver_ol.png" alt="" class="card-overlay" loading="lazy" aria-hidden="true">
               <div class="work-card-content">
                 <h3>Integrate</h3>
                 <p>Seamless AI integration into existing workflows and systems.</p>
               </div>
             </div>
-            <div class="work-card">
-              <img src="thumbnails/deploy.png" alt="Deploy Phase">
-              <img src="thumbnails/deploy_ol.png" alt="" class="card-overlay">
+            <div class="work-card" role="listitem">
+              <img src="thumbnails/deploy.png" alt="Deploy Phase - Production deployment with monitoring" loading="lazy">
+              <img src="thumbnails/deploy_ol.png" alt="" class="card-overlay" loading="lazy" aria-hidden="true">
               <div class="work-card-content">
                 <h3>Deploy</h3>
                 <p>Production-grade deployment with monitoring and optimization.</p>
@@ -1329,32 +1409,32 @@
               </a>
             </div>
             <div class="gallery-mini-grid">
-              <a class="gallery-mini-item" href="gallery.html">
-                <img src="WebsiteContent/Images/42.png" alt="Gallery preview 42">
+              <a class="gallery-mini-item" href="gallery.html" aria-label="View gallery image 42">
+                <img src="WebsiteContent/Images/42.png" alt="AI generated artwork 42" loading="lazy">
               </a>
-              <a class="gallery-mini-item" href="gallery.html">
-                <img src="WebsiteContent/Images/82.png" alt="Gallery preview 82">
+              <a class="gallery-mini-item" href="gallery.html" aria-label="View gallery image 82">
+                <img src="WebsiteContent/Images/82.png" alt="AI generated artwork 82" loading="lazy">
               </a>
-              <a class="gallery-mini-item" href="gallery.html">
-                <img src="WebsiteContent/Images/80.png" alt="Gallery preview 80">
+              <a class="gallery-mini-item" href="gallery.html" aria-label="View gallery image 80">
+                <img src="WebsiteContent/Images/80.png" alt="AI generated artwork 80" loading="lazy">
               </a>
-              <a class="gallery-mini-item" href="gallery.html">
-                <img src="WebsiteContent/Images/34.png" alt="Gallery preview 34">
+              <a class="gallery-mini-item" href="gallery.html" aria-label="View gallery image 34">
+                <img src="WebsiteContent/Images/34.png" alt="AI generated artwork 34" loading="lazy">
               </a>
-              <a class="gallery-mini-item" href="gallery.html">
-                <img src="WebsiteContent/Images/52.png" alt="Gallery preview 52">
+              <a class="gallery-mini-item" href="gallery.html" aria-label="View gallery image 52">
+                <img src="WebsiteContent/Images/52.png" alt="AI generated artwork 52" loading="lazy">
               </a>
-              <a class="gallery-mini-item" href="gallery.html">
-                <img src="WebsiteContent/Images/73.png" alt="Gallery preview 73">
+              <a class="gallery-mini-item" href="gallery.html" aria-label="View gallery image 73">
+                <img src="WebsiteContent/Images/73.png" alt="AI generated artwork 73" loading="lazy">
               </a>
-              <a class="gallery-mini-item" href="gallery.html">
-                <img src="WebsiteContent/Images/67.png" alt="Gallery preview 67">
+              <a class="gallery-mini-item" href="gallery.html" aria-label="View gallery image 67">
+                <img src="WebsiteContent/Images/67.png" alt="AI generated artwork 67" loading="lazy">
               </a>
-              <a class="gallery-mini-item" href="gallery.html">
-                <img src="WebsiteContent/Images/93.png" alt="Gallery preview 93">
+              <a class="gallery-mini-item" href="gallery.html" aria-label="View gallery image 93">
+                <img src="WebsiteContent/Images/93.png" alt="AI generated artwork 93" loading="lazy">
               </a>
-              <a class="gallery-mini-item" href="gallery.html">
-                <img src="WebsiteContent/Images/79.png" alt="Gallery preview 79">
+              <a class="gallery-mini-item" href="gallery.html" aria-label="View gallery image 79">
+                <img src="WebsiteContent/Images/79.png" alt="AI generated artwork 79" loading="lazy">
               </a>
             </div>
           </div>
@@ -1505,34 +1585,34 @@
               <p class="info-desc">No generic solutions. Every tool is refined for your personal use case and deployed to your specifications.</p>
             </div>
             <div class="business-card business-card--empty business-card--mini-b business-card--image">
-              <img src="assets/fingain1.png" alt="Neurofoundry visual">
+              <img src="assets/fingain1.png" alt="Neurofoundry AI visualization" loading="lazy">
             </div>
             <div class="business-card business-card--empty business-card--wide-b business-card--image">
-              <img src="assets/ani_b.webp" alt="Neurofoundry visual">
+              <img src="assets/ani_b.webp" alt="Neurofoundry animated visualization" loading="lazy">
             </div>
             <div class="business-card business-card--empty business-card--wide-bottom business-card--image">
-              <img src="assets/fingain2.png" alt="Neurofoundry visual">
+              <img src="assets/fingain2.png" alt="Neurofoundry AI visualization 2" loading="lazy">
             </div>
           </div>
           <div class="business-right">
             <div class="business-card business-card--empty business-card--tall business-card--image">
-              <img src="assets/fingain3.png" alt="Neurofoundry visual">
+              <img src="assets/fingain3.png" alt="Neurofoundry AI visualization 3" loading="lazy">
             </div>
           </div>
         </div>
       </div>
     </section>
   </main>
-  <footer>
+  <footer role="contentinfo">
     <div class="footer-content">
       <p>&copy; 2025 The Neurofoundry. Forged with intent.</p>
-      <div class="footer-links">
+      <nav class="footer-links" aria-label="Footer navigation">
         <a href="home.html">Home</a>
         <a href="technology.html">Technology</a>
         <a href="projects.html">Projects</a>
-        <a href="https://forge.theneurofoundry.com/">Forge</a>
+        <a href="https://forge.theneurofoundry.com/" target="_blank" rel="noopener noreferrer">Forge</a>
         <a href="gallery.html">Gallery</a>
-      </div>
+      </nav>
     </div>
   </footer>
   <script>
