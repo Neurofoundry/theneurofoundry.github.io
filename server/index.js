@@ -46,6 +46,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+// Serve static files from root directory
+app.use(express.static('.'));
+
+// Serve uploads directory
+app.use('/uploads', express.static('uploads'));
+
 // Session middleware
 app.use(session(sessionConfig));
 
