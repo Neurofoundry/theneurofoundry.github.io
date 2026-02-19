@@ -142,6 +142,17 @@
       <strong>Note:</strong> This page is for testing the authentication system. Make sure the backend server is running on <code>localhost:3000</code>.
     </div>
 
+    <!-- Server Controls -->
+    <div class="section">
+      <h2>Server Controls</h2>
+      <p style="color: #9aa3ad; font-size: 14px; margin-bottom: 16px;">
+        Quickly start or stop the local auth server on port 3000 without leaving this page.
+      </p>
+      <button class="btn" onclick="startLocalServer()">Start Server</button>
+      <button class="btn secondary" onclick="stopLocalServer()">Stop Server</button>
+      <div id="serverStatus" class="status"></div>
+    </div>
+
     <!-- Current Auth Status -->
     <div class="section">
       <h2>Current Status</h2>
@@ -383,6 +394,43 @@
         statusDiv.textContent = '✗ Profile update failed: ' + error.message;
         console.error('Update error:', error);
       }
+    }
+
+    async function controlServer(action) {
+      const statusDiv = document.getElementById('serverStatus');
+      statusDiv.className = 'status info show';
+      statusDiv.textContent = action === 'start' ? 'Starting server...' : 'Stopping server...';
+
+      try {
+        const response = await fetch(`/api/dev/server/${action}`, {
+          method: 'POST'
+        });
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || 'Server control failed');
+        }
+
+        statusDiv.className = 'status success show';
+        statusDiv.textContent = data.message || (action === 'start' ? 'Server started.' : 'Server stopped.');
+
+        if (action === 'start') {
+          setTimeout(() => {
+            updateAuthStatus();
+          }, 1000);
+        }
+      } catch (error) {
+        statusDiv.className = 'status error show';
+        statusDiv.textContent = '✗ ' + error.message;
+      }
+    }
+
+    function startLocalServer() {
+      return controlServer('start');
+    }
+
+    function stopLocalServer() {
+      return controlServer('stop');
     }
   </script>
 </body>
