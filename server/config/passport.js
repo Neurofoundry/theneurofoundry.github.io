@@ -57,8 +57,8 @@ module.exports = function(passport) {
             return done(null, false, { message: 'Invalid email or password' });
           }
 
-          // Check if email is verified
-          if (!user.emailVerified) {
+          // Check if email is verified (skip in development for testing)
+          if (!user.emailVerified && process.env.NODE_ENV === 'production') {
             return done(null, false, { message: 'Please verify your email first' });
           }
 

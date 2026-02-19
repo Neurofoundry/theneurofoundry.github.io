@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Standalone Auth Testing – Neurofoundry</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      background: #0f1113;
+      color: #e6e9ee;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      margin: 0;
+      padding: 40px 20px;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1 {
+      color: #e0473c;
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      color: #9aa3ad;
+      margin-bottom: 40px;
+    }
+    .section {
+      background: rgba(15, 17, 19, 0.95);
+      border: 1px solid rgba(224, 71, 60, 0.2);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    h2 {
+      color: #fff;
+      font-size: 20px;
+      margin-bottom: 16px;
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    label {
+      display: block;
+      color: #c9d0d8;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px 12px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(224, 71, 60, 0.3);
+      border-radius: 6px;
+      color: #e6e9ee;
+      font-size: 14px;
+      font-family: inherit;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: #e0473c;
+      box-shadow: 0 0 0 2px rgba(224, 71, 60, 0.2);
+    }
+    .btn {
+      padding: 10px 20px;
+      background: linear-gradient(180deg, #ff7b6e 0%, #e9584d 48%, #d23d33 100%);
+      border: 2px solid #a2362f;
+      border-radius: 6px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-right: 10px;
+    }
+    .btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(224, 71, 60, 0.4);
+    }
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .btn.secondary {
+      background: rgba(224, 71, 60, 0.1);
+      border-color: rgba(224, 71, 60, 0.4);
+    }
+    .status {
+      padding: 12px 16px;
+      border-radius: 6px;
+      margin-top: 16px;
+      font-size: 14px;
+      display: none;
+    }
+    .status.show {
+      display: block;
+    }
+    .status.success {
+      background: rgba(57, 255, 20, 0.1);
+      border: 1px solid rgba(57, 255, 20, 0.3);
+      color: #39FF14;
+    }
+    .status.error {
+      background: rgba(224, 71, 60, 0.1);
+      border: 1px solid rgba(224, 71, 60, 0.3);
+      color: #ff9b93;
+    }
+    .status.info {
+      background: rgba(100, 149, 237, 0.1);
+      border: 1px solid rgba(100, 149, 237, 0.3);
+      color: #6495ED;
+    }
+    pre {
+      background: #000;
+      border: 1px solid #333;
+      border-radius: 6px;
+      padding: 12px;
+      overflow-x: auto;
+      font-size: 12px;
+      color: #39FF14;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .info-box {
+      background: rgba(100, 149, 237, 0.1);
+      border: 1px solid rgba(100, 149, 237, 0.3);
+      border-radius: 6px;
+      padding: 16px;
+      margin-bottom: 24px;
+      color: #c9d0d8;
+      font-size: 14px;
+    }
+    .info-box strong {
+      color: #6495ED;
+    }
+    .info-box code {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 2px 6px;
+      border-radius: 3px;
+      color: #39FF14;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔥 Standalone Authentication Testing</h1>
+    <p class="subtitle">Complete OAuth and Local Auth Testing - No CORS Issues</p>
+
+    <div class="info-box">
+      <strong>Testing Instructions:</strong>
+      <ol style="margin: 8px 0 0 20px; padding: 0;">
+        <li>Configure API URL below (default: http://localhost:3000/api)</li>
+        <li>Ensure the backend server is running with <code>npm start</code></li>
+        <li>Test registration → login → logout flow in order</li>
+        <li>Check console (F12) for detailed request/response logs</li>
+        <li>All errors and JSON parsing issues are logged</li>
+      </ol>
+    </div>
+
+    <!-- Configuration -->
+    <div class="section">
+      <h2>⚙️ Configuration</h2>
+      <div class="form-group">
+        <label>API Base URL</label>
+        <input type="text" id="apiUrl" value="http://localhost:3000/api">
+      </div>
+      <button class="btn" onclick="updateApiUrl()">Update API URL</button>
+      <button class="btn secondary" onclick="testConnection()">Test Connection</button>
+      <div id="configStatus" class="status"></div>
+    </div>
+
+    <!-- Current Status -->
+    <div class="section">
+      <h2>📊 Current Authentication Status</h2>
+      <div id="authStatus" class="status info show">Checking authentication...</div>
+      <div id="userInfo" style="display: none;">
+        <pre id="userData"></pre>
+        <button class="btn" onclick="testLogout()">Logout</button>
+        <button class="btn secondary" onclick="refreshAuthStatus()">Refresh Status</button>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- Register -->
+      <div class="section">
+        <h2>1️⃣ Test Registration</h2>
+        <form id="registerForm" onsubmit="testRegister(event)">
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="regEmail" value="test@neurofoundry.com" required>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="regPassword" value="password123" required>
+          </div>
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" id="regName" value="Test User" required>
+          </div>
+          <button type="submit" class="btn">Register</button>
+          <div id="registerStatus" class="status"></div>
+        </form>
+      </div>
+
+      <!-- Login -->
+      <div class="section">
+        <h2>2️⃣ Test Login</h2>
+        <form id="loginForm" onsubmit="testLogin(event)">
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="loginEmail" value="test@neurofoundry.com" required>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="loginPassword" value="password123" required>
+          </div>
+          <button type="submit" class="btn">Login</button>
+          <div id="loginStatus" class="status"></div>
+        </form>
+      </div>
+    </div>
+
+    <!-- OAuth Testing -->
+    <div class="section">
+      <h2>3️⃣ Test OAuth (Google / GitHub)</h2>
+      <p style="color: #9aa3ad; font-size: 14px; margin-bottom: 16px;">
+        OAuth requires valid credentials in .env file. Opens popup window for OAuth flow.
+      </p>
+      <button class="btn" onclick="testOAuth('google')">Test Google OAuth</button>
+      <button class="btn" onclick="testOAuth('github')">Test GitHub OAuth</button>
+      <div id="oauthStatus" class="status"></div>
+    </div>
+
+    <!-- Profile Test -->
+    <div class="section" id="profileSection" style="display: none;">
+      <h2>4️⃣ Test Profile Operations</h2>
+      <form id="profileForm" onsubmit="testProfileUpdate(event)">
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" id="profileName" value="Updated Name">
+        </div>
+        <div class="form-group">
+          <label>Bio</label>
+          <input type="text" id="profileBio" value="This is my test bio">
+        </div>
+        <button type="submit" class="btn">Update Profile</button>
+        <button type="button" class="btn secondary" onclick="testGetProfile()">Get Profile</button>
+        <div id="profileStatus" class="status"></div>
+      </form>
+    </div>
+
+    <!-- Debug Console -->
+    <div class="section">
+      <h2>🐛 Debug Console</h2>
+      <button class="btn secondary" onclick="clearDebugLog()">Clear Log</button>
+      <button class="btn secondary" onclick="exportDebugLog()">Export Log</button>
+      <pre id="debugLog">Ready for testing...\n</pre>
+    </div>
+  </div>
+
+  <script>
+    // ============================================
+    // NEUROFOUNDRY AUTH CLIENT (EMBEDDED)
+    // ============================================
+    class NeurofoundryAuth {
+      constructor(config = {}) {
+        this.apiUrl = config.apiUrl || 'http://localhost:3000/api';
+        this.storageKey = 'nf_auth';
+        this.user = null;
+        this.token = null;
+        this.loadAuthState();
+      }
+
+      loadAuthState() {
+        try {
+          const stored = localStorage.getItem(this.storageKey);
+          if (stored) {
+            const data = JSON.parse(stored);
+            this.user = data.user;
+            this.token = data.token;
+          }
+        } catch (error) {
+          logDebug('ERROR', 'Error loading auth state', error);
+        }
+      }
+
+      saveAuthState(user, token) {
+        this.user = user;
+        this.token = token;
+        const authData = {
+          user,
+          token,
+          timestamp: Date.now()
+        };
+        localStorage.setItem(this.storageKey, JSON.stringify(authData));
+        logDebug('INFO', 'Auth state saved', authData);
+      }
+
+      clearAuthState() {
+        this.user = null;
+        this.token = null;
+        localStorage.removeItem(this.storageKey);
+        logDebug('INFO', 'Auth state cleared');
+      }
+
+      isAuthenticated() {
+        return !!this.token && !!this.user;
+      }
+
+      getCurrentUser() {
+        return this.user;
+      }
+
+      async apiRequest(endpoint, options = {}) {
+        const url = `${this.apiUrl}${endpoint}`;
+        const headers = {
+          'Content-Type': 'application/json',
+          ...options.headers
+        };
+
+        if (this.token) {
+          headers['Authorization'] = `Bearer ${this.token}`;
+        }
+
+        logDebug('REQUEST', `${options.method || 'GET'} ${endpoint}`, {
+          url,
+          headers: { ...headers, Authorization: headers.Authorization ? 'Bearer ***' : undefined },
+          body: options.body
+        });
+
+        try {
+          const response = await fetch(url, {
+            ...options,
+            headers,
+            credentials: 'include'
+          });
+
+          logDebug('RESPONSE', `${response.status} ${response.statusText}`, {
+            url,
+            status: response.status,
+            headers: Object.fromEntries(response.headers.entries())
+          });
+
+          // Try to parse JSON response
+          let data;
+          const contentType = response.headers.get('content-type');
+          const responseText = await response.text();
+
+          logDebug('RAW RESPONSE', 'Response body', {
+            contentType,
+            length: responseText.length,
+            preview: responseText.substring(0, 500)
+          });
+
+          if (contentType && contentType.includes('application/json')) {
+            try {
+              data = JSON.parse(responseText);
+            } catch (jsonError) {
+              logDebug('ERROR', 'JSON parse error', {
+                error: jsonError.message,
+                responseText: responseText.substring(0, 1000)
+              });
+              throw new Error(`Invalid JSON response: ${jsonError.message}`);
+            }
+          } else {
+            data = { message: responseText };
+          }
+
+          if (!response.ok) {
+            const errorMessage = data.message || `HTTP ${response.status}: ${response.statusText}`;
+            logDebug('ERROR', 'API request failed', { status: response.status, data });
+            throw new Error(errorMessage);
+          }
+
+          logDebug('SUCCESS', 'API request successful', data);
+          return data;
+        } catch (error) {
+          logDebug('ERROR', 'Request exception', {
+            message: error.message,
+            stack: error.stack
+          });
+          throw error;
+        }
+      }
+
+      async register(userData) {
+        try {
+          const data = await this.apiRequest('/auth/register', {
+            method: 'POST',
+            body: JSON.stringify({
+              email: userData.email,
+              password: userData.password,
+              name: userData.name || `${userData.firstName || ''} ${userData.lastName || ''}`.trim()
+            })
+          });
+
+          if (data.success && data.data) {
+            this.saveAuthState(data.data.user, data.data.tokens.accessToken);
+          }
+
+          return data;
+        } catch (error) {
+          throw error;
+        }
+      }
+
+      async login(email, password) {
+        try {
+          const data = await this.apiRequest('/auth/login', {
+            method: 'POST',
+            body: JSON.stringify({ email, password })
+          });
+
+          if (data.success && data.data) {
+            this.saveAuthState(data.data.user, data.data.tokens.accessToken);
+          }
+
+          return data;
+        } catch (error) {
+          throw error;
+        }
+      }
+
+      async logout() {
+        try {
+          await this.apiRequest('/auth/logout', {
+            method: 'POST'
+          });
+        } catch (error) {
+          logDebug('ERROR', 'Logout error', error);
+        } finally {
+          this.clearAuthState();
+        }
+      }
+
+      async getProfile() {
+        try {
+          const data = await this.apiRequest('/user/me');
+          if (data.success && data.data) {
+            this.user = data.data.user;
+            this.saveAuthState(this.user, this.token);
+          }
+          return data;
+        } catch (error) {
+          throw error;
+        }
+      }
+
+      async updateProfile(profileData) {
+        try {
+          const data = await this.apiRequest('/profile', {
+            method: 'PATCH',
+            body: JSON.stringify(profileData)
+          });
+          return data;
+        } catch (error) {
+          throw error;
+        }
+      }
+
+      loginWithOAuth(provider) {
+        const width = 600;
+        const height = 700;
+        const left = (window.innerWidth - width) / 2;
+        const top = (window.innerHeight - height) / 2;
+
+        const popup = window.open(
+          `${this.apiUrl}/auth/${provider}`,
+          `${provider}_oauth`,
+          `width=${width},height=${height},top=${top},left=${left},resizable,scrollbars`
+        );
+
+        return new Promise((resolve, reject) => {
+          const messageHandler = (event) => {
+            if (event.origin !== window.location.origin) return;
+
+            if (event.data.type === 'oauth_success') {
+              window.removeEventListener('message', messageHandler);
+              this.saveAuthState(event.data.user, event.data.token);
+              resolve(event.data);
+            } else if (event.data.type === 'oauth_error') {
+              window.removeEventListener('message', messageHandler);
+              reject(new Error(event.data.message));
+            }
+          };
+
+          window.addEventListener('message', messageHandler);
+
+          const checkClosed = setInterval(() => {
+            if (popup.closed) {
+              clearInterval(checkClosed);
+              window.removeEventListener('message', messageHandler);
+              reject(new Error('OAuth window was closed'));
+            }
+          }, 500);
+        });
+      }
+    }
+
+    // ============================================
+    // DEBUG LOGGING
+    // ============================================
+    function logDebug(level, message, data) {
+      const timestamp = new Date().toISOString();
+      const logEntry = `[${timestamp}] [${level}] ${message}\n`;
+      const debugLog = document.getElementById('debugLog');
+
+      let logLine = logEntry;
+      if (data) {
+        logLine += JSON.stringify(data, null, 2) + '\n';
+      }
+      logLine += '\n';
+
+      debugLog.textContent += logLine;
+      debugLog.scrollTop = debugLog.scrollHeight;
+
+      // Also log to console
+      console.log(`[${level}] ${message}`, data || '');
+    }
+
+    function clearDebugLog() {
+      document.getElementById('debugLog').textContent = 'Log cleared.\n';
+      logDebug('INFO', 'Debug log cleared');
+    }
+
+    function exportDebugLog() {
+      const logContent = document.getElementById('debugLog').textContent;
+      const blob = new Blob([logContent], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `auth-debug-${Date.now()}.log`;
+      a.click();
+      URL.revokeObjectURL(url);
+      logDebug('INFO', 'Debug log exported');
+    }
+
+    // ============================================
+    // INITIALIZATION
+    // ============================================
+    let auth = new NeurofoundryAuth();
+
+    window.addEventListener('load', () => {
+      logDebug('INFO', 'Page loaded, checking auth status');
+      updateAuthStatus();
+    });
+
+    // ============================================
+    // UI FUNCTIONS
+    // ============================================
+    function updateApiUrl() {
+      const apiUrl = document.getElementById('apiUrl').value;
+      auth = new NeurofoundryAuth({ apiUrl });
+      showStatus('configStatus', 'success', `✓ API URL updated to: ${apiUrl}`);
+      logDebug('INFO', 'API URL updated', { apiUrl });
+    }
+
+    async function testConnection() {
+      const statusDiv = document.getElementById('configStatus');
+      showStatus('configStatus', 'info', 'Testing connection...');
+
+      try {
+        const data = await auth.apiRequest('/health');
+        showStatus('configStatus', 'success', `✓ Server is reachable! Status: ${data.status}`);
+      } catch (error) {
+        showStatus('configStatus', 'error', `✗ Connection failed: ${error.message}`);
+      }
+    }
+
+    function updateAuthStatus() {
+      const statusDiv = document.getElementById('authStatus');
+      const userInfoDiv = document.getElementById('userInfo');
+      const profileSection = document.getElementById('profileSection');
+
+      if (auth.isAuthenticated()) {
+        const user = auth.getCurrentUser();
+        statusDiv.className = 'status success show';
+        statusDiv.textContent = '✓ Authenticated';
+        userInfoDiv.style.display = 'block';
+        profileSection.style.display = 'block';
+        document.getElementById('userData').textContent = JSON.stringify(user, null, 2);
+        logDebug('INFO', 'User authenticated', user);
+      } else {
+        statusDiv.className = 'status info show';
+        statusDiv.textContent = '⚠ Not authenticated';
+        userInfoDiv.style.display = 'none';
+        profileSection.style.display = 'none';
+        logDebug('INFO', 'User not authenticated');
+      }
+    }
+
+    function refreshAuthStatus() {
+      logDebug('INFO', 'Refreshing auth status');
+      updateAuthStatus();
+    }
+
+    function showStatus(elementId, type, message) {
+      const statusDiv = document.getElementById(elementId);
+      statusDiv.className = `status ${type} show`;
+      statusDiv.textContent = message;
+      setTimeout(() => {
+        if (type === 'info') {
+          statusDiv.classList.remove('show');
+        }
+      }, 5000);
+    }
+
+    // ============================================
+    // AUTH OPERATIONS
+    // ============================================
+    async function testRegister(event) {
+      event.preventDefault();
+      showStatus('registerStatus', 'info', 'Registering...');
+      logDebug('INFO', 'Starting registration');
+
+      try {
+        const result = await auth.register({
+          email: document.getElementById('regEmail').value,
+          password: document.getElementById('regPassword').value,
+          name: document.getElementById('regName').value
+        });
+
+        showStatus('registerStatus', 'success', '✓ Registration successful!');
+        logDebug('SUCCESS', 'Registration completed', result);
+
+        setTimeout(() => {
+          updateAuthStatus();
+        }, 1000);
+      } catch (error) {
+        showStatus('registerStatus', 'error', `✗ Registration failed: ${error.message}`);
+        logDebug('ERROR', 'Registration failed', error);
+      }
+    }
+
+    async function testLogin(event) {
+      event.preventDefault();
+      showStatus('loginStatus', 'info', 'Logging in...');
+      logDebug('INFO', 'Starting login');
+
+      try {
+        const result = await auth.login(
+          document.getElementById('loginEmail').value,
+          document.getElementById('loginPassword').value
+        );
+
+        showStatus('loginStatus', 'success', '✓ Login successful!');
+        logDebug('SUCCESS', 'Login completed', result);
+
+        setTimeout(() => {
+          updateAuthStatus();
+        }, 1000);
+      } catch (error) {
+        showStatus('loginStatus', 'error', `✗ Login failed: ${error.message}`);
+        logDebug('ERROR', 'Login failed', error);
+      }
+    }
+
+    async function testOAuth(provider) {
+      showStatus('oauthStatus', 'info', `Opening ${provider} OAuth...`);
+      logDebug('INFO', `Starting ${provider} OAuth`);
+
+      try {
+        await auth.loginWithOAuth(provider);
+        showStatus('oauthStatus', 'success', `✓ ${provider} OAuth successful!`);
+        logDebug('SUCCESS', `${provider} OAuth completed`);
+
+        setTimeout(() => {
+          updateAuthStatus();
+        }, 1000);
+      } catch (error) {
+        showStatus('oauthStatus', 'error', `✗ ${provider} OAuth failed: ${error.message}`);
+        logDebug('ERROR', `${provider} OAuth failed`, error);
+      }
+    }
+
+    async function testLogout() {
+      showStatus('authStatus', 'info', 'Logging out...');
+      logDebug('INFO', 'Starting logout');
+
+      try {
+        await auth.logout();
+        showStatus('authStatus', 'success', '✓ Logged out successfully!');
+        logDebug('SUCCESS', 'Logout completed');
+
+        setTimeout(() => {
+          updateAuthStatus();
+        }, 500);
+      } catch (error) {
+        showStatus('authStatus', 'error', `✗ Logout failed: ${error.message}`);
+        logDebug('ERROR', 'Logout failed', error);
+      }
+    }
+
+    async function testGetProfile() {
+      showStatus('profileStatus', 'info', 'Fetching profile...');
+      logDebug('INFO', 'Fetching profile');
+
+      try {
+        const result = await auth.getProfile();
+        showStatus('profileStatus', 'success', '✓ Profile fetched! Check console.');
+        logDebug('SUCCESS', 'Profile fetched', result);
+      } catch (error) {
+        showStatus('profileStatus', 'error', `✗ Failed to fetch profile: ${error.message}`);
+        logDebug('ERROR', 'Profile fetch failed', error);
+      }
+    }
+
+    async function testProfileUpdate(event) {
+      event.preventDefault();
+      showStatus('profileStatus', 'info', 'Updating profile...');
+      logDebug('INFO', 'Updating profile');
+
+      try {
+        const result = await auth.updateProfile({
+          name: document.getElementById('profileName').value,
+          bio: document.getElementById('profileBio').value
+        });
+
+        showStatus('profileStatus', 'success', '✓ Profile updated!');
+        logDebug('SUCCESS', 'Profile updated', result);
+
+        setTimeout(() => {
+          updateAuthStatus();
+        }, 1000);
+      } catch (error) {
+        showStatus('profileStatus', 'error', `✗ Profile update failed: ${error.message}`);
+        logDebug('ERROR', 'Profile update failed', error);
+      }
+    }
+  </script>
+</body>
+</html>
