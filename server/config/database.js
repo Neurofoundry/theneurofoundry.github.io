@@ -5,9 +5,21 @@
 
 let db = null;
 let dbType = null;
+const { LocalFileStore } = require('../services/localFileStore');
+
+function isPlaceholderValue(value) {
+  if (!value) return true;
+  const lower = String(value).toLowerCase();
+  return (
+    lower.includes('your-') ||
+    lower.includes('xxxxx') ||
+    lower.includes('example') ||
+    lower.includes('change-this')
+  );
+}
 
 // Initialize Firebase if configured
-if (process.env.FIREBASE_PROJECT_ID) {
+if (!isPlaceholderValue(process.env.FIREBASE_PROJECT_ID)) {
   const admin = require('firebase-admin');
 
   try {
@@ -25,7 +37,7 @@ if (process.env.FIREBASE_PROJECT_ID) {
 }
 
 // Initialize Supabase if configured and Firebase is not
-if (!db && process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
+if (!db && !isPlaceholderValue(process.env.SUPABASE_URL) && !isPlaceholderValue(process.env.SUPABASE_SERVICE_ROLE_KEY)) {
   const { createClient } = require('@supabase/supabase-js');
 
   try {
@@ -42,9 +54,20 @@ if (!db && process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
 
 // Fallback to in-memory storage (development only)
 if (!db) {
-  console.warn('⚠️  No database configured. Using in-memory storage (dev only)');
-  db = new Map(); // Simple in-memory store for development
-  dbType = 'memory';
+  const defaultPath = process.env.NODE_ENV === 'production'
+    ? '/data/auth-users.json'
+    : './data/auth-users.json';
+  const filePath = process.env.LOCAL_DB_FILE || defaultPath;
+
+  try {
+    db = new LocalFileStore(filePath);
+    dbType = 'localfile';
+    console.warn(`⚠️  No external database configured. Using local file store: ${filePath}`);
+  } catch (error) {
+    console.warn('⚠️  Local file store unavailable. Falling back to in-memory storage.');
+    db = new Map(); // Last-resort fallback
+    dbType = 'memory';
+  }
 }
 
 module.exports = { db, dbType };
