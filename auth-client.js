@@ -107,11 +107,15 @@ class NeurofoundryAuth {
   /**
    * Register new user
    */
-  async register(email, password, name) {
+  async register(userData) {
     try {
       const data = await this.apiRequest('/auth/register', {
         method: 'POST',
-        body: JSON.stringify({ email, password, name })
+        body: JSON.stringify({
+          email: userData.email,
+          password: userData.password,
+          name: userData.name || `${userData.firstName || ''} ${userData.lastName || ''}`.trim()
+        })
       });
 
       if (data.success && data.data) {

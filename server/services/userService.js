@@ -306,6 +306,124 @@ async function deleteUser(userId) {
   }
 }
 
+/**
+ * Verify email token
+ */
+async function verifyEmailToken(token) {
+  try {
+    let user = null;
+
+    if (dbType === 'firebase') {
+      const snapshot = await db.collection('users')
+        .where('verificationToken', '==', token)
+        .limit(1)
+        .get();
+
+      if (!snapshot.empty) {
+        const doc = snapshot.docs[0];
+        user = { id: doc.id, ...doc.data() };
+      }
+    } else if (dbType === 'supabase') {
+      const { data, error } = await db
+        .from('users')
+        .select('*')
+        .eq('verification_token', token)
+        .single();
+
+      if (!error) user = data;
+    } else {
+      // In-memory
+      for (const [id, u] of db.entries()) {
+        if (u.verificationToken === token) {
+          user = u;
+          break;
+        }
+      }
+    }
+
+    if (!user) return null;
+
+    // Check if token is expired
+    if (user.verificationTokenExpires && new Date(user.verificationTokenExpires) < new Date()) {
+      return null;
+    }
+
+    // Mark email as verified
+    await updateUser(user.id, {
+      emailVerified: true,
+      verificationToken: null,
+      verificationTokenExpires: null
+    });
+
+    return await findUserById(user.id);
+  } catch (error) {
+    console.error('Error verifying email token:', error);
+    throw error;
+  }
+}
+
+/**
+ * Reset password with token
+ */
+async function resetPassword(token, newPassword) {
+  try {
+    let user = null;
+
+    if (dbType === 'firebase') {
+      const snapshot = await db.collection('users')
+        .where('resetPasswordToken', '==', token)
+        .limit(1)
+        .get();
+
+      if (!snapshot.empty) {
+        const doc = snapshot.docs[0];
+        user = { id: doc.id, ...doc.data() };
+      }
+    } else if (dbType === 'supabase') {
+      const { data, error } = await db
+        .from('users')
+        .select('*')
+        .eq('reset_password_token', token)
+        .single();
+
+      if (!error) user = data;
+    } else {
+      // In-memory
+      for (const [id, u] of db.entries()) {
+        if (u.resetPasswordToken === token) {
+          user = u;
+          break;
+        }
+      }
+    }
+
+    if (!user) return null;
+
+    // Check if token is expired
+    if (user.resetPasswordExpires && new Date(user.resetPasswordExpires) < new Date()) {
+      return null;
+    }
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(
+      newPassword,
+      parseInt(process.env.BCRYPT_ROUNDS) || 12
+    );
+
+    // Update password and clear reset token
+    await updateUser(user.id, {
+      password: hashedPassword,
+      resetPasswordToken: null,
+      resetPasswordExpires: null
+    });
+
+    return await findUserById(user.id);
+  } catch (error) {
+    console.error('Error resetting password:', error);
+    throw error;
+  }
+}
+
 module.exports = {
   findUserById,
   findUserByEmail,
@@ -314,5 +432,7 @@ module.exports = {
   findOrCreateOAuthUser,
   updateUser,
   registerUser,
-  deleteUser
+  deleteUser,
+  verifyEmailToken,
+  resetPassword
 };
