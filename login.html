@@ -6,6 +6,7 @@
   <title>Login – Neurofoundry</title>
   <meta name="description" content="Access your Neurofoundry account to create, manage, and generate AI-powered content.">
   <meta name="theme-color" content="#0f1113">
+  <script src="/auth-client.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { 
@@ -554,33 +555,52 @@
   </footer>
 
   <script>
-    function handleLogin(event) {
-      event.preventDefault();
-      
-      const email = document.getElementById('email').value;
-      const remember = document.getElementById('remember').checked;
-      
-      // Simulate login
-      console.log('Login attempt:', { email, remember });
-      
-      // Show feedback
-      alert('Login functionality would connect to your backend here.\n\nEmail: ' + email);
-      
-      // In production, this would:
-      // 1. Send credentials to secure backend
-      // 2. Set authentication tokens
-      // 3. Redirect to dashboard
+    // Initialize auth client
+    const auth = new window.NeurofoundryAuth();
+
+    // Check if already logged in
+    if (auth.isAuthenticated()) {
+      const redirect = new URLSearchParams(window.location.search).get('redirect') || '/profile.html';
+      window.location.href = redirect;
     }
-    
-    function handleSocialLogin(provider) {
-      console.log('Social login with:', provider);
-      alert('Social login via ' + provider + ' would integrate with OAuth here.');
-      
-      // In production, this would:
-      // 1. Redirect to OAuth provider
-      // 2. Handle OAuth callback
-      // 3. Authenticate user
-      // 4. Set session/tokens
+
+    // Handle login form submission
+    async function handleLogin(event) {
+      event.preventDefault();
+
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const remember = document.getElementById('remember').checked;
+      const loginBtn = event.target.querySelector('.login-btn');
+
+      // Disable button and show loading state
+      loginBtn.disabled = true;
+      loginBtn.textContent = '🔄 Connecting...';
+
+      try {
+        await auth.login(email, password);
+
+        // Success - redirect to profile or specified page
+        const redirect = new URLSearchParams(window.location.search).get('redirect') || '/profile.html';
+        window.location.href = redirect;
+
+      } catch (error) {
+        // Show error message
+        loginBtn.disabled = false;
+        loginBtn.textContent = '🔥 Initialize Session';
+
+        alert('Login failed: ' + (error.message || 'Invalid credentials. Please check your email and password.'));
+      }
+    }
+
+    // Handle OAuth login
+    async function handleSocialLogin(provider) {
+      try {
+        const redirect = new URLSearchParams(window.location.search).get('redirect') || '/profile.html';
+        await auth.loginWithOAuth(provider, redirect);
+      } catch (error) {
+        alert('OAuth login failed: ' + (error.message || 'Could not connect to ' + provider));
+      }
     }
   </script>
   <script src="shared/page-transitions.js"></script>
