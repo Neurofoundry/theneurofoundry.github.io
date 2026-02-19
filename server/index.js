@@ -28,6 +28,8 @@ const { authMiddleware } = require('./middleware/auth');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+let serverInstance;
+let isShuttingDown = false;
 
 // Security middleware
 app.use(helmet());
@@ -70,11 +72,44 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// Dev-only server controls
+app.post('/api/dev/server/start', (req, res) => {
+  if (process.env.NODE_ENV === 'production') {
+    return res.status(403).json({ message: 'Server control is disabled in production.' });
+  }
+
+  return res.json({
+    success: true,
+    message: `Server already running on port ${PORT}`
+  });
+});
+
+app.post('/api/dev/server/stop', (req, res) => {
+  if (process.env.NODE_ENV === 'production') {
+    return res.status(403).json({ message: 'Server control is disabled in production.' });
+  }
+
+  if (isShuttingDown) {
+    return res.status(409).json({ message: 'Shutdown already in progress.' });
+  }
+
+  isShuttingDown = true;
+  res.json({ success: true, message: 'Shutting down server...' });
+
+  setTimeout(() => {
+    if (serverInstance) {
+      serverInstance.close(() => process.exit(0));
+    } else {
+      process.exit(0);
+    }
+  }, 100);
+});
+
 // Error handling middleware (must be last)
 app.use(errorHandler);
 
 // Start server
-app.listen(PORT, () => {
+serverInstance = app.listen(PORT, () => {
   console.log(`🚀 Neurofoundry Auth Server running on port ${PORT}`);
   console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`🔒 CORS enabled for: ${process.env.CORS_ORIGIN}`);
