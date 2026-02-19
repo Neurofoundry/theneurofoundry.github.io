@@ -4,7 +4,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Auth Testing – Neurofoundry</title>
-  <script src="/auth-client.js"></script>
+  <script src="./auth-client.js" onerror="handleScriptLoadError()"></script>
+  <script>
+    function handleScriptLoadError() {
+      console.error('Failed to load auth-client.js');
+      document.addEventListener('DOMContentLoaded', function() {
+        const container = document.querySelector('.container');
+        if (container) {
+          const errorDiv = document.createElement('div');
+          errorDiv.className = 'status error show';
+          errorDiv.style.marginBottom = '24px';
+          errorDiv.innerHTML = '<strong>Error:</strong> Failed to load authentication library (auth-client.js). Please ensure the file exists in the same directory as this page.';
+          container.insertBefore(errorDiv, container.firstChild);
+        }
+      });
+    }
+  </script>
   <style>
     * { box-sizing: border-box; }
     body {
