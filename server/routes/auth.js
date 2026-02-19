@@ -7,11 +7,110 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const { body, validationResult } = require('express-validator');
-const { registerUser, findUserByEmail } = require('../services/userService');
+const { registerUser, findUserByEmail, findOrCreateOAuthUser } = require('../services/userService');
 const { generateTokens, verifyRefreshToken } = require('../utils/jwt');
-const { sendVerificationEmail, sendPasswordResetEmail } = require('../services/emailService');
+const { sendPasswordResetEmail } = require('../services/emailService');
+const { enqueueUserRegisteredEmail } = require('../services/emailOrchestrator');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
+
+function isPlaceholderValue(value) {
+  if (!value) return true;
+  const lower = String(value).toLowerCase();
+  return (
+    lower.includes('your-') ||
+    lower.includes('xxxxx') ||
+    lower.includes('example') ||
+    lower.includes('change-this')
+  );
+}
+
+function isProviderConfigured(provider) {
+  if (provider === 'google') {
+    return !isPlaceholderValue(process.env.GOOGLE_CLIENT_ID)
+      && !isPlaceholderValue(process.env.GOOGLE_CLIENT_SECRET);
+  }
+  if (provider === 'github') {
+    return !isPlaceholderValue(process.env.GITHUB_CLIENT_ID)
+      && !isPlaceholderValue(process.env.GITHUB_CLIENT_SECRET);
+  }
+  return false;
+}
+
+function isDevOAuthMockEnabled() {
+  return process.env.NODE_ENV !== 'production' && process.env.DEV_OAUTH_MOCK !== 'false';
+}
+
+function sanitizeRedirectPath(redirect) {
+  if (!redirect || typeof redirect !== 'string') return '/profile.html';
+  if (!redirect.startsWith('/')) return '/profile.html';
+  if (redirect.startsWith('//')) return '/profile.html';
+  return redirect;
+}
+
+function buildFrontendUrl(pathname, query = {}) {
+  const frontendBase = process.env.FRONTEND_URL || 'http://localhost:3000';
+  const url = new URL(pathname, frontendBase);
+  Object.entries(query).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== '') {
+      url.searchParams.set(key, String(value));
+    }
+  });
+  return url.toString();
+}
+
+function setAuthCookie(res, accessToken) {
+  res.cookie('accessToken', accessToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 7 * 24 * 60 * 60 * 1000
+  });
+}
+
+function issueOAuthSuccessRedirect(res, user, provider, redirectPath, mock = false) {
+  const tokens = generateTokens(user);
+  setAuthCookie(res, tokens.accessToken);
+  return res.redirect(
+    buildFrontendUrl('/auth/callback.html', {
+      token: tokens.accessToken,
+      redirect: sanitizeRedirectPath(redirectPath),
+      provider,
+      mock: mock ? '1' : undefined
+    })
+  );
+}
+
+function issueOAuthFailureRedirect(res, errorCode) {
+  return res.redirect(
+    buildFrontendUrl('/login.html', {
+      error: errorCode || 'oauth_failed'
+    })
+  );
+}
+
+async function createDevOAuthAuthData(provider) {
+  const id = `dev-${provider}-user`;
+  const userData = {
+    authProvider: provider,
+    authProviderId: id,
+    email: `${id}@neurofoundry.local`,
+    name: `Dev ${provider.charAt(0).toUpperCase() + provider.slice(1)} User`,
+    emailVerified: true
+  };
+  const user = await findOrCreateOAuthUser(userData);
+  const tokens = generateTokens(user);
+  return { user, tokens };
+}
+
+async function handleDevOAuth(provider, req, res, next) {
+  try {
+    const redirectPath = sanitizeRedirectPath(req.query.redirect);
+    const { user } = await createDevOAuthAuthData(provider);
+    return issueOAuthSuccessRedirect(res, user, provider, redirectPath, true);
+  } catch (error) {
+    return next(error);
+  }
+}
 
 // ============================================
 // LOCAL REGISTRATION
@@ -40,11 +139,14 @@ router.post(
       // Register user
       const user = await registerUser(email, password, name);
 
-      // Send verification email
+      // Emit user.registered event for email pipeline
+      let emailStatus = null;
       try {
-        await sendVerificationEmail(user);
+        emailStatus = enqueueUserRegisteredEmail(user, {
+          requestId: req.headers['x-request-id'] || null
+        });
       } catch (emailError) {
-        console.error('Failed to send verification email:', emailError);
+        console.error('Failed to enqueue verification email:', emailError);
       }
 
       // Generate tokens
@@ -67,7 +169,8 @@ router.post(
             name: user.name,
             emailVerified: user.emailVerified
           },
-          tokens
+          tokens,
+          ...(process.env.NODE_ENV !== 'production' && emailStatus ? { email: emailStatus } : {})
         }
       });
     } catch (error) {
@@ -141,31 +244,104 @@ router.post(
 // ============================================
 router.get(
   '/google',
-  passport.authenticate('google', {
-    scope: ['profile', 'email'],
-    session: false
-  })
+  (req, res, next) => {
+    if (!isProviderConfigured('google')) {
+      if (isDevOAuthMockEnabled()) {
+        return handleDevOAuth('google', req, res, next);
+      }
+      return res.status(503).json({
+        success: false,
+        message: 'Google OAuth is not configured'
+      });
+    }
+
+    const redirectPath = sanitizeRedirectPath(req.query.redirect);
+    return passport.authenticate('google', {
+      scope: ['profile', 'email'],
+      session: false,
+      state: encodeURIComponent(redirectPath)
+    })(req, res, next);
+  }
 );
+
+router.post('/dev-oauth/:provider', async (req, res, next) => {
+  try {
+    const provider = String(req.params.provider || '').toLowerCase();
+    if (!['google', 'github'].includes(provider)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Unsupported OAuth provider'
+      });
+    }
+
+    if (!isDevOAuthMockEnabled()) {
+      return res.status(403).json({
+        success: false,
+        message: 'Development OAuth mock is disabled'
+      });
+    }
+
+    if (isProviderConfigured(provider)) {
+      return res.status(409).json({
+        success: false,
+        message: `${provider} OAuth is configured. Use the real OAuth flow.`
+      });
+    }
+
+    const { user, tokens } = await createDevOAuthAuthData(provider);
+    setAuthCookie(res, tokens.accessToken);
+
+    return res.json({
+      success: true,
+      message: `Development ${provider} OAuth successful`,
+      data: {
+        provider,
+        mock: true,
+        user: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          avatar: user.avatar,
+          emailVerified: user.emailVerified,
+          role: user.role
+        },
+        tokens
+      }
+    });
+  } catch (error) {
+    return next(error);
+  }
+});
 
 router.get(
   '/google/callback',
-  passport.authenticate('google', {
-    session: false,
-    failureRedirect: `${process.env.FRONTEND_URL}/login?error=google_auth_failed`
-  }),
-  (req, res) => {
-    // Generate tokens
-    const tokens = generateTokens(req.user);
+  (req, res, next) => {
+    if (!isProviderConfigured('google')) {
+      if (isDevOAuthMockEnabled()) {
+        return handleDevOAuth('google', req, res, next);
+      }
+      return issueOAuthFailureRedirect(res, 'google_auth_not_configured');
+    }
 
-    // Set cookie
-    res.cookie('accessToken', tokens.accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 7 * 24 * 60 * 60 * 1000
-    });
+    return passport.authenticate('google', { session: false }, (err, user) => {
+      if (err) {
+        return next(err);
+      }
+      if (!user) {
+        return issueOAuthFailureRedirect(res, 'google_auth_failed');
+      }
 
-    // Redirect to frontend with token
-    res.redirect(`${process.env.FRONTEND_URL}/auth/callback?token=${tokens.accessToken}`);
+      let redirectPath = '/profile.html';
+      if (req.query.state) {
+        try {
+          redirectPath = sanitizeRedirectPath(decodeURIComponent(req.query.state));
+        } catch (_) {
+          redirectPath = '/profile.html';
+        }
+      }
+
+      return issueOAuthSuccessRedirect(res, user, 'google', redirectPath);
+    })(req, res, next);
   }
 );
 
@@ -174,31 +350,55 @@ router.get(
 // ============================================
 router.get(
   '/github',
-  passport.authenticate('github', {
-    scope: ['user:email'],
-    session: false
-  })
+  (req, res, next) => {
+    if (!isProviderConfigured('github')) {
+      if (isDevOAuthMockEnabled()) {
+        return handleDevOAuth('github', req, res, next);
+      }
+      return res.status(503).json({
+        success: false,
+        message: 'GitHub OAuth is not configured'
+      });
+    }
+
+    const redirectPath = sanitizeRedirectPath(req.query.redirect);
+    return passport.authenticate('github', {
+      scope: ['user:email'],
+      session: false,
+      state: encodeURIComponent(redirectPath)
+    })(req, res, next);
+  }
 );
 
 router.get(
   '/github/callback',
-  passport.authenticate('github', {
-    session: false,
-    failureRedirect: `${process.env.FRONTEND_URL}/login?error=github_auth_failed`
-  }),
-  (req, res) => {
-    // Generate tokens
-    const tokens = generateTokens(req.user);
+  (req, res, next) => {
+    if (!isProviderConfigured('github')) {
+      if (isDevOAuthMockEnabled()) {
+        return handleDevOAuth('github', req, res, next);
+      }
+      return issueOAuthFailureRedirect(res, 'github_auth_not_configured');
+    }
 
-    // Set cookie
-    res.cookie('accessToken', tokens.accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 7 * 24 * 60 * 60 * 1000
-    });
+    return passport.authenticate('github', { session: false }, (err, user) => {
+      if (err) {
+        return next(err);
+      }
+      if (!user) {
+        return issueOAuthFailureRedirect(res, 'github_auth_failed');
+      }
 
-    // Redirect to frontend with token
-    res.redirect(`${process.env.FRONTEND_URL}/auth/callback?token=${tokens.accessToken}`);
+      let redirectPath = '/profile.html';
+      if (req.query.state) {
+        try {
+          redirectPath = sanitizeRedirectPath(decodeURIComponent(req.query.state));
+        } catch (_) {
+          redirectPath = '/profile.html';
+        }
+      }
+
+      return issueOAuthSuccessRedirect(res, user, 'github', redirectPath);
+    })(req, res, next);
   }
 );
 

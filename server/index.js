@@ -21,6 +21,8 @@ const passportConfig = require('./config/passport');
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 const profileRoutes = require('./routes/profile');
+const { getLastSentEmail, getSentEmailLog } = require('./services/emailService');
+const { getEmailDeliveryLog, getEmailQueueSnapshot } = require('./services/emailOrchestrator');
 
 // Import middleware
 const { errorHandler } = require('./middleware/errorHandler');
@@ -32,7 +34,11 @@ let serverInstance;
 let isShuttingDown = false;
 
 // Security middleware
-app.use(helmet());
+app.use(helmet({
+  // Auth test pages and OAuth callback rely on inline scripts in development.
+  // Keep strict CSP in production by leaving Helmet defaults enabled there.
+  contentSecurityPolicy: process.env.NODE_ENV === 'production' ? undefined : false
+}));
 app.use(cors(corsOptions));
 
 // Rate limiting
@@ -103,6 +109,42 @@ app.post('/api/dev/server/stop', (req, res) => {
       process.exit(0);
     }
   }, 100);
+});
+
+app.get('/api/dev/email/last', (req, res) => {
+  if (process.env.NODE_ENV === 'production') {
+    return res.status(403).json({ message: 'Email debug endpoints are disabled in production.' });
+  }
+
+  return res.json({
+    success: true,
+    data: getLastSentEmail()
+  });
+});
+
+app.get('/api/dev/email/log', (req, res) => {
+  if (process.env.NODE_ENV === 'production') {
+    return res.status(403).json({ message: 'Email debug endpoints are disabled in production.' });
+  }
+
+  return res.json({
+    success: true,
+    data: getSentEmailLog()
+  });
+});
+
+app.get('/api/dev/email/events', (req, res) => {
+  if (process.env.NODE_ENV === 'production') {
+    return res.status(403).json({ message: 'Email debug endpoints are disabled in production.' });
+  }
+
+  return res.json({
+    success: true,
+    data: {
+      queue: getEmailQueueSnapshot(),
+      log: getEmailDeliveryLog()
+    }
+  });
 });
 
 // Error handling middleware (must be last)
