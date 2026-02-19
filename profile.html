@@ -6,7 +6,7 @@
   <title>Profile – Neurofoundry</title>
   <meta name="description" content="Manage your Neurofoundry profile and account settings">
   <meta name="theme-color" content="#0f1113">
-  <script src="/auth-client.js"></script>
+  <script src="/auth-client.js?v=20260219b"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -367,6 +367,10 @@
   </main>
 
   <script>
+    window.nfAuth = new window.NeurofoundryAuth({
+      apiUrl: 'https://api.theneurofoundry.com/api'
+    });
+
     // Check authentication
     if (!window.nfAuth.isAuthenticated()) {
       window.location.href = '/login.html?redirect=' + encodeURIComponent(window.location.pathname);

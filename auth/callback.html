@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Auth Callback – Neurofoundry</title>
-  <script src="/auth-client.js"></script>
+  <script src="/auth-client.js?v=20260219b"></script>
   <style>
     body {
       background: #0f1113;
@@ -41,16 +41,21 @@
 
   <script>
     // Handle OAuth callback
-    try {
-      window.nfAuth.handleOAuthCallback();
-    } catch (error) {
-      console.error('OAuth callback error:', error);
-      // Show error and redirect
-      document.querySelector('.loading p').textContent = 'Authentication failed. Redirecting...';
-      setTimeout(() => {
-        window.location.href = '/login.html?error=' + encodeURIComponent(error.message);
-      }, 2000);
-    }
+    (async () => {
+      try {
+        const auth = new window.NeurofoundryAuth({
+          apiUrl: 'https://api.theneurofoundry.com/api'
+        });
+        await auth.handleOAuthCallback();
+      } catch (error) {
+        console.error('OAuth callback error:', error);
+        // Show error and redirect
+        document.querySelector('.loading p').textContent = 'Authentication failed. Redirecting...';
+        setTimeout(() => {
+          window.location.href = '/login.html?error=' + encodeURIComponent(error.message);
+        }, 2000);
+      }
+    })();
   </script>
 </body>
 </html>

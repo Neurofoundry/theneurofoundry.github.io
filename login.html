@@ -6,7 +6,7 @@
   <title>Login – Neurofoundry</title>
   <meta name="description" content="Access your Neurofoundry account to create, manage, and generate AI-powered content.">
   <meta name="theme-color" content="#0f1113">
-  <script src="/auth-client.js"></script>
+  <script src="/auth-client.js?v=20260219b"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { 
@@ -556,7 +556,9 @@
 
   <script>
     // Initialize auth client
-    const auth = new window.NeurofoundryAuth();
+    const auth = new window.NeurofoundryAuth({
+      apiUrl: 'https://api.theneurofoundry.com/api'
+    });
 
     // Check if already logged in
     if (auth.isAuthenticated()) {
