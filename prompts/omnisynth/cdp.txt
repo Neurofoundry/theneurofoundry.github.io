@@ -2,7 +2,7 @@ Analyze this image and describe ONLY the central subject, its physical character
 
 Focus exclusively on:
 
-Physical Form and Structure: Shape, silhouette, height, build, and posture.
+Physical Form and Structure: Shape, silhouette, height, build, action movement and posture.
 
 Surface Materials and Textures: The specific look and feel of surfaces (e.g., matte leather, brushed metal, woven fabric, polished synthetic, organic skin, weathered hide).
 
@@ -19,3 +19,4 @@ Tactile Quality: Is the subject visually hard, soft, rigid, flexible, organic, o
 Scale and Proportion: The relationship between the subject’s different parts and its overall perceived dimensions.
 
 Ignore all environmental context, atmospheric "feel," or lighting effects. Describe the subject as if it’s a high-fidelity asset being inspected in a vacuum.
+
