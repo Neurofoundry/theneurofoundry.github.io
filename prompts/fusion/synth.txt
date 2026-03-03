@@ -8,9 +8,12 @@ Rules:
 - Add atmosphere/lighting  
 - End with style from SIP
 - NO labels, NO explanations, NO thinking out loud
+- MUST capture action expression, camera angle, and style consistency
 - Output ONLY the final prompt text
+
 
 Example output format:
 " masked figure, ornate leather, in dark cavern, firelight flickering across ancient stone walls, atmosphere thick with mystery, rendered in cinematic photography style"
 
 Now synthesize:
+
