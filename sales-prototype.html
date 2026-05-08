@@ -1,0 +1,1570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Neurofoundry Sales Prototype</title>
+  <meta name="description" content="Interactive sales prototype for Neurofoundry browser workflows, built from local repo assets.">
+  <meta name="theme-color" content="#0f1113">
+  <link rel="icon" type="image/png" href="anvil.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f1113;
+      --panel-border: rgba(224, 71, 60, 0.24);
+      --accent: #e0473c;
+      --accent-bright: #ff7b6e;
+      --accent-soft: #ffb6ad;
+      --text: #eef1f4;
+      --muted: #9da5af;
+      --shadow: 0 16px 40px rgba(0, 0, 0, 0.42);
+      --radius-lg: 24px;
+      --radius-md: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at top left, rgba(224, 71, 60, 0.18), transparent 34%),
+        radial-gradient(circle at 82% 12%, rgba(255, 162, 106, 0.1), transparent 28%),
+        linear-gradient(180deg, #111417 0%, #0a0b0d 100%);
+      color: var(--text);
+      font-family: Inter, sans-serif;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+      background-size: 36px 36px;
+      opacity: 0.3;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: rgba(11, 12, 14, 0.84);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(224, 71, 60, 0.22);
+    }
+
+    .nav {
+      position: relative;
+      z-index: 1;
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 0 22px;
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+    }
+
+    .brand-mark {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent-bright) 0%, var(--accent) 100%);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 24px rgba(224, 71, 60, 0.32);
+    }
+
+    .brand-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .brand-copy strong {
+      font-size: 14px;
+    }
+
+    .brand-copy span {
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      font-size: 14px;
+      color: #d1d6dc;
+    }
+
+    .nav-links a:hover,
+    .nav-links a:focus-visible {
+      color: var(--accent-bright);
+    }
+
+    .nav-cta {
+      padding: 11px 18px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, var(--accent-bright) 0%, #e9584d 48%, #d23d33 100%);
+      border: 1px solid #a2362f;
+      box-shadow: 0 8px 22px rgba(224, 71, 60, 0.28);
+      font-weight: 700;
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+    }
+
+    .section-shell {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 0 22px;
+    }
+
+    .hero {
+      padding: 40px 0 36px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .panel {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(19, 20, 24, 0.92), rgba(10, 11, 14, 0.96));
+      border: 1px solid var(--panel-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-copy-panel,
+    .control-panel,
+    .preview-panel,
+    .roi-panel,
+    .roi-results,
+    .visual-panel {
+      padding: 28px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(224, 71, 60, 0.14);
+      border: 1px solid rgba(224, 71, 60, 0.28);
+      color: var(--accent-soft);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .hero-banner {
+      display: block;
+      width: min(100%, 440px);
+      margin: 24px 0 18px;
+      filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.45));
+    }
+
+    .hero-copy-panel h1,
+    .section-heading h2,
+    .cta-band h2 {
+      margin: 0;
+      font-family: "Space Grotesk", Inter, sans-serif;
+      font-size: clamp(34px, 4.6vw, 62px);
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+      background: linear-gradient(135deg, #ffffff 0%, #ffc9c3 45%, #ff7a66 72%, #e0473c 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-copy-panel p,
+    .section-heading p,
+    .control-panel p,
+    .preview-panel p,
+    .roi-panel p,
+    .roi-results p,
+    .proof-card p,
+    .cta-band p {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .hero-copy-panel p {
+      margin: 18px 0 0;
+      font-size: 17px;
+      max-width: 60ch;
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .cta-row a,
+    .run-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 48px;
+      padding: 0 22px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .cta-row a:hover,
+    .cta-row a:focus-visible,
+    .run-button:hover,
+    .run-button:focus-visible {
+      transform: translateY(-1px);
+    }
+
+    .cta-primary,
+    .run-button {
+      background: linear-gradient(180deg, var(--accent-bright) 0%, #e9584d 48%, #d23d33 100%);
+      color: #fff;
+      border-color: #a2362f;
+      box-shadow: 0 10px 24px rgba(224, 71, 60, 0.26);
+    }
+
+    .cta-secondary {
+      color: #fff;
+      border-color: rgba(224, 71, 60, 0.28);
+      background: rgba(224, 71, 60, 0.08);
+    }
+
+    .hero-metrics,
+    .summary-grid,
+    .roi-results-grid,
+    .proof-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .hero-metrics {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-top: 28px;
+    }
+
+    .metric-tile,
+    .summary-card,
+    .roi-card,
+    .proof-card {
+      padding: 18px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .metric-tile strong,
+    .roi-card strong {
+      display: block;
+      font-family: "Space Grotesk", Inter, sans-serif;
+      color: #fff;
+    }
+
+    .metric-tile strong {
+      font-size: 28px;
+    }
+
+    .metric-tile span,
+    .summary-card span,
+    .roi-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .metric-tile span {
+      margin-top: 6px;
+      font-size: 13px;
+      letter-spacing: normal;
+      text-transform: none;
+    }
+
+    .visual-panel {
+      min-height: 620px;
+      background:
+        radial-gradient(circle at 24% 18%, rgba(224, 71, 60, 0.28), transparent 32%),
+        linear-gradient(180deg, rgba(20, 12, 10, 0.96), rgba(9, 10, 12, 0.98));
+    }
+
+    .visual-stage {
+      position: relative;
+      min-height: 100%;
+      border-radius: 16px;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.03), transparent 60%),
+        rgba(7, 8, 10, 0.82);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      overflow: hidden;
+    }
+
+    .stage-fog {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 16% 20%, rgba(255, 123, 110, 0.22), transparent 26%),
+        radial-gradient(circle at 80% 32%, rgba(255, 185, 126, 0.14), transparent 24%),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.52));
+    }
+
+    .stage-pillar {
+      position: absolute;
+      bottom: -20px;
+      width: 138px;
+      opacity: 0.36;
+      filter: saturate(0.86);
+    }
+
+    .stage-pillar.left {
+      left: -28px;
+    }
+
+    .stage-pillar.right {
+      right: -28px;
+      transform: scaleX(-1);
+    }
+
+    .stage-brain {
+      position: absolute;
+      top: 26px;
+      left: 26px;
+      width: min(42%, 250px);
+      filter: drop-shadow(0 12px 32px rgba(224, 71, 60, 0.4));
+    }
+
+    .stage-drone {
+      position: absolute;
+      top: 38px;
+      right: 100px;
+      width: min(27%, 170px);
+      opacity: 0.8;
+      filter: drop-shadow(0 12px 22px rgba(224, 71, 60, 0.24));
+    }
+
+    .stage-arch {
+      position: absolute;
+      right: -8px;
+      bottom: 0;
+      width: min(48%, 340px);
+      filter: drop-shadow(0 24px 46px rgba(0, 0, 0, 0.68));
+    }
+
+    .stage-shell {
+      position: absolute;
+      left: 82px;
+      right: 88px;
+      bottom: 42px;
+      min-height: 322px;
+      padding: 22px;
+      border-radius: 28px;
+      background:
+        linear-gradient(180deg, rgba(8, 10, 12, 0.76), rgba(8, 10, 12, 0.94)),
+        url("frame.png") center / cover no-repeat;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    }
+
+    .shell-label {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(224, 71, 60, 0.14);
+      border: 1px solid rgba(224, 71, 60, 0.28);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .shell-grid {
+      position: relative;
+      z-index: 1;
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .shell-step {
+      padding: 16px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      min-height: 126px;
+    }
+
+    .shell-step strong {
+      display: block;
+      font-size: 13px;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .shell-step p {
+      margin: 10px 0 0;
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--muted);
+    }
+
+    .section-spacing {
+      padding: 18px 0 0;
+    }
+
+    .section-heading {
+      max-width: 860px;
+      margin-bottom: 24px;
+    }
+
+    .section-heading p {
+      margin: 12px 0 0;
+      font-size: 16px;
+    }
+
+    .demo-grid,
+    .roi-grid,
+    .materials-grid,
+    .cta-band {
+      display: grid;
+      gap: 24px;
+    }
+
+    .demo-grid,
+    .roi-grid {
+      grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+    }
+
+    .control-panel {
+      background:
+        linear-gradient(180deg, rgba(13, 14, 18, 0.94), rgba(16, 9, 7, 0.96)),
+        url("rusted_rect.png") center / cover no-repeat;
+      background-blend-mode: screen, normal;
+    }
+
+    .control-panel h3,
+    .preview-panel h3,
+    .roi-panel h3,
+    .roi-results h3 {
+      margin: 0;
+      font-size: 24px;
+      font-family: "Space Grotesk", Inter, sans-serif;
+      letter-spacing: -0.03em;
+    }
+
+    .persona-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 22px 0 20px;
+    }
+
+    .persona-button {
+      min-height: 42px;
+      padding: 0 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(224, 71, 60, 0.22);
+      background: rgba(255, 255, 255, 0.03);
+      color: #e6eaef;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .persona-button:hover,
+    .persona-button:focus-visible {
+      transform: translateY(-1px);
+      border-color: rgba(255, 123, 110, 0.42);
+    }
+
+    .persona-button.is-active {
+      background: rgba(224, 71, 60, 0.18);
+      border-color: rgba(255, 123, 110, 0.44);
+      color: #fff;
+      box-shadow: 0 10px 24px rgba(224, 71, 60, 0.18);
+    }
+
+    .field-label {
+      display: block;
+      margin: 0 0 10px;
+      font-size: 13px;
+      color: var(--accent-soft);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    textarea,
+    input[type="range"] {
+      width: 100%;
+    }
+
+    textarea {
+      min-height: 160px;
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(6, 7, 9, 0.78);
+      color: var(--text);
+      font: inherit;
+      resize: vertical;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+    }
+
+    textarea:focus-visible,
+    input:focus-visible,
+    button:focus-visible,
+    a:focus-visible {
+      outline: 2px solid var(--accent-bright);
+      outline-offset: 2px;
+    }
+
+    .control-foot,
+    .footer-copy {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .chip,
+    .deliverable-card span,
+    .material-overlay span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 0 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .chip {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      color: #d5dbe2;
+    }
+
+    .preview-shell {
+      margin-top: 20px;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background:
+        linear-gradient(180deg, rgba(10, 11, 13, 0.92), rgba(8, 9, 10, 0.96)),
+        url("frame.png") center / cover no-repeat;
+      min-height: 530px;
+    }
+
+    .preview-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 18px 22px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .browser-dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .browser-dots span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.22);
+    }
+
+    .preview-status {
+      font-size: 12px;
+      color: var(--accent-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+    }
+
+    .preview-body {
+      padding: 20px 22px 24px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .summary-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .summary-card strong {
+      display: block;
+      margin-top: 8px;
+      font-size: 16px;
+      line-height: 1.45;
+    }
+
+    .step-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .step-card {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 14px;
+      align-items: start;
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(255, 255, 255, 0.03);
+      opacity: 0.52;
+      transform: translateY(6px);
+      transition: opacity 0.24s ease, transform 0.24s ease, border-color 0.24s ease, background 0.24s ease;
+    }
+
+    .step-card.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .step-card.is-active {
+      border-color: rgba(255, 123, 110, 0.4);
+      background: rgba(224, 71, 60, 0.08);
+    }
+
+    .step-number {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .step-card.is-active .step-number {
+      background: linear-gradient(135deg, var(--accent-bright), var(--accent));
+      color: #fff;
+    }
+
+    .step-copy strong {
+      display: block;
+      font-size: 15px;
+      color: #fff;
+    }
+
+    .step-copy p {
+      margin: 6px 0 0;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .step-tag {
+      min-height: 30px;
+      padding: 0 10px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      background: rgba(255, 255, 255, 0.05);
+      color: #d9dde3;
+    }
+
+    .deliverable-card {
+      padding: 18px;
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(224, 71, 60, 0.14), rgba(224, 71, 60, 0.05));
+      border: 1px solid rgba(255, 123, 110, 0.26);
+    }
+
+    .deliverable-card span,
+    .material-overlay span {
+      background: rgba(224, 71, 60, 0.16);
+      border: 1px solid rgba(255, 123, 110, 0.28);
+      color: var(--accent-soft);
+    }
+
+    .deliverable-card h4,
+    .material-overlay h3,
+    .proof-card strong {
+      margin: 14px 0 8px;
+      font-family: "Space Grotesk", Inter, sans-serif;
+    }
+
+    .deliverable-card h4 {
+      font-size: 20px;
+    }
+
+    .deliverable-card p,
+    .material-overlay p {
+      margin: 0;
+      color: #e7ebef;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .slider-stack {
+      display: grid;
+      gap: 20px;
+      margin-top: 22px;
+    }
+
+    .slider-group label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+      color: #e6eaef;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .slider-value {
+      color: var(--accent-soft);
+      font-family: "Space Grotesk", Inter, sans-serif;
+      font-size: 18px;
+    }
+
+    input[type="range"] {
+      accent-color: var(--accent);
+    }
+
+    .roi-results-grid {
+      margin-top: 22px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .roi-card strong {
+      margin-top: 8px;
+      font-size: 30px;
+    }
+
+    .materials-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .material-card {
+      position: relative;
+      overflow: hidden;
+      min-height: 360px;
+      padding: 22px;
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: linear-gradient(180deg, rgba(13, 14, 16, 0.82), rgba(10, 10, 12, 0.98));
+      box-shadow: var(--shadow);
+    }
+
+    .material-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 22%, rgba(5, 6, 8, 0.92) 100%);
+      pointer-events: none;
+    }
+
+    .material-card img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.84;
+    }
+
+    .material-overlay {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .material-overlay h3 {
+      font-size: 24px;
+      line-height: 1.02;
+    }
+
+    .proof-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .proof-card strong {
+      display: block;
+      font-size: 22px;
+    }
+
+    .proof-card p {
+      margin: 0;
+    }
+
+    .cta-band {
+      margin: 36px 0 56px;
+      padding: 30px;
+      border-radius: 30px;
+      background:
+        radial-gradient(circle at 18% 24%, rgba(224, 71, 60, 0.22), transparent 30%),
+        linear-gradient(135deg, rgba(18, 18, 22, 0.98), rgba(12, 10, 9, 0.98));
+      border: 1px solid rgba(255, 123, 110, 0.24);
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .cta-band p {
+      margin: 14px 0 0;
+      font-size: 16px;
+    }
+
+    .cta-band-art {
+      position: relative;
+      min-height: 220px;
+      border-radius: 24px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(0, 0, 0, 0.24)),
+        url("brain3.png") center / cover no-repeat;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .cta-band-art::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 22% 30%, rgba(255, 123, 110, 0.28), transparent 28%),
+        linear-gradient(180deg, transparent, rgba(8, 9, 12, 0.78));
+    }
+
+    .cta-band-art strong {
+      position: absolute;
+      left: 22px;
+      right: 22px;
+      bottom: 22px;
+      z-index: 1;
+      font-family: "Space Grotesk", Inter, sans-serif;
+      font-size: 24px;
+      line-height: 1.08;
+    }
+
+    footer {
+      padding: 0 0 38px;
+    }
+
+    .footer-copy {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 0 22px;
+      color: #7f8790;
+      font-size: 13px;
+    }
+
+    @media (max-width: 1180px) {
+      .hero-grid,
+      .demo-grid,
+      .roi-grid,
+      .cta-band {
+        grid-template-columns: 1fr;
+      }
+
+      .materials-grid,
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .stage-shell {
+        left: 30px;
+        right: 30px;
+        bottom: 28px;
+      }
+    }
+
+    @media (max-width: 840px) {
+      .hero-copy-panel,
+      .visual-panel,
+      .control-panel,
+      .preview-panel,
+      .roi-panel,
+      .roi-results {
+        padding: 22px;
+      }
+
+      .hero-metrics,
+      .summary-grid,
+      .roi-results-grid,
+      .materials-grid,
+      .proof-grid,
+      .shell-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .nav {
+        padding: 14px 18px;
+      }
+
+      .nav-links {
+        gap: 12px;
+      }
+
+      .stage-pillar {
+        display: none;
+      }
+
+      .stage-brain,
+      .stage-drone {
+        opacity: 0.44;
+      }
+
+      .stage-arch {
+        width: min(56%, 300px);
+      }
+
+      .stage-shell {
+        left: 18px;
+        right: 18px;
+        bottom: 18px;
+        min-height: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav">
+      <a class="brand" href="home.html" aria-label="Neurofoundry home">
+        <span class="brand-mark" aria-hidden="true">N</span>
+        <span class="brand-copy">
+          <strong>NEUROFOUNDRY</strong>
+          <span>Sales Prototype</span>
+        </span>
+      </a>
+      <nav class="nav-links" aria-label="Prototype navigation">
+        <a href="home.html">Home</a>
+        <a href="forge_final.html">Forge</a>
+        <a href="projects.html">Projects</a>
+        <a href="crew.html">Crew</a>
+        <a class="nav-cta" href="signup.html">Request Access</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="section-shell hero-grid">
+        <article class="panel hero-copy-panel">
+          <div class="eyebrow">Interactive proof for browser extension sales</div>
+          <img class="hero-banner" src="banner.png" alt="Neurofoundry - Intelligence Engineered">
+          <h1>Turn one prompt into a browser workflow your team can review and run.</h1>
+          <p>
+            This prototype reframes Neurofoundry around its strongest commercial angle: browser-native automation for
+            operators who want execution, visibility, and custom deployment paths instead of another vague AI promise.
+          </p>
+          <p>
+            It reuses dormant repo assets, packages them into concrete campaign surfaces, and demonstrates how the
+            extension story can sell across sales, recruiting, operations, and research buyers.
+          </p>
+          <div class="cta-row">
+            <a class="cta-primary" href="signup.html">Request extension access</a>
+            <a class="cta-secondary" href="#demo">Run the workflow demo</a>
+            <a class="cta-secondary" href="crew.html">See deployment path</a>
+          </div>
+          <div class="hero-metrics" aria-label="Commercial positioning metrics">
+            <div class="metric-tile">
+              <strong>4 ICPs</strong>
+              <span>Founder, rev/growth, recruiting, ops and research</span>
+            </div>
+            <div class="metric-tile">
+              <strong>2 offers</strong>
+              <span>Extension access for speed, guided pilot for depth</span>
+            </div>
+            <div class="metric-tile">
+              <strong>1 story</strong>
+              <span>Prompt to browser execution with human approval</span>
+            </div>
+          </div>
+        </article>
+
+        <aside class="panel visual-panel" aria-label="Sales hero visualization">
+          <div class="visual-stage">
+            <div class="stage-fog"></div>
+            <img class="stage-pillar left" src="pillar_base.png" alt="">
+            <img class="stage-pillar right" src="pillar_base.png" alt="">
+            <img class="stage-brain" src="sbrain.png" alt="Neural control visual">
+            <img class="stage-drone" src="sdrone.png" alt="Execution drone visual">
+            <img class="stage-arch" src="arch.png" alt="Neurofoundry forge operator">
+            <div class="stage-shell">
+              <div class="shell-label">Browser extension sales narrative</div>
+              <div class="shell-grid">
+                <div class="shell-step">
+                  <strong>1. Intent</strong>
+                  <p>Capture the user goal in plain language instead of making them author automation logic.</p>
+                </div>
+                <div class="shell-step">
+                  <strong>2. Review</strong>
+                  <p>Show the buyer how the workflow can pause for approval before a browser action becomes final.</p>
+                </div>
+                <div class="shell-step">
+                  <strong>3. Deliver</strong>
+                  <p>Route output into CRM, ATS, docs, or internal systems as a product surface, not a hand wave.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section-spacing" id="demo">
+      <div class="section-shell">
+        <div class="section-heading">
+          <h2>Interactive extension workflow prototype</h2>
+          <p>
+            Pick a buyer persona, tune the prompt, and run the mock extension flow. The right panel shows the action
+            graph, approval steps, and final business output that a sales conversation should orbit around.
+          </p>
+        </div>
+
+        <div class="demo-grid">
+          <article class="panel control-panel">
+            <h3>Choose the buyer you are selling to</h3>
+            <p>
+              Each path keeps the same product thesis but changes the workflow proof, business destination, and value
+              framing. That keeps outreach specific without fragmenting the story.
+            </p>
+
+            <div class="persona-row" role="tablist" aria-label="Buyer personas">
+              <button class="persona-button is-active" type="button" data-scenario="sales">Sales</button>
+              <button class="persona-button" type="button" data-scenario="recruiting">Recruiting</button>
+              <button class="persona-button" type="button" data-scenario="ops">Operations</button>
+              <button class="persona-button" type="button" data-scenario="research">Research</button>
+            </div>
+
+            <label class="field-label" for="promptInput">User prompt</label>
+            <textarea id="promptInput">Find 20 RevOps leaders at Series B SaaS companies, capture recent hiring signals, and draft first-touch outreach with CRM-ready notes.</textarea>
+
+            <div class="control-foot">
+              <div class="chip-row" id="scenarioChips" aria-label="Scenario attributes"></div>
+              <button class="run-button" id="simulateRun" type="button">Simulate extension run</button>
+            </div>
+          </article>
+
+          <article class="panel preview-panel">
+            <h3>Mock browser output</h3>
+            <p>
+              This panel is what a buyer should remember after the call: a guided sequence from intent to result, with
+              business context preserved and manual approval points made explicit.
+            </p>
+
+            <div class="preview-shell">
+              <div class="preview-topbar">
+                <div class="browser-dots" aria-hidden="true">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+                <div class="preview-status" id="previewStatus">Extension waiting for prompt</div>
+              </div>
+
+              <div class="preview-body">
+                <div class="summary-grid">
+                  <div class="summary-card">
+                    <span>Buyer</span>
+                    <strong id="summaryPersona">Sales</strong>
+                  </div>
+                  <div class="summary-card">
+                    <span>Target destination</span>
+                    <strong id="summaryDestination">CRM handoff</strong>
+                  </div>
+                  <div class="summary-card">
+                    <span>Commercial angle</span>
+                    <strong id="summaryValue">Faster pipeline without extra rep overhead</strong>
+                  </div>
+                </div>
+
+                <div class="step-list" id="stepList" aria-live="polite"></div>
+
+                <div class="deliverable-card">
+                  <span>Final handoff</span>
+                  <h4 id="deliverableTitle">CRM-ready account queue</h4>
+                  <p id="deliverableCopy">
+                    20 qualified accounts, notes, and first-touch drafts packaged for rep review.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-spacing">
+      <div class="section-shell">
+        <div class="section-heading">
+          <h2>Simple ROI framing for sales calls</h2>
+          <p>
+            Buyers do not need a perfect spreadsheet in the first call. They need a credible model showing how browser
+            workload reduction turns into saved time and a pilot-worthy budget story.
+          </p>
+        </div>
+
+        <div class="roi-grid">
+          <article class="panel roi-panel">
+            <h3>Adjust the workload</h3>
+            <p>
+              Tune the repeated browser volume, time per task, and weighted automation coverage. This is the fastest
+              way to show why an extension plus guided pilot is easier to justify than more manual process.
+            </p>
+
+            <div class="slider-stack">
+              <div class="slider-group">
+                <label for="tasksRange">
+                  Weekly repeated browser tasks
+                  <span class="slider-value" id="tasksValue">140</span>
+                </label>
+                <input id="tasksRange" type="range" min="20" max="400" value="140">
+              </div>
+
+              <div class="slider-group">
+                <label for="minutesRange">
+                  Minutes per task today
+                  <span class="slider-value" id="minutesValue">11</span>
+                </label>
+                <input id="minutesRange" type="range" min="2" max="30" value="11">
+              </div>
+
+              <div class="slider-group">
+                <label for="rateRange">
+                  Loaded hourly cost
+                  <span class="slider-value" id="rateValue">$72</span>
+                </label>
+                <input id="rateRange" type="range" min="25" max="180" value="72">
+              </div>
+
+              <div class="slider-group">
+                <label for="coverageRange">
+                  Workflow coverage during pilot
+                  <span class="slider-value" id="coverageValue">68%</span>
+                </label>
+                <input id="coverageRange" type="range" min="20" max="95" value="68">
+              </div>
+            </div>
+          </article>
+
+          <article class="panel roi-results">
+            <h3>Value story</h3>
+            <p>
+              Use these outputs to move the conversation from "interesting AI" to "this is worth piloting against one
+              painful workflow right now."
+            </p>
+
+            <div class="roi-results-grid">
+              <div class="roi-card">
+                <span>Hours reclaimed / month</span>
+                <strong id="hoursSaved">72.1</strong>
+              </div>
+              <div class="roi-card">
+                <span>Labor value / month</span>
+                <strong id="monthlyValue">$5,191</strong>
+              </div>
+              <div class="roi-card">
+                <span>Labor value / year</span>
+                <strong id="yearlyValue">$62,292</strong>
+              </div>
+              <div class="roi-card">
+                <span>Pilot framing</span>
+                <strong id="pilotValue">One workflow can justify a paid rollout discussion.</strong>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-spacing">
+      <div class="section-shell">
+        <div class="section-heading">
+          <h2>Creative surfaces built from local assets</h2>
+          <p>
+            These cards repurpose the unused top-level art into campaign-ready concepts for social, store, email, and
+            founder-led outbound. They can be lifted into final production without introducing new brand directions.
+          </p>
+        </div>
+
+        <div class="materials-grid">
+          <article class="material-card">
+            <img src="sbrain.png" alt="Neural brain visual">
+            <div class="material-overlay">
+              <span>LinkedIn launch card</span>
+              <h3>From prompt to browser result.</h3>
+              <p>Use this as the top-of-funnel concept ad for founders and operator-heavy teams.</p>
+            </div>
+          </article>
+
+          <article class="material-card">
+            <img src="sdrone.png" alt="Drone execution visual">
+            <div class="material-overlay">
+              <span>Extension store surface</span>
+              <h3>Automate the tabs your team already lives in.</h3>
+              <p>Best fit for store screenshots, listing art, and motion-led install pages.</p>
+            </div>
+          </article>
+
+          <article class="material-card">
+            <img src="3v_sbrain.gif" alt="Animated neural visual">
+            <div class="material-overlay">
+              <span>Founder email banner</span>
+              <h3>Deploy a browser workflow before the team asks for another hire.</h3>
+              <p>Use in short outbound notes to make the extension story feel tangible and premium.</p>
+            </div>
+          </article>
+
+          <article class="material-card">
+            <img src="arch.png" alt="Neurofoundry forge operator">
+            <div class="material-overlay">
+              <span>Case-study hero</span>
+              <h3>Engineered execution, not generic automation.</h3>
+              <p>Use for founder-led proof pages and custom deployment follow-up material.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-spacing">
+      <div class="section-shell">
+        <div class="section-heading">
+          <h2>Why this prototype should convert better</h2>
+          <p>
+            The current site already has the right raw material. This page tightens it into a sales flow that shows
+            product behavior, commercial framing, and next-step packaging in one place.
+          </p>
+        </div>
+
+        <div class="proof-grid">
+          <article class="proof-card">
+            <strong>It sells one motion.</strong>
+            <p>The page shows prompt, review, browser action, and deliverable as a single story instead of spreading proof across unrelated pages.</p>
+          </article>
+          <article class="proof-card">
+            <strong>It fits extension usage.</strong>
+            <p>The interaction is modeled around a user goal inside a browser surface, which matches the preferred usage mode more closely than a generic landing page.</p>
+          </article>
+          <article class="proof-card">
+            <strong>It supports the services path.</strong>
+            <p>The same narrative can close extension access or escalate into a custom pilot, which is the most practical monetization path for this repo today.</p>
+          </article>
+        </div>
+
+        <div class="cta-band">
+          <div>
+            <h2>Use this as the commercial center of gravity.</h2>
+            <p>
+              Put the prototype in outreach, demo calls, and founder posts. Then route buyers into either request
+              access or a workflow-specific deployment conversation based on how complex their use case is.
+            </p>
+            <div class="cta-row">
+              <a class="cta-primary" href="signup.html">Request Access</a>
+              <a class="cta-secondary" href="marketing-plan.md">Open marketing plan</a>
+              <a class="cta-secondary" href="marketing-skill-suggestions.md">Open skill suggestions</a>
+            </div>
+          </div>
+          <div class="cta-band-art" aria-hidden="true">
+            <strong>Prompt-driven browser execution is the product category worth owning here.</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-copy">
+      <span>Built from local repo assets: arch.png, sbrain.png, sdrone.png, brain3.png, frame.png, pillar_base.png, rusted_rect.png, 3v_sbrain.gif.</span>
+      <span>Primary next step: extension access or guided pilot.</span>
+    </div>
+  </footer>
+  <script>
+    const scenarios = {
+      sales: {
+        name: "Sales",
+        destination: "CRM handoff",
+        value: "Faster pipeline without extra rep overhead",
+        deliverableTitle: "CRM-ready account queue",
+        deliverableCopy: "20 qualified accounts, recent buying signals, and first-touch drafts packaged for rep review.",
+        prompt: "Find 20 RevOps leaders at Series B SaaS companies, capture recent hiring signals, and draft first-touch outreach with CRM-ready notes.",
+        chips: ["Extension workflow", "Human approval", "CRM sync"],
+        steps: [
+          { title: "Capture target account list", copy: "The extension opens LinkedIn and company sites, then narrows the search to the exact ICP in the prompt.", tag: "Source" },
+          { title: "Enrich signals in-browser", copy: "It pulls hiring signals, job-board clues, and company context into a structured account brief.", tag: "Context" },
+          { title: "Pause for approval", copy: "Before outbound copy is drafted, the operator can edit targeting rules and reject weak candidates.", tag: "Review" },
+          { title: "Draft and route output", copy: "Approved accounts receive CRM-ready notes plus first-touch outreach drafts for the rep team.", tag: "Delivery" }
+        ]
+      },
+      recruiting: {
+        name: "Recruiting",
+        destination: "ATS handoff",
+        value: "More sourcing coverage with tighter review control",
+        deliverableTitle: "Ranked candidate slate",
+        deliverableCopy: "Profiles, fit notes, and outreach drafts are staged for recruiter approval before ATS handoff.",
+        prompt: "Source platform engineers with browser extension or agent experience, rank them for fit, and prepare recruiter-ready outreach notes.",
+        chips: ["Candidate review", "Approval gate", "ATS sync"],
+        steps: [
+          { title: "Profile discovery", copy: "The extension searches target sources and collects candidates tied to the role, stack, and seniority requested.", tag: "Source" },
+          { title: "Fit scoring and notes", copy: "Each profile gets a structured summary focused on the role, not a vague generic recap.", tag: "Context" },
+          { title: "Recruiter checkpoint", copy: "The operator can override fit scoring before any outreach draft or profile routing happens.", tag: "Review" },
+          { title: "ATS-ready output", copy: "Approved candidates are packaged into a slate with next-step notes and outreach messaging.", tag: "Delivery" }
+        ]
+      },
+      ops: {
+        name: "Operations",
+        destination: "Task queue",
+        value: "Reduce repeated tab work across internal systems",
+        deliverableTitle: "Resolved browser workflow pack",
+        deliverableCopy: "The extension completes repeated checks, packages exceptions, and routes only the items that need a human.",
+        prompt: "Audit vendor portals for billing mismatches, collect exceptions, and package only the outliers for ops review.",
+        chips: ["Exception routing", "Task queue", "Approval gate"],
+        steps: [
+          { title: "Open system set", copy: "The extension works through vendor portals, dashboards, and admin tabs defined by the workflow owner.", tag: "Source" },
+          { title: "Compare and flag mismatches", copy: "Browser-visible data is compared against expected values so only true exceptions survive.", tag: "Context" },
+          { title: "Escalate uncertain cases", copy: "Low-confidence or high-risk actions stop and wait for operator confirmation.", tag: "Review" },
+          { title: "Route final package", copy: "Resolved items are closed, while exceptions are routed into the ops task queue with evidence attached.", tag: "Delivery" }
+        ]
+      },
+      research: {
+        name: "Research",
+        destination: "Decision brief",
+        value: "Replace tab chaos with structured browser evidence",
+        deliverableTitle: "Decision-ready research brief",
+        deliverableCopy: "The extension opens sources, compares evidence, and delivers a structured brief with citations and next actions.",
+        prompt: "Compare three AI browser competitors, capture their extension positioning, and package a decision brief for leadership review.",
+        chips: ["Source comparison", "Citation capture", "Decision brief"],
+        steps: [
+          { title: "Open source set", copy: "The extension visits the named competitors, docs, and public pages without losing the prompt objective.", tag: "Source" },
+          { title: "Extract comparison points", copy: "Positioning, workflow claims, and pricing clues are grouped into a usable matrix.", tag: "Context" },
+          { title: "Review edge cases", copy: "If the evidence is weak or contradictory, the reviewer gets a checkpoint before final synthesis.", tag: "Review" },
+          { title: "Publish brief", copy: "The final output is a leadership-ready memo with recommendations, citations, and next questions.", tag: "Delivery" }
+        ]
+      }
+    };
+
+    const personaButtons = Array.from(document.querySelectorAll(".persona-button"));
+    const promptInput = document.getElementById("promptInput");
+    const scenarioChips = document.getElementById("scenarioChips");
+    const previewStatus = document.getElementById("previewStatus");
+    const summaryPersona = document.getElementById("summaryPersona");
+    const summaryDestination = document.getElementById("summaryDestination");
+    const summaryValue = document.getElementById("summaryValue");
+    const stepList = document.getElementById("stepList");
+    const deliverableTitle = document.getElementById("deliverableTitle");
+    const deliverableCopy = document.getElementById("deliverableCopy");
+    const simulateRun = document.getElementById("simulateRun");
+    const tasksRange = document.getElementById("tasksRange");
+    const minutesRange = document.getElementById("minutesRange");
+    const rateRange = document.getElementById("rateRange");
+    const coverageRange = document.getElementById("coverageRange");
+    const tasksValue = document.getElementById("tasksValue");
+    const minutesValue = document.getElementById("minutesValue");
+    const rateValue = document.getElementById("rateValue");
+    const coverageValue = document.getElementById("coverageValue");
+    const hoursSaved = document.getElementById("hoursSaved");
+    const monthlyValue = document.getElementById("monthlyValue");
+    const yearlyValue = document.getElementById("yearlyValue");
+    const pilotValue = document.getElementById("pilotValue");
+
+    let currentScenario = "sales";
+
+    function currency(value) {
+      return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        maximumFractionDigits: 0
+      }).format(value);
+    }
+
+    function setScenario(key) {
+      currentScenario = key;
+      const scenario = scenarios[key];
+      personaButtons.forEach((button) => {
+        button.classList.toggle("is-active", button.dataset.scenario === key);
+      });
+      promptInput.value = scenario.prompt;
+      scenarioChips.innerHTML = scenario.chips.map((chip) => `<span class="chip">${chip}</span>`).join("");
+      renderScenario(false);
+    }
+
+    function createStepCard(step, index) {
+      const article = document.createElement("article");
+      article.className = "step-card";
+      article.innerHTML = `
+        <div class="step-number">${index + 1}</div>
+        <div class="step-copy">
+          <strong>${step.title}</strong>
+          <p>${step.copy}</p>
+        </div>
+        <div class="step-tag">${step.tag}</div>
+      `;
+      return article;
+    }
+
+    function renderScenario(animate) {
+      const scenario = scenarios[currentScenario];
+      const prompt = promptInput.value.trim() || scenario.prompt;
+      previewStatus.textContent = animate ? "Compiling extension run" : "Extension waiting for prompt";
+      summaryPersona.textContent = scenario.name;
+      summaryDestination.textContent = scenario.destination;
+      summaryValue.textContent = scenario.value;
+      deliverableTitle.textContent = scenario.deliverableTitle;
+      deliverableCopy.textContent = scenario.deliverableCopy;
+      stepList.innerHTML = "";
+
+      const cards = scenario.steps.map((step, index) => {
+        const article = createStepCard(step, index);
+        stepList.appendChild(article);
+        return article;
+      });
+
+      if (!animate) {
+        previewStatus.textContent = `Ready: ${prompt}`;
+        cards.forEach((card, index) => {
+          card.classList.add("is-visible");
+          if (index === cards.length - 1) {
+            card.classList.add("is-active");
+          }
+        });
+        return;
+      }
+
+      cards.forEach((card, index) => {
+        window.setTimeout(() => {
+          cards.forEach((item) => item.classList.remove("is-active"));
+          card.classList.add("is-visible", "is-active");
+          previewStatus.textContent = `Running step ${index + 1} of ${cards.length}: ${scenario.steps[index].title}`;
+          if (index === cards.length - 1) {
+            window.setTimeout(() => {
+              previewStatus.textContent = `Completed: ${prompt}`;
+            }, 280);
+          }
+        }, index * 260);
+      });
+    }
+
+    function updateRoi() {
+      const tasks = Number(tasksRange.value);
+      const minutes = Number(minutesRange.value);
+      const rate = Number(rateRange.value);
+      const coverage = Number(coverageRange.value) / 100;
+      const monthlyTasks = tasks * 4.33;
+      const hours = (monthlyTasks * minutes / 60) * coverage;
+      const monthValue = hours * rate;
+      const yearValue = monthValue * 12;
+
+      tasksValue.textContent = tasks;
+      minutesValue.textContent = minutes;
+      rateValue.textContent = currency(rate).replace(".00", "");
+      coverageValue.textContent = `${Math.round(coverage * 100)}%`;
+      hoursSaved.textContent = hours.toFixed(1);
+      monthlyValue.textContent = currency(monthValue);
+      yearlyValue.textContent = currency(yearValue);
+
+      if (yearValue < 25000) {
+        pilotValue.textContent = "Good fit for a narrow pilot tied to one repeated workflow.";
+      } else if (yearValue < 90000) {
+        pilotValue.textContent = "Strong case for a paid pilot with clear operator review gates.";
+      } else {
+        pilotValue.textContent = "Large enough workload to justify product access plus deployment planning.";
+      }
+    }
+
+    personaButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        setScenario(button.dataset.scenario);
+      });
+    });
+
+    simulateRun.addEventListener("click", () => {
+      renderScenario(true);
+    });
+
+    [tasksRange, minutesRange, rateRange, coverageRange].forEach((input) => {
+      input.addEventListener("input", updateRoi);
+    });
+
+    setScenario(currentScenario);
+    updateRoi();
+  </script>
+</body>
+</html>

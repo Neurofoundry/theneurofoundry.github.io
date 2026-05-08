@@ -1,0 +1,244 @@
+﻿<!-- html-designer.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Simple HTML Page Designer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+    }
+    #menu {
+      width: 220px;
+      background: #f8f8f8;
+      border-right: 1px solid #ddd;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    #menu h2 {
+      margin-top: 0;
+    }
+    #canvas-container {
+      flex: 1;
+      padding: 20px;
+      background: #fff;
+      overflow: auto;
+    }
+    #canvas {
+      min-height: 400px;
+      border: 1px dashed #aaa;
+      padding: 20px;
+      background: #fafafa;
+      position: relative;
+    }
+    .element-controls {
+      margin-top: 5px;
+    }
+    .designer-element {
+      position: relative;
+      margin-bottom: 10px;
+      padding: 6px 8px 6px 8px;
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 3px;
+    }
+    .designer-element.selected {
+      border: 2px solid #2196F3;
+      background: #e3f2fd;
+    }
+    button {
+      margin-right: 5px;
+      margin-top: 5px;
+      margin-bottom: 5px;
+    }
+    .input-row {
+      margin-bottom: 10px;
+    }
+    label {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 3px;
+    }
+    input[type="text"], input[type="url"] {
+      width: 100%;
+      padding: 4px 6px;
+      box-sizing: border-box;
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div id="menu">
+    <h2>Elements</h2>
+    <button onclick="showAddText()">Add Text</button>
+    <button onclick="showAddImage()">Add Image</button>
+    <button onclick="showAddButton()">Add Button</button>
+    <button onclick="showAddInput()">Add Input Field</button>
+    <hr>
+    <button onclick="exportHTML()">Export HTML</button>
+    <div id="element-form"></div>
+  </div>
+  <div id="canvas-container">
+    <h2>Canvas</h2>
+    <div id="canvas"></div>
+  </div>
+  <script>
+    const canvas = document.getElementById('canvas');
+    const elementForm = document.getElementById('element-form');
+    let selectedElement = null;
+
+    function clearForm() {
+      elementForm.innerHTML = '';
+    }
+
+    function showAddText() {
+      clearForm();
+      elementForm.innerHTML = `
+        <div class="input-row">
+          <label>Text Content</label>
+          <input type="text" id="text-content" placeholder="Enter text">
+        </div>
+        <button onclick="addText()">Add</button>
+      `;
+    }
+
+    function showAddImage() {
+      clearForm();
+      elementForm.innerHTML = `
+        <div class="input-row">
+          <label>Image URL</label>
+          <input type="url" id="img-url" placeholder="https://example.com/image.png">
+        </div>
+        <button onclick="addImage()">Add</button>
+      `;
+    }
+
+    function showAddButton() {
+      clearForm();
+      elementForm.innerHTML = `
+        <div class="input-row">
+          <label>Button Text</label>
+          <input type="text" id="btn-text" placeholder="Button">
+        </div>
+        <button onclick="addButton()">Add</button>
+      `;
+    }
+
+    function showAddInput() {
+      clearForm();
+      elementForm.innerHTML = `
+        <div class="input-row">
+          <label>Placeholder</label>
+          <input type="text" id="input-placeholder" placeholder="Placeholder text">
+        </div>
+        <button onclick="addInput()">Add</button>
+      `;
+    }
+
+    function addText() {
+      const text = document.getElementById('text-content').value;
+      if (!text.trim()) return;
+      const div = document.createElement('div');
+      div.className = 'designer-element';
+      div.innerHTML = `<span>${escapeHTML(text)}</span>
+        <div class="element-controls">
+          <button onclick="removeElement(this)">Remove</button>
+        </div>`;
+      div.onclick = function(e) { selectElement(div, e); };
+      canvas.appendChild(div);
+      clearForm();
+    }
+
+    function addImage() {
+      const url = document.getElementById('img-url').value;
+      if (!url.trim()) return;
+      const div = document.createElement('div');
+      div.className = 'designer-element';
+      div.innerHTML = `<img src="${escapeAttr(url)}" alt="Image" style="max-width:180px; max-height:120px; display:block;">
+        <div class="element-controls">
+          <button onclick="removeElement(this)">Remove</button>
+        </div>`;
+      div.onclick = function(e) { selectElement(div, e); };
+      canvas.appendChild(div);
+      clearForm();
+    }
+
+    function addButton() {
+      const text = document.getElementById('btn-text').value;
+      if (!text.trim()) return;
+      const div = document.createElement('div');
+      div.className = 'designer-element';
+      div.innerHTML = `<button>${escapeHTML(text)}</button>
+        <div class="element-controls">
+          <button onclick="removeElement(this)">Remove</button>
+        </div>`;
+      div.onclick = function(e) { selectElement(div, e); };
+      canvas.appendChild(div);
+      clearForm();
+    }
+
+    function addInput() {
+      const placeholder = document.getElementById('input-placeholder').value;
+      const div = document.createElement('div');
+      div.className = 'designer-element';
+      div.innerHTML = `<input type="text" placeholder="${escapeAttr(placeholder)}">
+        <div class="element-controls">
+          <button onclick="removeElement(this)">Remove</button>
+        </div>`;
+      div.onclick = function(e) { selectElement(div, e); };
+      canvas.appendChild(div);
+      clearForm();
+    }
+
+    function removeElement(btn) {
+      btn.closest('.designer-element').remove();
+      selectedElement = null;
+    }
+
+    function selectElement(div, event) {
+      event.stopPropagation();
+      if (selectedElement) selectedElement.classList.remove('selected');
+      selectedElement = div;
+      div.classList.add('selected');
+    }
+
+    document.body.onclick = function() {
+      if (selectedElement) selectedElement.classList.remove('selected');
+      selectedElement = null;
+    };
+
+    function exportHTML() {
+      let html = '';
+      canvas.querySelectorAll('.designer-element').forEach(el => {
+        const clone = el.cloneNode(true);
+        // Remove controls
+        const controls = clone.querySelector('.element-controls');
+        if (controls) controls.remove();
+        clone.classList.remove('designer-element', 'selected');
+        html += clone.innerHTML + '\n';
+      });
+      window.prompt('Copy HTML below:', html.trim());
+    }
+
+    // Escape helpers
+    function escapeHTML(str) {
+      return str.replace(/[&<>"']/g, function(m) {
+        return ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;'
+        })[m];
+      });
+    }
+    function escapeAttr(str) {
+      return str.replace(/"/g, '&quot;');
+    }
+  </script>
+</body>
+</html>

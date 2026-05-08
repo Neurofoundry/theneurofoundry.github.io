@@ -1,0 +1,1189 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Forge Online Browser Test</title>
+  <style>
+    :root {
+      --bg-1: #04070c;
+      --bg-2: #091221;
+      --panel: #0f1828;
+      --panel-2: #0b1422;
+      --line: #22344f;
+      --line-strong: #2f4f77;
+      --text: #eef4fd;
+      --muted: #9cb0ca;
+      --ok: #44d88e;
+      --bad: #ff6a63;
+      --accent: #ff7a3f;
+      --accent-2: #4ea4ff;
+    }
+    * { box-sizing: border-box; }
+    html, body { max-width: 100%; overflow-x: hidden; }
+    body {
+      margin: 0;
+      font-family: "Aptos", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      background:
+        radial-gradient(900px 500px at -10% -15%, #1a2a42 0%, transparent 65%),
+        radial-gradient(1200px 600px at 110% -20%, #1f1b35 0%, transparent 66%),
+        linear-gradient(180deg, var(--bg-2), var(--bg-1));
+      color: var(--text);
+    }
+    .wrap {
+      max-width: 1640px;
+      margin: 18px auto 28px;
+      padding: 0 18px;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 32px;
+      letter-spacing: 0.01em;
+      font-weight: 700;
+    }
+    .sub {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 14px;
+      max-width: 1200px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    .card {
+      background: linear-gradient(180deg, rgba(17, 26, 41, 0.95), rgba(12, 20, 33, 0.95));
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.03);
+      min-width: 0;
+    }
+    .card h2 {
+      margin: 0 0 8px;
+      font-size: 20px;
+      letter-spacing: .01em;
+    }
+    .card h3 {
+      margin: 16px 0 8px;
+      font-size: 15px;
+      color: #d8e6f8;
+    }
+    .section-note {
+      margin: 0 0 10px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #2b4263 16%, #2b4263 84%, transparent);
+      margin: 14px 0;
+    }
+    .row, .row3 {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .row { grid-template-columns: 1fr 1fr; }
+    .row3 { grid-template-columns: 1fr 1fr 1fr; }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 12px;
+      color: #9eb5d1;
+      letter-spacing: .01em;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+    input, textarea, select, button {
+      width: 100%;
+      min-width: 0;
+      border: 1px solid #304968;
+      border-radius: 10px;
+      background: #0a131f;
+      color: var(--text);
+      padding: 10px 12px;
+      font-size: 14px;
+      line-height: 1.2;
+    }
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #4f7bb0;
+      box-shadow: 0 0 0 3px rgba(78,164,255,.15);
+    }
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+      line-height: 1.35;
+    }
+    button {
+      border: none;
+      background: linear-gradient(135deg, #ff7a3f, #ff9d57);
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .08s ease, filter .15s ease;
+    }
+    button:hover { filter: brightness(1.08); }
+    button:active { transform: translateY(1px); }
+    button.ghost {
+      background: linear-gradient(180deg, #1d2c41, #172436);
+      border: 1px solid #3a5b83;
+      color: #d8e8fb;
+      font-weight: 600;
+    }
+    .actions, .actions4 {
+      display: grid;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .actions { grid-template-columns: repeat(3, minmax(150px, 1fr)); }
+    .actions4 { grid-template-columns: repeat(4, minmax(130px, 1fr)); }
+    .status {
+      margin-top: 10px;
+      font-size: 13px;
+      color: var(--muted);
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: rgba(20, 32, 49, .55);
+      border: 1px solid #24384f;
+    }
+    .status.ok { color: var(--ok); border-color: rgba(68,216,142,.35); }
+    .status.bad { color: var(--bad); border-color: rgba(255,106,99,.35); }
+    .img-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .img-box {
+      border: 1px solid #314b6d;
+      border-radius: 12px;
+      background: linear-gradient(180deg, #0c1727, #0a121f);
+      min-height: 170px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      font-size: 12px;
+      color: #8ea7c4;
+      text-align: center;
+      padding: 10px;
+    }
+    .img-box img {
+      width: 100%;
+      max-height: 280px;
+      object-fit: contain;
+      display: block;
+    }
+    pre {
+      margin: 0;
+      max-height: 560px;
+      overflow: auto;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      border: 1px solid #2a405c;
+      border-radius: 10px;
+      background: #08121f;
+      padding: 10px;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    .log {
+      margin-top: 8px;
+      max-height: 230px;
+      overflow: auto;
+      border: 1px solid #2a405c;
+      border-radius: 10px;
+      background: #08121f;
+      padding: 10px;
+      font-size: 12px;
+      line-height: 1.35;
+      color: #c5d8ef;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+    .step-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(180px, 1fr));
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .step-card {
+      border: 1px solid #2a405c;
+      border-radius: 10px;
+      background: #091323;
+      padding: 10px;
+      min-width: 0;
+    }
+    .step-title {
+      font-size: 11px;
+      color: #a6c0de;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .step-body {
+      font-size: 12px;
+      line-height: 1.35;
+      color: #dce8f8;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      max-height: 120px;
+      overflow: auto;
+    }
+    .inline-check {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+      color: #bfd2ea;
+      font-size: 13px;
+      padding: 9px 10px;
+      border: 1px dashed #315074;
+      border-radius: 10px;
+      background: rgba(12, 24, 40, .5);
+    }
+    .inline-check input {
+      width: auto;
+      accent-color: var(--accent);
+      margin: 0;
+      padding: 0;
+    }
+    .mono {
+      font-family: Consolas, "Courier New", monospace;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+    .lane-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 12px;
+    }
+    .lane {
+      border: 1px solid var(--line-strong);
+      border-radius: 14px;
+      background: linear-gradient(180deg, #0d1728, #0a1320);
+      padding: 12px;
+      position: relative;
+    }
+    .lane h4 {
+      margin: 0 0 10px;
+      font-size: 13px;
+      color: #dce9f8;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 7px 9px;
+      border-radius: 8px;
+      background: rgba(22, 38, 59, .8);
+      border: 1px solid #365985;
+    }
+    .pipe-step {
+      border: 1px solid #315176;
+      border-radius: 10px;
+      background: linear-gradient(180deg, #0a1422, #08121d);
+      padding: 10px;
+      margin-bottom: 10px;
+      position: relative;
+      min-height: 68px;
+    }
+    .pipe-step:last-child { margin-bottom: 0; }
+    .pipe-name {
+      font-size: 11px;
+      color: #a9c2df;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+    .pipe-val {
+      font-size: 12px;
+      color: #e0ecfb;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      max-height: 150px;
+      overflow: auto;
+      line-height: 1.35;
+    }
+    .flowboard {
+      margin-top: 10px;
+      border: 1px solid #2f4d72;
+      border-radius: 14px;
+      background: linear-gradient(180deg, #0b1422, #0a121d);
+      padding: 12px;
+    }
+    .flow-row {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(120px, 1fr));
+      gap: 8px;
+      align-items: stretch;
+    }
+    .flow-node {
+      border: 1px solid #34557e;
+      border-radius: 10px;
+      background: linear-gradient(180deg, #101d30, #0d1828);
+      padding: 8px;
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 12px;
+      color: #dce9f8;
+      font-weight: 600;
+      line-height: 1.25;
+    }
+    .flow-node.accent {
+      border-color: #ff8a4a;
+      background: linear-gradient(180deg, rgba(255,122,63,.2), rgba(255,122,63,.08));
+    }
+    .flow-arrow {
+      text-align: center;
+      color: #88a9cf;
+      font-size: 11px;
+      margin: 6px 0;
+    }
+    .flow-branches {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .flow-branch {
+      border: 1px solid #2b4567;
+      border-radius: 12px;
+      background: linear-gradient(180deg, #0c1727, #0a131f);
+      padding: 10px;
+    }
+    .flow-branch h5 {
+      margin: 0 0 8px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: #bfd4ee;
+    }
+    .flow-col {
+      display: grid;
+      gap: 7px;
+    }
+    .flow-pill {
+      border: 1px solid #35557f;
+      border-radius: 9px;
+      background: #0a1524;
+      padding: 7px 8px;
+      font-size: 11px;
+      color: #d7e6f8;
+      text-align: center;
+    }
+    .flow-pill.warn {
+      border-color: #ff8a4a;
+      color: #ffd9c5;
+      background: rgba(255,138,74,.12);
+    }
+    .flow-pill.ok {
+      border-color: #4ea4ff;
+      color: #d2ecff;
+      background: rgba(78,164,255,.12);
+    }
+    @media (max-width: 1320px) {
+      .row, .row3, .img-wrap, .lane-wrap { grid-template-columns: 1fr; }
+      .actions, .actions4 { grid-template-columns: repeat(2, minmax(160px, 1fr)); }
+      .step-grid { grid-template-columns: 1fr 1fr; }
+      .flow-row { grid-template-columns: 1fr; }
+      .flow-branches { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 760px) {
+      .wrap { padding: 0 12px; margin-top: 12px; }
+      h1 { font-size: 26px; }
+      .card { padding: 14px; }
+      .actions, .actions4, .step-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Forge Live Browser Test</h1>
+    <p class="sub">Online endpoint harness aligned to Forge runtime patterns. No local fallback logic. If opened via <span class="mono">file://</span>, use endpoints that allow <span class="mono">Origin: null</span> or serve this file over localhost.</p>
+
+    <div class="grid">
+      <section class="card">
+        <h2>1) Shared Setup</h2>
+        <p class="section-note">These settings are shared by both New Method and SIP/Live Method paths.</p>
+
+        <h3>Shared Endpoints</h3>
+        <div class="row">
+          <div>
+            <label for="extractApi">Extract API</label>
+            <input id="extractApi" value="https://extract.theneurofoundry.com/extract" />
+          </div>
+          <div>
+            <label for="fusionApi">Fusion API Base</label>
+            <input id="fusionApi" value="https://prmptrndr.csirico9.workers.dev/fusion" />
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="synthApi">Synth API</label>
+            <input id="synthApi" value="https://synth.csirico9.workers.dev" />
+          </div>
+          <div>
+            <label for="renderApi">Render API</label>
+            <input id="renderApi" value="https://nfcr-synthesize.onrender.com/features/4/render" />
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="styleApi">Style API Base</label>
+            <input id="styleApi" value="https://prmptrndr.csirico9.workers.dev" />
+          </div>
+          <div>
+            <label for="authKey">x-auth-key (optional)</label>
+            <input id="authKey" value="Tr1bXimgEnV1-sdbAI25" placeholder="Set your key for fusion/style/synth if required" />
+          </div>
+        </div>
+
+        <div class="divider"></div>
+        <h3>Shared Inputs</h3>
+        <div class="row">
+          <div>
+            <label for="subjectFile">Subject image</label>
+            <input id="subjectFile" type="file" accept="image/*" />
+          </div>
+          <div>
+            <label for="sceneFile">Scene image</label>
+            <input id="sceneFile" type="file" accept="image/*" />
+          </div>
+        </div>
+        <div class="img-wrap">
+          <div class="img-box" id="subjectPreview">No subject image</div>
+          <div class="img-box" id="scenePreview">No scene image</div>
+        </div>
+
+        <div class="divider"></div>
+        <h3>Manual Step Tools</h3>
+        <p class="section-note">Use these for one-off endpoint checks. Compare flow lives in panel 2.</p>
+        <div class="actions4">
+          <button id="btnExtractSubject">Extract Subject</button>
+          <button id="btnCdp" class="ghost">CDP</button>
+          <button id="btnAcp" class="ghost">ACP</button>
+          <button id="btnSip" class="ghost">SIP</button>
+        </div>
+        <div class="actions">
+          <button id="btnSynth">Synth Prompt</button>
+          <button id="btnRender" class="ghost">Render 1</button>
+          <button id="btnClearOutput" class="ghost">Clear Output</button>
+        </div>
+
+        <div class="divider"></div>
+        <h3>Shared Style Module</h3>
+        <div class="row3">
+          <div>
+            <label for="styleListPath">List path</label>
+            <input id="styleListPath" value="/style/list" />
+          </div>
+          <div>
+            <label for="styleListMethod">List method</label>
+            <select id="styleListMethod">
+              <option value="POST">POST</option>
+              <option value="GET">GET</option>
+            </select>
+          </div>
+          <div>
+            <label for="styleCompilePath">Compile path</label>
+            <input id="styleCompilePath" value="/style/compile" />
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="styleProfile">Style profile</label>
+            <select id="styleProfile"></select>
+          </div>
+          <div>
+            <label for="styleTokenTarget">Token target</label>
+            <input id="styleTokenTarget" readonly />
+          </div>
+        </div>
+        <div class="actions">
+          <button id="btnStyleList" class="ghost">Load Styles</button>
+          <button id="btnStyleCompile">Compile Style</button>
+          <button id="btnCopyCompiled" class="ghost">Use in Prompt</button>
+        </div>
+
+        <div id="status" class="status">Ready.</div>
+      </section>
+
+      <section class="card">
+        <h2>2) Process Lanes</h2>
+        <p class="section-note">Run both paths from shared inputs and compare prompts/data directly.</p>
+        <div class="flowboard">
+          <div class="flow-row">
+            <div class="flow-node accent">Shared Input Images</div>
+            <div class="flow-node">Fusion</div>
+            <div class="flow-node">Data Ingestion</div>
+            <div class="flow-node">Transform</div>
+            <div class="flow-node">Finalizing (Branch)</div>
+          </div>
+          <div class="flow-arrow">split -> New Method vs SIP/Live Method</div>
+          <div class="flow-branches">
+            <div class="flow-branch">
+              <h5>New Method Lane</h5>
+              <div class="flow-col">
+                <div class="flow-pill warn">Style Required</div>
+                <div class="flow-pill">Compile (Style + Prompt Extraction)</div>
+                <div class="flow-pill">Images w/ New Style</div>
+                <div class="flow-pill ok">Display</div>
+                <div class="flow-pill">Prompt/Data Output</div>
+                <div class="flow-pill">Extraction Trace</div>
+              </div>
+            </div>
+            <div class="flow-branch">
+              <h5>SIP / Live Lane</h5>
+              <div class="flow-col">
+                <div class="flow-pill">SIP / Live Method</div>
+                <div class="flow-pill">Images</div>
+                <div class="flow-pill ok">Display for Comparison</div>
+                <div class="flow-pill">Prompt/Data Output</div>
+                <div class="flow-pill">Extraction Trace</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h3>Compare Flow Control</h3>
+        <div class="actions">
+          <button id="btnRunAll">Run Compare Flow</button>
+          <button id="btnLabRun" class="ghost">Run New-Method Loop</button>
+          <button id="btnLabReset" class="ghost">Reset New-Method Loop</button>
+        </div>
+        <label class="inline-check">
+          <input id="applyStyleInFlow" type="checkbox" />
+          <span>Apply selected style during compare flow (optional New-Method branch)</span>
+        </label>
+        <div class="lane-wrap">
+          <div class="lane">
+            <h4>Live Lane (Auto Synth)</h4>
+            <div class="pipe-step"><div class="pipe-name">Source</div><div id="liveStepSource" class="pipe-val">Waiting for shared image.</div></div>
+            <div class="pipe-step"><div class="pipe-name">Extract + Analyze</div><div id="liveStepAnalyze" class="pipe-val">-</div></div>
+            <div class="pipe-step"><div class="pipe-name">Synth</div><div id="liveStepSynth" class="pipe-val">-</div></div>
+            <div class="pipe-step"><div class="pipe-name">Final</div><div id="liveStepFinal" class="pipe-val">-</div></div>
+            <div class="pipe-step"><div class="pipe-name">Prompt Output</div><div id="liveLanePromptOut" class="pipe-val">-</div></div>
+            <div class="pipe-step"><div class="pipe-name">Data Output</div><div id="liveLaneDataOut" class="pipe-val">-</div></div>
+          </div>
+          <div class="lane">
+            <h4>New Lane (Style-Gated)</h4>
+            <div class="pipe-step"><div class="pipe-name">Source</div><div id="newStepSource" class="pipe-val">Waiting for shared image.</div></div>
+            <div class="pipe-step"><div class="pipe-name">Extract + Analyze</div><div id="newStepAnalyze" class="pipe-val">-</div></div>
+            <div class="pipe-step"><div class="pipe-name">Style Gate</div><div id="newStepStyleGate" class="pipe-val">Select style and run compare flow.</div></div>
+            <div class="pipe-step"><div class="pipe-name">Compile</div><div id="newStepCompile" class="pipe-val">-</div></div>
+            <div class="pipe-step"><div class="pipe-name">Final</div><div id="newStepFinal" class="pipe-val">-</div></div>
+            <div class="pipe-step"><div class="pipe-name">Prompt Output</div><div id="newLanePromptOut" class="pipe-val">-</div></div>
+            <div class="pipe-step"><div class="pipe-name">Data Output</div><div id="newLaneDataOut" class="pipe-val">-</div></div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+        <h3>New-Method Loop Input</h3>
+        <div class="row">
+          <div>
+            <label for="labImage">Image</label>
+            <input id="labImage" type="file" accept="image/*" />
+          </div>
+          <div>
+            <label for="labMode">ACP source</label>
+            <select id="labMode">
+              <option value="original">Original image</option>
+              <option value="extracted">Extracted subject</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="img-wrap">
+          <div class="img-box" id="labOriginalPreview">No lab image</div>
+          <div class="img-box" id="labExtractedPreview">No extracted subject</div>
+        </div>
+
+        <div class="divider"></div>
+        <h3>Prompt Fields (Shared Display)</h3>
+        <label for="positivePrompt">Positive Prompt</label>
+        <textarea id="positivePrompt" placeholder="Synth prompt output"></textarea>
+        <label for="scenePrompt">Scene Prompt</label>
+        <textarea id="scenePrompt" placeholder="ACP / scene output"></textarea>
+        <label for="negativePrompt">Negative Prompt</label>
+        <textarea id="negativePrompt" placeholder="Optional negative prompt"></textarea>
+
+        <div class="divider"></div>
+        <h3>Latest Payload</h3>
+        <pre id="output">Run a step to view response data.</pre>
+        <h3>Step Results (Shared)</h3>
+        <div class="step-grid">
+          <div class="step-card"><div class="step-title">Extract</div><div id="stepExtract" class="step-body">-</div></div>
+          <div class="step-card"><div class="step-title">CDP</div><div id="stepCdp" class="step-body">-</div></div>
+          <div class="step-card"><div class="step-title">ACP</div><div id="stepAcp" class="step-body">-</div></div>
+          <div class="step-card"><div class="step-title">SIP</div><div id="stepSip" class="step-body">-</div></div>
+          <div class="step-card"><div class="step-title">Synth</div><div id="stepSynth" class="step-body">-</div></div>
+          <div class="step-card"><div class="step-title">Style Compile</div><div id="stepStyle" class="step-body">-</div></div>
+        </div>
+        <h3>Activity Log</h3>
+        <div id="activity" class="log">No activity yet.</div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const state = {
+      subjectImage: "",
+      sceneImage: "",
+      extractedSubject: "",
+      cdp: "",
+      acp: "",
+      sip: "",
+      synth: "",
+      styles: [],
+      compiled: null,
+      results: {
+        extract: "-",
+        cdp: "-",
+        acp: "-",
+        sip: "-",
+        synth: "-",
+        style: "-"
+      },
+      labImage: "",
+      labExtracted: "",
+      activity: []
+    };
+
+    const el = (id) => document.getElementById(id);
+
+    function pushActivity(line) {
+      const ts = new Date().toLocaleTimeString();
+      state.activity.unshift(`[${ts}] ${line}`);
+      state.activity = state.activity.slice(0, 60);
+      el("activity").textContent = state.activity.join("\n");
+    }
+
+    function outputJson(label, data) {
+      el("output").textContent = JSON.stringify({ label, at: new Date().toISOString(), data }, null, 2);
+      pushActivity(`output: ${label}`);
+    }
+
+    function setStepResult(stepKey, value) {
+      state.results[stepKey] = value || "-";
+      const mapping = {
+        extract: "stepExtract",
+        cdp: "stepCdp",
+        acp: "stepAcp",
+        sip: "stepSip",
+        synth: "stepSynth",
+        style: "stepStyle"
+      };
+      const targetId = mapping[stepKey];
+      if (targetId) {
+        el(targetId).textContent = state.results[stepKey];
+      }
+    }
+
+    function setStatus(message, kind = "") {
+      const s = el("status");
+      s.className = `status ${kind}`.trim();
+      s.textContent = message;
+      pushActivity(`status: ${message}`);
+    }
+
+    function renderBranchOutputs(newMethod, liveMethod) {
+      el("newLanePromptOut").textContent = String(newMethod && newMethod.final_prompt ? newMethod.final_prompt : "-");
+      el("liveLanePromptOut").textContent = String(liveMethod && liveMethod.final_prompt ? liveMethod.final_prompt : "-");
+      el("newLaneDataOut").textContent = JSON.stringify(newMethod || {}, null, 2);
+      el("liveLaneDataOut").textContent = JSON.stringify(liveMethod || {}, null, 2);
+    }
+
+    function endpoint(id) {
+      return (el(id).value || "").trim();
+    }
+
+    function authHeaders(includeJson = true) {
+      const headers = {};
+      if (includeJson) headers["Content-Type"] = "application/json";
+      const key = endpoint("authKey");
+      if (key) headers["x-auth-key"] = key;
+      return headers;
+    }
+
+    async function readAsDataUrl(file) {
+      return new Promise((resolve, reject) => {
+        const r = new FileReader();
+        r.onload = () => resolve(String(r.result || ""));
+        r.onerror = () => reject(new Error("file read failed"));
+        r.readAsDataURL(file);
+      });
+    }
+
+    function setImgBox(id, dataUrl, emptyText) {
+      const box = el(id);
+      if (!dataUrl) {
+        box.innerHTML = emptyText;
+        return;
+      }
+      box.innerHTML = `<img src="${dataUrl}" alt="preview" />`;
+    }
+
+    async function callJson(url, method, body, includeJson = true) {
+      const opts = {
+        method,
+        headers: authHeaders(includeJson)
+      };
+      if (body !== undefined) opts.body = includeJson ? JSON.stringify(body) : body;
+      const t0 = performance.now();
+      const res = await fetch(url, opts);
+      const ms = Math.round(performance.now() - t0);
+      const text = await res.text();
+      let json = null;
+      try { json = JSON.parse(text); } catch {}
+      return { ok: res.ok, status: res.status, ms, url, json, raw: text };
+    }
+
+    function requireImage(dataUrl, name) {
+      if (!dataUrl) throw new Error(`${name} image is required.`);
+      return dataUrl;
+    }
+
+    function pickCaption(data) {
+      if (!data || typeof data !== "object") return "";
+      return String(data.synth || data.cdp || data.acp || data.sip || data.output || data.caption || data.text || "").trim();
+    }
+
+    function buildFusionUrl(route) {
+      return `${endpoint("fusionApi").replace(/\/+$/, "")}/${route.replace(/^\/+/, "")}`;
+    }
+
+    function buildStyleUrl(pathId) {
+      const base = endpoint("styleApi").replace(/\/+$/, "");
+      const p = endpoint(pathId).trim();
+      const path = p.startsWith("/") ? p : `/${p}`;
+      return `${base}${path}`;
+    }
+
+    async function extractSubject(imageDataUrl) {
+      const res = await callJson(endpoint("extractApi"), "POST", { image: imageDataUrl });
+      outputJson("extractSubject", res);
+      if (!res.ok) throw new Error(`Extract failed: ${res.status}`);
+      const extracted = String((res.json && (res.json.image || res.json.image_base64)) || "").trim();
+      if (!extracted) throw new Error("Extract response missing image field");
+      setStepResult("extract", `ok (${res.status}) in ${res.ms}ms`);
+      return extracted.startsWith("data:image") ? extracted : `data:image/png;base64,${extracted}`;
+    }
+
+    async function runCdp(imageDataUrl) {
+      const res = await callJson(buildFusionUrl("cdp"), "POST", { image_base64: imageDataUrl });
+      outputJson("cdp", res);
+      if (!res.ok) throw new Error(`CDP failed: ${res.status}`);
+      const caption = pickCaption(res.json);
+      setStepResult("cdp", caption || `ok (${res.status}) in ${res.ms}ms`);
+      return caption;
+    }
+
+    async function runAcp(imageDataUrl) {
+      const res = await callJson(buildFusionUrl("acp"), "POST", { image_base64: imageDataUrl });
+      outputJson("acp", res);
+      if (!res.ok) throw new Error(`ACP failed: ${res.status}`);
+      const caption = pickCaption(res.json);
+      setStepResult("acp", caption || `ok (${res.status}) in ${res.ms}ms`);
+      return caption;
+    }
+
+    async function runSip(imageDataUrl) {
+      const instruction = [
+        "TASK: Identify the visual style of this image.",
+        "Output two lines only:",
+        "Color palette: <short palette>",
+        "Style: <short style>"
+      ].join("\n");
+      const res = await callJson(buildFusionUrl("sip"), "POST", { image_base64: imageDataUrl, instruction });
+      outputJson("sip", res);
+      if (!res.ok) throw new Error(`SIP failed: ${res.status}`);
+      const caption = pickCaption(res.json);
+      setStepResult("sip", caption || `ok (${res.status}) in ${res.ms}ms`);
+      return caption;
+    }
+
+    async function runSynth(cdp, acp, sip) {
+      const prompt = `Compress the following into a single vivid image caption. Maximum 75 tokens. Output only the caption:\n\n${cdp} ${acp} ${sip}`;
+      const res = await callJson(endpoint("synthApi"), "POST", { prompt });
+      outputJson("synth", res);
+      if (!res.ok) throw new Error(`Synth failed: ${res.status}`);
+      const out = pickCaption(res.json);
+      if (!out) throw new Error("Synth returned empty result");
+      setStepResult("synth", out);
+      return out;
+    }
+
+    async function runRender(promptText, negativeText) {
+      const payload = {
+        method: "prompt",
+        prompt: promptText,
+        negative_prompt: negativeText || "",
+        model: "@cf/stabilityai/stable-diffusion-xl-base-1.0",
+        width: 1024,
+        height: 576,
+        guidance_scale: 7.5,
+        num_inference_steps: 25
+      };
+      const res = await callJson(endpoint("renderApi"), "POST", payload);
+      outputJson("render", res);
+      if (!res.ok) throw new Error(`Render failed: ${res.status}`);
+      const b64 = String((res.json && res.json.image_base64) || "").trim();
+      if (!b64) throw new Error("Render returned no image_base64");
+      const imageUrl = `data:image/png;base64,${b64}`;
+      setImgBox("scenePreview", imageUrl, "No scene image");
+      return imageUrl;
+    }
+
+    function populateStyles(styles) {
+      const select = el("styleProfile");
+      select.innerHTML = "";
+      const list = Array.isArray(styles) ? styles : [];
+      if (!list.length) {
+        throw new Error("style/list returned no profiles");
+      }
+      state.styles = list;
+      for (const s of list) {
+        const opt = document.createElement("option");
+        const id = String(s.id || s.style_id || s.name || "");
+        const label = String(s.label || s.name || id || "unnamed");
+        const token = s.token_target !== undefined ? ` (${s.token_target} tok)` : "";
+        opt.value = id;
+        opt.textContent = `${label}${token}`;
+        select.appendChild(opt);
+      }
+      if (select.options.length > 0) {
+        select.selectedIndex = 0;
+      }
+      updateTokenTarget();
+    }
+
+    function updateTokenTarget() {
+      const id = el("styleProfile").value;
+      const match = state.styles.find((s) => String(s.id || s.style_id || s.name || "") === id);
+      el("styleTokenTarget").value = match && match.token_target !== undefined ? String(match.token_target) : "";
+    }
+
+    async function loadStyles(opts = {}) {
+      const silent = !!opts.silent;
+      const method = (endpoint("styleListMethod") || "POST").toUpperCase();
+      const primaryPath = endpoint("styleListPath").trim() || "/style/list";
+      const candidatePaths = Array.from(new Set([
+        primaryPath,
+        "/style/list",
+        "/fusion/style/list",
+        "/style/profiles",
+        "/fusion/style/profiles"
+      ]));
+      const methodOrder = method === "POST" ? ["POST", "GET"] : ["GET", "POST"];
+
+      let lastErr = "No valid style response.";
+      for (const p of candidatePaths) {
+        const normalizedPath = p.startsWith("/") ? p : `/${p}`;
+        const url = `${endpoint("styleApi").replace(/\/+$/, "")}${normalizedPath}`;
+        for (const m of methodOrder) {
+          const res = await callJson(url, m, m === "POST" ? {} : undefined);
+          if (!res.ok) {
+            lastErr = `${m} ${normalizedPath} -> HTTP ${res.status}`;
+            if (!silent) pushActivity(`style probe fail: ${lastErr}`);
+            continue;
+          }
+          const payload = res.json || {};
+          const styles = payload.styles || payload.profiles || payload.items || payload.data || (Array.isArray(payload) ? payload : []);
+          if (Array.isArray(styles) && styles.length) {
+            populateStyles(styles);
+            el("styleListPath").value = normalizedPath;
+            el("styleListMethod").value = m;
+            if (!silent) {
+              outputJson("style/list", {
+                ok: true,
+                url,
+                method: m,
+                count: styles.length
+              });
+            }
+            return res;
+          }
+          lastErr = `${m} ${normalizedPath} -> no styles array`;
+          if (!silent) pushActivity(`style probe empty: ${lastErr}`);
+        }
+      }
+      if (!silent) {
+        outputJson("style/list:error", { ok: false, error: lastErr });
+      }
+      throw new Error(`style/list unavailable. ${lastErr}`);
+    }
+
+    async function compileStyle(opts = {}) {
+      const silent = !!opts.silent;
+      const url = buildStyleUrl("styleCompilePath");
+      const payload = {
+        style_profile_id: el("styleProfile").value,
+        positive_prompt: el("positivePrompt").value || state.synth || "",
+        scene_prompt: el("scenePrompt").value || state.acp || "",
+        negative_prompt: el("negativePrompt").value || "",
+        cdp: state.cdp || undefined,
+        acp: state.acp || undefined,
+        sip: state.sip || undefined
+      };
+      const res = await callJson(url, "POST", payload);
+      if (!silent) outputJson("style/compile", res);
+      if (!res.ok) throw new Error(`style/compile failed: ${res.status}`);
+      state.compiled = res.json || {};
+      const compiledPositive = String((state.compiled.compiled_positive_prompt || state.compiled.prompt || state.compiled.positive_prompt || "")).trim();
+      const compiledNegative = String((state.compiled.compiled_negative_prompt || state.compiled.negative_prompt || "")).trim();
+      if (compiledPositive) el("positivePrompt").value = compiledPositive;
+      if (compiledNegative) el("negativePrompt").value = compiledNegative;
+      setStepResult("style", compiledPositive || `ok (${res.status}) in ${res.ms}ms`);
+      return res;
+    }
+
+    async function runFlow() {
+      const subject = requireImage(state.subjectImage, "Subject");
+      const scene = requireImage(state.sceneImage, "Scene");
+      setStatus("Running compare flow...", "");
+      el("liveStepSource").textContent = "Shared source loaded.";
+      el("newStepSource").textContent = "Shared source loaded.";
+      el("liveStepAnalyze").textContent = "Running...";
+      el("newStepAnalyze").textContent = "Running...";
+      el("liveStepSynth").textContent = "-";
+      el("newStepStyleGate").textContent = "Waiting for style selection.";
+      el("newStepCompile").textContent = "-";
+      el("liveStepFinal").textContent = "-";
+      el("newStepFinal").textContent = "-";
+
+      state.extractedSubject = await extractSubject(subject);
+      setImgBox("subjectPreview", state.extractedSubject, "No subject image");
+
+      state.cdp = await runCdp(state.extractedSubject);
+      state.acp = await runAcp(scene);
+      state.sip = await runSip(state.extractedSubject);
+      const analyzeSummary = `CDP/ACP/SIP ready (${state.cdp ? "cdp" : "-"}, ${state.acp ? "acp" : "-"}, ${state.sip ? "sip" : "-"})`;
+      el("liveStepAnalyze").textContent = analyzeSummary;
+      el("newStepAnalyze").textContent = analyzeSummary;
+      state.synth = await runSynth(state.cdp, state.acp, state.sip);
+      el("liveStepSynth").textContent = "Synth complete.";
+
+      el("positivePrompt").value = state.synth;
+      el("scenePrompt").value = state.acp;
+
+      const liveMethod = {
+        mode: "sip_live_method",
+        extract_image_ready: !!state.extractedSubject,
+        cdp: state.cdp,
+        acp: state.acp,
+        sip: state.sip,
+        synth_prompt: state.synth,
+        final_prompt: state.synth,
+        final_negative_prompt: el("negativePrompt").value.trim() || "",
+        style_applied: false
+      };
+      el("liveStepFinal").textContent = "Live final prompt ready.";
+
+      const newMethod = {
+        mode: "new_method",
+        extract_image_ready: !!state.extractedSubject,
+        cdp: state.cdp,
+        acp: state.acp,
+        sip: state.sip,
+        synth_prompt: state.synth,
+        style_applied: false,
+        style_profile_id: el("styleProfile").value || "",
+        style_compile_error: "",
+        final_prompt: state.synth,
+        final_negative_prompt: el("negativePrompt").value.trim() || ""
+      };
+
+      if (el("applyStyleInFlow").checked && (el("styleProfile").value || "").trim()) {
+        el("newStepStyleGate").textContent = `Style selected: ${el("styleProfile").value}`;
+        try {
+          await compileStyle({ silent: true });
+          const c = state.compiled || {};
+          newMethod.style_applied = true;
+          newMethod.style_compile = c;
+          newMethod.final_prompt = String(c.compiled_positive_prompt || c.prompt || c.positive_prompt || state.synth || "").trim();
+          newMethod.final_negative_prompt = String(c.compiled_negative_prompt || c.negative_prompt || el("negativePrompt").value.trim() || "").trim();
+          el("newStepCompile").textContent = "Compile complete.";
+          pushActivity("optional branch: style compile applied");
+        } catch (err) {
+          const msg = err && err.message ? err.message : String(err);
+          newMethod.style_compile_error = msg;
+          el("newStepCompile").textContent = `Compile error: ${msg}`;
+          setStepResult("style", `ERROR: ${msg}`);
+        }
+      } else {
+        newMethod.final_prompt = "";
+        newMethod.final_negative_prompt = "";
+        newMethod.style_applied = false;
+        newMethod.style_compile_error = "Style required before New Method finalization.";
+        el("newStepStyleGate").textContent = "Blocked: choose style and enable style branch.";
+        el("newStepCompile").textContent = "Not run.";
+      }
+
+      if (newMethod.final_prompt) {
+        el("positivePrompt").value = newMethod.final_prompt;
+      }
+      if (newMethod.final_negative_prompt) {
+        el("negativePrompt").value = newMethod.final_negative_prompt;
+      }
+      el("newStepFinal").textContent = newMethod.final_prompt
+        ? "New final prompt ready."
+        : "Paused before synth/final (style gate).";
+
+      renderBranchOutputs(newMethod, liveMethod);
+      outputJson("compare:complete", { new_method: newMethod, sip_live_method: liveMethod });
+      setStatus("Compare flow complete.", "ok");
+    }
+
+    async function runLab() {
+      const img = requireImage(state.labImage, "Lab");
+      setStatus("Lab extraction loop running...", "");
+
+      state.labExtracted = await extractSubject(img);
+      setImgBox("labExtractedPreview", state.labExtracted, "No extracted subject");
+
+      const sourceForAcp = endpoint("labMode") === "extracted" ? state.labExtracted : img;
+      const cdp = await runCdp(state.labExtracted);
+      const acp = await runAcp(sourceForAcp);
+      const sip = await runSip(state.labExtracted);
+      const synth = await runSynth(cdp, acp, sip);
+
+      state.cdp = cdp;
+      state.acp = acp;
+      state.sip = sip;
+      state.synth = synth;
+
+      el("positivePrompt").value = synth;
+      el("scenePrompt").value = acp;
+
+      outputJson("lab:complete", { cdp, acp, sip, synth });
+      setStatus("Lab extraction loop complete.", "ok");
+    }
+
+    function wireUploads() {
+      el("subjectFile").addEventListener("change", async (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        state.subjectImage = await readAsDataUrl(file);
+        setImgBox("subjectPreview", state.subjectImage, "No subject image");
+        setStatus(`Subject loaded: ${file.name}`, "ok");
+      });
+
+      el("sceneFile").addEventListener("change", async (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        state.sceneImage = await readAsDataUrl(file);
+        setImgBox("scenePreview", state.sceneImage, "No scene image");
+        setStatus(`Scene loaded: ${file.name}`, "ok");
+      });
+
+      el("labImage").addEventListener("change", async (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        state.labImage = await readAsDataUrl(file);
+        state.labExtracted = "";
+        setImgBox("labOriginalPreview", state.labImage, "No lab image");
+        setImgBox("labExtractedPreview", "", "No extracted subject");
+        setStatus(`Lab image loaded: ${file.name}`, "ok");
+      });
+    }
+
+    function runAction(name, fn) {
+      return async () => {
+        try {
+          setStatus(`${name}: running...`);
+          await fn();
+          if (!/complete/i.test(el("status").textContent)) {
+            setStatus(`${name}: done.`, "ok");
+          }
+        } catch (err) {
+          const msg = err && err.message ? err.message : String(err);
+          setStatus(`${name}: ${msg}`, "bad");
+          if (/extract/i.test(name)) setStepResult("extract", `ERROR: ${msg}`);
+          if (/cdp/i.test(name)) setStepResult("cdp", `ERROR: ${msg}`);
+          if (/acp/i.test(name)) setStepResult("acp", `ERROR: ${msg}`);
+          if (/sip/i.test(name)) setStepResult("sip", `ERROR: ${msg}`);
+          if (/synth/i.test(name)) setStepResult("synth", `ERROR: ${msg}`);
+          if (/style/i.test(name)) setStepResult("style", `ERROR: ${msg}`);
+          outputJson(`${name}:error`, { message: msg, stack: err && err.stack ? err.stack : "" });
+        }
+      };
+    }
+
+    function wireButtons() {
+      el("btnExtractSubject").onclick = runAction("extractSubject", async () => {
+        const subject = requireImage(state.subjectImage, "Subject");
+        state.extractedSubject = await extractSubject(subject);
+        setImgBox("subjectPreview", state.extractedSubject, "No subject image");
+      });
+
+      el("btnCdp").onclick = runAction("cdp", async () => {
+        const src = state.extractedSubject || requireImage(state.subjectImage, "Subject");
+        state.cdp = await runCdp(src);
+      });
+
+      el("btnAcp").onclick = runAction("acp", async () => {
+        const src = state.sceneImage || state.subjectImage;
+        state.acp = await runAcp(requireImage(src, "Scene or subject"));
+      });
+
+      el("btnSip").onclick = runAction("sip", async () => {
+        const src = state.extractedSubject || state.subjectImage || state.sceneImage;
+        state.sip = await runSip(requireImage(src, "Image"));
+      });
+
+      el("btnSynth").onclick = runAction("synth", async () => {
+        const cdp = state.cdp || el("positivePrompt").value.trim();
+        const acp = state.acp || el("scenePrompt").value.trim();
+        const sip = state.sip || "style unknown";
+        state.synth = await runSynth(cdp, acp, sip);
+        el("positivePrompt").value = state.synth;
+      });
+
+      el("btnRender").onclick = runAction("render", async () => {
+        const prompt = (el("positivePrompt").value || state.synth || "").trim();
+        if (!prompt) throw new Error("Positive prompt is required for render");
+        await runRender(prompt, el("negativePrompt").value.trim());
+      });
+
+      el("btnRunAll").onclick = runAction("fullFlow", runFlow);
+      el("btnStyleList").onclick = runAction("style/list", loadStyles);
+      el("btnStyleCompile").onclick = runAction("style/compile", compileStyle);
+
+      el("btnCopyCompiled").onclick = runAction("copyCompiled", async () => {
+        const c = state.compiled || {};
+        const p = String(c.compiled_positive_prompt || c.prompt || c.positive_prompt || "").trim();
+        const n = String(c.compiled_negative_prompt || c.negative_prompt || "").trim();
+        if (!p) throw new Error("No compiled prompt available");
+        el("positivePrompt").value = p;
+        if (n) el("negativePrompt").value = n;
+      });
+
+      el("btnLabRun").onclick = runAction("lab", runLab);
+      el("btnLabReset").onclick = runAction("labReset", async () => {
+        state.labImage = "";
+        state.labExtracted = "";
+        setImgBox("labOriginalPreview", "", "No lab image");
+        setImgBox("labExtractedPreview", "", "No extracted subject");
+      });
+      el("btnClearOutput").onclick = () => { el("output").textContent = "Cleared."; };
+
+      el("styleProfile").addEventListener("change", updateTokenTarget);
+    }
+
+    wireUploads();
+    wireButtons();
+    loadStyles({ silent: true }).catch(() => {});
+  </script>
+</body>
+</html>

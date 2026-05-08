@@ -12,7 +12,15 @@ const corsOptions = {
     if (!origin) return callback(null, true);
 
     // Allow any localhost or 127.0.0.1 origin in development
-    if (process.env.NODE_ENV !== 'production' && (origin.includes('localhost') || origin.includes('127.0.0.1') || origin.startsWith('file://'))) {
+    if (
+      process.env.NODE_ENV !== 'production'
+      && (
+        origin === 'null'
+        || origin.includes('localhost')
+        || origin.includes('127.0.0.1')
+        || origin.startsWith('file://')
+      )
+    ) {
       return callback(null, true);
     }
 

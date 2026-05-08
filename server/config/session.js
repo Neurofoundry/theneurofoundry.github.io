@@ -5,6 +5,18 @@
 const RedisStore = require('connect-redis').default;
 const { createClient } = require('redis');
 
+function isPlaceholderValue(value) {
+  if (!value) return true;
+  const lower = String(value).toLowerCase();
+  return (
+    lower.includes('your-') ||
+    lower.includes('xxxxx') ||
+    lower.includes('example') ||
+    lower.includes('change-this') ||
+    lower.includes('localhost:6379')
+  );
+}
+
 let sessionConfig = {
   secret: process.env.SESSION_SECRET || 'neurofoundry-session-secret-change-this',
   resave: false,
@@ -18,7 +30,7 @@ let sessionConfig = {
 };
 
 // Use Redis for session storage if configured
-if (process.env.REDIS_URL) {
+if (!isPlaceholderValue(process.env.REDIS_URL)) {
   const redisClient = createClient({
     url: process.env.REDIS_URL,
     legacyMode: false

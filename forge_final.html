@@ -398,6 +398,32 @@
       font-weight: 700;
       color: #e6e9ee;
     }
+
+    .panel-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .origin-select {
+      min-width: 96px;
+      padding: 4px 6px;
+      border-radius: 4px;
+      border: 1px solid rgba(224, 71, 60, 0.4);
+      background: rgba(0, 0, 0, 0.5);
+      color: #e6e9ee;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.2px;
+    }
+
+    .origin-select:focus {
+      outline: none;
+      border-color: #e0473c;
+    }
     
     .panel-description {
       font-size: 10px;
@@ -507,6 +533,34 @@
       font-size: 9px;
       color: #9aa3ad;
       min-height: 12px;
+    }
+
+    .fusion-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .fusion-tab {
+      border: 1px solid rgba(224, 71, 60, 0.35);
+      background: rgba(224, 71, 60, 0.08);
+      color: #c9d0d8;
+      border-radius: 6px;
+      padding: 6px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .fusion-tab.active {
+      color: #fff;
+      border-color: #e0473c;
+      background: rgba(224, 71, 60, 0.25);
+      box-shadow: 0 0 10px rgba(224, 71, 60, 0.25);
     }
     
     .furnace-toggle-btn {
@@ -639,6 +693,62 @@
     .render-btn:hover {
       transform: translateY(-2px);
       box-shadow: 0 8px 28px rgba(224, 71, 60, 0.6);
+    }
+
+    .advanced-toggle {
+      width: 100%;
+      margin-top: 10px;
+      padding: 6px 8px;
+      border-radius: 4px;
+      border: 1px solid rgba(224, 71, 60, 0.35);
+      background: rgba(0, 0, 0, 0.45);
+      color: #ffb199;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      cursor: pointer;
+    }
+
+    .advanced-panel {
+      margin-top: 10px;
+      border: 1px solid rgba(224, 71, 60, 0.25);
+      border-radius: 6px;
+      padding: 8px;
+      background: rgba(0, 0, 0, 0.35);
+      display: none;
+      gap: 8px;
+      flex-direction: column;
+    }
+
+    .advanced-panel.open {
+      display: flex;
+    }
+
+    .slider-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .slider-row input[type="range"] {
+      width: 100%;
+    }
+
+    .slider-value {
+      min-width: 38px;
+      font-size: 9px;
+      color: #c9d0d8;
+      text-align: right;
+    }
+
+    .input-field:disabled,
+    .input-select:disabled,
+    .advanced-panel input:disabled,
+    .advanced-panel select:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
     }
     
     /* Left panels container */
@@ -1173,7 +1283,15 @@
             <div class="panel">
               <div class="panel-header">
                 <div class="step-number">1</div>
-                <div class="panel-title">Origin</div>
+                <div class="panel-title panel-title-row">
+                  <span>Origin</span>
+                  <select id="originModelSelect" class="origin-select">
+                    <option value="sdxl">SDXL</option>
+                    <option value="phoenix">Phoenix</option>
+                    <option value="flux">Flux</option>
+                    <option value="dreamshaper">Dreamshaper</option>
+                  </select>
+                </div>
               </div>
               <p class="panel-description">The seed. Drop your starting frame here.</p>
               <div class="upload-zone">
@@ -1189,6 +1307,10 @@
                 <div class="panel-title">Fusion</div>
               </div>
               <p class="panel-description">Blend elements. Subject + Scene + Style = Origin.</p>
+              <div class="fusion-tabs" id="fusionTabs">
+                <button class="fusion-tab active" id="fusionTabFusion" data-mode="fusion">Fusion</button>
+                <button class="fusion-tab" id="fusionTabFractal" data-mode="fractal">Fractal</button>
+              </div>
               
               <div class="fusion-grid" id="fusionGrid">
                   <div class="fusion-item" data-role="subject" id="fusionSubject">
@@ -1208,7 +1330,7 @@
                   </div>
                 </div>
                 <div class="fusion-status" id="fusionStatus">Waiting for subject + scene.</div>
-                <button class="generate-btn">Generate Image</button>
+                <button class="generate-btn" id="fusionGenerateBtn">Generate Image</button>
               <button class="furnace-toggle-btn" id="furnace-toggle">Toggle Frame</button>
             </div>
           </div>
@@ -1245,8 +1367,41 @@
               <label class="input-label">Negative Prompt</label>
               <textarea class="input-field" id="negativePrompt" placeholder="Avoid, exclude, or downplay...">A majestic dragon soaring over a mystical forest at dawn.</textarea>
             </div>
+
+            <button class="advanced-toggle" id="advancedToggle" type="button">Advanced Controls</button>
+            <div class="advanced-panel" id="advancedPanel">
+              <div class="input-group">
+                <label class="input-label">Aspect Ratio</label>
+                <select class="input-select" id="aspectRatioSelect">
+                  <option value="16:9">16:9</option>
+                  <option value="4:3">4:3</option>
+                  <option value="1:1">1:1</option>
+                </select>
+              </div>
+              <div class="input-group">
+                <label class="input-label">Seed</label>
+                <div class="slider-row">
+                  <input id="seedInput" type="range" min="1" max="999999" value="12345" step="1">
+                  <span class="slider-value" id="seedValue">12345</span>
+                </div>
+              </div>
+              <div class="input-group">
+                <label class="input-label">Guidance</label>
+                <div class="slider-row">
+                  <input id="guidanceInput" type="range" min="1" max="20" value="7.5" step="0.1">
+                  <span class="slider-value" id="guidanceValue">7.5</span>
+                </div>
+              </div>
+              <div class="input-group">
+                <label class="input-label">Steps</label>
+                <div class="slider-row">
+                  <input id="stepsInput" type="range" min="8" max="80" value="25" step="1">
+                  <span class="slider-value" id="stepsValue">25</span>
+                </div>
+              </div>
+            </div>
             
-            <button class="ai-generate-btn">Let AI Compose</button>
+            <button class="ai-generate-btn" id="resynthesizeBtn">Resynthesize</button>
             
             <button class="render-btn">FORGE IT</button>
           </div>
@@ -1275,6 +1430,7 @@
             <div class="craft-item"></div>
             <div class="craft-item"></div>
           </div>
+          <div class="forge-status" id="forgeStatus">Awaiting origin or fusion inputs.</div>
         </div>
       </div>
     </div>
@@ -1382,6 +1538,20 @@
       const positivePrompt = document.getElementById('positivePrompt');
       const scenePrompt = document.getElementById('scenePrompt');
       const negativePrompt = document.getElementById('negativePrompt');
+      const originModelSelect = document.getElementById('originModelSelect');
+      const advancedToggle = document.getElementById('advancedToggle');
+      const advancedPanel = document.getElementById('advancedPanel');
+      const aspectRatioSelect = document.getElementById('aspectRatioSelect');
+      const seedInput = document.getElementById('seedInput');
+      const guidanceInput = document.getElementById('guidanceInput');
+      const stepsInput = document.getElementById('stepsInput');
+      const seedValue = document.getElementById('seedValue');
+      const guidanceValue = document.getElementById('guidanceValue');
+      const stepsValue = document.getElementById('stepsValue');
+      const fusionTabFusion = document.getElementById('fusionTabFusion');
+      const fusionTabFractal = document.getElementById('fusionTabFractal');
+      const fusionGenerateBtn = document.getElementById('fusionGenerateBtn');
+      const resynthesizeBtn = document.getElementById('resynthesizeBtn');
 
       const RECENT_KEY = 'forgeRecentRenders';
       const MAX_RECENT = 16;
@@ -1397,6 +1567,92 @@
       let sipContext = null;
       let mergedImage = null;
       let isProcessing = false;
+      let fusionMode = 'fusion';
+
+      const ORIGIN_MODEL_CONFIG = {
+        sdxl: {
+          label: 'SDXL',
+          renderModel: '@cf/stabilityai/stable-diffusion-xl-base-1.0',
+          acceptsPrompts: true,
+          acceptsAdvanced: true,
+          supports169: true,
+          defaults: { guidance: 7.5, steps: 25 }
+        },
+        phoenix: {
+          label: 'Phoenix',
+          renderModel: '@cf/stabilityai/stable-diffusion-xl-base-1.0',
+          acceptsPrompts: true,
+          acceptsAdvanced: true,
+          supports169: true,
+          defaults: { guidance: 6.5, steps: 30 }
+        },
+        flux: {
+          label: 'Flux',
+          renderModel: '@cf/stabilityai/stable-diffusion-xl-base-1.0',
+          acceptsPrompts: true,
+          acceptsAdvanced: false,
+          supports169: true,
+          defaults: { guidance: 5.0, steps: 20 }
+        },
+        dreamshaper: {
+          label: 'Dreamshaper',
+          renderModel: '@cf/stabilityai/stable-diffusion-xl-base-1.0',
+          acceptsPrompts: true,
+          acceptsAdvanced: true,
+          supports169: true,
+          defaults: { guidance: 8.0, steps: 30 }
+        }
+      };
+
+      function getActiveOriginKey() {
+        return (originModelSelect && originModelSelect.value) || 'sdxl';
+      }
+
+      function getActiveOriginConfig() {
+        return ORIGIN_MODEL_CONFIG[getActiveOriginKey()] || ORIGIN_MODEL_CONFIG.sdxl;
+      }
+
+      function setControlEnabled(el, enabled) {
+        if (!el) return;
+        el.disabled = !enabled;
+      }
+
+      function applyOriginCapabilities() {
+        const cfg = getActiveOriginConfig();
+        const promptEnabled = !!cfg.acceptsPrompts;
+        [positivePrompt, scenePrompt, negativePrompt, styleSelect].forEach((el) => setControlEnabled(el, promptEnabled));
+
+        const advEnabled = !!cfg.acceptsAdvanced;
+        [seedInput, guidanceInput, stepsInput].forEach((el) => setControlEnabled(el, advEnabled));
+
+        if (guidanceInput && cfg.defaults?.guidance != null) {
+          guidanceInput.value = String(cfg.defaults.guidance);
+          guidanceValue.textContent = String(cfg.defaults.guidance);
+        }
+        if (stepsInput && cfg.defaults?.steps != null) {
+          stepsInput.value = String(cfg.defaults.steps);
+          stepsValue.textContent = String(cfg.defaults.steps);
+        }
+
+        if (aspectRatioSelect) {
+          const supports169 = !!cfg.supports169;
+          const sixteenNine = Array.from(aspectRatioSelect.options).find((o) => o.value === '16:9');
+          if (sixteenNine) sixteenNine.disabled = !supports169;
+          if (!supports169 && aspectRatioSelect.value === '16:9') {
+            aspectRatioSelect.value = '4:3';
+          }
+        }
+      }
+
+      function updateFusionModeUI() {
+        if (fusionTabFusion) fusionTabFusion.classList.toggle('active', fusionMode === 'fusion');
+        if (fusionTabFractal) fusionTabFractal.classList.toggle('active', fusionMode === 'fractal');
+        if (fusionMode === 'fractal') {
+          setFusionStatus('Fractal mode active: Dreamshaper/SD model flipping enabled.');
+        } else {
+          setFusionStatus('Waiting for subject + scene.');
+        }
+      }
 
       function setStatus(message, level) {
         if (!statusEl) return;
@@ -1500,6 +1756,7 @@
       function enableFusion(enabled) {
         if (!fusionGrid) return;
         fusionGrid.classList.toggle('disabled', !enabled);
+        if (enabled && originImage) originImage = null;
       }
 
       function clearOrigin() {
@@ -1518,6 +1775,7 @@
         setFusionStatus('Fusion disabled. Origin image loaded.');
         setStatus('Origin loaded. Ready to forge.', 'success');
         updateRenderState();
+        updateFusionModeUI();
       }
 
       async function handleFusionFile(role, file) {
@@ -1538,9 +1796,11 @@
           setFusionImage(fusionStyle, dataUrl);
         }
         if (subjectImage && backgroundImage) {
-          await runFusionPipeline();
+          setFusionStatus('Inputs ready. Press Generate Image.');
+          setStatus('Fusion inputs ready. Generate when ready.', 'active');
+          updateRenderState();
         } else {
-          setFusionStatus('Waiting for subject + scene.');
+          updateFusionModeUI();
         }
       }
 
@@ -1704,6 +1964,9 @@ ${combined}`;
           mergedImage = await mergeImages();
           displayImage(mergedImage);
           sipContext = await runSip(mergedImage);
+          if (fusionMode === 'fractal') {
+            styleSelect.value = 'Artistic';
+          }
           setFusionStatus('Fusion ready.');
           setStatus('Fusion ready. Press Forge.', 'success');
         } catch (err) {
@@ -1717,11 +1980,21 @@ ${combined}`;
 
       function buildPrompt(basePrompt) {
         const parts = [];
+        const cfg = getActiveOriginConfig();
+        parts.push(`Origin: ${cfg.label}`);
+        if (fusionMode === 'fractal') parts.push('Fractal iterative flip pass');
         if (basePrompt) parts.push(basePrompt);
         if (styleSelect && styleSelect.value) parts.push(styleSelect.value);
         if (positivePrompt && positivePrompt.value.trim()) parts.push(positivePrompt.value.trim());
         if (scenePrompt && scenePrompt.value.trim()) parts.push(scenePrompt.value.trim());
         return parts.join(', ');
+      }
+
+      function computeDimensions() {
+        const ratio = (aspectRatioSelect && aspectRatioSelect.value) || '16:9';
+        if (ratio === '1:1') return { width: 1024, height: 1024 };
+        if (ratio === '4:3') return { width: 1024, height: 768 };
+        return { width: 1024, height: 576 };
       }
 
       function getNegativePrompt() {
@@ -1785,6 +2058,8 @@ ${combined}`;
         const outputs = [];
         const renderCount = 3;
         for (let i = 1; i <= renderCount; i++) {
+          const cfg = getActiveOriginConfig();
+          const dims = computeDimensions();
           setStatus(`Rendering ${i}/${renderCount}...`, 'active');
           const response = await fetch(RENDER_API, {
             method: 'POST',
@@ -1793,11 +2068,12 @@ ${combined}`;
               method: 'prompt',
               prompt: promptText,
               negative_prompt: negativeText,
-              model: '@cf/stabilityai/stable-diffusion-xl-base-1.0',
-              width: 1024,
-              height: 576,
-              guidance_scale: 7.5,
-              num_inference_steps: 25
+              model: cfg.renderModel,
+              width: dims.width,
+              height: dims.height,
+              seed: Number(seedInput && seedInput.value ? seedInput.value : 12345),
+              guidance_scale: Number(guidanceInput && guidanceInput.value ? guidanceInput.value : cfg.defaults.guidance),
+              num_inference_steps: Number(stepsInput && stepsInput.value ? stepsInput.value : cfg.defaults.steps)
             })
           });
           if (!response.ok) throw new Error(`Render ${i} failed: ${response.status}`);
@@ -1839,9 +2115,127 @@ ${combined}`;
         });
       }
 
+      if (fusionGenerateBtn) {
+        fusionGenerateBtn.addEventListener('click', async () => {
+          if (isProcessing) return;
+          if (!subjectImage || !backgroundImage) {
+            setFusionStatus('Need subject + scene before generation.');
+            setStatus('Fusion requires subject and scene.', 'error');
+            return;
+          }
+          const previous = fusionGenerateBtn.textContent;
+          fusionGenerateBtn.disabled = true;
+          fusionGenerateBtn.textContent = fusionMode === 'fractal' ? 'Fractalizing...' : 'Generating...';
+          try {
+            setFusionStatus(fusionMode === 'fractal' ? 'Running fractal fusion pass...' : 'Running fusion pass...');
+            await runFusionPipeline();
+          } finally {
+            fusionGenerateBtn.disabled = false;
+            fusionGenerateBtn.textContent = previous;
+          }
+        });
+      }
+
+      async function handleResynthesize() {
+        const cfg = getActiveOriginConfig();
+        const contextHints = [];
+        contextHints.push(`origin model: ${cfg.label}`);
+        contextHints.push(`mode: ${fusionMode}`);
+        if (originImage) contextHints.push('origin image present');
+        if (subjectImage) contextHints.push('subject image present');
+        if (backgroundImage) contextHints.push('scene image present');
+        if (styleImage) contextHints.push('style image present');
+
+        let compressed = '';
+        if (cdpContext && acpContext && sipContext) {
+          compressed = await runSynth(cdpContext, acpContext, sipContext);
+        }
+
+        const sceneBase = (acpContext || scenePrompt.value || '').trim();
+        const styleBase = (sipContext || '').trim();
+        const positiveBase = (compressed || cdpContext || positivePrompt.value || '').trim();
+
+        const modeFlavor = fusionMode === 'fractal'
+          ? 'iterative dreamlike fractal texture, subtle model flip aesthetic'
+          : 'clean cinematic composition and coherent subject fidelity';
+
+        positivePrompt.value = [
+          positiveBase || 'high detail focal subject',
+          `rendered for ${cfg.label}`,
+          modeFlavor
+        ].filter(Boolean).join(', ');
+
+        scenePrompt.value = [
+          sceneBase || 'environment with depth and atmospheric lighting',
+          styleSelect.value || 'cinematic'
+        ].filter(Boolean).join(', ');
+
+        negativePrompt.value = [
+          'blurry, low detail, bad anatomy, deformed, artifacts, watermark, text, logo',
+          cfg.label === 'flux' ? 'over-sharpening, over-contrast' : 'flat lighting, washed colors'
+        ].join(', ');
+
+        setStatus(`Resynthesized prompts from ${contextHints.join(' | ')}`, 'success');
+      }
+
+      if (resynthesizeBtn) {
+        resynthesizeBtn.addEventListener('click', async () => {
+          if (isProcessing) return;
+          const previous = resynthesizeBtn.textContent;
+          resynthesizeBtn.disabled = true;
+          resynthesizeBtn.textContent = 'Resynthesizing...';
+          try {
+            await handleResynthesize();
+          } catch (err) {
+            setStatus(`Resynthesize failed: ${err.message}`, 'error');
+          } finally {
+            resynthesizeBtn.disabled = false;
+            resynthesizeBtn.textContent = previous;
+          }
+        });
+      }
+
+      if (advancedToggle && advancedPanel) {
+        advancedToggle.addEventListener('click', () => {
+          advancedPanel.classList.toggle('open');
+        });
+      }
+
+      if (seedInput && seedValue) {
+        seedInput.addEventListener('input', () => { seedValue.textContent = seedInput.value; });
+      }
+      if (guidanceInput && guidanceValue) {
+        guidanceInput.addEventListener('input', () => { guidanceValue.textContent = guidanceInput.value; });
+      }
+      if (stepsInput && stepsValue) {
+        stepsInput.addEventListener('input', () => { stepsValue.textContent = stepsInput.value; });
+      }
+
+      if (originModelSelect) {
+        originModelSelect.addEventListener('change', () => {
+          applyOriginCapabilities();
+          setStatus(`Origin switched to ${getActiveOriginConfig().label}.`, 'active');
+        });
+      }
+
+      if (fusionTabFusion) {
+        fusionTabFusion.addEventListener('click', () => {
+          fusionMode = 'fusion';
+          updateFusionModeUI();
+        });
+      }
+      if (fusionTabFractal) {
+        fusionTabFractal.addEventListener('click', () => {
+          fusionMode = 'fractal';
+          updateFusionModeUI();
+        });
+      }
+
       window.addEventListener('load', async () => {
         renderRecent();
         updateUploadZoneLabel('');
+        applyOriginCapabilities();
+        updateFusionModeUI();
         try {
           await fetch('https://nfcr-extractor.onrender.com/health');
           await fetch('https://nfcr-synthesize.onrender.com/features/4/images');

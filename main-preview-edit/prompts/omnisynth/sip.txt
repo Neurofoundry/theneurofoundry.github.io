@@ -1,0 +1,97 @@
+Analyze this image and identify its visual STYLE only. Ignore the subject matter completely.
+
+Your response must be exactly TWO parts:
+
+1. COLOR PALETTE: Briefly describe the color palette. 
+
+2. STYLE MATCH: Identify which ONE style from the list below most closely matches this image's visual aesthetic:
+
+APPROVED STYLES (choose the closest match):
+- Ghibli style
+- Disney animation style
+- Pixar 3D render
+- anime style
+- manga illustration
+- comic book art
+- graphic novel style
+- oil painting
+- watercolor painting
+- acrylic painting
+- impressionist painting
+- expressionist art
+- surrealist art
+- abstract art
+- minimalist design
+- Art Deco style
+- Art Nouveau style
+- retro 1950s illustration
+- vintage 1980s aesthetic
+- cyberpunk art
+- synthwave aesthetic
+- vaporwave aesthetic
+- pixel art
+- low poly 3D
+- isometric game art
+- concept art
+- matte painting
+- digital painting
+- photorealistic render
+- hyperrealistic art
+- cinematic photography
+- film noir style
+- baroque painting
+- renaissance painting
+- ukiyo-e Japanese print
+- art by Moebius
+- art by Hayao Miyazaki
+- art by Makoto Shinkai
+- art by Greg Rutkowski
+- art by Artgerm
+- art by Ross Tran
+- art by Studio Ghibli
+- art by James Gurney
+- art by Simon Stålenhag
+- art by Alphonse Mucha
+- art by Yoshitaka Amano
+- art by Akira Toriyama
+- Unreal Engine 5 render
+- Octane render
+- Blender 3D render
+- clay render
+- paper cutout art
+- stained glass window
+- mosaic art
+- charcoal sketch
+- pencil drawing
+- ink illustration
+- linocut print
+- screen print
+- risograph print
+- blueprint technical drawing
+- architectural visualization
+- fashion illustration
+- children's book illustration
+- editorial illustration
+- propaganda poster style
+- travel poster vintage
+- movie poster aesthetic
+
+OUTPUT FORMAT (keep it short):
+Color palette: [brief color description]
+Style: [ONE exact match from the list above]
+
+Example:
+Color palette: warm oranges and deep reds with golden highlights
+Style: oil painting
+
+Example:
+Color palette: vibrant neon pinks, purples, and cyan
+Style: synthwave aesthetic
+
+Example:
+Color palette: soft pastel blues and pinks with white
+Style: Ghibli style
+
+
+**So, based off this image, what is your color palette, and style it most closely resembles? 
+

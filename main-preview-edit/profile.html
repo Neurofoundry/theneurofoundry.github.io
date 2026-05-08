@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Profile – Neurofoundry</title>
+  <meta name="description" content="Manage your Neurofoundry profile and account settings">
+  <meta name="theme-color" content="#0f1113">
+  <script src="/auth-client.js?v=20260219b"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0f1113;
+      color: #e6e9ee;
+      font-family: Inter, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      position: relative;
+      z-index: 20;
+      background: rgba(11, 12, 14, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid #e0473c;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      flex-shrink: 0;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 0 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: 0.5px;
+      text-decoration: none;
+      color: #e6e9ee;
+    }
+
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #ff7b6e 0%, #e0473c 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 18px;
+      color: white;
+      box-shadow: 0 4px 12px rgba(224, 71, 60, 0.3);
+    }
+
+    .links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .navlink {
+      color: #ccc;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .navlink:hover { color: #e0473c; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 18px;
+      border-radius: 8px;
+      font: 600 13px/1 Inter, sans-serif;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: 2px solid transparent;
+    }
+
+    .btn.primary {
+      background: linear-gradient(180deg, #ff7b6e 0%, #e9584d 48%, #d23d33 100%);
+      border-color: #a2362f;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(224, 71, 60, 0.3);
+    }
+
+    .btn.primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(224, 71, 60, 0.4);
+    }
+
+    .btn.secondary {
+      background: transparent;
+      border-color: rgba(224, 71, 60, 0.5);
+      color: #ff9b93;
+    }
+
+    .btn.secondary:hover {
+      background: rgba(224, 71, 60, 0.15);
+      border-color: #e0473c;
+    }
+
+    main {
+      flex: 1;
+      padding: 80px 20px 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+      margin-bottom: 40px;
+      padding: 30px;
+      background: linear-gradient(135deg, rgba(15, 17, 19, 0.95), rgba(10, 11, 13, 0.98));
+      border: 1px solid rgba(224, 71, 60, 0.2);
+      border-radius: 16px;
+    }
+
+    .avatar-container {
+      position: relative;
+    }
+
+    .avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 3px solid #e0473c;
+      object-fit: cover;
+      background: linear-gradient(135deg, rgba(224, 71, 60, 0.2), rgba(224, 71, 60, 0.1));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      font-weight: 800;
+      color: #e0473c;
+    }
+
+    .avatar-upload {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 36px;
+      height: 36px;
+      background: #e0473c;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .avatar-upload:hover {
+      transform: scale(1.1);
+    }
+
+    .profile-info h1 {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .profile-info p {
+      color: #9aa3ad;
+      margin-bottom: 4px;
+    }
+
+    .profile-sections {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+
+    .section {
+      background: linear-gradient(135deg, rgba(15, 17, 19, 0.95), rgba(10, 11, 13, 0.98));
+      border: 1px solid rgba(224, 71, 60, 0.2);
+      border-radius: 16px;
+      padding: 30px;
+    }
+
+    .section h2 {
+      font-size: 20px;
+      margin-bottom: 20px;
+      color: #e6e9ee;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #c9d0d8;
+      margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(224, 71, 60, 0.3);
+      border-radius: 8px;
+      color: #e6e9ee;
+      font-family: Inter, sans-serif;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #e0473c;
+      box-shadow: 0 0 0 3px rgba(224, 71, 60, 0.15);
+    }
+
+    .form-group textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .verification-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(57, 255, 20, 0.1);
+      border: 1px solid rgba(57, 255, 20, 0.3);
+      border-radius: 999px;
+      font-size: 12px;
+      color: #39FF14;
+      margin-top: 8px;
+    }
+
+    .unverified-badge {
+      background: rgba(255, 165, 0, 0.1);
+      border-color: rgba(255, 165, 0, 0.3);
+      color: #FFA500;
+    }
+
+    #message {
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    #message.success {
+      background: rgba(57, 255, 20, 0.1);
+      border: 1px solid rgba(57, 255, 20, 0.3);
+      color: #39FF14;
+    }
+
+    #message.error {
+      background: rgba(224, 71, 60, 0.1);
+      border: 1px solid rgba(224, 71, 60, 0.3);
+      color: #ff9b93;
+    }
+
+    @media (max-width: 768px) {
+      .profile-sections {
+        grid-template-columns: 1fr;
+      }
+      .profile-header {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav">
+      <a href="home.html" class="brand">
+        <div class="brand-icon">N</div>
+        <span>NEUROFOUNDRY</span>
+      </a>
+      <div class="links">
+        <a class="navlink" href="home.html">Home</a>
+        <a class="navlink" href="projects.html">Projects</a>
+        <a class="navlink" href="profile.html">Profile</a>
+        <button class="btn secondary" onclick="handleLogout()">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div id="message"></div>
+
+    <div class="profile-header">
+      <div class="avatar-container">
+        <div class="avatar" id="avatar">
+          <span id="avatarInitial">U</span>
+          <img id="avatarImg" style="display: none; width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+        </div>
+        <label for="avatarInput" class="avatar-upload">
+          📷
+          <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+        </label>
+      </div>
+      <div class="profile-info">
+        <h1 id="userName">Loading...</h1>
+        <p id="userEmail"></p>
+        <p>Member since <span id="memberSince"></span></p>
+        <div id="verificationBadge"></div>
+      </div>
+    </div>
+
+    <div class="profile-sections">
+      <div class="section">
+        <h2>Personal Information</h2>
+        <form id="profileForm">
+          <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" required>
+          </div>
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" pattern="[a-zA-Z0-9_-]+">
+          </div>
+          <div class="form-group">
+            <label for="bio">Bio</label>
+            <textarea id="bio" name="bio" maxlength="500"></textarea>
+          </div>
+          <button type="submit" class="btn primary">Save Changes</button>
+        </form>
+      </div>
+
+      <div class="section">
+        <h2>Additional Details</h2>
+        <form id="detailsForm">
+          <div class="form-group">
+            <label for="location">Location</label>
+            <input type="text" id="location" name="location">
+          </div>
+          <div class="form-group">
+            <label for="company">Company</label>
+            <input type="text" id="company" name="company">
+          </div>
+          <div class="form-group">
+            <label for="website">Website</label>
+            <input type="url" id="website" name="website" placeholder="https://example.com">
+          </div>
+          <button type="submit" class="btn primary">Update Details</button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    window.nfAuth = new window.NeurofoundryAuth({
+      apiUrl: 'https://api.theneurofoundry.com/api'
+    });
+
+    // Check authentication
+    if (!window.nfAuth.isAuthenticated()) {
+      window.location.href = '/login.html?redirect=' + encodeURIComponent(window.location.pathname);
+    }
+
+    // Load user profile
+    async function loadProfile() {
+      try {
+        const response = await window.nfAuth.getProfile();
+        const user = response.data.user;
+
+        // Update header
+        document.getElementById('userName').textContent = user.name || user.email;
+        document.getElementById('userEmail').textContent = user.email;
+
+        // Update avatar
+        if (user.avatar) {
+          document.getElementById('avatarImg').src = user.avatar;
+          document.getElementById('avatarImg').style.display = 'block';
+          document.getElementById('avatarInitial').style.display = 'none';
+        } else {
+          const initial = (user.name || user.email)[0].toUpperCase();
+          document.getElementById('avatarInitial').textContent = initial;
+        }
+
+        // Member since
+        const date = new Date(user.createdAt);
+        document.getElementById('memberSince').textContent = date.toLocaleDateString('en-US', {
+          month: 'long',
+          year: 'numeric'
+        });
+
+        // Verification badge
+        const badge = document.getElementById('verificationBadge');
+        if (user.emailVerified) {
+          badge.innerHTML = '<span class="verification-badge">✓ Email Verified</span>';
+        } else {
+          badge.innerHTML = '<span class="verification-badge unverified-badge">⚠ Email Not Verified</span>';
+        }
+
+        // Fill form fields
+        document.getElementById('name').value = user.name || '';
+        document.getElementById('username').value = user.username || '';
+        document.getElementById('bio').value = user.bio || '';
+        document.getElementById('location').value = user.location || '';
+        document.getElementById('company').value = user.company || '';
+        document.getElementById('website').value = user.website || '';
+
+      } catch (error) {
+        console.error('Error loading profile:', error);
+        showMessage('Failed to load profile', 'error');
+      }
+    }
+
+    // Handle profile form submission
+    document.getElementById('profileForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = {
+        name: document.getElementById('name').value,
+        username: document.getElementById('username').value,
+        bio: document.getElementById('bio').value
+      };
+
+      try {
+        await window.nfAuth.updateProfile(formData);
+        showMessage('Profile updated successfully!', 'success');
+        loadProfile();
+      } catch (error) {
+        showMessage(error.message || 'Failed to update profile', 'error');
+      }
+    });
+
+    // Handle details form submission
+    document.getElementById('detailsForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = {
+        location: document.getElementById('location').value,
+        company: document.getElementById('company').value,
+        website: document.getElementById('website').value
+      };
+
+      try {
+        await window.nfAuth.updateProfile(formData);
+        showMessage('Details updated successfully!', 'success');
+      } catch (error) {
+        showMessage(error.message || 'Failed to update details', 'error');
+      }
+    });
+
+    // Handle avatar upload
+    document.getElementById('avatarInput').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      if (file.size > 5 * 1024 * 1024) {
+        showMessage('File size must be less than 5MB', 'error');
+        return;
+      }
+
+      try {
+        const result = await window.nfAuth.uploadAvatar(file);
+        showMessage('Avatar uploaded successfully!', 'success');
+        loadProfile();
+      } catch (error) {
+        showMessage(error.message || 'Failed to upload avatar', 'error');
+      }
+    });
+
+    // Handle logout
+    async function handleLogout() {
+      if (confirm('Are you sure you want to logout?')) {
+        await window.nfAuth.logout();
+        window.location.href = '/home.html';
+      }
+    }
+
+    // Show message
+    function showMessage(text, type) {
+      const msg = document.getElementById('message');
+      msg.textContent = text;
+      msg.className = type;
+      msg.style.display = 'block';
+      setTimeout(() => {
+        msg.style.display = 'none';
+      }, 5000);
+    }
+
+    // Load profile on page load
+    loadProfile();
+  </script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "Neurofoundry Prompt Launcher",
+  "version": "0.2.0",
+  "description": "Launch and monitor Browser Use scripts from a polished side panel.",
+  "permissions": ["storage", "sidePanel", "tabs"],
+  "host_permissions": [
+    "http://127.0.0.1:8788/*",
+    "http://localhost:8788/*",
+    "https://zero.csirico9.workers.dev/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Neurofoundry Prompt Launcher"
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  }
+}

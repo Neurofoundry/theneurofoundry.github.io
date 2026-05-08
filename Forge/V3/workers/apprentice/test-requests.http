@@ -1,0 +1,135 @@
+### Apprentice health
+GET http://127.0.0.1:8787/health
+
+### Model diagnostics
+GET http://127.0.0.1:8787/diag/models
+
+### Generation schema
+GET http://127.0.0.1:8787/schema/generate
+
+### Origin generate (SDXL txt2img)
+POST http://127.0.0.1:8787/generate
+content-type: application/json
+x-auth-key: {{AUTH_KEY}}
+
+{
+  "origin": "sdxl",
+  "prompt": "cinematic portrait of a cyberpunk detective, volumetric light, detailed textures",
+  "negative_prompt": "blurry, low quality, distorted face",
+  "width": 1024,
+  "height": 1024,
+  "num_steps": 20,
+  "guidance": 7.5,
+  "seed": 1234
+}
+
+### Origin generate (Dreamshaper img2img)
+POST http://127.0.0.1:8787/origin/generate
+content-type: application/json
+x-auth-key: {{AUTH_KEY}}
+
+{
+  "origin": "dreamshaper",
+  "prompt": "turn this into a stylized fantasy portrait with painterly detail",
+  "negative_prompt": "artifacts, warped anatomy",
+  "image_b64": "{{IMAGE_BASE64}}",
+  "strength": 0.75,
+  "guidance": 7.0,
+  "width": 1024,
+  "height": 1024,
+  "num_steps": 20
+}
+
+### Fractal generate (alternating img2img)
+POST http://127.0.0.1:8787/fractal
+content-type: application/json
+x-auth-key: {{AUTH_KEY}}
+
+{
+  "origin": "sdxl",
+  "prompt": "keep face identity stable, increase cinematic atmosphere and contrast",
+  "negative_prompt": "extra limbs, warped face, blur",
+  "image_b64": "{{IMAGE_BASE64}}",
+  "iterations": 3,
+  "strength": 0.8,
+  "guidance": 7.5,
+  "width": 1024,
+  "height": 1024,
+  "num_steps": 20,
+  "seed": 999
+}
+
+### CDP analysis
+POST http://127.0.0.1:8787/fusion/cdp
+content-type: application/json
+x-auth-key: {{AUTH_KEY}}
+
+{
+  "image_base64": "{{IMAGE_BASE64}}"
+}
+
+### ACP analysis
+POST http://127.0.0.1:8787/fusion/acp
+content-type: application/json
+x-auth-key: {{AUTH_KEY}}
+
+{
+  "image_base64": "{{IMAGE_BASE64}}"
+}
+
+### SIP analysis
+POST http://127.0.0.1:8787/fusion/sip
+content-type: application/json
+x-auth-key: {{AUTH_KEY}}
+
+{
+  "image_base64": "{{IMAGE_BASE64}}"
+}
+
+### Synth (structured inputs)
+POST http://127.0.0.1:8787/fusion/synth
+content-type: application/json
+x-auth-key: {{AUTH_KEY}}
+
+{
+  "cdp": {
+    "summary": "A single person with short dark hair wearing a denim jacket.",
+    "observed_facts": ["one person", "denim jacket", "indoor scene"],
+    "uncertainty_flags": ["eye color unclear"],
+    "excluded_assumptions": ["identity not confirmed"],
+    "confidence": 0.74
+  },
+  "acp": {
+    "summary": "Warm indoor lighting with shallow background blur.",
+    "observed_facts": ["warm light", "indoor", "blurred background"],
+    "uncertainty_flags": ["time of day not visible"],
+    "excluded_assumptions": ["location city unknown"],
+    "confidence": 0.71
+  },
+  "sip": {
+    "summary": "Naturalistic portrait style with medium close-up framing.",
+    "observed_facts": ["portrait framing", "natural colors", "medium close-up"],
+    "uncertainty_flags": ["lens focal length uncertain"],
+    "excluded_assumptions": ["camera brand unknown"],
+    "confidence": 0.69
+  }
+}
+
+### Full fusion pipeline
+POST http://127.0.0.1:8787/fusion
+content-type: application/json
+x-auth-key: {{AUTH_KEY}}
+
+{
+  "image_base64": "{{IMAGE_BASE64}}"
+}
+
+### Generic analyze with mode
+POST http://127.0.0.1:8787/analyze
+content-type: application/json
+x-auth-key: {{AUTH_KEY}}
+
+{
+  "mode": "cdp",
+  "image_base64": "{{IMAGE_BASE64}}"
+}

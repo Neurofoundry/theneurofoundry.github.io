@@ -1,0 +1,43 @@
+{
+  "cdp_identity": {
+    "gender": "unknown | male | female | nonbinary",
+    "age_range": "child | teen | adult | elderly | unknown",
+    "ethnicity": "optional / unknown",
+    "body_type": "slim | athletic | average | stocky | unknown",
+    "face_features": ["optional key traits"],
+    "hair": {
+      "style": "short | long | shaved | unknown",
+      "color": "black | brown | blonde | red | gray | unknown"
+    }
+  },
+  "cdp_wardrobe": {
+    "primary_clothing": [
+      {
+        "item": "jacket | coat | hoodie | shirt | pants | skirt | dress | armor | uniform | unknown",
+        "material": "leather | denim | cotton | metal | synthetic | unknown",
+        "color": "black | white | gray | red | blue | green | unknown",
+        "pattern": "solid | camo | stripes | none | unknown"
+      }
+    ],
+    "footwear": "boots | sneakers | heels | sandals | unknown",
+    "headwear": "helmet | hood | cap | none | unknown"
+  },
+  "cdp_accessories": [
+    "mask",
+    "glasses",
+    "jewelry",
+    "gloves",
+    "belt",
+    "bag",
+    "none",
+    "unknown"
+  ],
+  "cdp_props": [
+    {
+      "item": "weapon | tool | object | unknown",
+      "material": "metal | wood | plastic | unknown",
+      "color": "black | silver | brown | unknown"
+    }
+  ],
+  "cdp_notes": "only visible details; use unknown if unsure"
+}

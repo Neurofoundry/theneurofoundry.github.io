@@ -74,7 +74,17 @@ class CloudflareD1Client {
       'CREATE INDEX IF NOT EXISTS idx_users_email ON users (email)',
       'CREATE INDEX IF NOT EXISTS idx_users_auth_provider ON users (auth_provider, auth_provider_id)',
       'CREATE INDEX IF NOT EXISTS idx_users_verification_token ON users (verification_token)',
-      'CREATE INDEX IF NOT EXISTS idx_users_reset_password_token ON users (reset_password_token)'
+      'CREATE INDEX IF NOT EXISTS idx_users_reset_password_token ON users (reset_password_token)',
+      `CREATE TABLE IF NOT EXISTS skeleton_key_auth_codes (
+        code_hash TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL,
+        purpose TEXT NOT NULL,
+        expires_at TEXT NOT NULL,
+        used_at TEXT,
+        created_at TEXT NOT NULL
+      )`,
+      'CREATE INDEX IF NOT EXISTS idx_skeleton_key_auth_codes_user ON skeleton_key_auth_codes (user_id)',
+      'CREATE INDEX IF NOT EXISTS idx_skeleton_key_auth_codes_purpose ON skeleton_key_auth_codes (purpose)'
     ];
 
     for (const sql of statements) {

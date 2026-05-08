@@ -1,0 +1,874 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Gallery – Neurofoundry</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { 
+      background: #0f1113; 
+      color: #e6e9ee; 
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+    
+    /* Header Styles */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(11, 12, 14, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid #e0473c;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 0 18px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: 0.5px;
+      text-decoration: none;
+      color: #e6e9ee;
+    }
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #ff7b6e 0%, #e0473c 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 18px;
+      color: white;
+      box-shadow: 0 4px 12px rgba(224, 71, 60, 0.3);
+    }
+    .links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .navlink {
+      color: #ccc;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .navlink:hover { color: #e0473c; }
+    .nav-item { position: relative; }
+    .dropdown-toggle {
+      background: none;
+      border: none;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      color: #ccc;
+      font: 500 14px/1 Inter, sans-serif;
+      transition: color 0.2s;
+    }
+    .dropdown-toggle:hover,
+    .dropdown-toggle:focus-visible {
+      color: #e0473c;
+      outline: none;
+    }
+    .dropdown-caret {
+      font-size: 11px;
+      opacity: 0.7;
+    }
+    .dropdown-menu {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      min-width: 200px;
+      background: rgba(15, 17, 19, 0.96);
+      border: 1px solid rgba(224, 71, 60, 0.25);
+      border-radius: 12px;
+      padding: 10px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+      opacity: 0;
+      transform: translateY(6px);
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 50;
+    }
+    .dropdown::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 100%;
+      height: 10px;
+    }
+    .dropdown-menu a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      color: #d6d6d6;
+      text-decoration: none;
+      font-size: 13px;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .dropdown-menu a:hover {
+      background: rgba(224, 71, 60, 0.15);
+      color: #fff;
+    }
+    .dropdown:hover .dropdown-menu,
+    .dropdown:focus-within .dropdown-menu {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 18px;
+      border-radius: 8px;
+      font: 600 13px/1 Inter, sans-serif;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: 2px solid transparent;
+    }
+    .btn.primary {
+      background: linear-gradient(180deg, #ff7b6e 0%, #e9584d 48%, #d23d33 100%);
+      border-color: #a2362f;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(224, 71, 60, 0.3);
+    }
+    .btn.primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(224, 71, 60, 0.4);
+    }
+    
+    /* Main Content */
+    main {
+      padding-top: 64px;
+      min-height: 100vh;
+    }
+    
+    /* Hero Section */
+    .gallery-hero {
+      padding: 80px 20px 60px;
+      text-align: center;
+      background: linear-gradient(180deg, rgba(224, 71, 60, 0.05) 0%, transparent 100%);
+    }
+    .gallery-hero h1 {
+      font-size: 48px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #e6e9ee 0%, #9aa3ad 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .gallery-hero p {
+      font-size: 18px;
+      color: #9aa3ad;
+      max-width: 600px;
+      margin: 0 auto 32px;
+    }
+    
+    /* Gallery Filter */
+    .gallery-filter {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 48px;
+      flex-wrap: wrap;
+      padding: 0 20px;
+    }
+    .filter-btn {
+      padding: 10px 24px;
+      background: rgba(224, 71, 60, 0.1);
+      border: 1px solid rgba(224, 71, 60, 0.3);
+      border-radius: 24px;
+      color: #e6e9ee;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: linear-gradient(180deg, #ff7b6e 0%, #e9584d 100%);
+      border-color: #e0473c;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(224, 71, 60, 0.4);
+    }
+    
+    /* Gallery Grid */
+    .gallery-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 20px 80px;
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
+      animation: fadeIn 0.6s ease-in;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Gallery Item */
+    .gallery-item {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      background: rgba(224, 71, 60, 0.05);
+      border: 1px solid rgba(224, 71, 60, 0.1);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      aspect-ratio: 1/1;
+    }
+    .gallery-item.video {
+      aspect-ratio: 16/9;
+    }
+    .gallery-item video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .gallery-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(224, 71, 60, 0.3);
+      border-color: #e0473c;
+    }
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+    .gallery-item:hover img {
+      transform: scale(1.05);
+    }
+    .gallery-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to top, rgba(15, 17, 19, 0.95) 0%, transparent 100%);
+      padding: 20px;
+      transform: translateY(100%);
+      transition: transform 0.3s ease;
+    }
+    .gallery-item:hover .gallery-overlay {
+      transform: translateY(0);
+    }
+    .gallery-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #e6e9ee;
+      margin-bottom: 4px;
+    }
+    .gallery-desc {
+      font-size: 13px;
+      color: #9aa3ad;
+    }
+    
+    /* Placeholder for images */
+    .placeholder-img {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, rgba(224, 71, 60, 0.1), rgba(224, 71, 60, 0.05));
+      font-size: 48px;
+    }
+    
+    /* Lightbox Modal */
+    .lightbox {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .lightbox.active {
+      display: flex;
+    }
+    .lightbox-content {
+      max-width: 90%;
+      max-height: 90%;
+      position: relative;
+    }
+    .lightbox-content img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      background: rgba(224, 71, 60, 0.9);
+      border: none;
+      border-radius: 50%;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .lightbox-close:hover {
+      background: #e0473c;
+      transform: rotate(90deg);
+    }
+    
+    /* Footer */
+    footer {
+      background: #0b0c0e;
+      border-top: 2px solid #e0473c;
+      padding: 32px 20px;
+    }
+    .footer-content {
+      max-width: 1600px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: #9aa3ad;
+    }
+    .footer-links a {
+      color: #9aa3ad;
+      text-decoration: none;
+      margin-left: 20px;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover {
+      color: #e0473c;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .gallery-hero h1 { font-size: 36px; }
+      .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; }
+      .footer-content { flex-direction: column; gap: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav">
+      <a href="home.html" class="brand">
+        <div class="brand-icon">N</div>
+        <span>NEUROFOUNDRY</span>
+      </a>
+      <div class="links">
+        <a class="navlink" href="home.html">Home</a>
+        <a class="navlink" href="technology.html">Technology</a>
+        <a class="navlink" href="crew.html">Crew</a>
+        <a class="navlink" href="https://forge.theneurofoundry.com/">Forge</a>
+        <div class="nav-item dropdown">
+          <button class="dropdown-toggle" type="button">
+            Archives <span class="dropdown-caret">v</span>
+          </button>
+          <div class="dropdown-menu">
+            <a href="technology.html">Technology</a>
+            <a href="downloads.html">Downloads</a>
+            <a href="button2.html">Manifesto</a>
+            <a href="neurofoundry-report.html">Report</a>
+          </div>
+        </div>
+        <a class="navlink" href="gallery.html">Gallery</a>
+        <a class="btn primary" href="signup.html">Request Access</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="gallery-hero">
+      <h1>The Synthesis Gallery</h1>
+      <p>Where machine vision meets human imagination. A living archive of neural artistry—forged in silicon, sparked by creativity.</p>
+    </div>
+
+    <div class="gallery-filter">
+      <button class="filter-btn active" data-filter="all">All Creations</button>
+      <button class="filter-btn" data-filter="images">Stills</button>
+      <button class="filter-btn" data-filter="videos">Motion</button>
+      <button class="filter-btn" data-filter="abstract">Abstract</button>
+      <button class="filter-btn" data-filter="landscape">Environments</button>
+      <button class="filter-btn" data-filter="portrait">Portraits</button>
+      <button class="filter-btn" data-filter="conceptual">Conceptual</button>
+    </div>
+
+    <div class="gallery-container">
+      <div class="gallery-grid">
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/42.png" alt="Gallery image 42">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 42</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/82.png" alt="Gallery image 82">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 82</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/80.png" alt="Gallery image 80">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 80</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/34.png" alt="Gallery image 34">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 34</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/32.png" alt="Gallery image 32">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 32</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/52.png" alt="Gallery image 52">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 52</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/18.png" alt="Gallery image 18">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 18</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/73.png" alt="Gallery image 73">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 73</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/67.png" alt="Gallery image 67">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 67</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/46.png" alt="Gallery image 46">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 46</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/86.png" alt="Gallery image 86">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 86</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/74.png" alt="Gallery image 74">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 74</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/93.png" alt="Gallery image 93">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 93</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/79.png" alt="Gallery image 79">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 79</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/11.png" alt="Gallery image 11">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 11</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/55.png" alt="Gallery image 55">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 55</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/12.png" alt="Gallery image 12">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 12</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/41.png" alt="Gallery image 41">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 41</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/47.png" alt="Gallery image 47">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 47</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/62.png" alt="Gallery image 62">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 62</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/81.png" alt="Gallery image 81">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 81</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/92.png" alt="Gallery image 92">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 92</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/76.png" alt="Gallery image 76">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 76</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/96.png" alt="Gallery image 96">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 96</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/83.png" alt="Gallery image 83">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 83</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/89.png" alt="Gallery image 89">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 89</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/70.png" alt="Gallery image 70">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 70</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/25.png" alt="Gallery image 25">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 25</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/53.png" alt="Gallery image 53">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 53</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/16.png" alt="Gallery image 16">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 16</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/38.png" alt="Gallery image 38">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 38</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/50.png" alt="Gallery image 50">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 50</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/36.png" alt="Gallery image 36">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 36</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/58.png" alt="Gallery image 58">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 58</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/63.png" alt="Gallery image 63">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 63</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/33.png" alt="Gallery image 33">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 33</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/43.png" alt="Gallery image 43">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 43</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/72.png" alt="Gallery image 72">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 72</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/13.png" alt="Gallery image 13">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 13</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/40.png" alt="Gallery image 40">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 40</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/44.png" alt="Gallery image 44">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 44</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/90.png" alt="Gallery image 90">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 90</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/45.png" alt="Gallery image 45">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 45</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/71.png" alt="Gallery image 71">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 71</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/88.png" alt="Gallery image 88">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 88</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/69.png" alt="Gallery image 69">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 69</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/15.png" alt="Gallery image 15">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 15</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/51.png" alt="Gallery image 51">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 51</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/95.png" alt="Gallery image 95">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 95</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="images">
+          <img src="WebsiteContent/Images/19.png" alt="Gallery image 19">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Image 19</div>
+            <div class="gallery-desc">Gallery placeholder image</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Lightbox Modal -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" onclick="closeLightbox()">×</button>
+    <div class="lightbox-content">
+      <img id="lightbox-img" src="" alt="Gallery Image">
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-content">
+      <span>© 2024 Neurofoundry. All rights reserved.</span>
+      <div class="footer-links">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Gallery filter functionality
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const galleryItems = document.querySelectorAll('.gallery-item');
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Remove active class from all buttons
+        filterBtns.forEach(b => b.classList.remove('active'));
+        // Add active class to clicked button
+        btn.classList.add('active');
+        
+        const filter = btn.getAttribute('data-filter');
+        
+        galleryItems.forEach(item => {
+          const categories = item.getAttribute('data-category').split(' ');
+          if (filter === 'all' || categories.includes(filter)) {
+            item.style.display = 'block';
+          } else {
+            item.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Lightbox functionality
+    function openLightbox(imgSrc) {
+      document.getElementById('lightbox').classList.add('active');
+      document.getElementById('lightbox-img').src = imgSrc;
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+
+    // Close lightbox on background click
+    document.getElementById('lightbox').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeLightbox();
+      }
+    });
+
+    // Add click events to gallery items
+    galleryItems.forEach(item => {
+      item.addEventListener('click', () => {
+        const img = item.querySelector('img');
+        if (img) {
+          openLightbox(img.src);
+        }
+      });
+    });
+
+    // Close lightbox with Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeLightbox();
+      }
+    });
+  </script>
+  <script src="shared/page-transitions.js"></script>
+  <script src="shared/micro-interactions.js"></script>
+  <script src="chatbot-component.js"></script>
+  <script src="embers-effect.js"></script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+:root {
+  --nf-footer-bg: rgba(10, 11, 13, 0.9);
+  --nf-footer-border: #e0473c;
+  --nf-footer-link: #e0473c;
+  --nf-footer-text: #9aa3ad;
+}
+
+.nf-site-footer {
+  background: var(--nf-footer-bg);
+  border-top: 2px solid var(--nf-footer-border);
+  padding: 20px clamp(12px, 3vw, 20px);
+  text-align: center;
+  color: var(--nf-footer-text);
+  font-size: 13px;
+}
+
+.nf-footer-content {
+  display: grid;
+  gap: 14px;
+  justify-items: center;
+}
+
+.nf-footer-content p {
+  margin: 0;
+}
+
+.nf-footer-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 3vw, 18px);
+  flex-wrap: nowrap;
+  width: 100%;
+  min-width: 0;
+}
+
+.nf-footer-links a {
+  color: var(--nf-footer-link);
+  text-decoration: none;
+  font-size: clamp(10px, 3.25vw, 14px);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.nf-footer-links a:hover,
+.nf-footer-links a:focus-visible {
+  text-decoration: underline;
+}
+
+@media (max-width: 420px) {
+  .nf-footer-links {
+    gap: clamp(7px, 2.2vw, 10px);
+  }
+
+  .nf-footer-links a {
+    font-size: clamp(9px, 2.75vw, 11px);
+  }
+}

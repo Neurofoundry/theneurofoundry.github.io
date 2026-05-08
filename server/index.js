@@ -23,6 +23,7 @@ const userRoutes = require('./routes/user');
 const profileRoutes = require('./routes/profile');
 const { getLastSentEmail, getSentEmailLog } = require('./services/emailService');
 const { getEmailDeliveryLog, getEmailQueueSnapshot } = require('./services/emailOrchestrator');
+const skeletonKeyChangelog = require('./data/skeleton-key-changelog.json');
 
 // Import middleware
 const { errorHandler } = require('./middleware/errorHandler');
@@ -76,6 +77,20 @@ app.use('/api/profile', authMiddleware, profileRoutes);
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+app.get('/api/skeleton-key/changelog', (req, res) => {
+  const version = String(req.query.version || '').trim();
+  const changelog = skeletonKeyChangelog[version] || null;
+
+  if (!changelog) {
+    return res.status(404).type('application/json').json({
+      error: 'changelog_not_found',
+      version
+    });
+  }
+
+  return res.type('application/json').json(changelog);
 });
 
 // Dev-only server controls

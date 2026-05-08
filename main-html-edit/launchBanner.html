@@ -1,0 +1,329 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neurofoundry Launch Banner Styles</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: #181818;
+      color: #b85c1e;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .banner {
+      width: 100vw;
+      max-width: 100%;
+      min-height: 56px;
+      margin: 32px 0 0 0;
+      padding: 10px 20px;
+      font-family: 'Inter', sans-serif;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      border-radius: 8px;
+      box-sizing: border-box;
+      position: relative;
+      overflow: hidden;
+      transition: box-shadow 0.3s;
+    }
+    .banner strong {
+      font-size: 1.15em;
+      letter-spacing: 1px;
+    }
+    .banner a {
+      background: rgba(184, 92, 30, 0.18);
+      border: 1px solid #b85c1e;
+      border-radius: 4px;
+      padding: 4px 12px;
+      color: #b85c1e;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95em;
+      transition: background 0.2s;
+    }
+    .banner a:hover {
+      background: rgba(184, 92, 30, 0.32);
+    }
+    /* 1. Molten Metal Gradient */
+    .molten {
+      background: linear-gradient(90deg, #181818 0%, #ff7b1a 50%, #181818 100%);
+      box-shadow: 0 0 24px 0 #ff7b1a44;
+    }
+    /* 2. Forged Texture */
+    .forged {
+      background: #181818 url('https://www.transparenttextures.com/patterns/hammered.png');
+      background-size: 200px 200px;
+      border: 2px solid #b85c1e;
+      box-shadow: 0 2px 12px #b85c1e33;
+    }
+    /* 3. Ember Glow */
+    .ember {
+      background: #181818;
+      box-shadow: 0 0 32px 8px #ff7b1a88, 0 0 0 2px #b85c1e;
+    }
+    /* 4. Rusty Plate */
+    .rusty {
+      background: linear-gradient(120deg, #181818 60%, #b85c1e 100%);
+      border: 2px solid #a3471c;
+      box-shadow: 0 0 0 6px #181818, 0 0 24px #a3471c55;
+      font-style: italic;
+    }
+    /* 5. Firelight Flicker with Pulsating Glow and Original Colors */
+    .firelight {
+      background: linear-gradient(90deg, #1a0f0d 0%, rgba(224, 71, 60, 0.15) 50%, #1a0f0d 100%);
+      color: #b85c1e;
+      animation: flicker 1.5s infinite alternate, pulse-glow 2.2s infinite;
+      box-shadow: 0 0 24px 6px rgba(224, 71, 60, 0.4);
+    }
+    @keyframes flicker {
+      0% { box-shadow: 0 0 16px 2px rgba(224, 71, 60, 0.27); }
+      100% { box-shadow: 0 0 32px 8px rgba(224, 71, 60, 0.6); }
+    }
+    @keyframes pulse-glow {
+      0% { box-shadow: 0 0 24px 6px rgba(224, 71, 60, 0.4), 0 0 0 0 rgba(224, 71, 60, 0.18); }
+      50% { box-shadow: 0 0 48px 18px rgba(224, 71, 60, 0.7), 0 0 24px 12px rgba(224, 71, 60, 0.32); }
+      100% { box-shadow: 0 0 24px 6px rgba(224, 71, 60, 0.4), 0 0 0 0 rgba(224, 71, 60, 0.18); }
+    }
+    /* 6. Runic Border */
+    .runic {
+      background: #181818;
+      border: 3px double #b85c1e;
+      box-shadow: 0 0 0 4px #181818, 0 0 16px #b85c1e55;
+    }
+    .runic::before {
+      content: 'ᚠᚢᚦᚨᚱᚲᚷᚹᚺᛃᛇᛈᛉᛋᛏ';
+      position: absolute;
+      top: 2px; left: 12px;
+      font-size: 0.8em;
+      color: #b85c1e99;
+      letter-spacing: 0.3em;
+      pointer-events: none;
+    }
+    .runic::after {
+      content: 'ᛒᛖᛗᛚᛜᛞᛟᛞᚾᚱᚺᚾᛗᛚᛇ';
+      position: absolute;
+      bottom: 2px; right: 12px;
+      font-size: 0.8em;
+      color: #b85c1e99;
+      letter-spacing: 0.3em;
+      pointer-events: none;
+    }
+    /* 7. Anvil Shadow */
+    .anvil {
+      background: #181818;
+    }
+    .anvil::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 120px;
+      height: 60px;
+      background: url('https://svgshare.com/i/15kA.svg') center/contain no-repeat;
+      opacity: 0.08;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    /* 8. Lava Crack */
+    .lava {
+      background: #181818;
+    }
+    .lava::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 80%;
+      height: 8px;
+      background: linear-gradient(90deg, #ff7b1a 0%, #fff 50%, #ff7b1a 100%);
+      filter: blur(2px);
+      opacity: 0.5;
+      transform: translate(-50%, -50%) rotate(-8deg);
+      pointer-events: none;
+    }
+    /* 9. Smoky Overlay */
+    .smoky {
+      background: #181818;
+    }
+    .smoky::after {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; width: 100%; height: 100%;
+      background: url('https://svgshare.com/i/15kB.svg') repeat-x;
+      opacity: 0.12;
+      pointer-events: none;
+      animation: smoke-move 8s linear infinite;
+    }
+    @keyframes smoke-move {
+      0% { background-position-x: 0; }
+      100% { background-position-x: 400px; }
+    }
+    /* 10. Forged Gradient */
+    .forged-gradient {
+      background: linear-gradient(120deg, #181818 0%, #b85c1e 100%);
+      box-shadow: 0 0 24px #b85c1e44;
+    }
+    /* 11. Torchlight Corners */
+    .torchlight {
+      background: #181818;
+    }
+    .torchlight::before, .torchlight::after {
+      content: '';
+      position: absolute;
+      width: 32px; height: 32px;
+      background: radial-gradient(circle, #ff7b1a 0%, #181818 80%);
+      opacity: 0.5;
+      pointer-events: none;
+    }
+    .torchlight::before { left: 0; top: 0; }
+    .torchlight::after { right: 0; bottom: 0; }
+    /* 12. Charred Edges */
+    .charred {
+      background: #181818;
+      box-shadow: 0 0 0 8px #181818, 0 0 32px 8px #b85c1e55;
+      border: 2px dashed #b85c1e;
+      filter: drop-shadow(0 0 8px #b85c1e);
+    }
+    /* 13. Fantasy Crest */
+    .crest {
+      background: #181818;
+    }
+    .crest::before {
+      content: '';
+      position: absolute;
+      left: 50%; top: 50%;
+      width: 80px; height: 80px;
+      background: url('https://svgshare.com/i/15kC.svg') center/contain no-repeat;
+      opacity: 0.07;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    /* 14. Animated Sparks */
+    .sparks {
+      background: #181818;
+    }
+    .sparks::after {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; width: 100%; height: 100%;
+      pointer-events: none;
+      background: url('https://svgshare.com/i/15kD.svg') repeat-x;
+      opacity: 0.18;
+      animation: sparks-move 2s linear infinite;
+    }
+    @keyframes sparks-move {
+      0% { background-position-x: 0; }
+      100% { background-position-x: 200px; }
+    }
+    /* 15. Old Scroll */
+    .scroll {
+      background: url('https://svgshare.com/i/15kE.svg') center/cover no-repeat, #181818;
+      border: 2px solid #b85c1e;
+      box-shadow: 0 0 32px #b85c1e33;
+      color: #b85c1e;
+      font-family: 'Inter', serif;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div class="banner molten">
+    <span><strong>LAUNCHING SOON</strong> — The future of creative AI is almost here</span>
+    <a href="signup.html">GET EARLY ACCESS</a>
+  </div>
+  <div class="banner forged">
+    <span><strong>LAUNCHING SOON</strong> — The future of creative AI is almost here</span>
+    <a href="signup.html">GET EARLY ACCESS</a>
+  </div>
+  <div class="banner ember">
+    <span><strong>LAUNCHING SOON</strong> — The future of creative AI is almost here</span>
+    <a href="signup.html">GET EARLY ACCESS</a>
+  </div>
+  <div class="banner rusty">
+    <span><strong>LAUNCHING SOON</strong> — The future of creative AI is almost here</span>
+    <a href="signup.html">GET EARLY ACCESS</a>
+  </div>
+  <!-- Combined Style: Firelight Glow + Rusty Gradient/Border -->
+  <div class="banner" style="
+    background: linear-gradient(90deg, #0f1113 60%, #23272e 100%);
+    border: 1.5px solid #e0473c;
+    color: #e6e9ee;
+    font-style: normal;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    box-shadow: 0 0 18px 0 #e0473c33;
+    ">
+    <span style="font-size:1.18em; letter-spacing:0.5px; color:#e6e9ee; font-weight:700;">Official Launch</span>
+    <span id="countdown" style="font-size:1.25em; color:#e0473c; font-family:'Inter',monospace; font-weight:800; letter-spacing:1.5px; text-shadow:0 0 8px #e0473c,0 0 2px #fff;">Loading...</span>
+  </div>
+  <div class="banner runic">
+    <span><strong>LAUNCHING SOON</strong> — The future of creative AI is almost here</span>
+    <a href="signup.html">GET EARLY ACCESS</a>
+  </div>
+  <div class="banner anvil">
+    <span><strong>LAUNCHING SOON</strong> — The future of creative AI is almost here</span>
+    <a href="signup.html">GET EARLY ACCESS</a>
+  </div>
+  <div class="banner lava">
+    <span><strong>LAUNCHING SOON</strong> — The future of creative AI is almost here</span>
+    <a href="signup.html">GET EARLY ACCESS</a>
+  </div>
+  <div class="banner smoky">
+    <span><strong>LAUNCHING SOON</strong> — The future of creative AI is almost here</span>
+    <a href="signup.html">GET EARLY ACCESS</a>
+  </div>
+  <div class="banner forged-gradient">
+    <span><strong>LAUNCHING SOON</strong> — The future of creative AI is almost here</span>
+    <a href="signup.html">GET EARLY ACCESS</a>
+  </div>
+  <div class="banner torchlight">
+    <span><strong>LAUNCHING SOON</strong> — The future of creative AI is almost here</span>
+    <a href="signup.html">GET EARLY ACCESS</a>
+  </div>
+  <div class="banner charred">
+    <span><strong>LAUNCHING SOON</strong> — The future of creative AI is almost here</span>
+    <a href="signup.html">GET EARLY ACCESS</a>
+  </div>
+  <div class="banner crest">
+    <span><strong>LAUNCHING SOON</strong> — The future of creative AI is almost here</span>
+    <a href="signup.html">GET EARLY ACCESS</a>
+  </div>
+  <div class="banner sparks">
+    <span><strong>LAUNCHING SOON</strong> — The future of creative AI is almost here</span>
+    <a href="signup.html">GET EARLY ACCESS</a>
+  </div>
+  <div class="banner scroll">
+    <span><strong>LAUNCHING SOON</strong> — The future of creative AI is almost here</span>
+    <a href="signup.html">GET EARLY ACCESS</a>
+  </div>
+</body>
+<script>
+// Countdown to midnight tonight (local time)
+function updateCountdown() {
+  const now = new Date();
+  let year = now.getFullYear();
+  let month = now.getMonth();
+  let day = now.getDate();
+  // If already past midnight, set to next day
+  let target = new Date(year, month, day + 1, 0, 0, 0, 0);
+  const diff = target - now;
+  if (diff <= 0) {
+    document.getElementById('countdown').textContent = '00:00:00';
+    return;
+  }
+  const hours = String(Math.floor(diff / 1000 / 60 / 60)).padStart(2, '0');
+  const minutes = String(Math.floor((diff / 1000 / 60) % 60)).padStart(2, '0');
+  const seconds = String(Math.floor((diff / 1000) % 60)).padStart(2, '0');
+  document.getElementById('countdown').textContent = `${hours}:${minutes}:${seconds}`;
+}
+setInterval(updateCountdown, 1000);
+updateCountdown();
+</script>
+</html>

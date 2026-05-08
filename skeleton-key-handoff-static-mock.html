@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aegis: Skeleton Key Verification Mock</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ember:#ff6b3d;
+      --gold:#ffb347;
+      --line:rgba(255,107,61,.35);
+      --text:#f6f0ea;
+      --muted:#b9b2aa;
+      --panel:rgba(9,8,7,.82);
+    }
+    * { box-sizing:border-box; }
+    body {
+      margin:0;
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 50% 18%, rgba(255,179,71,.28), transparent 22rem),
+        radial-gradient(circle at 22% 88%, rgba(255,107,61,.20), transparent 18rem),
+        linear-gradient(145deg, #050505 0%, #160c08 45%, #030303 100%);
+      color:var(--text);
+      font-family:"Segoe UI", Arial, sans-serif;
+      letter-spacing:.02em;
+    }
+    body::before {
+      content:"";
+      position:fixed;
+      inset:-20%;
+      background:
+        linear-gradient(110deg, transparent 0 42%, rgba(255,107,61,.12) 43%, transparent 45% 100%),
+        repeating-linear-gradient(90deg, rgba(255,255,255,.035) 0 1px, transparent 1px 7px);
+      opacity:.42;
+      transform:rotate(-8deg);
+      pointer-events:none;
+    }
+    main {
+      position:relative;
+      width:min(560px, calc(100% - 32px));
+      padding:30px;
+      border:1px solid var(--line);
+      border-radius:8px;
+      background:linear-gradient(180deg, rgba(18,14,12,.92), var(--panel));
+      box-shadow:0 28px 90px rgba(0,0,0,.72), inset 0 1px 0 rgba(255,255,255,.06);
+      text-align:center;
+    }
+    .brand {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      margin-bottom:22px;
+      text-transform:uppercase;
+      font-weight:900;
+      color:var(--ember);
+      letter-spacing:.22em;
+      font-size:12px;
+      text-shadow:0 2px 14px rgba(255,107,61,.36);
+    }
+    .brand span:last-child { color:var(--muted); letter-spacing:.12em; font-size:10px; }
+    h1 {
+      margin:0;
+      font-size:34px;
+      line-height:1;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      text-shadow:0 3px 18px rgba(0,0,0,.85), 0 0 24px rgba(255,107,61,.22);
+    }
+    h1 small {
+      display:block;
+      margin-top:8px;
+      color:var(--gold);
+      font-size:13px;
+      letter-spacing:.24em;
+    }
+    p {
+      margin:18px auto 0;
+      max-width:420px;
+      color:var(--muted);
+      line-height:1.55;
+      font-size:14px;
+    }
+    .account {
+      margin-top:14px;
+      padding:10px 12px;
+      border:1px solid rgba(255,255,255,.09);
+      border-radius:8px;
+      background:rgba(0,0,0,.36);
+      color:#fff;
+      font-weight:800;
+      overflow-wrap:anywhere;
+    }
+    .code {
+      margin:24px auto 18px;
+      padding:18px 18px 18px 26px;
+      width:min(340px, 100%);
+      border:1px solid rgba(255,179,71,.48);
+      border-radius:8px;
+      background:linear-gradient(180deg, rgba(0,0,0,.72), rgba(0,0,0,.92));
+      color:var(--gold);
+      font-size:46px;
+      letter-spacing:12px;
+      font-weight:950;
+      text-shadow:0 0 22px rgba(255,179,71,.42);
+      box-shadow:inset 0 0 28px rgba(255,107,61,.11), 0 18px 45px rgba(0,0,0,.5);
+    }
+    .meta {
+      display:grid;
+      gap:7px;
+      margin:18px auto 0;
+      color:#d8d0c8;
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+    .warning {
+      margin-top:18px;
+      padding:12px;
+      border-left:3px solid var(--ember);
+      border-radius:8px;
+      background:rgba(255,107,61,.08);
+      color:#f0d7cb;
+      font-size:12px;
+      line-height:1.45;
+      text-align:left;
+    }
+    footer {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      margin-top:24px;
+      padding-top:16px;
+      border-top:1px solid rgba(255,255,255,.08);
+      color:#8f8780;
+      font-size:11px;
+    }
+    a { color:var(--gold); text-decoration:none; font-weight:800; }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="brand"><span>Neurofoundry</span><span>Secure Desktop Handoff</span></div>
+    <h1>Aegis<small>Skeleton Key</small></h1>
+    <p>Google authentication succeeded. Enter this one-time code in Skeleton Key to continue.</p>
+    <div class="account">example@theneurofoundry.com</div>
+    <div class="code">1234</div>
+    <div class="meta">
+      <span>Expires: 04/22/2026 | 5:42 PM</span>
+      <span>Single-use verification code</span>
+    </div>
+    <div class="warning">Only enter this code in the Skeleton Key desktop app. Neurofoundry will never ask you to send vault secrets, passwords, or key values through this page.</div>
+    <footer>
+      <span>Copyright Neurofoundry 2025</span>
+      <a href="https://www.theneurofoundry.com">www.theneurofoundry.com</a>
+    </footer>
+  </main>
+</body>
+</html>

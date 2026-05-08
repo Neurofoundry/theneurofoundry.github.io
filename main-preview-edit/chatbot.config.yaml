@@ -1,0 +1,95 @@
+# Chatbot configuration
+# Place this file at the site root (served as /chatbot.config.yaml)
+# Available keys (all optional):
+#   endpoint: URL to POST chat requests to (string)
+#   initial_message: initial bot greeting (string)
+#   placeholder: input placeholder text (string)
+#   window_width: width in pixels (number)
+#   window_height: height in pixels (number)
+#   accent1: first accent color (hex string)
+#   accent2: second accent color (hex string)
+#   bg: background color for the chat window (CSS color)
+#   enable_tracing: boolean
+#   typing_text: text to show while typing
+#   error_message: friendly error message
+
+endpoint: "https://eden-chat.csirico9.workers.dev"
+initial_message: "Hello! I'm your Neurofoundry AI assistant. How can I help you today?"
+placeholder: "Type your message..."
+window_width: 300
+window_height: 360
+accent1: "#ff7b6e"
+accent2: "#e0473c"
+bg: "rgba(15, 17, 19, 0.98)"
+enable_tracing: true
+typing_text: "Typing..."
+error_message: "Sorry, I'm having trouble connecting. Please try again."
+
+# Fuzzy matching:
+# match_fuzzy: enable or disable fuzzy matching (true/false)
+# fuzzy_threshold: normalized similarity threshold (0..1, default 0.8)
+# fuzzy_whole_word: when true, compare rules to each token in user input rather than the whole input
+match_fuzzy: true
+fuzzy_threshold: 0.8
+fuzzy_whole_word: true
+
+# Personality configuration
+# personality:
+#   name: "Onyx"
+#   tone: "short, sharp"
+#   rules:
+#     - name: "greeting"
+#       match: "hello|hi|hey"
+#       match_regex: "^(hi|hello|hey)\\b"
+#       action: "reply"       # 'reply' = respond locally, 'inject' = add hint to endpoint
+#       stop_propagation: true # when true, skip calling external endpoint
+#       response: "Hey. What do you need?"
+#     - name: "pricing"
+#       match: "price"
+#       action: "inject"
+#       response:
+#         response_set: "pricing_responses"
+# response_sets:
+#   pricing_responses:
+#     - "We have tiered pricing based on usage. Want details?"
+#     - "Send me your expected usage and I can estimate cost."
+
+# Example uncommented personality block (use one or the other)
+personality:
+  name: "Onyx"
+  tone: "short, sharp"
+  rules:
+    - name: "greeting"
+      match_regex: "^(hi|hello|hey)\\b"
+      action: "reply"
+      stop_propagation: true
+      response: "Hey. What do you need?"
+    - name: "pricing"
+      match: "price"
+      action: "inject"
+      response:
+        response_set: "pricing_responses"
+    - name: "architect"
+      match: "architect"
+      action: "inject"
+      response: "Oh you want to know more about the Architect? Dont we all!"
+    - name: "projects"
+      match: "projects"
+      action: "inject"
+      response: "Were you curious about our pending projects? Feel free to view some of the on-going developments!"
+    - name: "forge"
+      match: "forge"
+      action: "inject"
+      response: "The Forge is one of the key hubs where we prototype and refine ideas. Want a tour?"
+
+# Global assistant instructions & response policy
+assistant_instructions: "You are the Neurofoundry assistant. Be concise (20-80 words), avoid long encyclopedia-like answers, and guide the user to sign up or explore site features when appropriate. Keep tone helpful and promotional — suggest signing up when the user asks for details."
+cta_text: "Want more detail? Sign up to get a full walkthrough:"
+cta_url: "/signup.html"
+max_response_length: 300
+shorten_policy: true
+
+response_sets:
+  pricing_responses:
+    - "We have tiered pricing based on usage. Want details?"
+    - "Send me your expected usage and I can estimate cost."

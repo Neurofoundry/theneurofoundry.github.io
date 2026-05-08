@@ -1,0 +1,1701 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+              <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Neurofoundry - Intelligence Engineered</title>
+  <meta name="description" content="AI-powered systems that think, adapt, and deliver. Transform ideas into intelligent reality.">
+  <meta name="theme-color" content="#0f1113">
+  <meta name="keywords" content="AI, artificial intelligence, machine learning, neural networks, intelligent systems, automation">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.theneurofoundry.com/">
+  <meta property="og:title" content="Neurofoundry - Intelligence Engineered">
+  <meta property="og:description" content="AI-powered systems that think, adapt, and deliver. Transform ideas into intelligent reality.">
+  <meta property="og:image" content="https://www.theneurofoundry.com/banner.png">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://www.theneurofoundry.com/">
+  <meta property="twitter:title" content="Neurofoundry - Intelligence Engineered">
+  <meta property="twitter:description" content="AI-powered systems that think, adapt, and deliver. Transform ideas into intelligent reality.">
+  <meta property="twitter:image" content="https://www.theneurofoundry.com/banner.png">
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://www.theneurofoundry.com/home.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Structured Data for SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Neurofoundry",
+    "url": "https://www.theneurofoundry.com",
+    "logo": "https://www.theneurofoundry.com/banner.png",
+    "description": "AI-powered systems that think, adapt, and deliver. Transform ideas into intelligent reality.",
+    "sameAs": [
+      "https://github.com/Neurofoundry"
+    ],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "Customer Service",
+      "url": "https://www.theneurofoundry.com/signup.html"
+    },
+    "offers": {
+      "@type": "AggregateOffer",
+      "offerCount": "3",
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "Neural Architecture Design",
+          "description": "Custom neural network design and intelligent systems architecture"
+        },
+        {
+          "@type": "Offer",
+          "name": "AI Integration Services",
+          "description": "Seamless AI integration into existing workflows and systems"
+        },
+        {
+          "@type": "Offer",
+          "name": "Production Deployment",
+          "description": "Production-grade deployment with monitoring and optimization"
+        }
+      ]
+    }
+  }
+  </script>
+
+  <style>
+    /* Improved focus styles for accessibility */
+    *:focus-visible {
+      outline: 3px solid #e0473c;
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+
+    .sr-only-focusable:focus {
+      clip: auto;
+      height: auto;
+      margin: 0;
+      overflow: visible;
+      position: absolute;
+      width: auto;
+      white-space: normal;
+    }
+
+    body { background: #0f1113; color: #e6e9ee; margin: 0; font-family: Inter, sans-serif; }
+    header {
+      position: relative;
+      z-index: 20;
+      background: rgba(11, 12, 14, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid #e0473c;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      flex-shrink: 0;
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 0 18px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: 0.5px;
+    }
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #ff7b6e 0%, #e0473c 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 18px;
+      color: white;
+      box-shadow: 0 4px 12px rgba(224, 71, 60, 0.3);
+    }
+    .links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .navlink {
+      color: #ccc;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      position: relative;
+      transition: color 0.2s;
+    }
+    .navlink:hover { color: #e0473c; }
+    .nav-item { position: relative; }
+    .dropdown-toggle {
+      background: none;
+      border: none;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      color: #ccc;
+      font: 500 14px/1 Inter, sans-serif;
+      transition: color 0.2s;
+    }
+    .dropdown-toggle:hover,
+    .dropdown-toggle:focus-visible {
+      color: #e0473c;
+      outline: none;
+    }
+    .dropdown-caret {
+      font-size: 11px;
+      opacity: 0.7;
+    }
+    .dropdown-menu {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      min-width: 200px;
+      background: rgba(15, 17, 19, 0.96);
+      border: 1px solid rgba(224, 71, 60, 0.25);
+      border-radius: 12px;
+      padding: 10px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+      opacity: 0;
+      transform: translateY(6px);
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 50;
+    }
+    .dropdown::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 100%;
+      height: 10px;
+    }
+    .dropdown-menu a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      color: #c9d0d8;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      transition: background 0.2s, color 0.2s;
+    }
+    .dropdown-menu a:hover {
+      background: rgba(224, 71, 60, 0.18);
+      color: #fff;
+    }
+    .dropdown:hover .dropdown-menu,
+    .dropdown:focus-within .dropdown-menu {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 18px;
+      border-radius: 8px;
+      font: 600 13px/1 Inter, sans-serif;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: 2px solid transparent;
+    }
+    .btn.primary {
+      background: linear-gradient(180deg, #ff7b6e 0%, #e9584d 48%, #d23d33 100%);
+      border-color: #a2362f;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(224, 71, 60, 0.3);
+    }
+    .btn.primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(224, 71, 60, 0.4);
+    }
+    .btn.secondary {
+      background: transparent;
+      border: 2px solid rgba(224, 71, 60, 0.5);
+      color: #ff9b93;
+    }
+    .btn.secondary:hover {
+      background: rgba(224, 71, 60, 0.15);
+      border-color: #e0473c;
+      transform: translateY(-1px);
+    }
+    .btn.mesh {
+      --main-color: #ff8a3d;
+      --main-bg-color: rgba(0, 0, 0, 0);
+      --pattern-color: rgba(255, 138, 61, 0.35);
+      position: relative;
+      overflow: hidden;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--main-color);
+      background-color: #050506;
+      background-image:
+        linear-gradient(var(--pattern-color) 1px, transparent 1px),
+        linear-gradient(to right, var(--pattern-color) 1px, transparent 1px);
+      background-size:
+        14px 14px,
+        14px 14px;
+      background-position:
+        center,
+        center;
+      border: 1px solid rgba(255, 138, 61, 0.55);
+      border-radius: 10px;
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 138, 61, 0.25),
+        0 10px 24px rgba(0, 0, 0, 0.35);
+      padding: 12px 28px;
+      font-size: 13px;
+      font-weight: 700;
+      transition: background-size 0.2s ease-in-out, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    }
+    .btn.mesh:hover {
+      background-size:
+        cover,
+        cover,
+        12px 12px,
+        12px 12px;
+      border-color: rgba(255, 138, 61, 0.9);
+      color: #fff2e6;
+      transform: translateY(-1px);
+    }
+    .btn.mesh:active {
+      filter: hue-rotate(18deg);
+    }
+    .hero-cta-image {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+    }
+    .hero-cta-image img {
+      display: block;
+      height: 56px;
+      width: auto;
+      object-fit: contain;
+      transition: transform 0.2s ease, filter 0.2s ease;
+    }
+    .hero-cta-image:hover img {
+      transform: scale(1.15);
+      filter: drop-shadow(0 0 16px rgba(224, 71, 60, 0.4)) drop-shadow(0 0 32px rgba(224, 71, 60, 0.2));
+    }
+    .btn.shimmer {
+      position: relative;
+      overflow: hidden;
+    }
+    .btn.primary.shimmer {
+      background-image:
+        linear-gradient(180deg, #ff7b6e 0%, #e9584d 48%, #d23d33 100%),
+        linear-gradient(110deg, #000103 45%, #1e2631 55%, #000103);
+      background-size: 100% 100%, 200% 100%;
+      background-position: 0 0, 0 0;
+      animation: shimmer 2s linear infinite;
+    }
+    .btn.secondary.shimmer {
+      background-image: linear-gradient(110deg, rgba(255, 255, 255, 0.06) 45%, rgba(255, 255, 255, 0.18) 55%, rgba(255, 255, 255, 0.06));
+      background-size: 200% 100%;
+      background-position: 0 0;
+      animation: shimmer 2.4s linear infinite;
+    }
+    @keyframes shimmer {
+      from { background-position: 0 0, -200% 0; }
+      to { background-position: 0 0, 200% 0; }
+    }
+    main { flex: 1; display: flex; flex-direction: column; }
+    .hero-section {
+      min-height: 420px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 48px 0 32px 0;
+      /*#---- DIVIDING SECTIONS FOR NEW ADDITIONS----#*/
+      position: relative; /* This is crucial for positioning the video */
+      overflow: hidden; /* Ensures video doesn't bleed out */
+      background: #0f1113; /* Fallback color if video fails */
+      /* The gradient background was moved to .hero-overlay */
+      /*#-------------------------------------------#*/
+    }
+    
+    /*#---- DIVIDING SECTIONS FOR NEW ADDITIONS----#*/
+    .hero-video {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+    }
+    .hero-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      /* This is your original gradient, now an overlay */
+      background: linear-gradient(180deg, rgba(15,17,19,0.8), rgba(10,11,13,0.9));
+      z-index: 2;
+    }
+    /*#-------------------------------------------#*/
+
+    .hero-content { 
+      top: 10px;
+      text-align: center; 
+      /*#---- DIVIDING SECTIONS FOR NEW ADDITIONS----#*/
+      z-index: 3; /* Changed from 2 to 3 to be on top of the overlay */
+      position: relative; /* Ensures it respects the z-index */
+      /*#-------------------------------------------#*/
+    }
+    .hero-label {
+      margin-bottom: 20px;
+      display: inline-block;
+      padding: 0;
+      position: relative;
+    }
+    .hero-banner {
+      position: absolute;
+      top: -360px;
+      left: 50%;
+      transform: translateX(-50%);
+      max-width: 724px;
+      width: 45vw;
+      height: auto;
+      z-index: 10;
+      opacity: 0.95;
+      filter: drop-shadow(0 8px 24px rgba(224, 71, 60, 0.4));
+    }
+    h1 {
+      font-size: 30px;
+      font-weight: 800;
+      margin-top: 0;
+      margin-bottom: 24px;
+      width: auto;
+      background: linear-gradient(135deg, #fff 0%, #ffc9c3 45%, #ff7a66 70%, #e0473c 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+    }
+    .subtitle {
+      display: none;
+    }
+    .hero-cta {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: -10px;
+    }
+    .hero-cta .btn { padding: 12px 28px; font-size: 15px; }
+    .section-divider {
+      width: 100vw;
+      height: 3px;
+      background: linear-gradient(90deg, #ff7b6e 0%, #e0473c 100%);
+      border-radius: 1px;
+      position: relative;
+      left: 0;
+      margin: 0;
+      z-index: 5;
+      box-shadow: 0 0 16px 0 #e0473c33;
+    }
+    .skills-bar {
+      display: flex;
+      padding: 20px 18px;
+      background: none;
+      position: relative;
+      z-index: 1;
+    }
+    .skills {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      max-width: 1600px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .skill-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px 20px;
+      background: linear-gradient(180deg, rgba(15, 17, 19, 0.9), rgba(9, 10, 12, 0.95));
+      border: 1px solid rgba(224, 71, 60, 0.35);
+      border-radius: 12px;
+      transition: all 0.3s;
+      color: #f2d3ce;
+      font-weight: 600;
+      font-size: 14px;
+      text-align: center;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35), inset 0 0 24px rgba(224, 71, 60, 0.08);
+    }
+    .skill-item:hover {
+      border-color: rgba(224, 71, 60, 0.7);
+      box-shadow: 0 0 16px rgba(224, 71, 60, 0.35), 0 0 32px rgba(224, 71, 60, 0.2);
+    }
+    .skill-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, rgba(224, 71, 60, 0.2), rgba(224, 71, 60, 0.1));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .bottom-section { background: none; }
+    .content-area {
+      display: flex;
+      width: 100%;
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 32px 24px;
+      box-sizing: border-box;
+      gap: 28px;
+      align-items: stretch;
+    }
+    .contact-side {
+      width: 42%;
+      display: flex;
+      flex-direction: column;
+      padding: 32px 24px;
+      background: linear-gradient(135deg, rgba(15, 17, 19, 0.3), rgba(10, 11, 13, 0.5));
+      border-radius: 16px;
+    }
+    .contact-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 32px;
+      color: #e6e9ee;
+      margin-top: 0;
+      text-align: right;
+      width: 100%;
+    }
+    .article-feed {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+      flex: 1;
+    }
+    .lab-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-areas:
+        "a e"
+        "b img"
+        "d img"
+        "span span";
+      gap: 20px;
+      width: 100%;
+    }
+    .lab-grid .lab-a { grid-area: a; }
+    .lab-grid .lab-b { grid-area: b; }
+    .lab-grid .lab-c { grid-area: c; }
+    .lab-grid .lab-d { grid-area: d; }
+    .lab-grid .lab-e { grid-area: e; }
+    .lab-grid .lab-span { grid-area: span; }
+    .lab-image {
+      grid-area: img;
+      border-radius: 16px;
+      border: 1px solid rgba(224, 71, 60, 0.25);
+      background: linear-gradient(135deg, rgba(20, 22, 25, 0.85), rgba(15, 17, 19, 0.95));
+      overflow: hidden;
+      min-height: 240px;
+      box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.4);
+    }
+    .lab-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .article-card {
+      background: linear-gradient(135deg, rgba(224, 71, 60, 0.05), rgba(224, 71, 60, 0.02));
+      border: 1px solid rgba(224, 71, 60, 0.2);
+      border-radius: 14px;
+      padding: 20px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
+      color: inherit;
+    }
+    .article-card:hover {
+      border-color: #e0473c;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(224, 71, 60, 0.2);
+    }
+    .article-date {
+      font-size: 11px;
+      color: #e0473c;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+    .article-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #e6e9ee;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+    .article-preview {
+      font-size: 13px;
+      color: #9aa3ad;
+      line-height: 1.6;
+      margin: 0;
+    }
+    .view-more-btn {
+      margin-top: auto;
+      padding: 14px 24px;
+      background: linear-gradient(180deg, rgba(224, 71, 60, 0.1), rgba(224, 71, 60, 0.05));
+      border: 2px solid rgba(224, 71, 60, 0.3);
+      border-radius: 8px;
+      color: #e0473c;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      text-decoration: none;
+      display: block;
+    }
+    .view-more-btn:hover {
+      background: linear-gradient(180deg, rgba(224, 71, 60, 0.2), rgba(224, 71, 60, 0.1));
+      border-color: #e0473c;
+      transform: scale(1.02);
+    }
+    .nav-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+      max-width: 400px;
+    }
+    .nav-button {
+      padding: 16px 24px;
+      background: linear-gradient(180deg, #ff7b6e 0%, #e9584d 48%, #d23d33 100%);
+      border: 2px solid #a2362f;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      text-align: center;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(224, 71, 60, 0.3);
+    }
+    .nav-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(224, 71, 60, 0.4);
+    }
+    .contact-form-wrapper { max-width: 400px; }
+    .form-group { margin-bottom: 12px; }
+    label {
+      font-size: 12px;
+      color: #c9d0d8;
+      margin-bottom: 4px;
+      display: block;
+      font-weight: 600;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid #2a2f34;
+      background: #121417;
+      color: #e6e9ee;
+      font-size: 13px;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #e0473c;
+      box-shadow: 0 0 0 3px rgba(224, 71, 60, 0.2);
+    }
+    textarea { min-height: 60px; resize: vertical; }
+    .work-side {
+      width: 58%;
+      display: flex;
+      flex-direction: column; 
+      align-items: flex-start; 
+      justify-content: flex-start;
+      padding: 14px 1px; 
+      position: relative;
+      background: linear-gradient(135deg, rgba(15, 17, 19, 0.15), rgba(10, 11, 13, 0.05));
+      border-radius: 16px;
+    }
+    .work-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      width: 100%;
+      max-width: 1020px;
+      padding: 0 24px; 
+      box-sizing: border-box; 
+    }
+    .work-card {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(15, 17, 19, 0.85), rgba(10, 11, 13, 0.95));
+      border: 1px solid #2a2f34;
+      transition: all 0.3s;
+      cursor: pointer;
+      aspect-ratio: 16/10;
+    }
+    .work-card:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 12px 30px rgba(224, 71, 60, 0.25);
+      border-color: #e0473c;
+      z-index: 10;
+    }
+    .work-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s, filter 0.3s;
+    }
+    .work-card .card-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: auto;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .work-card:hover img:not(.card-overlay) { 
+      transform: scale(1.05); 
+      filter: blur(2px);
+    }
+    .work-card:hover .card-overlay {
+      opacity: 1;
+      filter: drop-shadow(0 0 8px #ff6a00) drop-shadow(0 0 16px #ff4500);
+    }
+    .ember {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: radial-gradient(circle, #ff7840 0%, #e0473c 50%, transparent 100%);
+      border-radius: 50%;
+      box-shadow:
+        0 0 8px #e0473c,
+        0 0 16px rgba(255, 120, 80, 0.8),
+        0 0 24px rgba(255, 100, 60, 0.4);
+      pointer-events: none;
+      z-index: 100;
+      opacity: 0.9;
+    }
+    .spark {
+      position: fixed;
+      width: 3px;
+      height: 8px;
+      background: linear-gradient(180deg, #ffffff 0%, #ffd700 30%, #ff8c00 70%, transparent 100%);
+      border-radius: 2px;
+      box-shadow:
+        0 0 6px #ffd700,
+        0 0 12px rgba(255, 215, 0, 0.6);
+      pointer-events: none;
+      z-index: 100;
+      opacity: 0.95;
+    }
+    .work-header {
+      width: 100%;
+      margin-bottom: 18px;
+      padding-left: 24px; 
+      box-sizing: border-box;
+    }
+    .work-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #e6e9ee;
+    }
+    .work-subtitle {
+      font-size: 14px;
+      color: #9aa3ad;
+      margin: 0;
+      font-family: monospace;
+    }
+    .work-card-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 20px 20px 16px 20px;
+      background: linear-gradient(0deg, rgba(10, 11, 13, 0.95) 0%, rgba(10, 11, 13, 0.7) 80%, rgba(10, 11, 13, 0) 100%);
+      transform: translateY(40%); 
+      opacity: 0.8;
+      transition: all 0.3s ease-out;
+      z-index: 5;
+    }
+    .work-card:hover .work-card-content {
+      transform: translateY(0);
+      opacity: 1;
+      background: linear-gradient(0deg, rgba(10, 11, 13, 0.98) 0%, rgba(10, 11, 13, 0.8) 100%);
+    }
+    .work-card-content h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #e6e9ee;
+      margin: 0 0 4px 0;
+    }
+    .work-card-content p {
+      font-size: 13px;
+      color: #c9d0d8;
+      margin: 0;
+      line-height: 1.5;
+      opacity: 0; 
+      transition: opacity 0.3s ease-out 0.1s; 
+    }
+    .work-card:hover .work-card-content p {
+      opacity: 1;
+    }
+    .report-gallery-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 18px;
+    }
+    .report-mini-stack {
+      display: grid;
+      grid-template-rows: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      height: 100%;
+    }
+    .report-mini-card {
+      padding: 14px 18px;
+      border-radius: 12px;
+      min-height: 0;
+    }
+    .report-mini-card .article-date {
+      margin-bottom: 8px;
+      font-size: 10px;
+    }
+    .report-mini-card .article-title {
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+    .report-mini-card .article-preview {
+      font-size: 12px;
+    }
+    .gallery-mini-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .gallery-mini-item {
+      display: block;
+      aspect-ratio: 1 / 1;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid rgba(224, 71, 60, 0.18);
+      background: #0b0d10;
+      box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.35);
+    }
+    .gallery-mini-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    footer {
+      padding: 32px 18px;
+      background: #0a0b0d; 
+      border-top: 1px solid #2a2f34;
+      margin-top: 32px;
+    }
+    
+    /* ========== VIDEO SHOWCASE SECTION ========== */
+    .video-showcase {
+      padding: 80px 40px;
+      background: linear-gradient(180deg, rgba(10, 11, 13, 0.95) 0%, rgba(15, 17, 19, 0.9) 100%);
+      position: relative;
+      overflow: hidden;
+      display: block;
+    }
+    .video-showcase::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(224, 71, 60, 0.5), transparent);
+    }
+    .video-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .video-header {
+      margin-bottom: 40px;
+    }
+    .video-label {
+      display: inline-block;
+      padding: 6px 16px;
+      background: rgba(224, 71, 60, 0.1);
+      border: 1px solid rgba(224, 71, 60, 0.3);
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #ff9b93;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 16px;
+    }
+    .video-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: #e6e9ee;
+      margin: 0 0 12px 0;
+    }
+    .video-subtitle {
+      font-size: 15px;
+      color: #9aa3ad;
+      margin: 0;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    .video-frame {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%; /* 16:9 */
+      border-radius: 16px;
+      overflow: hidden;
+      border: 2px solid rgba(224, 71, 60, 0.3);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(224, 71, 60, 0.1);
+      background: #0a0b0d;
+    }
+    .video-frame iframe,
+    .video-frame video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .video-frame:hover {
+      border-color: #e0473c;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 60px rgba(224, 71, 60, 0.2);
+    }
+    
+    /* ========== BUSINESS VALUE SECTION ========== */
+    .business-section {
+      padding: 80px 40px;
+      background: linear-gradient(180deg, rgba(15, 17, 19, 0.9) 0%, rgba(10, 11, 13, 0.95) 100%);
+    }
+    .business-container {
+      max-width: 1500px;
+      margin: 0 auto;
+    }
+    .business-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+    .business-label {
+      display: inline-block;
+      padding: 6px 16px;
+      background: rgba(57, 255, 20, 0.1);
+      border: 1px solid rgba(57, 255, 20, 0.3);
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #39FF14;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 16px;
+    }
+    .business-title {
+      font-size: 32px;
+      font-weight: 800;
+      color: #e6e9ee;
+      margin: 0 0 12px 0;
+    }
+    .business-subtitle {
+      font-size: 15px;
+      color: #9aa3ad;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    .business-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.45fr) minmax(0, 0.75fr);
+      gap: 18px;
+      margin-top: 36px;
+    }
+    .business-left,
+    .business-right {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .business-middle {
+      display: grid;
+      grid-template-columns: 200px minmax(0, 1fr);
+      grid-template-areas:
+        "wide-top wide-top"
+        "mini-a wide-a"
+        "mini-b wide-b"
+        "wide-bottom wide-bottom";
+      gap: 16px;
+      align-content: start;
+    }
+    .business-card {
+      background: linear-gradient(135deg, rgba(20, 22, 25, 0.85), rgba(15, 17, 19, 0.95));
+      border: 1px solid rgba(224, 71, 60, 0.22);
+      border-radius: 16px;
+      padding: 18px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+    }
+    .business-card--graph {
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .graph-frame {
+      flex: 1;
+      border-radius: 12px;
+      border: 1px solid rgba(224, 71, 60, 0.25);
+      background: linear-gradient(135deg, rgba(18, 12, 12, 0.85), rgba(10, 11, 13, 0.95));
+      padding: 12px;
+      box-shadow: inset 0 0 24px rgba(224, 71, 60, 0.08);
+    }
+    .graph-frame svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .business-card--stat {
+      text-align: left;
+    }
+    .business-card--wide-top { grid-area: wide-top; min-height: 150px; }
+    .business-card--mini-a { grid-area: mini-a; min-height: 120px; }
+    .business-card--wide-a { grid-area: wide-a; min-height: 120px; }
+    .business-card--mini-b { grid-area: mini-b; min-height: 120px; }
+    .business-card--wide-b { grid-area: wide-b; min-height: 120px; }
+    .business-card--wide-bottom { grid-area: wide-bottom; min-height: 150px; }
+    .business-card--tall {
+      min-height: 620px;
+    }
+    .business-card--image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .business-card--empty {
+      background: linear-gradient(135deg, rgba(24, 18, 18, 0.6), rgba(12, 13, 15, 0.92));
+      border: 1px solid rgba(224, 71, 60, 0.18);
+      box-shadow: inset 0 0 22px rgba(224, 71, 60, 0.06);
+    }
+    .business-card--mini-a .info-stat,
+    .business-card--mini-b .info-stat {
+      font-size: 24px;
+    }
+    .business-card--mini-a .info-desc,
+    .business-card--mini-b .info-desc {
+      display: none;
+    }
+    .infographics-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      margin-bottom: 60px;
+    }
+    .info-card {
+      background: linear-gradient(135deg, rgba(224, 71, 60, 0.05), rgba(224, 71, 60, 0.02));
+      border: 1px solid rgba(224, 71, 60, 0.2);
+      border-radius: 16px;
+      padding: 32px 28px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    .info-card:hover {
+      border-color: #e0473c;
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(224, 71, 60, 0.15);
+    }
+    .info-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 20px auto;
+      background: linear-gradient(135deg, rgba(224, 71, 60, 0.15), rgba(224, 71, 60, 0.05));
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+    }
+    .info-stat {
+      font-size: 36px;
+      font-weight: 800;
+      color: #e0473c;
+      margin-bottom: 8px;
+      font-family: 'Inter', monospace;
+    }
+    .info-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #e6e9ee;
+      margin-bottom: 8px;
+    }
+    .info-desc {
+      font-size: 13px;
+      color: #9aa3ad;
+      line-height: 1.5;
+      margin: 0;
+    }
+    
+    /* System Showcase Placeholders */
+    .systems-showcase {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+      margin-top: 48px;
+    }
+    .system-preview {
+      background: linear-gradient(135deg, rgba(20, 22, 25, 0.8), rgba(15, 17, 19, 0.9));
+      border: 1px solid rgba(224, 71, 60, 0.15);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    .system-preview:hover {
+      border-color: rgba(224, 71, 60, 0.4);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+    .system-image-placeholder {
+      height: 200px;
+      background: linear-gradient(135deg, rgba(224, 71, 60, 0.08), rgba(224, 71, 60, 0.03));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid rgba(224, 71, 60, 0.1);
+    }
+    .system-image-placeholder img {
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain;
+      opacity: 0.9;
+    }
+    .growth-graph {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .placeholder-text {
+      color: rgba(224, 71, 60, 0.4);
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .system-info {
+      padding: 24px;
+    }
+    .system-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: #e6e9ee;
+      margin: 8px 0 6px 0;
+    }
+    .system-desc {
+      font-size: 13px;
+      color: #9aa3ad;
+      line-height: 1.5;
+      margin: 0;
+    }
+    
+    @media (max-width: 968px) {
+      .infographics-grid { grid-template-columns: 1fr; }
+      .systems-showcase { grid-template-columns: 1fr; }
+      .video-showcase, .business-section { padding: 60px 20px; }
+      .video-title, .business-title { font-size: 24px; }
+      .business-layout { grid-template-columns: 1fr; }
+      .business-middle {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+          "wide-top"
+          "mini-a"
+          "wide-a"
+          "mini-b"
+          "wide-b"
+          "wide-bottom";
+      }
+      .business-card--tall { min-height: 320px; }
+    }
+    .footer-content {
+      max-width: 1600px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: #9aa3ad;
+    }
+    .footer-links a {
+      color: #9aa3ad;
+      text-decoration: none;
+      margin-left: 20px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover {
+      color: #e0473c;
+    }
+   
+    @media (max-width: 1200px) {
+      .skills { grid-template-columns: repeat(2, 1fr); }
+      h1 { font-size: 32px; }
+      .content-area { flex-direction: column; }
+      .contact-side, .work-side { width: 100%; border-radius: 0; }
+      .work-grid { grid-template-columns: repeat(2, 1fr); } 
+    }
+    @media (max-width: 968px) {
+      .hero-section { padding: 32px 0; }
+      .skills { grid-template-columns: 1fr; }
+      .content-area { padding: 0; }
+      .work-card { aspect-ratio: 1.5/1; }
+      .work-grid { grid-template-columns: 1fr; padding: 0 18px; } 
+      .work-header { padding-left: 18px; } 
+      .report-gallery-row { grid-template-columns: 1fr; }
+      .report-mini-stack { height: auto; }
+      .lab-grid {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+          "a"
+          "b"
+          "c"
+          "d"
+          "e"
+          "img"
+          "span";
+      }
+      .staggering-card-stack { grid-template-columns: 1fr; }
+      .footer-content { flex-direction: column; gap: 16px; } 
+    }
+  </style>
+  <link rel="stylesheet" href="style_changess.css">
+</head>
+<body>
+  <!-- Neural Particles Background -->
+  <canvas id="neural-particles" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.4;"></canvas>
+  
+
+  <style>
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    header { top: 0 !important; }
+    main { padding-top: 0; }
+  </style>
+  
+  <!-- Skip to main content link for accessibility -->
+  <a href="#main-content" class="sr-only sr-only-focusable" style="position: absolute; top: 10px; left: 10px; z-index: 10000; padding: 10px 20px; background: #e0473c; color: white; text-decoration: none; border-radius: 4px;">Skip to main content</a>
+
+  <header role="banner">
+    <div class="nav">
+      <a href="home.html" class="brand" aria-label="Neurofoundry home">
+        <div class="brand-icon" aria-hidden="true">N</div>
+        <span>NEUROFOUNDRY</span>
+      </a>
+      <nav class="links" role="navigation" aria-label="Main navigation">
+        <a class="navlink" href="home.html" aria-current="page">Home</a>
+        <a class="navlink" href="https://forge.theneurofoundry.com/" target="_blank" rel="noopener noreferrer">Forge</a>
+        <div class="nav-item dropdown">
+          <button class="dropdown-toggle" type="button" aria-expanded="false" aria-haspopup="true" aria-label="Archives menu">
+            Archives <span class="dropdown-caret" aria-hidden="true">v</span>
+          </button>
+          <div class="dropdown-menu" role="menu">
+            <a href="technology.html" role="menuitem">Technology</a>
+            <a href="downloads.html" role="menuitem">Downloads</a>
+            <a href="button2.html" role="menuitem">Manifesto</a>
+            <a href="neurofoundry-report.html" role="menuitem">Report</a>
+          </div>
+        </div>
+        <a class="navlink" href="about.html">About</a>
+        <a class="btn primary" href="signup.html">Request Access</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main-content" role="main">
+    <section class="hero-section" aria-label="Hero banner">
+      <video class="hero-video" autoplay loop muted playsinline aria-hidden="true" preload="auto">
+        <source src="assets/neurofoundry-hero-bg.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+      <div class="hero-overlay" aria-hidden="true"></div>
+      <div class="hero-content">
+        <div class="hero-label">
+          <img src="banner.png" alt="Neurofoundry - Intelligence Engineered" class="hero-banner" loading="eager">
+        </div>
+        <h1>The Engine is a Mind&mdash;for the Network you Design.</h1>
+        <p class="subtitle">
+          We build systems that think, adapt, and deliver. From neural architectures to production-ready AI solutions-transform your vision into intelligent reality.
+        </p>
+        <div class="hero-cta" role="group" aria-label="Primary actions">
+          <a class="hero-cta-image" href="https://forge.theneurofoundry.com/" aria-label="Launch the Forge application">
+            <img src="assets/forge_btn.png" alt="Launch the Forge" loading="eager">
+          </a>
+          <a class="hero-cta-image" href="projects.html" aria-label="View our projects portfolio">
+            <img src="assets/proj_btn.png" alt="View Projects" loading="eager">
+          </a>
+        </div>
+      </div>
+    </section>
+    <div class="section-divider" role="separator" aria-hidden="true"></div>
+    <div class="skills-bar">
+      <div class="skills" role="list" aria-label="Core capabilities">
+        <div class="skill-item" role="listitem">Neural Architecture</div>
+        <div class="skill-item" role="listitem">Real-time Processing</div>
+        <div class="skill-item" role="listitem">Precision Systems</div>
+        <div class="skill-item" role="listitem">Production Ready</div>
+      </div>
+    </div>
+    <section class="video-showcase">
+      <div class="video-container">
+        <div class="video-header">
+          <div class="video-label">Behind the Forge</div>
+          <h2 class="video-title">See the Architect in Action</h2>
+          <p class="video-subtitle">Watch how ideas transform into intelligent systems-from concept to deployment, in real time.</p>
+        </div>
+        <div class="video-frame">
+          <iframe
+            src="https://www.youtube.com/embed/SbL6dWf9k20?rel=0&modestbranding=1&color=white"
+            title="Neurofoundry - See the Architect in Action demonstration video"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            loading="lazy">
+          </iframe>
+        </div>
+      </div>
+    </section>
+  <section class="bottom-section">
+      <div class="content-area">
+        <div class="contact-side">
+          <h2 class="contact-title">From the Lab</h2>
+          <div class="article-feed">
+            
+                        <!-- Staggered Article Layout -->
+            <div class="lab-grid">
+              <a class="article-card lab-a" href="technology.html">
+                <div class="article-date">Flagship - Active Development</div>
+                <h3 class="article-title">Thalamus Engine</h3>
+                <p class="article-preview">3D scene director powered by natural language. Runtime ledger, time-travel debugging, and a continuously-running workbench.</p>
+              </a>
+              <a class="article-card lab-e" href="button2.html">
+                <div class="article-date">Philosophy - Manifesto</div>
+                <h3 class="article-title">What is Neurofoundry?</h3>
+                <p class="article-preview">Our core philosophy: build systems that don't just respond-they understand, anticipate, and evolve.</p>
+              </a>
+              
+              <a class="article-card lab-d" href="technology.html#devconsole">
+                <div class="article-date">Active - Custom Solutions</div>
+                <h3 class="article-title">256 Encryption</h3>
+                <p class="article-preview">Don't lose your API keys. Lock down secrets with a clean, free app built for clarity and control.</p>
+              </a>
+              <div class="lab-image">
+                <img src="thskey.png" alt="Aegis Skeleton Key">
+              </div>
+              <div class="lab-span" style="padding: 22px 28px; background: linear-gradient(135deg, rgba(224, 71, 60, 0.08), rgba(224, 71, 60, 0.03)); border: 1px solid rgba(224, 71, 60, 0.25); border-radius: 16px; display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;">
+              <div>
+                <div class="lab-span" style="display: inline-block; padding: 4px 12px; background: rgba(224, 71, 60, 0.15); border: 1px solid rgba(224, 71, 60, 0.3); border-radius: 6px; font-size: 10px; font-weight: 700; color: #ff9b93; text-transform: uppercase; letter-spacing: 1px;">Free Tools</div>
+                <h3 style="font-size: 18px; font-weight: 700; color: #e6e9ee; margin: 0 0 8px 0;">Grab Some Utilities</h3>
+                <p style="font-size: 13px; color: #9aa3ad; margin: 0; line-height: 1.5;">Lightweight tools we built for ourselves. Now yours.</p>
+              </div>
+              <a href="downloads.html" style="display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; background: linear-gradient(180deg, #ff7b6e 0%, #e9584d 48%, #d23d33 100%); border: 2px solid #a2362f; border-radius: 8px; color: #fff; font-size: 14px; font-weight: 600; text-decoration: none; box-shadow: 0 4px 12px rgba(224, 71, 60, 0.3); white-space: nowrap;"> Downloads</a>
+            </div>
+            </div>
+          </div>
+          <a class="view-more-btn" href="#all-articles">View All Articles -></a>
+        </div>
+        <div class="work-side">
+          <div class="work-header">
+            <h2 class="work-title">Concept -> Creation -> Deployment</h2>
+            <p class="work-subtitle">End-to-end intelligent solutions</p>
+          </div>
+          <div class="work-grid" role="list" aria-label="Service offerings">
+            <div class="work-card" role="listitem">
+              <img src="thumbnails/design.png" alt="Design Phase - Neural network architecture design" loading="lazy">
+              <img src="thumbnails/design_ol.png" alt="" class="card-overlay" loading="lazy" aria-hidden="true">
+              <div class="work-card-content">
+                <h3>Architect</h3>
+                <p>Neural network design and intelligent systems architecture.</p>
+              </div>
+            </div>
+            <div class="work-card" role="listitem">
+              <img src="thumbnails/deliver.png" alt="Deliver Phase - AI integration into workflows" loading="lazy">
+              <img src="thumbnails/deliver_ol.png" alt="" class="card-overlay" loading="lazy" aria-hidden="true">
+              <div class="work-card-content">
+                <h3>Integrate</h3>
+                <p>Seamless AI integration into existing workflows and systems.</p>
+              </div>
+            </div>
+            <div class="work-card" role="listitem">
+              <img src="thumbnails/deploy.png" alt="Deploy Phase - Production deployment with monitoring" loading="lazy">
+              <img src="thumbnails/deploy_ol.png" alt="" class="card-overlay" loading="lazy" aria-hidden="true">
+              <div class="work-card-content">
+                <h3>Deploy</h3>
+                <p>Production-grade deployment with monitoring and optimization.</p>
+              </div>
+            </div>
+          </div>
+          <!-- Staggering Card Stack Below Work Grid -->
+          <div class="staggering-card-stack" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 24px; margin-bottom: 0;">
+            <a class="article-card" href="neurofoundry-report.html">
+              <div class="article-date">Research - Deep Dive</div>
+              <h3 class="article-title">The Neurofoundry Report</h3>
+              <p class="article-preview">Neural plasticity, cognitive architecture, and the science of becoming the architect of your own mind.</p>
+            </a>
+            <a class="article-card" href="gallery.html">
+              <div class="article-date">Gallery - AI Art</div>
+              <h3 class="article-title">The Synthesis Gallery</h3>
+              <p class="article-preview">Where algorithms meet artistry. Explore AI-generated visuals that blur the line between computation and creativity.</p>
+            </a>
+          </div>
+          <div class="report-gallery-row">
+            <div class="report-mini-stack">
+              <a class="article-card report-mini-card" href="neurofoundry-report.html">
+                <div class="article-date">Research Note</div>
+                <h3 class="article-title">Cognition Trace</h3>
+                <p class="article-preview">Short-form findings from live model behavior.</p>
+              </a>
+              <a class="article-card report-mini-card" href="neurofoundry-report.html">
+                <div class="article-date">Field Log</div>
+                <h3 class="article-title">Signal Audit</h3>
+                <p class="article-preview">What the system learned in the last iteration.</p>
+              </a>
+              <a class="article-card report-mini-card" href="neurofoundry-report.html">
+                <div class="article-date">Brief</div>
+                <h3 class="article-title">Memory Loops</h3>
+                <p class="article-preview">Patterns we are reinforcing and retiring.</p>
+              </a>
+            </div>
+            <div class="gallery-mini-grid">
+              <a class="gallery-mini-item" href="gallery.html" aria-label="View gallery image 42">
+                <img src="WebsiteContent/Images/42.png" alt="AI generated artwork 42" loading="lazy">
+              </a>
+              <a class="gallery-mini-item" href="gallery.html" aria-label="View gallery image 82">
+                <img src="WebsiteContent/Images/82.png" alt="AI generated artwork 82" loading="lazy">
+              </a>
+              <a class="gallery-mini-item" href="gallery.html" aria-label="View gallery image 80">
+                <img src="WebsiteContent/Images/80.png" alt="AI generated artwork 80" loading="lazy">
+              </a>
+              <a class="gallery-mini-item" href="gallery.html" aria-label="View gallery image 34">
+                <img src="WebsiteContent/Images/34.png" alt="AI generated artwork 34" loading="lazy">
+              </a>
+              <a class="gallery-mini-item" href="gallery.html" aria-label="View gallery image 52">
+                <img src="WebsiteContent/Images/52.png" alt="AI generated artwork 52" loading="lazy">
+              </a>
+              <a class="gallery-mini-item" href="gallery.html" aria-label="View gallery image 73">
+                <img src="WebsiteContent/Images/73.png" alt="AI generated artwork 73" loading="lazy">
+              </a>
+              <a class="gallery-mini-item" href="gallery.html" aria-label="View gallery image 67">
+                <img src="WebsiteContent/Images/67.png" alt="AI generated artwork 67" loading="lazy">
+              </a>
+              <a class="gallery-mini-item" href="gallery.html" aria-label="View gallery image 93">
+                <img src="WebsiteContent/Images/93.png" alt="AI generated artwork 93" loading="lazy">
+              </a>
+              <a class="gallery-mini-item" href="gallery.html" aria-label="View gallery image 79">
+                <img src="WebsiteContent/Images/79.png" alt="AI generated artwork 79" loading="lazy">
+              </a>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== CINEMATIC VIDEO SHOWCASE ========== -->
+    
+    
+    <!-- ========== BUSINESS VALUE INFOGRAPHICS ========== -->
+    <section class="business-section">
+      <div class="business-container">
+        <div class="business-header">
+          <div class="business-label">Business Impact</div>
+          <h2 class="business-title">Grow Smarter, Not Harder</h2>
+          <p class="business-subtitle">We build intelligent tools that amplify your capabilities-custom AI solutions designed around your specific workflow.</p>
+        </div>
+        
+        <div class="business-layout">
+          <div class="business-left">
+            <div class="business-card business-card--graph">
+              <div class="graph-frame">
+                <svg class="growth-graph" viewBox="0 0 400 220" role="img" aria-label="Revenue growth chart">
+                  <defs>
+                    <linearGradient id="nf-bg-1" x1="0" x2="1" y1="0" y2="1">
+                      <stop offset="0%" stop-color="#2a1515" stop-opacity="0.9"/>
+                      <stop offset="100%" stop-color="#0b0c0e" stop-opacity="0.95"/>
+                    </linearGradient>
+                    <linearGradient id="nf-line-1" x1="0" x2="1" y1="0" y2="0">
+                      <stop offset="0%" stop-color="#ffd1cc"/>
+                      <stop offset="55%" stop-color="#ff7b6e"/>
+                      <stop offset="100%" stop-color="#e0473c"/>
+                    </linearGradient>
+                    <linearGradient id="nf-fill-1" x1="0" x2="0" y1="0" y2="1">
+                      <stop offset="0%" stop-color="#e0473c" stop-opacity="0.4"/>
+                      <stop offset="100%" stop-color="#e0473c" stop-opacity="0"/>
+                    </linearGradient>
+                    <radialGradient id="nf-node-1" cx="50%" cy="50%" r="50%">
+                      <stop offset="0%" stop-color="#fff2f0"/>
+                      <stop offset="65%" stop-color="#ff7b6e"/>
+                      <stop offset="100%" stop-color="#e0473c"/>
+                    </radialGradient>
+                    <filter id="nf-glow-1" x="-50%" y="-50%" width="200%" height="200%">
+                      <feGaussianBlur stdDeviation="3" result="blur"/>
+                      <feMerge>
+                        <feMergeNode in="blur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                      </feMerge>
+                    </filter>
+                  </defs>
+                  <rect x="0" y="0" width="400" height="220" fill="url(#nf-bg-1)"/>
+                  <g stroke="rgba(255,255,255,0.08)" stroke-width="1">
+                    <line x1="20" y1="40" x2="380" y2="40"/>
+                    <line x1="20" y1="80" x2="380" y2="80"/>
+                    <line x1="20" y1="120" x2="380" y2="120"/>
+                    <line x1="20" y1="160" x2="380" y2="160"/>
+                  </g>
+                  <path d="M20 172 L80 152 L140 142 L200 110 L260 92 L320 72 L380 44 L380 200 L20 200 Z"
+                        fill="url(#nf-fill-1)"/>
+                  <path d="M20 172 L80 152 L140 142 L200 110 L260 92 L320 72 L380 44"
+                        fill="none" stroke="url(#nf-line-1)" stroke-width="3.5" stroke-linecap="round" filter="url(#nf-glow-1)"/>
+                  <g fill="url(#nf-node-1)" filter="url(#nf-glow-1)">
+                    <circle cx="20" cy="172" r="4.5"/>
+                    <circle cx="140" cy="142" r="4.5"/>
+                    <circle cx="260" cy="92" r="4.5"/>
+                    <circle cx="380" cy="44" r="4.5"/>
+                  </g>
+                </svg>
+              </div>
+              <div class="system-info">
+                <h3 class="system-name">Thalamus Engine</h3>
+                <p class="system-desc">Natural language scene direction. Describe what you want to see, watch it come to life in real-time 3D.</p>
+              </div>
+            </div>
+            <div class="business-card business-card--graph">
+              <div class="graph-frame">
+                <svg class="growth-graph" viewBox="0 0 400 220" role="img" aria-label="Company growth chart">
+                  <defs>
+                    <linearGradient id="nf-bg-2" x1="0" x2="1" y1="0" y2="1">
+                      <stop offset="0%" stop-color="#241414" stop-opacity="0.9"/>
+                      <stop offset="100%" stop-color="#0a0b0d" stop-opacity="0.95"/>
+                    </linearGradient>
+                    <linearGradient id="nf-line-2" x1="0" x2="1" y1="0" y2="0">
+                      <stop offset="0%" stop-color="#ffd1cc"/>
+                      <stop offset="60%" stop-color="#ff7b6e"/>
+                      <stop offset="100%" stop-color="#e0473c"/>
+                    </linearGradient>
+                    <linearGradient id="nf-fill-2" x1="0" x2="0" y1="0" y2="1">
+                      <stop offset="0%" stop-color="#ff7b6e" stop-opacity="0.35"/>
+                      <stop offset="100%" stop-color="#e0473c" stop-opacity="0"/>
+                    </linearGradient>
+                    <radialGradient id="nf-node-2" cx="50%" cy="50%" r="50%">
+                      <stop offset="0%" stop-color="#fff2f0"/>
+                      <stop offset="60%" stop-color="#ff9b93"/>
+                      <stop offset="100%" stop-color="#e0473c"/>
+                    </radialGradient>
+                    <filter id="nf-glow-2" x="-50%" y="-50%" width="200%" height="200%">
+                      <feGaussianBlur stdDeviation="3" result="blur"/>
+                      <feMerge>
+                        <feMergeNode in="blur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                      </feMerge>
+                    </filter>
+                  </defs>
+                  <rect x="0" y="0" width="400" height="220" fill="url(#nf-bg-2)"/>
+                  <g stroke="rgba(255,255,255,0.08)" stroke-width="1">
+                    <line x1="20" y1="40" x2="380" y2="40"/>
+                    <line x1="20" y1="90" x2="380" y2="90"/>
+                    <line x1="20" y1="140" x2="380" y2="140"/>
+                    <line x1="20" y1="190" x2="380" y2="190"/>
+                  </g>
+                  <path d="M20 168 C70 130 120 150 170 120 C220 85 260 110 300 78 C330 56 360 70 380 54 L380 200 L20 200 Z"
+                        fill="url(#nf-fill-2)"/>
+                  <path d="M20 168 C70 130 120 150 170 120 C220 85 260 110 300 78 C330 56 360 70 380 54"
+                        fill="none" stroke="url(#nf-line-2)" stroke-width="3.5" stroke-linecap="round" filter="url(#nf-glow-2)"/>
+                  <path d="M20 150 L60 138 L95 118 L135 128 L175 104 L215 118 L255 92 L295 100 L335 70 L380 54"
+                        fill="none" stroke="rgba(255, 209, 204, 0.7)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="4 6"/>
+                  <g fill="url(#nf-node-2)" filter="url(#nf-glow-2)">
+                    <circle cx="20" cy="168" r="4"/>
+                    <circle cx="170" cy="120" r="4"/>
+                    <circle cx="300" cy="78" r="4"/>
+                    <circle cx="380" cy="54" r="4"/>
+                  </g>
+                </svg>
+              </div>
+              <div class="system-info">
+                <h3 class="system-name">Custom AI Deployment</h3>
+                <p class="system-desc">We build and deploy AI assistants tailored to your workflow. Persistent memory, real-time collaboration, your rules.</p>
+              </div>
+            </div>
+          </div>
+          <div class="business-middle">
+            <div class="business-card business-card--stat business-card--wide-top">
+              <div class="info-stat">10x</div>
+              <div class="info-label">Workflow Acceleration</div>
+              <p class="info-desc">Automate repetitive tasks with custom AI assistants that understand your process and adapt to your needs.</p>
+            </div>
+            <div class="business-card business-card--stat business-card--mini-a">
+              <div class="info-stat">24/7</div>
+              <div class="info-label">Always-On Intelligence</div>
+              <p class="info-desc">Deploy targeted bots that work around the clock-handling queries, processing data, and supporting your team.</p>
+            </div>
+            <div class="business-card business-card--stat business-card--wide-a">
+              <div class="info-stat">100%</div>
+              <div class="info-label">Custom Built</div>
+              <p class="info-desc">No generic solutions. Every tool is refined for your personal use case and deployed to your specifications.</p>
+            </div>
+            <div class="business-card business-card--empty business-card--mini-b business-card--image">
+              <img src="assets/fingain1.png" alt="Neurofoundry AI visualization" loading="lazy">
+            </div>
+            <div class="business-card business-card--empty business-card--wide-b business-card--image">
+              <img src="assets/ani_b.webp" alt="Neurofoundry animated visualization" loading="lazy">
+            </div>
+            <div class="business-card business-card--empty business-card--wide-bottom business-card--image">
+              <img src="assets/fingain2.png" alt="Neurofoundry AI visualization 2" loading="lazy">
+            </div>
+          </div>
+          <div class="business-right">
+            <div class="business-card business-card--empty business-card--tall business-card--image">
+              <img src="assets/fingain3.png" alt="Neurofoundry AI visualization 3" loading="lazy">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer role="contentinfo">
+    <div class="footer-content">
+      <p>&copy; 2025 The Neurofoundry. Forged with intent.</p>
+      <nav class="footer-links" aria-label="Footer navigation">
+        <a href="home.html">Home</a>
+        <a href="technology.html">Technology</a>
+        <a href="projects.html">Projects</a>
+        <a href="https://forge.theneurofoundry.com/" target="_blank" rel="noopener noreferrer">Forge</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="privacy-policy.html" style="font-size:11px; opacity:0.75;">Privacy Policy</a>
+      </nav>
+    </div>
+  </footer>
+  <script>
+    function createEmber() {
+      const divider = document.querySelector('.section-divider');
+      if (!divider) return;
+      const startX = Math.random() * window.innerWidth;
+      const rect = divider.getBoundingClientRect();
+      const scrollY = window.scrollY || window.pageYOffset;
+      const startY = rect.top + scrollY;
+      const ember = document.createElement('span');
+      ember.className = 'ember';
+      ember.style.left = startX + 'px';
+      ember.style.top = startY + 'px';
+      const riseDistance = 220 + Math.random() * 140;
+      const drift = (Math.random() - 0.5) * 140;
+      const duration = (1600 + Math.random() * 1200) * 0.9;
+      const size = 3 + Math.random() * 4;
+      ember.style.width = size + 'px';
+      ember.style.height = size + 'px';
+      ember.style.transition = `transform ${duration}ms ease-out, opacity ${duration}ms ease-out`;
+      document.body.appendChild(ember);
+      requestAnimationFrame(() => {
+        ember.style.transform = `translate(${drift}px, -${riseDistance}px)`;
+        ember.style.opacity = '0';
+      });
+      setTimeout(() => ember.remove(), duration + 30);
+    }
+    function scheduleEmbers() {
+      createEmber();
+      const nextDelay = (65 + Math.random() * 100) * 0.8;  // 20% more embers
+      setTimeout(scheduleEmbers, nextDelay);
+    }
+    window.addEventListener('load', scheduleEmbers);
+    function createSpark() {
+      const startX = window.innerWidth - 60;
+      const startY = window.innerHeight - 60;
+      const spark = document.createElement('span');
+      spark.className = 'spark';
+      spark.style.left = startX + 'px';
+      spark.style.top = startY + 'px';
+      const angleVariation = (Math.random() - 0.5) * 60;
+      const distance = 40 + Math.random() * 80;
+      const radians = (angleVariation - 90) * (Math.PI / 180);
+      const driftX = Math.cos(radians) * distance;
+      const driftY = Math.sin(radians) * distance;
+      const duration = 800 + Math.random() * 600;
+      const rotation = (Math.random() - 0.5) * 720;
+      spark.style.transition = `transform ${duration}ms ease-out, opacity ${duration}ms ease-out`;
+      document.body.appendChild(spark);
+      requestAnimationFrame(() => {
+        spark.style.transform = `translate(${driftX}px, ${driftY}px) rotate(${rotation}deg)`;
+        spark.style.opacity = '0';
+      });
+      setTimeout(() => spark.remove(), duration + 50);
+    }
+    function scheduleSparks() {
+      if (Math.random() < 0.7) {
+        createSpark();
+      }
+      const nextDelay = 100 + Math.random() * 200;
+      setTimeout(scheduleSparks, nextDelay);
+    }
+    window.addEventListener('load', scheduleSparks);
+    function handleSubmit() {
+      alert('Form submission would be handled here. Connect to your backend or email service.');
+    }
+  </script>
+  <script src="shared/page-transitions.js"></script>
+  <script src="shared/micro-interactions.js"></script>
+  <script src="shared/neural-particles.js"></script>
+  <script src="chatbot-component.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

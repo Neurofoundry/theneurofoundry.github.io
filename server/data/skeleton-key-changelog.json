@@ -1,0 +1,26 @@
+{
+  "2.0.0": {
+    "version": "2.0.0",
+    "title": "What's New?",
+    "subtitle": "The Vault has been rebuilt from the ground up.",
+    "items": [
+      {
+        "label": "Auto-locking timer, PIN change, Plaintext Export Controls."
+      },
+      {
+        "label": "Audit log for monitoring accessing and copying, with timestamp reveals."
+      },
+      {
+        "label": "Encrypted note storage — secure yours alongside your API keys."
+      },
+      {
+        "label": "Password generator with optional prefixes."
+      },
+      {
+        "label": "AES-256 vault locked with PBKDF2-SHA256 at 480,000 iterations."
+      }
+    ],
+    "footer": "Your secrets stay local. Nothing leaves your machine.",
+    "cta": "CONFIRM"
+  }
+}

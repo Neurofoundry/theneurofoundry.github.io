@@ -1,0 +1,20 @@
+{
+	"name": "cloudflare-hello-workflows",
+	"version": "0.0.0",
+	"private": true,
+	"scripts": {
+		"deploy": "wrangler deploy",
+		"start": "wrangler dev",
+		"dev": "wrangler dev",
+		"cf-typegen": "wrangler types",
+		"typecheck": "tsc --noEmit"
+	},
+	"devDependencies": {
+		"@types/node": "^25.3.0",
+		"typescript": "^5.0.4",
+		"wrangler": "^4.67.0"
+	},
+	"dependencies": {
+		"@cloudflare/ai-utils": "^1.0.1"
+	}
+}

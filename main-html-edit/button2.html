@@ -1,0 +1,593 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Framework — What is Neurofoundry?</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { 
+      background: #0f1113; 
+      color: #e6e9ee; 
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      overflow-x: hidden;
+      line-height: 1.8;
+    }
+    
+    /* Header Styles */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(11, 12, 14, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid #e0473c;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 0 18px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: 0.5px;
+      text-decoration: none;
+      color: #e6e9ee;
+    }
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #ff7b6e 0%, #e0473c 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 18px;
+      color: white;
+      box-shadow: 0 4px 12px rgba(224, 71, 60, 0.3);
+    }
+    .links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .navlink {
+      color: #ccc;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .navlink:hover { color: #e0473c; }
+    .nav-item { position: relative; }
+    .dropdown-toggle {
+      background: none;
+      border: none;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      color: #ccc;
+      font: 500 14px/1 Inter, sans-serif;
+      transition: color 0.2s;
+    }
+    .dropdown-toggle:hover,
+    .dropdown-toggle:focus-visible {
+      color: #e0473c;
+      outline: none;
+    }
+    .dropdown-caret {
+      font-size: 11px;
+      opacity: 0.7;
+    }
+    .dropdown-menu {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      min-width: 200px;
+      background: rgba(15, 17, 19, 0.96);
+      border: 1px solid rgba(224, 71, 60, 0.25);
+      border-radius: 12px;
+      padding: 10px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+      opacity: 0;
+      transform: translateY(6px);
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 50;
+    }
+    .dropdown::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 100%;
+      height: 10px;
+    }
+    .dropdown-menu a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      color: #d6d6d6;
+      text-decoration: none;
+      font-size: 13px;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .dropdown-menu a:hover {
+      background: rgba(224, 71, 60, 0.15);
+      color: #fff;
+    }
+    .dropdown:hover .dropdown-menu,
+    .dropdown:focus-within .dropdown-menu {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 18px;
+      border-radius: 8px;
+      font: 600 13px/1 Inter, sans-serif;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: 2px solid transparent;
+    }
+    .btn.primary {
+      background: linear-gradient(180deg, #ff7b6e 0%, #e9584d 48%, #d23d33 100%);
+      border-color: #a2362f;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(224, 71, 60, 0.3);
+    }
+    .btn.primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(224, 71, 60, 0.4);
+    }
+    
+    /* Main Content */
+    main {
+      padding-top: 64px;
+      min-height: 100vh;
+    }
+    
+    /* Hero Section */
+    .article-hero {
+      padding: 100px 20px 60px;
+      text-align: center;
+      background: linear-gradient(180deg, rgba(224, 71, 60, 0.08) 0%, transparent 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .article-hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(224, 71, 60, 0.05) 0%, transparent 70%);
+      animation: pulse 8s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+    }
+    .article-hero h1 {
+      font-size: 56px;
+      font-weight: 900;
+      margin-bottom: 24px;
+      background: linear-gradient(135deg, #e6e9ee 0%, #e0473c 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      position: relative;
+      z-index: 1;
+    }
+    .article-meta {
+      font-size: 14px;
+      color: #9aa3ad;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+    .article-meta span {
+      color: #e0473c;
+      font-weight: 600;
+    }
+    .article-subtitle {
+      font-size: 22px;
+      color: #c9d0d8;
+      max-width: 700px;
+      margin: 0 auto;
+      font-weight: 400;
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Article Content */
+    .article-content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 60px 20px;
+    }
+    
+    .content-section {
+      margin-bottom: 60px;
+    }
+    
+    h2 {
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 20px;
+      color: #e6e9ee;
+      position: relative;
+      padding-left: 20px;
+    }
+    h2::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 80%;
+      background: linear-gradient(180deg, #e0473c, #ff7b6e);
+      border-radius: 2px;
+    }
+    
+    h3 {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 32px 0 16px;
+      color: #e0473c;
+    }
+    
+    p {
+      font-size: 17px;
+      color: #c9d0d8;
+      margin-bottom: 20px;
+    }
+    
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(224, 71, 60, 0.08), rgba(224, 71, 60, 0.03));
+      border-left: 4px solid #e0473c;
+      padding: 24px;
+      margin: 32px 0;
+      border-radius: 8px;
+    }
+    
+    .highlight-box p {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 500;
+      color: #e6e9ee;
+      font-style: italic;
+    }
+    
+    ul {
+      list-style: none;
+      margin: 24px 0;
+      padding: 0;
+    }
+    
+    li {
+      padding-left: 32px;
+      margin-bottom: 16px;
+      position: relative;
+      color: #c9d0d8;
+      font-size: 17px;
+    }
+    
+    li::before {
+      content: '▸';
+      position: absolute;
+      left: 0;
+      color: #e0473c;
+      font-weight: 900;
+      font-size: 20px;
+    }
+    
+    .principle-card {
+      background: linear-gradient(135deg, rgba(224, 71, 60, 0.05), rgba(224, 71, 60, 0.02));
+      border: 1px solid rgba(224, 71, 60, 0.2);
+      border-radius: 12px;
+      padding: 28px;
+      margin: 24px 0;
+      transition: all 0.3s ease;
+    }
+    
+    .principle-card:hover {
+      border-color: #e0473c;
+      transform: translateX(8px);
+      box-shadow: 0 8px 24px rgba(224, 71, 60, 0.2);
+    }
+    
+    .principle-number {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #e0473c, #ff7b6e);
+      border-radius: 50%;
+      text-align: center;
+      line-height: 40px;
+      font-weight: 900;
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+    
+    .principle-card h4 {
+      font-size: 20px;
+      margin-bottom: 12px;
+      color: #e6e9ee;
+    }
+    
+    .principle-card p {
+      margin: 0;
+      font-size: 16px;
+    }
+    
+    .cta-section {
+      background: linear-gradient(135deg, rgba(224, 71, 60, 0.1), rgba(224, 71, 60, 0.05));
+      border: 2px solid rgba(224, 71, 60, 0.3);
+      border-radius: 16px;
+      padding: 48px;
+      text-align: center;
+      margin: 60px 0;
+    }
+    
+    .cta-section h3 {
+      color: #e6e9ee;
+      margin-bottom: 16px;
+    }
+    
+    .cta-section p {
+      margin-bottom: 24px;
+    }
+    
+    /* Footer */
+    footer {
+      background: #0b0c0e;
+      border-top: 2px solid #e0473c;
+      padding: 32px 20px;
+    }
+    .footer-content {
+      max-width: 1600px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: #9aa3ad;
+    }
+    .footer-links a {
+      color: #9aa3ad;
+      text-decoration: none;
+      margin-left: 20px;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover {
+      color: #e0473c;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .article-hero h1 { font-size: 36px; }
+      .article-subtitle { font-size: 18px; }
+      h2 { font-size: 28px; }
+      .cta-section { padding: 32px 24px; }
+      .footer-content { flex-direction: column; gap: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav">
+      <a href="home.html" class="brand">
+        <div class="brand-icon">N</div>
+        <span>theneurofoundry.com</span>
+      </a>
+      <div class="links">
+        <a class="navlink" href="home.html">Home</a>
+        <div class="nav-item dropdown">
+          <button class="dropdown-toggle" type="button">
+            Archives <span class="dropdown-caret">v</span>
+          </button>
+          <div class="dropdown-menu">
+            <a href="technology.html">Technology</a>
+            <a href="downloads.html">Downloads</a>
+            <a href="button2.html">Manifesto</a>
+            <a href="neurofoundry-report.html">Report</a>
+          </div>
+        </div>
+        <a class="navlink" href="gallery.html">Gallery</a>
+        <a class="navlink" href="button2.html">About</a>
+        <a class="btn primary" href="signup.html">Sign Up</a>
+        <a class="btn primary" href="login.html">Login</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="article-hero">
+      <div class="article-meta">Manifesto  •  <span>2025</span></div>
+      <h1>What is Neurofoundry?</h1>
+      <p class="article-subtitle">A framework for engineering AI systems that think before they speak, remember what matters, and deliver with surgical precision.</p>
+    </div>
+
+    <div class="article-content">
+      <div class="content-section">
+        <h2>The Philosophy</h2>
+        <p>
+          Neurofoundry is not just a technology stack—it's a comprehensive framework for designing AI systems 
+          that think, adapt, and communicate with precision. At its core, Neurofoundry believes that true 
+          artificial intelligence requires more than the ability to generate responses; it demands the capacity 
+          to understand context, maintain consistency across interactions, and deliver results with calculated clarity.
+        </p>
+        
+        <div class="highlight-box">
+          <p>"The Engine is the Mind—Code that clarifies, systems that ensure, connections that convert."</p>
+        </div>
+
+        <p>
+          In an age where AI systems often produce plausible but inconsistent outputs, Neurofoundry stands 
+          as a counterpoint. We engineer systems that don't just respond—they comprehend. They don't just 
+          generate—they reason. They don't just interact—they evolve.
+        </p>
+      </div>
+
+      <div class="content-section">
+        <h2>Core Principles</h2>
+        
+        <div class="principle-card">
+          <div class="principle-number">1</div>
+          <h4>Calculated Clarity</h4>
+          <p>
+            Every output is engineered for precision. We eliminate ambiguity through structured reasoning, 
+            context-aware processing, and deliberate response architecture. Clarity isn't accidental—it's calculated.
+          </p>
+        </div>
+
+        <div class="principle-card">
+          <div class="principle-number">2</div>
+          <h4>Contextual Consciousness</h4>
+          <p>
+            Our systems maintain awareness across time and interactions. They remember what matters, 
+            understand relationships between concepts, and adapt their responses based on accumulated knowledge 
+            rather than isolated prompts.
+          </p>
+        </div>
+
+        <div class="principle-card">
+          <div class="principle-number">3</div>
+          <h4>Iterative Integrity</h4>
+          <p>
+            When errors occur, we don't just correct—we learn. Our framework implements systematic error 
+            detection, reinterpretation protocols, and strategy correction mechanisms that prevent regression 
+            and ensure continuous improvement.
+          </p>
+        </div>
+
+        <div class="principle-card">
+          <div class="principle-number">4</div>
+          <h4>Systematic Reliability</h4>
+          <p>
+            Consistency is non-negotiable. Through rigorous validation protocols, self-comparison mechanisms, 
+            and compliance verification, we ensure that every interaction upholds the same standards of quality 
+            and accuracy.
+          </p>
+        </div>
+      </div>
+
+      <div class="content-section">
+        <h2>The Architecture</h2>
+        
+        <h3>Frontend AI System</h3>
+        <p>
+          Neurofoundry's frontend architecture is built on the principle that AI interfaces should be 
+          intuitive, responsive, and intelligently adaptive. Our systems employ:
+        </p>
+        <ul>
+          <li><strong>Real-time context preservation</strong> across conversation states</li>
+          <li><strong>Dynamic response adaptation</strong> based on user interaction patterns</li>
+          <li><strong>Semantic understanding</strong> that goes beyond keyword matching</li>
+          <li><strong>Progressive disclosure</strong> of complexity based on user expertise</li>
+        </ul>
+
+        <h3>Backend Systems</h3>
+        <p>
+          The power behind Neurofoundry lies in its robust backend infrastructure:
+        </p>
+        <ul>
+          <li><strong>Python & FastAPI</strong> for high-performance API services</li>
+          <li><strong>PowerShell automation</strong> for system integration and workflow orchestration</li>
+          <li><strong>Distributed processing</strong> for scalable AI operations</li>
+          <li><strong>Structured logging and analytics</strong> for continuous system refinement</li>
+        </ul>
+      </div>
+
+      <div class="content-section">
+        <h2>Beyond Generation</h2>
+        <p>
+          Most AI systems today are generative—they produce content based on patterns in training data. 
+          Neurofoundry systems are <em>cognitive</em>—they analyze, reason, and strategize before responding.
+        </p>
+
+        <p>This distinction manifests in several ways:</p>
+
+        <ul>
+          <li><strong>Comprehension over completion:</strong> Understanding intent before generating responses</li>
+          <li><strong>Strategy over synthesis:</strong> Planning approaches rather than pattern-matching</li>
+          <li><strong>Validation over volume:</strong> Ensuring quality through systematic verification</li>
+          <li><strong>Evolution over execution:</strong> Learning from interactions to improve future performance</li>
+        </ul>
+
+        <div class="highlight-box">
+          <p>"We don't build AI that responds. We build AI that understands."</p>
+        </div>
+      </div>
+
+      <div class="content-section">
+        <h2>Practical Applications</h2>
+        
+        <h3>Reliable Image Generation</h3>
+        <p>
+          Through our Operating Manifesto for image generation, we've established protocols that ensure 
+          visual outputs match user intent with precision. This includes context-aware interpretation, 
+          error detection and reinterpretation, and iterative refinement based on feedback.
+        </p>
+
+        <h3>Conversational Systems</h3>
+        <p>
+          Neurofoundry powers conversational interfaces that maintain context, remember preferences, 
+          and adapt their communication style based on user needs—all while ensuring consistent, 
+          accurate information delivery.
+        </p>
+
+        <h3>Brand & Identity Systems</h3>
+        <p>
+          We apply our framework to brand development, creating cohesive visual and verbal identities 
+          that maintain consistency across all touchpoints while adapting to different contexts and audiences.
+        </p>
+      </div>
+
+      <div class="cta-section">
+        <h3>Ready to Build What’s Next?</h3>
+        <p>Join the architects who refuse to settle for “good enough” AI.</p>
+        <a class="btn primary" href="signup.html">🔥 Request Access</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <span>© 2025 Neurofoundry. Engineered with intent.</span>
+      <div class="footer-links">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </footer>
+  <script src="shared/page-transitions.js"></script>
+  <script src="shared/micro-interactions.js"></script>
+  <script src="chatbot-component.js"></script>
+  <script src="embers-effect.js"></script>
+</body>
+</html>

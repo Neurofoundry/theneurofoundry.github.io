@@ -1,7 +1,17 @@
 /**
  * Transactional email templates
- * Layout inspired by the provided Neurofoundry concept, adapted for email clients.
  */
+
+const fs = require('fs');
+const path = require('path');
+
+const TEMPLATE_ROOT = path.resolve(__dirname, '..', '..', 'admin_access', 'email_templates');
+const ACTIVATION_TEMPLATE_PATH = path.join(TEMPLATE_ROOT, 'neurofoundry_activation_template_ember.html');
+const WELCOME_TEMPLATE_PATH = path.join(TEMPLATE_ROOT, 'neurofoundry_welcome_template_ember.html');
+const PASSWORD_RESET_TEMPLATE_PATH = path.join(TEMPLATE_ROOT, 'neurofoundry_password_reset_template_ember.html');
+const SKELETON_KEY_PIN_RESET_TEMPLATE_PATH = path.join(TEMPLATE_ROOT, 'neurofoundry_skeleton_key_pin_reset_template_ember.html');
+const SKELETON_KEY_ACCESS_CODE_TEMPLATE_PATH = path.join(TEMPLATE_ROOT, 'aegres_email_template_external_image.html');
+const NEUROFOUNDRY_HOME_URL = 'https://www.theneurofoundry.com';
 
 function escapeHtml(value) {
   return String(value || '')
@@ -21,6 +31,17 @@ function renderHighlights(items) {
       </td>
     </tr>
   `).join('');
+}
+
+function replaceTemplateTokens(template, replacements) {
+  return Object.entries(replacements).reduce((html, [token, value]) => {
+    return html.split(token).join(String(value || ''));
+  }, template);
+}
+
+function formatRequestLocation(location) {
+  const cleanLocation = String(location || '').trim();
+  return cleanLocation ? ` in ${escapeHtml(cleanLocation)}` : '';
 }
 
 function renderLayout({
@@ -47,7 +68,7 @@ function renderLayout({
   <title>Neurofoundry</title>
 </head>
 <body style="margin:0; padding:0; background:#f0eeeb;">
-  <div style="display:none; max-height:0; overflow:hidden; opacity:0;">${escapeHtml(preheader)}</div>
+  <div style="display:none; max-height:0; overflow:hidden; opacity:0;">The Engine is the Mind, for the Network you Design. ${escapeHtml(preheader)}</div>
   <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f0eeeb;">
     <tr>
       <td align="center" style="padding: 40px 16px;">
@@ -61,7 +82,7 @@ function renderLayout({
                   </td>
                   <td valign="top">
                     <div style="font-family:Arial, sans-serif; font-size:28px; font-weight:700; letter-spacing:4px; color:#e8e6e1;">NEUROFOUNDRY</div>
-                    <div style="font-family:Arial, sans-serif; margin-top:6px; font-size:10px; letter-spacing:1.5px; color:#6f6b64;">THE ENGINE IS THE MIND | FOR THE NETWORK YOU DESIGN</div>
+                    <div style="font-family:Arial, sans-serif; margin-top:6px; font-size:10px; letter-spacing:1.5px; color:#6f6b64;">THE ENGINE IS THE MIND, FOR THE NETWORK YOU DESIGN</div>
                   </td>
                 </tr>
               </table>
@@ -113,8 +134,8 @@ function renderLayout({
 
           <tr>
             <td style="padding:16px 32px 34px 32px; font-family:Inter, Arial, sans-serif;">
-              <p style="margin:0; color:#4a4a50; font-size:14px; line-height:1.7;">Cheers,</p>
-              <p style="margin:4px 0 0 0; color:#2a2a2e; font-size:14px;">The Neurofoundry Team</p>
+              <p style="margin:0; color:#4a4a50; font-size:14px; line-height:1.7;">Sincerely,</p>
+              <p style="margin:4px 0 0 0; color:#2a2a2e; font-size:14px;">The Architect</p>
             </td>
           </tr>
 
@@ -139,50 +160,72 @@ function renderLayout({
 }
 
 function renderVerificationEmailTemplate({ name, verificationUrl }) {
-  return renderLayout({
-    preheader: 'Verify your Neurofoundry account.',
-    heading: 'Verify Email',
-    greeting: `Hi ${name || 'there'},`,
-    paragraphA: 'Thank you for joining Neurofoundry. Your account is created and ready for activation.',
-    paragraphB: 'Before you continue, verify your email address so we can secure your account and enable the full platform.',
-    highlightsTitle: 'ACCOUNT ACTIVATION',
-    highlights: [
-      { label: 'FORGE', text: 'Your workspace was provisioned successfully.' },
-      { label: 'BUILD', text: 'Authentication and profile pipeline initialized.' },
-      { label: 'DEPLOY', text: 'Email verification required for trusted access.' },
-      { label: 'SECURE', text: 'Verification token expires in 24 hours.' }
-    ],
-    paragraphC: 'Use the button below to complete verification and continue into your account.',
-    ctaLabel: 'VERIFY EMAIL ADDRESS',
-    ctaUrl: verificationUrl,
-    fallbackLabel: 'If the button does not work, use this link:',
-    footerNote: 'You received this email because a Neurofoundry account was created with this address.'
+  const template = fs.readFileSync(ACTIVATION_TEMPLATE_PATH, 'utf8');
+  const safeName = escapeHtml(name || 'there');
+  const safeVerificationUrl = escapeHtml(verificationUrl);
+
+  return replaceTemplateTokens(template, {
+    '[Recipient Name]': safeName,
+    '[verification link]': safeVerificationUrl,
+    '[privacy link]': 'https://www.theneurofoundry.com/privacy-policy.html',
+    '[terms link]': 'https://www.theneurofoundry.com/terms-of-service.html'
   });
 }
 
-function renderPasswordResetEmailTemplate({ name, resetUrl }) {
-  return renderLayout({
-    preheader: 'Reset your Neurofoundry password.',
-    heading: 'Reset Password',
-    greeting: `Hi ${name || 'there'},`,
-    paragraphA: 'We received a request to reset your Neurofoundry password.',
-    paragraphB: 'Use the secure reset link below to set a new password. If this was not you, you can ignore this email.',
-    highlightsTitle: 'PASSWORD RESET',
-    highlights: [
-      { label: 'FORGE', text: 'Reset request received and authenticated.' },
-      { label: 'BUILD', text: 'One-time token generated for your account.' },
-      { label: 'DEPLOY', text: 'Reset link can be used once only.' },
-      { label: 'SECURE', text: 'Reset token expires in 1 hour.' }
-    ],
-    paragraphC: 'Click below to continue with password reset and regain account access.',
-    ctaLabel: 'RESET PASSWORD',
-    ctaUrl: resetUrl,
-    fallbackLabel: 'If the button does not work, use this link:',
-    footerNote: 'You received this email because a password reset was requested for your Neurofoundry account.'
+function renderWelcomeEmailTemplate({ name }) {
+  const template = fs.readFileSync(WELCOME_TEMPLATE_PATH, 'utf8');
+  const safeName = escapeHtml(name || 'there');
+  const safeHomeUrl = escapeHtml(NEUROFOUNDRY_HOME_URL);
+
+  return replaceTemplateTokens(template, {
+    '[Recipient Name]': safeName,
+    '[verification link]': safeHomeUrl,
+    '[privacy link]': 'https://www.theneurofoundry.com/privacy-policy.html',
+    '[terms link]': 'https://www.theneurofoundry.com/terms-of-service.html'
+  });
+}
+
+function renderPasswordResetEmailTemplate({ name, resetUrl, requestLocation }) {
+  const template = fs.readFileSync(PASSWORD_RESET_TEMPLATE_PATH, 'utf8');
+  const safeName = escapeHtml(name || 'there');
+  const safeResetUrl = escapeHtml(resetUrl);
+
+  return replaceTemplateTokens(template, {
+    '[Recipient Name]': safeName,
+    '[request location]': formatRequestLocation(requestLocation),
+    '[reset link]': safeResetUrl,
+    '[privacy link]': 'https://www.theneurofoundry.com/privacy-policy.html',
+    '[terms link]': 'https://www.theneurofoundry.com/terms-of-service.html'
+  });
+}
+
+function renderSkeletonKeyPinResetEmailTemplate({ name, code, appName = 'Skeleton Key', requestLocation }) {
+  const template = fs.readFileSync(SKELETON_KEY_PIN_RESET_TEMPLATE_PATH, 'utf8');
+
+  return replaceTemplateTokens(template, {
+    '[Recipient Name]': escapeHtml(name || 'there'),
+    '[AppName]': escapeHtml(appName),
+    '[request location]': formatRequestLocation(requestLocation),
+    '[pin code]': escapeHtml(code),
+    '[privacy link]': 'https://www.theneurofoundry.com/privacy-policy.html',
+    '[terms link]': 'https://www.theneurofoundry.com/terms-of-service.html'
+  });
+}
+
+function renderSkeletonKeyAccessCodeEmailTemplate({ code }) {
+  const template = fs.readFileSync(SKELETON_KEY_ACCESS_CODE_TEMPLATE_PATH, 'utf8');
+
+  return replaceTemplateTokens(template, {
+    'placeholder="1234"': `value="${escapeHtml(code)}" placeholder="${escapeHtml(code)}"`,
+    'Google authentication succeeded. Enter the one-time verification code to continue in Skeleton Key.': 'Neurofoundry account verified. Enter this one-time access code to continue in Skeleton Key.',
+    'https://example.com/activate': 'https://www.theneurofoundry.com'
   });
 }
 
 module.exports = {
   renderVerificationEmailTemplate,
-  renderPasswordResetEmailTemplate
+  renderWelcomeEmailTemplate,
+  renderPasswordResetEmailTemplate,
+  renderSkeletonKeyPinResetEmailTemplate,
+  renderSkeletonKeyAccessCodeEmailTemplate
 };

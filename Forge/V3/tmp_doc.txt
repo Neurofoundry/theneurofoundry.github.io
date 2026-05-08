@@ -1,0 +1,24 @@
+﻿Goal : Expand the “Forge” to a more modular based image generation pipeline
+
+Interface: First thing I want you is add a small drop down window next to Origin. It should become “Origin:” [menu] (SDXL > Phoenix > Flux > Dreamshaper. This will be the selector for the image gen method so it’s important to understand where this falls in terms of the variables that follow in terms of “the forge”.   
+
+When the Origin point changes, so does the model being used. Flux doesnt gen the same way as sdxl, and so forth– while there may be similaries or even shared input fields (width, height) its crucial that changes in origin also reflect the systematic changing of user adjustable variables.
+
+
+2 - Fusion: Panel can stay mostly untouched itself but still extremely important to notate is that users can only choose one, you either choose an origin point or a fusion method… Thats the conditional branch for the beginning of the process. One or the other. I already have this framed out where you can’t accidentally do both and cause a shit show. With that being said, Fusion Pipeline (which is essentially my own manufactured img2img) is going to receive an additional tab as well, becoming Fusion | Fractal.   A fractal generation pipeline will now utilize a generative process of dreamshaper vs sd img2img, where each subsequent render will flip models. Fractal procesess are ONLY img2img, not rembg or anything like that. 
+
+
+With that being said, the being said, the most important part of this all comes with the interface adjustments primarily lie… in
+
+
+3- Synthhesize: Style has been locked. Positive / Neg prompting were opened up and should remain so, unless any of the generative models or processes are not influenced by them, they should be disabled for interation. Were introducing the adjustable components with the models that accept it, so that is   seeding, guidance, number of steps, etc. You know what they are. 
+
+
+For models that accept it, we will also allow 16:9 scaling. All of these parameters hould be made available from the side bar button as Ive giving na example. CLick will produce an additional extending bar out with the draggable slider bars. The draggable slider bars will directly relate to their seed level etc.
+
+I am going to be condensing endpoints and workers ot simplify this process, butthat is not your concern right now. Right now, you need to do some inteface work, API call gathering, structured planning for this to be smooth and fun as possible.. 
+
+As we approahc locking this in, and I dont expect it to take very long.
+
+
+Please notate to me now of any potential issues or concerns you have, I am going to build this one way or another buts its more enjoyable with a quality coder and friend.

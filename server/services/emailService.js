@@ -7,7 +7,10 @@ const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const {
   renderVerificationEmailTemplate,
-  renderPasswordResetEmailTemplate
+  renderWelcomeEmailTemplate,
+  renderPasswordResetEmailTemplate,
+  renderSkeletonKeyPinResetEmailTemplate,
+  renderSkeletonKeyAccessCodeEmailTemplate
 } = require('./emailTemplates');
 
 let transporterPromise = null;
@@ -162,7 +165,7 @@ async function sendVerificationEmail(user) {
 /**
  * Send password reset email
  */
-async function sendPasswordResetEmail(user) {
+async function sendPasswordResetEmail(user, context = {}) {
   const transporter = await getTransporter();
   if (!transporter) {
     console.log('Email service not configured - skipping password reset email');
@@ -182,7 +185,10 @@ async function sendPasswordResetEmail(user) {
     resetPasswordExpires: new Date(Date.now() + 1 * 60 * 60 * 1000) // 1 hour
   });
 
-  const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
+  const resetBase = process.env.FRONTEND_URL || process.env.APP_URL || 'http://localhost:3000';
+  const resetUrlObj = new URL('/reset-password.html', resetBase);
+  resetUrlObj.searchParams.set('token', token);
+  const resetUrl = resetUrlObj.toString();
 
   const fromAddress = process.env.EMAIL_FROM || process.env.SMTP_USER || 'noreply@neurofoundry.local';
   const mailOptions = {
@@ -191,7 +197,8 @@ async function sendPasswordResetEmail(user) {
     subject: 'Reset your Neurofoundry password',
     html: renderPasswordResetEmailTemplate({
       name: user.name,
-      resetUrl
+      resetUrl,
+      requestLocation: context.requestLocation
     })
   };
 
@@ -222,9 +229,157 @@ async function sendPasswordResetEmail(user) {
   };
 }
 
+async function sendWelcomeEmail(user) {
+  const transporter = await getTransporter();
+  if (!transporter) {
+    console.log('Email service not configured - skipping welcome email');
+    return {
+      sent: false,
+      mode: transporterMode,
+      reason: 'email_service_not_configured'
+    };
+  }
+
+  const fromAddress = process.env.EMAIL_FROM || process.env.SMTP_USER || 'noreply@neurofoundry.local';
+  const mailOptions = {
+    from: fromAddress,
+    to: user.email,
+    subject: 'Welcome to Neurofoundry',
+    html: renderWelcomeEmailTemplate({
+      name: user.name
+    })
+  };
+
+  const info = await transporter.sendMail(mailOptions);
+  const previewUrl = nodemailer.getTestMessageUrl(info) || null;
+  recordSentEmail({
+    type: 'welcome',
+    from: fromAddress,
+    to: user.email,
+    messageId: info.messageId,
+    previewUrl,
+    mode: transporterMode
+  });
+
+  console.log(`Welcome email sent to ${user.email}`);
+  if (previewUrl) {
+    console.log(`Ethereal preview URL: ${previewUrl}`);
+  }
+
+  return {
+    sent: true,
+    type: 'welcome',
+    from: fromAddress,
+    to: user.email,
+    messageId: info.messageId,
+    previewUrl,
+    mode: transporterMode
+  };
+}
+
+async function sendSkeletonKeyPinResetEmail(user, code, context = {}) {
+  const transporter = await getTransporter();
+  if (!transporter) {
+    console.log('Email service not configured - skipping Skeleton Key PIN reset email');
+    return {
+      sent: false,
+      mode: transporterMode,
+      reason: 'email_service_not_configured'
+    };
+  }
+
+  const fromAddress = process.env.EMAIL_FROM || process.env.SMTP_USER || 'noreply@neurofoundry.local';
+  const mailOptions = {
+    from: fromAddress,
+    to: user.email,
+    subject: 'Your Skeleton Key PIN reset code',
+    html: renderSkeletonKeyPinResetEmailTemplate({
+      name: user.name,
+      code,
+      appName: context.appName || 'Skeleton Key',
+      requestLocation: context.requestLocation
+    })
+  };
+
+  const info = await transporter.sendMail(mailOptions);
+  const previewUrl = nodemailer.getTestMessageUrl(info) || null;
+  recordSentEmail({
+    type: 'skeleton_key_pin_reset',
+    from: fromAddress,
+    to: user.email,
+    messageId: info.messageId,
+    previewUrl,
+    mode: transporterMode
+  });
+
+  console.log(`Skeleton Key PIN reset email sent to ${user.email}`);
+  if (previewUrl) {
+    console.log(`Ethereal preview URL: ${previewUrl}`);
+  }
+
+  return {
+    sent: true,
+    type: 'skeleton_key_pin_reset',
+    from: fromAddress,
+    to: user.email,
+    messageId: info.messageId,
+    previewUrl,
+    mode: transporterMode
+  };
+}
+
+async function sendSkeletonKeyAccessCodeEmail(user, code) {
+  const transporter = await getTransporter();
+  if (!transporter) {
+    console.log('Email service not configured - skipping Skeleton Key access code email');
+    return {
+      sent: false,
+      mode: transporterMode,
+      reason: 'email_service_not_configured'
+    };
+  }
+
+  const fromAddress = process.env.EMAIL_FROM || process.env.SMTP_USER || 'noreply@neurofoundry.local';
+  const mailOptions = {
+    from: fromAddress,
+    to: user.email,
+    subject: 'Your Skeleton Key access code',
+    html: renderSkeletonKeyAccessCodeEmailTemplate({ code })
+  };
+
+  const info = await transporter.sendMail(mailOptions);
+  const previewUrl = nodemailer.getTestMessageUrl(info) || null;
+  recordSentEmail({
+    type: 'skeleton_key_access_code',
+    from: fromAddress,
+    to: user.email,
+    messageId: info.messageId,
+    previewUrl,
+    mode: transporterMode
+  });
+
+  console.log(`Skeleton Key access code email sent to ${user.email}`);
+  if (previewUrl) {
+    console.log(`Ethereal preview URL: ${previewUrl}`);
+  }
+
+  return {
+    sent: true,
+    type: 'skeleton_key_access_code',
+    from: fromAddress,
+    to: user.email,
+    messageId: info.messageId,
+    previewUrl,
+    mode: transporterMode
+  };
+}
+
 module.exports = {
   sendVerificationEmail,
+  sendWelcomeEmail,
   sendPasswordResetEmail,
+  sendSkeletonKeyPinResetEmail,
+  sendSkeletonKeyAccessCodeEmail,
   getLastSentEmail: () => sentEmailLog[sentEmailLog.length - 1] || null,
   getSentEmailLog: () => [...sentEmailLog]
 };

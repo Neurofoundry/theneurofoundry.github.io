@@ -137,7 +137,7 @@ class NeurofoundryAuth {
         })
       });
 
-      if (data.success && data.data) {
+      if (data.success && data.data && data.data.tokens && data.data.tokens.accessToken) {
         this.saveAuthState(data.data.user, data.data.tokens.accessToken);
       }
 

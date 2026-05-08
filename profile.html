@@ -6,11 +6,15 @@
   <title>Profile – Neurofoundry</title>
   <meta name="description" content="Manage your Neurofoundry profile and account settings">
   <meta name="theme-color" content="#0f1113">
+
+  <link rel="icon" type="image/png" href="anvil.png">
+  <link rel="apple-touch-icon" href="anvil.png">
   <script src="/auth-client.js?v=20260219b"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       background: #0f1113;
+      padding-top: 64px;
       color: #e6e9ee;
       font-family: Inter, sans-serif;
       min-height: 100vh;
@@ -286,22 +290,12 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="main-preview-edit/common/site-header.css">
+  <link rel="stylesheet" href="main-preview-edit/common/site-footer.css">
 </head>
 <body>
-  <header>
-    <div class="nav">
-      <a href="home.html" class="brand">
-        <div class="brand-icon">N</div>
-        <span>NEUROFOUNDRY</span>
-      </a>
-      <div class="links">
-        <a class="navlink" href="home.html">Home</a>
-        <a class="navlink" href="projects.html">Projects</a>
-        <a class="navlink" href="profile.html">Profile</a>
-        <button class="btn secondary" onclick="handleLogout()">Logout</button>
-      </div>
-    </div>
-  </header>
+  <div data-site-header></div>
+  <script src="main-preview-edit/common/site-header.js"></script>
 
   <main>
     <div id="message"></div>
@@ -365,6 +359,9 @@
       </div>
     </div>
   </main>
+
+  <div data-site-footer></div>
+  <script src="main-preview-edit/common/site-footer.js"></script>
 
   <script>
     window.nfAuth = new window.NeurofoundryAuth({

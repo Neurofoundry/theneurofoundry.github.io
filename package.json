@@ -20,7 +20,6 @@
     "jsonwebtoken": "^9.0.2",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
-    "passport-github2": "^0.1.12",
     "passport-local": "^1.0.0",
     "express-session": "^1.18.0",
     "connect-redis": "^7.1.1",
@@ -32,9 +31,7 @@
     "cookie-parser": "^1.4.6",
     "multer": "^2.0.2",
     "nodemailer": "^7.0.11",
-    "uuid": "^9.0.1",
-    "firebase-admin": "^12.0.0",
-    "@supabase/supabase-js": "^2.39.7"
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "nodemon": "^3.0.3"

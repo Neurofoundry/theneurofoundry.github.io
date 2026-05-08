@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Downloads — Neurofoundry</title>
+  <meta name="description" content="Free tools, skills, scripts, and custom apps from Neurofoundry. Lightweight, purpose-built utilities.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="common/site-header.css">
+  <link rel="stylesheet" href="common/site-footer.css">
+  <style>
+    :root {
+      --primary-color: #e0473c;
+      --primary-gradient-start: #ff7b6e;
+      --primary-gradient-end: #d23d33;
+      --primary-soft: #ff9b93;
+      --primary-border: rgba(224, 71, 60, 0.34);
+      --primary-border-strong: rgba(224, 71, 60, 0.48);
+      --primary-shadow: rgba(224, 71, 60, 0.38);
+      --dark-bg: #0f1113;
+      --dark-overlay: rgba(11, 12, 14, 0.95);
+      --section-bg: rgba(15, 17, 19, 0.78);
+      --light-text: #e6e9ee;
+      --muted-text: #9aa3ad;
+      --page-max: 100%;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--dark-bg);
+      color: var(--light-text);
+      line-height: 1.7;
+      overflow-x: hidden;
+      width: 100%;
+      padding-top: 58px;
+    }
+
+    /* Hero Section */
+    .downloads-hero {
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+      padding: clamp(40px, 8vw, 80px) clamp(14px, 3vw, 24px) clamp(30px, 6vw, 60px);
+      background: var(--dark-bg);
+    }
+
+    .downloads-hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(224, 71, 60, 0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .section-divider {
+      height: 2px;
+      background: var(--primary-color);
+      width: 100%;
+      max-width: var(--page-max);
+      margin: 0 auto;
+    }
+
+    .downloads-hero .section-divider {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+    }
+
+    .hero-label {
+      display: inline-block;
+      padding: 8px 20px;
+      background: rgba(224, 71, 60, 0.15);
+      border: 1px solid rgba(224, 71, 60, 0.3);
+      border-radius: 999px;
+      font-size: clamp(10px, 1.4vw, 12px);
+      font-weight: 600;
+      color: var(--primary-soft);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: clamp(16px, 2vw, 24px);
+    }
+
+    .downloads-hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 900;
+      margin-bottom: clamp(12px, 2vw, 16px);
+      background: linear-gradient(135deg, #fff 0%, #ffc9c3 50%, #e0473c 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .downloads-hero p {
+      font-size: clamp(14px, 2vw, 18px);
+      color: var(--muted-text);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    /* Content Container */
+    .downloads-container {
+      max-width: var(--page-max);
+      margin: 0 auto;
+      padding: clamp(40px, 6vw, 60px) clamp(14px, 3vw, 24px);
+    }
+
+    /* Category Sections */
+    .category-section {
+      margin-bottom: clamp(50px, 8vw, 80px);
+    }
+
+    .category-header {
+      margin-bottom: clamp(24px, 4vw, 40px);
+    }
+
+    .category-label {
+      font-size: clamp(11px, 1.6vw, 12px);
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--primary-soft);
+      letter-spacing: 1px;
+      margin-bottom: clamp(8px, 1vw, 12px);
+    }
+
+    .category-title {
+      font-size: clamp(1.5rem, 4vw, 2.2rem);
+      font-weight: 800;
+      color: var(--light-text);
+      margin-bottom: clamp(8px, 1vw, 12px);
+    }
+
+    .category-desc {
+      font-size: clamp(13px, 1.8vw, 15px);
+      color: var(--muted-text);
+      max-width: 700px;
+    }
+
+    /* Masonry Grid Layout */
+    .downloads-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(clamp(240px, 30vw, 300px), 1fr));
+      gap: clamp(20px, 3vw, 32px);
+      grid-auto-rows: auto;
+      grid-auto-flow: dense;
+    }
+
+    /* Staggered card sizing */
+    .download-card:nth-child(1) {
+      grid-column: span 2;
+      grid-row: span 1;
+    }
+
+    .download-card:nth-child(2) {
+      grid-column: span 1;
+      grid-row: span 2;
+    }
+
+    .download-card:nth-child(3) {
+      grid-column: span 1;
+      grid-row: span 1;
+    }
+
+    .download-card:nth-child(4) {
+      grid-column: span 2;
+      grid-row: span 1;
+    }
+
+    .download-card:nth-child(5) {
+      grid-column: span 1;
+      grid-row: span 1;
+    }
+
+    .download-card:nth-child(6) {
+      grid-column: span 1;
+      grid-row: span 2;
+    }
+
+    .download-card:nth-child(7) {
+      grid-column: span 2;
+      grid-row: span 1;
+    }
+
+    .download-card:nth-child(8) {
+      grid-column: span 1;
+      grid-row: span 1;
+    }
+
+    .download-card:nth-child(n+9) {
+      grid-column: span 1;
+      grid-row: span 1;
+    }
+
+    /* Featured/large card styling */
+    .download-card[data-featured="true"] {
+      grid-column: span 2;
+    }
+
+    .download-card[data-large="true"] {
+      grid-row: span 2;
+    }
+
+    /* Download Card */
+    .download-card {
+      background: linear-gradient(135deg, rgba(15, 17, 19, 0.95), rgba(10, 11, 13, 0.98));
+      border: 1px solid var(--primary-border);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      min-height: 280px;
+    }
+
+    .download-card[data-large="true"] {
+      min-height: 520px;
+    }
+
+    .download-card:hover {
+      border-color: var(--primary-color);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px var(--primary-shadow);
+    }
+
+    .card-image {
+      height: 160px;
+      background: linear-gradient(135deg, rgba(224, 71, 60, 0.1), rgba(224, 71, 60, 0.05));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid var(--primary-border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .download-card[data-large="true"] .card-image {
+      height: 240px;
+    }
+
+    .download-card[data-featured="true"] .card-image {
+      height: 200px;
+    }
+
+    .card-image img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .card-image .placeholder-icon {
+      font-size: clamp(48px, 10vw, 64px);
+      opacity: 0.8;
+    }
+
+    .card-content {
+      padding: clamp(18px, 4vw, 28px);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: clamp(12px, 2vw, 16px);
+    }
+
+    .card-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      background: rgba(57, 255, 20, 0.1);
+      border: 1px solid rgba(57, 255, 20, 0.3);
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 700;
+      color: #39FF14;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .card-badge.script {
+      background: rgba(147, 112, 219, 0.1);
+      border-color: rgba(147, 112, 219, 0.3);
+      color: #d8bfd8;
+    }
+
+    .card-badge.tool {
+      background: rgba(255, 165, 0, 0.1);
+      border-color: rgba(255, 165, 0, 0.3);
+      color: #ffa500;
+    }
+
+    .card-badge.skill {
+      background: rgba(100, 200, 255, 0.1);
+      border-color: rgba(100, 200, 255, 0.3);
+      color: #64c8ff;
+    }
+
+    .card-badge.app {
+      background: rgba(144, 238, 144, 0.1);
+      border-color: rgba(144, 238, 144, 0.3);
+      color: #90ee90;
+    }
+
+    .card-badge.premium {
+      background: rgba(255, 215, 0, 0.1);
+      border-color: rgba(255, 215, 0, 0.3);
+      color: #ffd700;
+    }
+
+    .card-title {
+      font-size: clamp(18px, 3vw, 22px);
+      font-weight: 800;
+      color: var(--light-text);
+      margin-bottom: 6px;
+    }
+
+    .card-version {
+      font-size: 11px;
+      color: #666;
+      font-family: 'JetBrains Mono', monospace;
+      margin-bottom: clamp(8px, 1vw, 12px);
+    }
+
+    .card-desc {
+      font-size: clamp(13px, 1.8vw, 14px);
+      color: var(--muted-text);
+      line-height: 1.6;
+      margin-bottom: clamp(16px, 2vw, 20px);
+      flex: 1;
+    }
+
+    .card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: clamp(12px, 2vw, 16px);
+      margin-bottom: clamp(16px, 2vw, 20px);
+      padding-top: clamp(12px, 2vw, 16px);
+      border-top: 1px solid var(--primary-border);
+      font-size: clamp(12px, 1.6vw, 13px);
+    }
+
+    .meta-item {
+      color: #666;
+    }
+
+    .meta-item span {
+      color: var(--muted-text);
+      font-weight: 600;
+    }
+
+    .download-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: clamp(12px, 2vw, 14px) clamp(18px, 3vw, 24px);
+      background: linear-gradient(180deg, var(--primary-gradient-start) 0%, #e9584d 48%, var(--primary-gradient-end) 100%);
+      border: 2px solid #a2362f;
+      border-radius: 10px;
+      color: #fff;
+      font-size: clamp(12px, 1.8vw, 14px);
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px var(--primary-shadow);
+    }
+
+    .download-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px var(--primary-shadow);
+    }
+
+    .premium-lock {
+      position: relative;
+      opacity: 0.7;
+    }
+
+    .premium-lock::after {
+      content: '🔒 Premium';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.85);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #ffd700;
+      white-space: nowrap;
+    }
+
+    /* Empty State */
+    .coming-soon-card {
+      background: linear-gradient(135deg, rgba(15, 17, 19, 0.6), rgba(10, 11, 13, 0.7));
+      border: 2px dashed var(--primary-border);
+      border-radius: 16px;
+      padding: clamp(40px, 6vw, 60px) clamp(20px, 4vw, 40px);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 280px;
+    }
+
+    .coming-soon-card .icon {
+      font-size: clamp(40px, 8vw, 48px);
+      margin-bottom: clamp(16px, 2vw, 20px);
+      opacity: 0.6;
+    }
+
+    .coming-soon-card h3 {
+      font-size: clamp(16px, 3vw, 20px);
+      color: #999;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .coming-soon-card p {
+      font-size: clamp(13px, 1.8vw, 14px);
+      color: #777;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .downloads-grid {
+        grid-template-columns: repeat(auto-fit, minmax(clamp(220px, 25vw, 280px), 1fr));
+      }
+
+      /* Reduce stagger on tablets */
+      .download-card:nth-child(1) {
+        grid-column: span 1;
+      }
+
+      .download-card:nth-child(2) {
+        grid-column: span 1;
+        grid-row: span 1;
+      }
+
+      .download-card:nth-child(4) {
+        grid-column: span 1;
+      }
+
+      .download-card:nth-child(7) {
+        grid-column: span 1;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding-top: 50px;
+      }
+
+      .downloads-grid {
+        grid-template-columns: 1fr;
+        grid-auto-flow: row;
+      }
+
+      /* Reset all stagger on mobile */
+      .download-card,
+      .download-card:nth-child(n) {
+        grid-column: span 1 !important;
+        grid-row: span 1 !important;
+        min-height: auto;
+      }
+
+      .download-card[data-large="true"],
+      .download-card[data-featured="true"] {
+        grid-column: span 1 !important;
+      }
+
+      .card-image {
+        height: 140px;
+      }
+
+      .category-section {
+        margin-bottom: 40px;
+      }
+
+      .downloads-container {
+        padding: 30px 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div data-site-header></div>
+  <script src="common/site-header.js"></script>
+
+  <main>
+    <section class="downloads-hero">
+      <div class="hero-label">⬇️ Downloads & Resources</div>
+      <h1>Tools, Scripts & More</h1>
+      <p>Free utilities, automation scripts, custom apps, and premium resources. Everything built for purpose and clarity.</p>
+      <div class="section-divider"></div>
+    </section>
+
+    <div class="downloads-container">
+
+      <!-- Tools Section -->
+      <section class="category-section">
+        <div class="category-header">
+          <div class="category-label">🔧 Utilities</div>
+          <h2 class="category-title">Tools</h2>
+          <p class="category-desc">Lightweight desktop utilities for developers and power users. No bloat, just functionality.</p>
+        </div>
+        <div class="downloads-grid">
+
+          <!-- AEGIS: Skeleton Key - Featured (wide) -->
+          <div class="download-card" data-featured="true">
+            <div class="card-image">
+              <span class="placeholder-icon">🔐</span>
+            </div>
+            <div class="card-content">
+              <div class="card-badges">
+                <span class="card-badge tool">Tool</span>
+                <span class="card-badge">Windows</span>
+              </div>
+              <h3 class="card-title">AEGIS: Skeleton Key</h3>
+              <div class="card-version">v1.0.0</div>
+              <p class="card-desc">
+                Encrypted local key storage with AES-256 encryption, auto-lock, and a clean UI. Never lose your API keys again. No cloud, no accounts—just your secrets, locked tight.
+              </p>
+              <div class="card-meta">
+                <div class="meta-item">Size: <span>~32 MB</span></div>
+                <div class="meta-item">Platform: <span>Win 10/11</span></div>
+              </div>
+              <a href="downloads/SkeletonKey.exe" class="download-btn">
+                ⬇️ Download .exe
+              </a>
+            </div>
+          </div>
+
+          <!-- Coming Soon - Tall -->
+          <div class="download-card" data-large="true">
+            <div class="card-image">
+              <span class="placeholder-icon">⚡</span>
+            </div>
+            <div class="card-content">
+              <div class="card-badges">
+                <span class="card-badge tool">Tool</span>
+              </div>
+              <h3 class="card-title">System Monitor</h3>
+              <div class="card-version">Coming Soon</div>
+              <p class="card-desc">
+                Real-time system resource monitoring. Watch CPU, memory, disk, and network at a glance. Lightweight, always-on, zero overhead.
+              </p>
+              <p class="card-desc" style="margin-bottom: 20px; color: #666;">
+                Features include custom alerts, data export, and minimalist design. Currently in testing phase.
+              </p>
+            </div>
+          </div>
+
+          <!-- Coming Soon - Normal -->
+          <div class="download-card">
+            <div class="card-image">
+              <span class="placeholder-icon">🔄</span>
+            </div>
+            <div class="card-content">
+              <div class="card-badges">
+                <span class="card-badge tool">Tool</span>
+              </div>
+              <h3 class="card-title">Sync Engine</h3>
+              <div class="card-version">Coming Soon</div>
+              <p class="card-desc">
+                Bidirectional file sync across local directories. Configuration-based rules, conflict resolution, detailed logs.
+              </p>
+              <div class="card-meta">
+                <div class="meta-item">Platform: <span>Cross-platform</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Coming Soon - Wide -->
+          <div class="download-card" data-featured="true">
+            <div class="card-image">
+              <span class="placeholder-icon">📊</span>
+            </div>
+            <div class="card-content">
+              <div class="card-badges">
+                <span class="card-badge tool">Tool</span>
+              </div>
+              <h3 class="card-title">Data Visualizer</h3>
+              <div class="card-version">Coming Soon</div>
+              <p class="card-desc">
+                Transform raw data into interactive charts and graphs. CSV/JSON import, real-time updates, export as PNG/SVG.
+              </p>
+              <div class="card-meta">
+                <div class="meta-item">Type: <span>Desktop App</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Coming Soon - Normal -->
+          <div class="download-card">
+            <div class="card-image">
+              <span class="placeholder-icon">🔍</span>
+            </div>
+            <div class="card-content">
+              <div class="card-badges">
+                <span class="card-badge tool">Tool</span>
+              </div>
+              <h3 class="card-title">Regex Tester</h3>
+              <div class="card-version">Coming Soon</div>
+              <p class="card-desc">
+                Fast regex pattern testing with live match highlighting, capture groups, and replace preview.
+              </p>
+            </div>
+          </div>
+
+          <!-- Coming Soon - Tall -->
+          <div class="download-card" data-large="true">
+            <div class="card-image">
+              <span class="placeholder-icon">🎨</span>
+            </div>
+            <div class="card-content">
+              <div class="card-badges">
+                <span class="card-badge tool">Tool</span>
+              </div>
+              <h3 class="card-title">Color Palette Generator</h3>
+              <div class="card-version">Coming Soon</div>
+              <p class="card-desc">
+                Generate harmonious color palettes from a base color. Export as CSS, JSON, or Figma tokens. Includes accessibility checks.
+              </p>
+              <p class="card-desc" style="margin-bottom: 20px; color: #666;">
+                Features: contrast ratio analysis, color blindness simulation, and a library of preset palettes.
+              </p>
+            </div>
+          </div>
+
+          <!-- Coming Soon - Wide -->
+          <div class="download-card" data-featured="true">
+            <div class="card-image">
+              <span class="placeholder-icon">🚀</span>
+            </div>
+            <div class="card-content">
+              <div class="card-badges">
+                <span class="card-badge tool">Tool</span>
+              </div>
+              <h3 class="card-title">Deployment Assistant</h3>
+              <div class="card-version">Coming Soon</div>
+              <p class="card-desc">
+                Streamline deployment workflows. Multi-environment support, rollback management, and deployment logs. Works with major cloud providers.
+              </p>
+            </div>
+          </div>
+
+          <!-- Coming Soon - Normal -->
+          <div class="download-card">
+            <div class="card-image">
+              <span class="placeholder-icon">📝</span>
+            </div>
+            <div class="card-content">
+              <div class="card-badges">
+                <span class="card-badge tool">Tool</span>
+              </div>
+              <h3 class="card-title">Markdown Converter</h3>
+              <div class="card-version">Coming Soon</div>
+              <p class="card-desc">
+                Convert Markdown to HTML, PDF, or other formats. Syntax highlighting, custom CSS support.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Scripts Section -->
+      <section class="category-section">
+        <div class="category-header">
+          <div class="category-label">⚙️ Automation</div>
+          <h2 class="category-title">Scripts</h2>
+          <p class="category-desc">Ready-to-run automation scripts for common tasks. Copy, customize, and go.</p>
+        </div>
+        <div class="downloads-grid">
+
+          <div class="coming-soon-card">
+            <div class="icon">📝</div>
+            <h3>Scripts Coming Soon</h3>
+            <p>Automation utilities will be available here</p>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Skills Section -->
+      <section class="category-section">
+        <div class="category-header">
+          <div class="category-label">📚 Learn & Build</div>
+          <h2 class="category-title">Skills & Prompts</h2>
+          <p class="category-desc">Claude skills and prompt templates that extend your capabilities across tools and workflows.</p>
+        </div>
+        <div class="downloads-grid">
+
+          <div class="coming-soon-card">
+            <div class="icon">💡</div>
+            <h3>Skills Coming Soon</h3>
+            <p>Custom skills and templates will launch here</p>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Custom Apps Section -->
+      <section class="category-section">
+        <div class="category-header">
+          <div class="category-label">🚀 Applications</div>
+          <h2 class="category-title">Built-In Apps</h2>
+          <p class="category-desc">Custom applications built by Neurofoundry. Some are free, others are available to premium members.</p>
+        </div>
+        <div class="downloads-grid">
+
+          <div class="coming-soon-card">
+            <div class="icon">⚡</div>
+            <h3>Apps Coming Soon</h3>
+            <p>Custom Neurofoundry apps launching soon</p>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <div data-site-footer></div>
+  <script src="common/site-footer.js"></script>
+  <script src="shared/page-transitions.js"></script>
+
+</body>
+</html>

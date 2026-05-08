@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zero Prompt Panel</title>
+  <link rel="stylesheet" href="sidepanel.css">
+</head>
+<body>
+  <main class="panel-shell">
+    <header class="hero">
+      <div class="hero-topline">
+        <p class="eyebrow">Neurofoundry</p>
+        <span id="bridgeBadge" class="hero-badge">Bridge Unknown</span>
+      </div>
+      <h1>Agent Zero</h1>
+      <p class="subhead">The Engine is the Mind, for the Network you Design</p>
+      <div class="actions-row">
+        <button id="launchBridgeButton" class="ghost-button" type="button">Launch Bridge</button>
+        <button id="refreshBridge" class="ghost-button" type="button">Check Bridge</button>
+        <button id="copyBridgeCommandButton" class="ghost-button" type="button">Copy Bridge Command</button>
+      </div>
+    </header>
+
+    <section class="card output-shell">
+      <div class="section-header">
+        <div>
+          <h2>Response</h2>
+          <p id="statusText">No active job.</p>
+        </div>
+        <span id="statusBadge" class="status-badge">Idle</span>
+      </div>
+
+      <div class="output-block">
+        <h3>Assistant</h3>
+        <pre id="resultOutput" class="output readable-output">Waiting for response...</pre>
+      </div>
+
+      <details class="run-details">
+        <summary>Run Details</summary>
+        <div class="output-meta">
+          <span id="outputJobMeta" class="meta-pill">No active job</span>
+          <span id="outputSessionMeta" class="meta-pill">Session: none</span>
+          <span id="outputTranscriptMeta" class="meta-pill">Transcript: n/a</span>
+        </div>
+        <pre id="jobOutput" class="output">No job output yet.</pre>
+      </details>
+    </section>
+
+    <section class="card composer-card">
+      <div class="section-header">
+        <div>
+          <h2>Input</h2>
+          <p>Single prompt. Active tab is attached automatically.</p>
+        </div>
+      </div>
+
+      <label class="field">
+        <span>Your Input</span>
+        <textarea id="promptInput" rows="8" placeholder=""></textarea>
+      </label>
+
+      <div class="actions-row">
+        <button id="runButton" class="primary-button" type="button">Send Prompt</button>
+      </div>
+
+      <details class="settings-drawer">
+        <summary>Advanced</summary>
+
+        <div class="settings-grid">
+          <label class="field">
+            <span>Bridge URL</span>
+            <input id="bridgeUrl" type="url" value="http://127.0.0.1:8788">
+          </label>
+
+          <label class="field">
+            <span>Worker URL</span>
+            <input id="workerUrl" type="url" value="https://zero.csirico9.workers.dev">
+          </label>
+
+          <label class="field">
+            <span>Model</span>
+            <input id="modelInput" type="text" value="@cf/zai-org/glm-4.7-flash">
+          </label>
+
+          <label class="field">
+            <span>Worker API Key</span>
+            <input id="workerApiKeyInput" type="password" placeholder="Bearer key for zero">
+          </label>
+
+          <label class="field">
+            <span>Vision</span>
+            <select id="visionSelect">
+              <option value="auto">Auto</option>
+              <option value="true">Enabled</option>
+              <option value="false">Disabled</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Session TTL (Seconds)</span>
+            <input id="sessionTtlInput" type="number" min="60" step="60" value="900">
+          </label>
+        </div>
+
+        <label class="toggle">
+          <input id="headlessToggle" type="checkbox">
+          <span>Headless</span>
+        </label>
+
+        <div class="actions-row">
+          <button id="saveSettingsButton" class="ghost-button" type="button">Save Settings</button>
+          <button id="resetDefaultsButton" class="ghost-button" type="button">Reset</button>
+        </div>
+      </details>
+    </section>
+  </main>
+
+  <script src="sidepanel.js"></script>
+</body>
+</html>

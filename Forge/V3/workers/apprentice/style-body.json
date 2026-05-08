@@ -1,0 +1,21 @@
+﻿{
+  "style_profile_id": "retro_comic_action",
+  "positive_prompt": "masked hero, gloves, boots, heavy hammer",
+  "scene_prompt": "outdoor snowy clash, motion streaks",
+  "negative_prompt": "blurry, low quality",
+  "cdp": {
+    "summary": "hero with black mask",
+    "observed_facts": ["black mask", "gloves", "boots", "heavy hammer"],
+    "confidence": 0.82
+  },
+  "acp": {
+    "summary": "windy outdoor action scene",
+    "observed_facts": ["snow", "wind", "open space"],
+    "confidence": 0.74
+  },
+  "sip": {
+    "summary": "dynamic low angle comic composition",
+    "observed_facts": ["dynamic pose", "low angle", "bold contrast"],
+    "confidence": 0.79
+  }
+}

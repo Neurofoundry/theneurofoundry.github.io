@@ -1,0 +1,17 @@
+
+#introContainer * { margin: 0; padding: 0; box-sizing: border-box; }
+#introContainer #introVid {
+  position: fixed; width: 100vw; height: 100vh; object-fit: cover; z-index: 9998;
+}
+#introContainer #introOverlay {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  background: #111; display: none; justify-content: center; align-items: center;
+  z-index: 9999; transition: opacity 0.7s;
+}
+#introContainer #brainImg {
+  position: absolute; width: 420px; height: 420px;
+  filter: drop-shadow(0 0 36px #e0473c);
+}
+#introContainer #brainNodesSVG {
+  position: absolute; width: 420px; height: 420px;
+}

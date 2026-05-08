@@ -1,0 +1,1625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>System Architecture — Neurofoundry</title>
+  <meta name="description" content="Interactive visualization of the Neurofoundry system architecture: memory systems, AI pipelines, and creative infrastructure.">
+  <meta name="theme-color" content="#0f1113">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      height: 100%;
+    }
+    body { 
+      background: #0f1113; 
+      color: #e6e9ee; 
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    
+    /* Header */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(11, 12, 14, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid #e0473c;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 0 18px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: 0.5px;
+      text-decoration: none;
+      color: #e6e9ee;
+    }
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #ff7b6e 0%, #e0473c 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 18px;
+      color: white;
+      box-shadow: 0 4px 12px rgba(224, 71, 60, 0.3);
+    }
+    .links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .navlink {
+      color: #ccc;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .navlink:hover { color: #e0473c; }
+    .nav-item { position: relative; }
+    .dropdown-toggle {
+      background: none;
+      border: none;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      color: #ccc;
+      font: 500 14px/1 Inter, sans-serif;
+      transition: color 0.2s;
+    }
+    .dropdown-toggle:hover,
+    .dropdown-toggle:focus-visible {
+      color: #e0473c;
+      outline: none;
+    }
+    .dropdown-caret {
+      font-size: 11px;
+      opacity: 0.7;
+    }
+    .dropdown-menu {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      min-width: 200px;
+      background: rgba(15, 17, 19, 0.96);
+      border: 1px solid rgba(224, 71, 60, 0.25);
+      border-radius: 12px;
+      padding: 10px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+      opacity: 0;
+      transform: translateY(6px);
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 50;
+    }
+    .dropdown::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 100%;
+      height: 10px;
+    }
+    .dropdown-menu a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      color: #d6d6d6;
+      text-decoration: none;
+      font-size: 13px;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .dropdown-menu a:hover {
+      background: rgba(224, 71, 60, 0.15);
+      color: #fff;
+    }
+    .dropdown:hover .dropdown-menu,
+    .dropdown:focus-within .dropdown-menu {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font: 600 13px/1 Inter, sans-serif;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: 2px solid transparent;
+    }
+    .btn.primary {
+      background: linear-gradient(180deg, #ff7b6e 0%, #e9584d 48%, #d23d33 100%);
+      border-color: #a2362f;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(224, 71, 60, 0.3);
+    }
+    .btn.primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(224, 71, 60, 0.4);
+    }
+    
+    /* ========== TWO-PANEL LAYOUT ========== */
+    .dual-panel-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      min-height: calc(100vh - 64px);
+      margin-top: 64px;
+      position: relative;
+      --brain-size: 700px;
+    }
+    .brain-overlay {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: var(--brain-size);
+      height: var(--brain-size);
+      transform: translate(-50%, -50%);
+      background: url('brain.png') center/contain no-repeat;
+      /* lowered from 0.95 to reveal secondary brain behind it */
+      opacity: 0.75;
+      pointer-events: none;
+      z-index: 2;
+      filter: saturate(1.05) brightness(1.02) drop-shadow(0 12px 40px rgba(0,0,0,0.6));
+    }
+
+    /* Tech underlay overlayed over the brain image (cosmetic only) */
+    .brain-overlay::after {
+      /* subtle tech texture overlay to let the secondary brain show through */
+      content: '';
+      position: absolute;
+      inset: 6% 6% 6% 6%;
+      background-image: url('assets/techunderlay.png');
+      background-position: center center;
+      background-size: contain;
+      background-repeat: no-repeat;
+      /* render fully (no blending) so the tech brain reads clearly over the main brain */
+      mix-blend-mode: normal;
+      /* animation controls opacity so base starts hidden */
+      opacity: 0;
+      filter: blur(4px) saturate(1.18) contrast(1.05) brightness(1.02);
+      pointer-events: none;
+      z-index: 4;
+      animation: underlay-subtle 6s ease-in-out infinite;
+      transform-origin: center;
+    }
+
+    @keyframes underlay-fade {
+      0% { opacity: 0; transform: scale(0.98); }
+      12% { opacity: 0.9; transform: scale(1); }
+      50% { opacity: 0.95; transform: scale(1.02); }
+      88% { opacity: 0.6; transform: scale(1); }
+      100% { opacity: 0; transform: scale(0.98); }
+    }
+    
+    @keyframes underlay-subtle {
+      0% { opacity: 0; transform: scale(0.995); }
+      18% { opacity: 0.28; transform: scale(1); }
+      45% { opacity: 0.6; transform: scale(1.02); }
+      72% { opacity: 0.32; transform: scale(1); }
+      100% { opacity: 0; transform: scale(0.995); }
+    }
+
+    /* Additional subtle pulse on the brain itself */
+    .brain-overlay {
+      animation: brain-pulse 8s ease-in-out infinite;
+    }
+    @keyframes brain-pulse {
+      0% { transform: translate(-50%, -50%) scale(0.995); }
+      45% { transform: translate(-50%, -50%) scale(1.01); }
+      100% { transform: translate(-50%, -50%) scale(0.995); }
+    }
+    .network-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 3;
+      mix-blend-mode: screen;
+      opacity: 0.85;
+    }
+    .network-overlay svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .network-overlay .net-base {
+      stroke: rgba(224, 71, 60, 0.22);
+      stroke-width: 1.1;
+      filter: drop-shadow(0 0 6px rgb(190, 44, 18));
+    }
+    .network-overlay .net-arc {
+      fill: none;
+      stroke: rgba(230,120,96,0.22);
+      stroke-width: 1.4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      filter: drop-shadow(0 0 6px rgba(255, 120, 96, 0.18));
+    }
+    .network-overlay .net-pulse {
+      stroke: rgba(255, 150, 120, 0.95);
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-dasharray: 14 180;
+      animation: pulse-out 2.6s linear infinite;
+      filter: drop-shadow(0 0 12px rgba(255, 130, 100, 0.7));
+    }
+    .network-overlay .net-spark {
+      fill: #fff6e8;
+      opacity: 0.0;
+      filter: drop-shadow(0 0 8px rgba(255,190,120,0.85));
+      animation: spark-pop 2.8s ease-in-out infinite;
+    }
+    @keyframes spark-pop {
+      0% { opacity: 0; transform: translateY(0) scale(0.3); }
+      8% { opacity: 1; transform: translateY(-6px) scale(1); }
+      60% { opacity: 0.5; transform: translateY(-12px) scale(0.9); }
+      100% { opacity: 0; transform: translateY(-18px) scale(0.6); }
+    }
+    .network-overlay .net-node {
+      fill: rgba(252, 81, 81, 0.65);
+      animation: pulse 3.2s ease-in-out infinite;
+    }
+    .network-overlay .net-node.core {
+      fill: rgba(255, 140, 120, 0.85);
+    }
+    .network-overlay .net-node.hot {
+      fill: rgba(255, 170, 130, 0.9);
+    }
+    @keyframes pulse-out {
+      from { stroke-dashoffset: 220; }
+      to { stroke-dashoffset: -220; }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+    .vortex-layer {
+      position: absolute;
+      inset: -8%;
+      pointer-events: none;
+      z-index: 4;
+      mix-blend-mode: screen;
+      opacity: 0.75;
+    }
+    .vortex-layer canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    /* Enhanced vortex visual: subtle conic + radial glow to emphasize swirl */
+    .vortex-layer::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,200,120,0.06), transparent 20%),
+        conic-gradient(from 220deg, rgba(255,120,60,0.03), rgba(0,0,0,0) 50%);
+      filter: blur(18px) saturate(1.05);
+      transform-origin: center;
+      animation: vortex-rotate 12s linear infinite, vortex-pulse 4.2s ease-in-out infinite;
+      opacity: 0.95;
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+
+    @keyframes vortex-rotate { to { transform: rotate(360deg) scale(1.02); } }
+    @keyframes vortex-pulse { 0%,100% { opacity:0.72; } 50% { opacity:1; transform: scale(1.03); } }
+    
+    .panel {
+      padding: 40px;
+      overflow-y: auto;
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Left Panel - Chat & Memory */
+    .panel-left {
+      background: linear-gradient(180deg, #0a0b0d 0%, #0f1113 100%);
+      border-right: 1px solid rgba(224, 71, 60, 0.2);
+    }
+    
+    /* Right Panel - System Connections */
+    .panel-right {
+      background: linear-gradient(180deg, #0f1113 0%, #131519 100%);
+    }
+    
+    .panel-header {
+      margin-bottom: 32px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(224, 71, 60, 0.15);
+    }
+    .panel-label {
+      display: inline-block;
+      padding: 6px 14px;
+      background: rgba(224, 71, 60, 0.12);
+      border: 1px solid rgba(224, 71, 60, 0.25);
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 700;
+      color: #ff9b93;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 12px;
+    }
+    .panel-title {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #fff 0%, #ff9b93 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .panel-subtitle {
+      font-size: 14px;
+      color: #9aa3ad;
+    }
+    
+    /* Image Placeholder Areas */
+    .image-slot {
+      background: rgba(224, 71, 60, 0.05);
+      border: 2px dashed rgba(224, 71, 60, 0.25);
+      border-radius: 16px;
+      min-height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .image-slot:hover {
+      border-color: rgba(224, 71, 60, 0.5);
+      background: rgba(224, 71, 60, 0.08);
+    }
+    .image-slot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 14px;
+    }
+    .image-slot.empty::after {
+      content: attr(data-label);
+      font-size: 12px;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .image-slot.large {
+      min-height: 320px;
+    }
+    .image-slot.hero {
+      min-height: 400px;
+    }
+    
+    /* Section Cards */
+    .section-card {
+      background: linear-gradient(135deg, rgba(15, 17, 19, 0.9), rgba(10, 11, 13, 0.95));
+      border: 1px solid rgba(224, 71, 60, 0.2);
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .section-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(180deg, #e0473c, #ff7b6e);
+    }
+    .section-card h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #e6e9ee;
+      margin-bottom: 12px;
+    }
+    .section-card p {
+      font-size: 14px;
+      color: #9aa3ad;
+      line-height: 1.7;
+    }
+    
+    /* Feature List */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 20px;
+    }
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 16px;
+      background: rgba(224, 71, 60, 0.05);
+      border: 1px solid rgba(224, 71, 60, 0.15);
+      border-radius: 12px;
+    }
+    .feature-icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(224, 71, 60, 0.15);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .feature-text h4 {
+      font-size: 13px;
+      font-weight: 700;
+      color: #e6e9ee;
+      margin-bottom: 4px;
+    }
+    .feature-text p {
+      font-size: 11px;
+      color: #9aa3ad;
+      line-height: 1.5;
+    }
+    
+    /* Main Content */
+    main {
+      padding-top: 64px;
+      min-height: 100vh;
+    }
+    
+    /* Hero Section */
+    .arch-hero {
+      padding: 100px 20px 60px;
+      text-align: center;
+      background: linear-gradient(180deg, rgba(224, 71, 60, 0.08) 0%, transparent 100%);
+      position: relative;
+    }
+    .arch-hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1000px;
+      height: 600px;
+      background: radial-gradient(ellipse, rgba(224, 71, 60, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-label {
+      display: inline-block;
+      padding: 8px 20px;
+      background: rgba(224, 71, 60, 0.15);
+      border: 1px solid rgba(224, 71, 60, 0.3);
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #ff9b93;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 24px;
+    }
+    .arch-hero h1 {
+      font-size: 52px;
+      font-weight: 900;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #fff 0%, #ffc9c3 50%, #e0473c 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .arch-hero p {
+      font-size: 18px;
+      color: #9aa3ad;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    
+    /* Interactive Architecture Map */
+    .arch-container {
+      max-width: 1400px;
+      margin: 60px auto;
+      padding: 0 20px;
+    }
+    
+    .arch-map {
+      background: linear-gradient(135deg, rgba(10, 11, 13, 0.95), rgba(15, 17, 19, 0.9));
+      border: 1px solid rgba(224, 71, 60, 0.2);
+      border-radius: 24px;
+      padding: 60px;
+      position: relative;
+      overflow: hidden;
+    }
+    .arch-map::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #e0473c, #ff7b6e, #e0473c);
+    }
+    
+    /* System Tiers */
+    .tier {
+      margin-bottom: 50px;
+    }
+    .tier:last-child {
+      margin-bottom: 0;
+    }
+    .tier-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .tier-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(224, 71, 60, 0.3), transparent);
+    }
+    
+    .tier-content {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    
+    /* System Nodes */
+    .node {
+      background: rgba(224, 71, 60, 0.08);
+      border: 2px solid rgba(224, 71, 60, 0.25);
+      border-radius: 16px;
+      padding: 24px 32px;
+      min-width: 180px;
+      min-height: 120px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 6px;
+    }
+    .node:hover {
+      background: rgba(224, 71, 60, 0.15);
+      border-color: #e0473c;
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(224, 71, 60, 0.2);
+    }
+    .node.active {
+      background: rgba(224, 71, 60, 0.2);
+      border-color: #ff7b6e;
+      box-shadow: 0 0 30px rgba(224, 71, 60, 0.3);
+    }
+    .node-icon {
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+    .node-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #e6e9ee;
+      margin-bottom: 4px;
+    }
+    .node-subtitle {
+      font-size: 11px;
+      color: #9aa3ad;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .node-port {
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 2px 8px;
+      background: #e0473c;
+      border-radius: 4px;
+      font-size: 9px;
+      font-weight: 700;
+      color: white;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    
+    /* Connectors */
+    .connector-row {
+      display: flex;
+      justify-content: center;
+      padding: 20px 0;
+    }
+    .connector {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .connector-line {
+      width: 2px;
+      height: 30px;
+      background: linear-gradient(180deg, rgba(224, 71, 60, 0.5), rgba(224, 71, 60, 0.2));
+    }
+    .connector-dot {
+      width: 8px;
+      height: 8px;
+      background: #e0473c;
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(224, 71, 60, 0.5);
+    }
+    .connector-label {
+      font-size: 10px;
+      color: #666;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    
+    /* Data Flow Section */
+    .flow-section {
+      margin-top: 80px;
+      padding: 60px 20px;
+      background: linear-gradient(180deg, transparent 0%, rgba(224, 71, 60, 0.03) 50%, transparent 100%);
+    }
+    .section-header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+    .section-header h2 {
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 12px;
+      color: #e6e9ee;
+    }
+    .section-header p {
+      font-size: 16px;
+      color: #9aa3ad;
+    }
+    
+    .flow-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .flow-card {
+      background: rgba(15, 17, 19, 0.95);
+      border: 1px solid rgba(224, 71, 60, 0.2);
+      border-radius: 16px;
+      padding: 28px;
+      transition: all 0.3s ease;
+    }
+    .flow-card:hover {
+      border-color: rgba(224, 71, 60, 0.4);
+      transform: translateY(-4px);
+    }
+    .flow-step {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #e0473c, #ff7b6e);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 16px;
+      color: white;
+      margin-bottom: 16px;
+    }
+    .flow-card h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #e6e9ee;
+      margin-bottom: 8px;
+    }
+    .flow-card p {
+      font-size: 13px;
+      color: #9aa3ad;
+      line-height: 1.6;
+    }
+    
+    /* Memory System Detail */
+    .memory-section {
+      max-width: 1200px;
+      margin: 80px auto;
+      padding: 0 20px;
+    }
+    .memory-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+    .memory-card {
+      background: linear-gradient(135deg, rgba(15, 17, 19, 0.9), rgba(10, 11, 13, 0.95));
+      border: 1px solid rgba(224, 71, 60, 0.2);
+      border-radius: 20px;
+      padding: 36px;
+      position: relative;
+      overflow: hidden;
+    }
+    .memory-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+    }
+    .memory-card.fts::before { background: #39FF14; }
+    .memory-card.semantic::before { background: #a855f7; }
+    .memory-card.session::before { background: #06b6d4; }
+    
+    .memory-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    .memory-card.fts .memory-icon { 
+      background: rgba(57, 255, 20, 0.1); 
+      border: 2px solid rgba(57, 255, 20, 0.3);
+    }
+    .memory-card.semantic .memory-icon { 
+      background: rgba(168, 85, 247, 0.1); 
+      border: 2px solid rgba(168, 85, 247, 0.3);
+    }
+    .memory-card.session .memory-icon { 
+      background: rgba(6, 182, 212, 0.1); 
+      border: 2px solid rgba(6, 182, 212, 0.3);
+    }
+    
+    .memory-card h3 {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .memory-card.fts h3 { color: #39FF14; }
+    .memory-card.semantic h3 { color: #a855f7; }
+    .memory-card.session h3 { color: #06b6d4; }
+    
+    .memory-card .subtitle {
+      font-size: 12px;
+      color: #9aa3ad;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+    }
+    .memory-card p {
+      font-size: 14px;
+      color: #c9d0d8;
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+    .memory-stats {
+      display: flex;
+      gap: 20px;
+    }
+    .stat {
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 24px;
+      font-weight: 800;
+      color: #e6e9ee;
+    }
+    .stat-label {
+      font-size: 10px;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    /* Code Preview */
+    .code-section {
+      max-width: 1000px;
+      margin: 80px auto;
+      padding: 0 20px;
+    }
+    .code-block {
+      background: #0a0b0d;
+      border: 1px solid rgba(224, 71, 60, 0.2);
+      border-radius: 16px;
+      overflow: hidden;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .code-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 20px;
+      background: rgba(224, 71, 60, 0.08);
+      border-bottom: 1px solid rgba(224, 71, 60, 0.2);
+    }
+    .code-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    .code-dot.red { background: #ff5f56; }
+    .code-dot.yellow { background: #ffbd2e; }
+    .code-dot.green { background: #27ca3f; }
+    .code-filename {
+      margin-left: auto;
+      font-size: 12px;
+      color: #666;
+    }
+    .code-body {
+      padding: 24px;
+      overflow-x: auto;
+      font-size: 13px;
+    }
+    .code-body pre {
+      margin: 0;
+      color: #c9d0d8;
+      line-height: 1.7;
+    }
+    .code-comment { color: #6a737d; }
+    .code-keyword { color: #ff7b6e; }
+    .code-string { color: #a5d6ff; }
+    .code-function { color: #d2a8ff; }
+    .code-variable { color: #ffa657; }
+    
+    /* Footer */
+    footer {
+      padding: 60px 20px;
+      text-align: center;
+      border-top: 1px solid rgba(224, 71, 60, 0.1);
+    }
+    footer p {
+      font-size: 13px;
+      color: #666;
+    }
+    
+    /* Responsive */
+    @media (max-width: 1200px) {
+      .dual-panel-container {
+        grid-template-columns: 1fr;
+      }
+      .panel-left {
+        border-right: none;
+        border-bottom: 1px solid rgba(224, 71, 60, 0.2);
+      }
+    }
+    @media (max-width: 768px) {
+      .feature-grid { grid-template-columns: 1fr; }
+      .panel { padding: 24px; }
+      .panel-title { font-size: 22px; }
+    }
+    
+    /* Node styling for right panel */
+    .node {
+      background: rgba(224, 71, 60, 0.08);
+      border: 2px solid rgba(224, 71, 60, 0.25);
+      border-radius: 12px;
+      padding: 16px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .node:hover {
+      background: rgba(224, 71, 60, 0.15);
+      border-color: #e0473c;
+      transform: translateY(-2px);
+    }
+    .node.active {
+      background: rgba(224, 71, 60, 0.2);
+      border-color: #ff7b6e;
+      box-shadow: 0 0 20px rgba(224, 71, 60, 0.3);
+    }
+    .node-icon { font-size: 24px; margin-bottom: 8px; }
+    .node-title { font-size: 13px; font-weight: 700; color: #e6e9ee; margin-bottom: 2px; }
+    .node-subtitle { font-size: 10px; color: #9aa3ad; text-transform: uppercase; letter-spacing: 0.5px; }
+    .node-port {
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 2px 6px;
+      background: #e0473c;
+      border-radius: 4px;
+      font-size: 8px;
+      font-weight: 700;
+      color: white;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    
+    /* Tier Layout */
+    .tier { margin-bottom: 28px; }
+    .tier-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tier-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(224, 71, 60, 0.3), transparent);
+    }
+    .tier-content {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      align-items: stretch;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .tier-content.cols-4 { grid-template-columns: repeat(4, 1fr); }
+    
+    /* Connector */
+    .connector-row {
+      display: flex;
+      justify-content: center;
+      padding: 12px 0;
+    }
+    .connector {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+    .connector-line {
+      width: 2px;
+      height: 20px;
+      background: linear-gradient(180deg, rgba(224, 71, 60, 0.5), rgba(224, 71, 60, 0.2));
+    }
+    .connector-dot {
+      width: 6px;
+      height: 6px;
+      background: #e0473c;
+      border-radius: 50%;
+      box-shadow: 0 0 8px rgba(224, 71, 60, 0.5);
+    }
+    .connector-label {
+      font-size: 9px;
+      color: #666;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    
+    /* Memory cards for left panel */
+    .memory-mini {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .mem-card {
+      background: rgba(15, 17, 19, 0.9);
+      border: 1px solid rgba(224, 71, 60, 0.2);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .mem-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+    }
+    .mem-card.fts::before { background: #39FF14; }
+    .mem-card.semantic::before { background: #a855f7; }
+    .mem-card.session::before { background: #06b6d4; }
+    .mem-card h4 { font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+    .mem-card.fts h4 { color: #39FF14; }
+    .mem-card.semantic h4 { color: #a855f7; }
+    .mem-card.session h4 { color: #06b6d4; }
+    .mem-card p { font-size: 10px; color: #9aa3ad; }
+    
+    /* Pipeline steps */
+    .pipeline-flow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .pipe-step {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: rgba(224, 71, 60, 0.08);
+      border: 1px solid rgba(224, 71, 60, 0.2);
+      border-radius: 8px;
+      font-size: 11px;
+      color: #c9d0d8;
+    }
+    .pipe-num {
+      width: 20px;
+      height: 20px;
+      background: linear-gradient(135deg, #e0473c, #ff7b6e);
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 10px;
+      color: white;
+      flex-shrink: 0;
+    }
+    .pipe-arrow {
+      color: #e0473c;
+      font-size: 14px;
+    }
+    
+    /* Code block small */
+    .code-mini {
+      background: #0a0b0d;
+      border: 1px solid rgba(224, 71, 60, 0.2);
+      border-radius: 10px;
+      overflow: hidden;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      margin-top: 16px;
+    }
+    .code-mini-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 14px;
+      background: rgba(224, 71, 60, 0.08);
+      border-bottom: 1px solid rgba(224, 71, 60, 0.2);
+    }
+    .code-mini-header span { width: 8px; height: 8px; border-radius: 50%; }
+    .code-mini-header .red { background: #ff5f56; }
+    .code-mini-header .yellow { background: #ffbd2e; }
+    .code-mini-header .green { background: #27ca3f; }
+    .code-mini-header .filename { margin-left: auto; font-size: 10px; color: #666; }
+    .code-mini pre {
+      padding: 14px;
+      margin: 0;
+      color: #c9d0d8;
+      line-height: 1.6;
+      overflow-x: auto;
+    }
+    .code-comment { color: #6a737d; }
+    .code-keyword { color: #ff7b6e; }
+    .code-string { color: #a5d6ff; }
+    .code-function { color: #d2a8ff; }
+    .code-variable { color: #ffa657; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav">
+      <a href="home.html" class="brand">
+        <div class="brand-icon">N</div>
+        <span>NEUROFOUNDRY</span>
+      </a>
+      <div class="links">
+        <a class="navlink" href="home.html">Home</a>
+        <a class="navlink" href="https://forge.theneurofoundry.com/">Forge</a>
+        <div class="nav-item dropdown">
+          <button class="dropdown-toggle" type="button">
+            Archives <span class="dropdown-caret">v</span>
+          </button>
+          <div class="dropdown-menu">
+            <a href="technology.html">Technology</a>
+            <a href="downloads.html">Downloads</a>
+            <a href="button2.html">Manifesto</a>
+            <a href="neurofoundry-report.html">Report</a>
+          </div>
+        </div>
+        <a class="navlink" href="technology.html">Technology</a>
+        <a class="btn primary" href="signup.html">Request Access</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========== TWO-PANEL LAYOUT ========== -->
+  <div class="dual-panel-container">
+    <div class="brain-overlay" aria-hidden="true"></div>
+    <div class="network-overlay" aria-hidden="true">
+      <svg viewBox="0 0 1200 720" preserveAspectRatio="none">
+        <defs>
+          <filter id="nodeGlow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="6" result="blur"/>
+            <feMerge>
+              <feMergeNode in="blur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+        <g class="net-base">
+          <path class="net-arc" d="M600 360 C 420 240, 240 170, 120 110" />
+          <path class="net-arc" d="M600 360 C 460 300, 220 260, 80 250" />
+          <path class="net-arc" d="M600 360 C 520 330, 360 300, 160 410" />
+          <path class="net-arc" d="M600 360 C 480 420, 280 490, 110 560" />
+          <path class="net-arc" d="M600 360 C 500 500, 320 620, 210 660" />
+          <path class="net-arc" d="M600 360 C 540 280, 420 220, 340 180" />
+          <path class="net-arc" d="M600 360 C 560 380, 490 460, 430 520" />
+          <path class="net-arc" d="M600 360 C 620 250, 610 160, 600 60" />
+          <path class="net-arc" d="M600 360 C 620 470, 620 580, 600 690" />
+          <path class="net-arc" d="M600 360 C 720 280, 800 230, 870 190" />
+          <path class="net-arc" d="M600 360 C 760 250, 880 200, 980 120" />
+          <path class="net-arc" d="M600 360 C 860 300, 980 260, 1110 260" />
+          <path class="net-arc" d="M600 360 C 760 360, 920 400, 1040 420" />
+          <path class="net-arc" d="M600 360 C 820 420, 940 480, 1120 560" />
+          <path class="net-arc" d="M600 360 C 720 520, 880 620, 1000 670" />
+          <path class="net-arc" d="M600 360 C 680 420, 760 480, 770 520" />
+        </g>
+        <g class="net-pulse">
+          <path class="net-pulse" d="M600 360 C 420 240, 240 170, 120 110" />
+          <path class="net-pulse" d="M600 360 C 460 300, 220 260, 80 250" />
+          <path class="net-pulse" d="M600 360 C 520 330, 360 300, 160 410" />
+          <path class="net-pulse" d="M600 360 C 480 420, 280 490, 110 560" />
+          <path class="net-pulse" d="M600 360 C 500 500, 320 620, 210 660" />
+          <path class="net-pulse" d="M600 360 C 540 280, 420 220, 340 180" />
+          <path class="net-pulse" d="M600 360 C 560 380, 490 460, 430 520" />
+          <path class="net-pulse" d="M600 360 C 620 250, 610 160, 600 60" />
+          <path class="net-pulse" d="M600 360 C 620 470, 620 580, 600 690" />
+          <path class="net-pulse" d="M600 360 C 720 280, 800 230, 870 190" />
+          <path class="net-pulse" d="M600 360 C 760 250, 880 200, 980 120" />
+          <path class="net-pulse" d="M600 360 C 860 300, 980 260, 1110 260" />
+          <path class="net-pulse" d="M600 360 C 760 360, 920 400, 1040 420" />
+          <path class="net-pulse" d="M600 360 C 820 420, 940 480, 1120 560" />
+          <path class="net-pulse" d="M600 360 C 720 520, 880 620, 1000 670" />
+          <path class="net-pulse" d="M600 360 C 680 420, 760 480, 770 520" />
+        </g>
+        <g filter="url(#nodeGlow)">
+          <circle class="net-node" cx="120" cy="110" r="6" style="animation-delay:-0.2s"/>
+          <circle class="net-node" cx="80" cy="250" r="5" style="animation-delay:-1.1s"/>
+          <circle class="net-node" cx="160" cy="410" r="5" style="animation-delay:-0.6s"/>
+          <circle class="net-node" cx="110" cy="560" r="6" style="animation-delay:-1.8s"/>
+          <circle class="net-node" cx="210" cy="660" r="6" style="animation-delay:-0.4s"/>
+          <circle class="net-node" cx="340" cy="180" r="5" style="animation-delay:-1.5s"/>
+          <circle class="net-node" cx="430" cy="520" r="5" style="animation-delay:-0.9s"/>
+          <circle class="net-node hot" cx="600" cy="60" r="7" style="animation-delay:-0.7s"/>
+          <circle class="net-node core" cx="600" cy="360" r="10" />
+          <circle class="net-node hot" cx="600" cy="690" r="7" style="animation-delay:-1.1s"/>
+          <circle class="net-node" cx="870" cy="190" r="5" style="animation-delay:-1.6s"/>
+          <circle class="net-node" cx="980" cy="120" r="6" style="animation-delay:-0.3s"/>
+          <circle class="net-node" cx="1110" cy="260" r="6" style="animation-delay:-1.9s"/>
+          <circle class="net-node" cx="1040" cy="420" r="5" style="animation-delay:-0.5s"/>
+          <circle class="net-node" cx="1120" cy="560" r="6" style="animation-delay:-1.4s"/>
+          <circle class="net-node" cx="1000" cy="670" r="6" style="animation-delay:-0.8s"/>
+          <circle class="net-node" cx="770" cy="520" r="5" style="animation-delay:-1.2s"/>
+        </g>
+        <!-- small electrical sparks along arcs -->
+        <g class="neuro-sparks">
+          <circle class="net-spark" cx="360" cy="230" r="3" style="animation-delay:0s"/>
+          <circle class="net-spark" cx="200" cy="430" r="3" style="animation-delay:0.6s"/>
+          <circle class="net-spark" cx="880" cy="220" r="3" style="animation-delay:1.2s"/>
+          <circle class="net-spark" cx="1020" cy="380" r="3" style="animation-delay:1.8s"/>
+        </g>
+      </svg>
+    </div>
+    <div class="vortex-layer" aria-hidden="true">
+      <canvas id="vortex-canvas"></canvas>
+    </div>
+    <!-- LEFT PANEL: Chat & Memory Architecture -->
+    <div class="panel panel-left">
+      <div class="panel-header">
+        <div class="panel-label">Left Brain</div>
+        <h1 class="panel-title">Chat & Memory</h1>
+        <p class="panel-subtitle">The conversational intelligence layer</p>
+      </div>
+      
+      <!-- Image Slot: Chat UI Screenshot -->
+      <div class="image-slot large empty" data-label="+ Add Chat UI Screenshot">
+        <!-- <img src="your-image.png" alt="Chat UI"> -->
+      </div>
+      
+      <div class="section-card">
+        <h3>🧠 The Chat Pipeline</h3>
+        <p>Eight stages transform every message into an intelligent response.</p>
+        <div class="pipeline-flow">
+          <div class="pipe-step"><span class="pipe-num">1</span> Intent</div>
+          <span class="pipe-arrow">→</span>
+          <div class="pipe-step"><span class="pipe-num">2</span> Mood</div>
+          <span class="pipe-arrow">→</span>
+          <div class="pipe-step"><span class="pipe-num">3</span> Extract</div>
+          <span class="pipe-arrow">→</span>
+          <div class="pipe-step"><span class="pipe-num">4</span> Search</div>
+          <span class="pipe-arrow">→</span>
+          <div class="pipe-step"><span class="pipe-num">5</span> Context</div>
+          <span class="pipe-arrow">→</span>
+          <div class="pipe-step"><span class="pipe-num">6</span> LLM</div>
+          <span class="pipe-arrow">→</span>
+          <div class="pipe-step"><span class="pipe-num">7</span> Save</div>
+          <span class="pipe-arrow">→</span>
+          <div class="pipe-step"><span class="pipe-num">8</span> Reply</div>
+        </div>
+      </div>
+      
+      <!-- Image Slot: Memory Diagram -->
+      <div class="image-slot empty" data-label="+ Add Memory Diagram">
+        <!-- <img src="your-image.png" alt="Memory Diagram"> -->
+      </div>
+      
+      <div class="section-card">
+        <h3>💾 Three Memory Systems</h3>
+        <p>Complementary approaches for different recall patterns.</p>
+        <div class="memory-mini">
+          <div class="mem-card fts">
+            <h4>FTS5 Lexical</h4>
+            <p>&lt;10ms queries</p>
+          </div>
+          <div class="mem-card semantic">
+            <h4>Vector Search</h4>
+            <p>70/30 hybrid blend</p>
+          </div>
+          <div class="mem-card session">
+            <h4>Session History</h4>
+            <p>JSON archives</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="code-mini">
+        <div class="code-mini-header">
+          <span class="red"></span>
+          <span class="yellow"></span>
+          <span class="green"></span>
+          <span class="filename">nf_recall.py</span>
+        </div>
+<pre><span class="code-comment"># Hybrid scoring algorithm</span>
+<span class="code-variable">lexical</span> = compute_lexical_score(query, doc)
+<span class="code-variable">semantic</span> = cosine_similarity(q_vec, d_vec)
+<span class="code-variable">score</span> = <span class="code-string">0.7</span> * lexical + <span class="code-string">0.3</span> * semantic</pre>
+      </div>
+      
+      <!-- Image Slot: Additional -->
+      <div class="image-slot empty" data-label="+ Add Additional Image" style="margin-top: 24px;">
+        <!-- <img src="your-image.png" alt="Additional"> -->
+      </div>
+      
+      <div class="feature-grid">
+        <div class="feature-item">
+          <div class="feature-icon">🎭</div>
+          <div class="feature-text">
+            <h4>Mood Tracking</h4>
+            <p>Sentiment-weighted responses with emotional inertia</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">📝</div>
+          <div class="feature-text">
+            <h4>Fact Extraction</h4>
+            <p>Automatically captures personal details from conversations</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🔄</div>
+          <div class="feature-text">
+            <h4>Context Injection</h4>
+            <p>Memory + personality assembled into enhanced prompts</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">⚡</div>
+          <div class="feature-text">
+            <h4>Intent Detection</h4>
+            <p>Pattern matching prevents false tool triggers</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- RIGHT PANEL: System Connections -->
+    <div class="panel panel-right">
+      <div class="panel-header">
+        <div class="panel-label">Right Brain</div>
+        <h1 class="panel-title">How It All Connects</h1>
+        <p class="panel-subtitle">The complete system architecture</p>
+      </div>
+      
+      <!-- Image Slot: Hero Architecture Diagram -->
+      <div class="image-slot hero empty" data-label="+ Add Main Architecture Diagram">
+        <!-- <img src="your-image.png" alt="Architecture"> -->
+      </div>
+      
+      <!-- Client Tier -->
+      <div class="tier">
+        <div class="tier-label">Client Tier — Browser</div>
+        <div class="tier-content">
+          <div class="node" onclick="this.classList.toggle('active')">
+            <div class="node-icon">🖥️</div>
+            <div class="node-title">Neuroforge UI</div>
+            <div class="node-subtitle">Chat Interface</div>
+          </div>
+          <div class="node" onclick="this.classList.toggle('active')">
+            <div class="node-icon">🎨</div>
+            <div class="node-title">The Forge</div>
+            <div class="node-subtitle">Image Gen</div>
+          </div>
+          <div class="node" onclick="this.classList.toggle('active')">
+            <div class="node-icon">🎬</div>
+            <div class="node-title">Thalamus</div>
+            <div class="node-subtitle">3D Stage</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="connector-row">
+        <div class="connector">
+          <div class="connector-dot"></div>
+          <div class="connector-line"></div>
+          <div class="connector-label">HTTP / WS</div>
+          <div class="connector-line"></div>
+          <div class="connector-dot"></div>
+        </div>
+      </div>
+
+      <!-- Server Tier -->
+      <div class="tier">
+        <div class="tier-label">Server Tier — FastAPI</div>
+        <div class="tier-content">
+          <div class="node" onclick="this.classList.toggle('active')">
+            <div class="node-icon">⚡</div>
+            <div class="node-title">Unified Core</div>
+            <div class="node-subtitle">API Gateway</div>
+            <div class="node-port">:8080</div>
+          </div>
+          <div class="node" onclick="this.classList.toggle('active')">
+            <div class="node-icon">🌉</div>
+            <div class="node-title">Asset Bridge</div>
+            <div class="node-subtitle">File Handler</div>
+            <div class="node-port">:9210</div>
+          </div>
+          <div class="node" onclick="this.classList.toggle('active')">
+            <div class="node-icon">📊</div>
+            <div class="node-title">Ledger</div>
+            <div class="node-subtitle">State Mgr</div>
+            <div class="node-port">:8765</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="connector-row">
+        <div class="connector">
+          <div class="connector-dot"></div>
+          <div class="connector-line"></div>
+          <div class="connector-label">Internal</div>
+          <div class="connector-line"></div>
+          <div class="connector-dot"></div>
+        </div>
+      </div>
+
+      <!-- Intelligence Tier -->
+      <div class="tier">
+        <div class="tier-label">Intelligence Tier — AI</div>
+        <div class="tier-content cols-4">
+          <div class="node" onclick="this.classList.toggle('active')">
+            <div class="node-icon">🧠</div>
+            <div class="node-title">Ollama</div>
+            <div class="node-subtitle">Local LLM</div>
+            <div class="node-port">:11434</div>
+          </div>
+          <div class="node" onclick="this.classList.toggle('active')">
+            <div class="node-icon">🔍</div>
+            <div class="node-title">Memory</div>
+            <div class="node-subtitle">Hybrid Search</div>
+          </div>
+          <div class="node" onclick="this.classList.toggle('active')">
+            <div class="node-icon">💭</div>
+            <div class="node-title">Personality</div>
+            <div class="node-subtitle">Mood Track</div>
+          </div>
+          <div class="node" onclick="this.classList.toggle('active')">
+            <div class="node-icon">🎯</div>
+            <div class="node-title">Intent</div>
+            <div class="node-subtitle">Tool Detect</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="connector-row">
+        <div class="connector">
+          <div class="connector-dot"></div>
+          <div class="connector-line"></div>
+          <div class="connector-label">SQL / Embed</div>
+          <div class="connector-line"></div>
+          <div class="connector-dot"></div>
+        </div>
+      </div>
+
+      <!-- Data Tier -->
+      <div class="tier">
+        <div class="tier-label">Data Tier — Persistence</div>
+        <div class="tier-content">
+          <div class="node" onclick="this.classList.toggle('active')">
+            <div class="node-icon">💾</div>
+            <div class="node-title">SQLite</div>
+            <div class="node-subtitle">Knowledge</div>
+          </div>
+          <div class="node" onclick="this.classList.toggle('active')">
+            <div class="node-icon">📁</div>
+            <div class="node-title">Sessions</div>
+            <div class="node-subtitle">JSON History</div>
+          </div>
+          <div class="node" onclick="this.classList.toggle('active')">
+            <div class="node-icon">🎨</div>
+            <div class="node-title">Asset Vault</div>
+            <div class="node-subtitle">Renders</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Image Slot: Additional Architecture -->
+      <div class="image-slot empty" data-label="+ Add Data Flow Diagram" style="margin-top: 28px;">
+        <!-- <img src="your-image.png" alt="Data Flow"> -->
+      </div>
+      
+      <div class="section-card" style="margin-top: 24px;">
+        <h3>🔌 Service Ports</h3>
+        <p>All services communicate over localhost with defined ports for easy debugging and development.</p>
+        <div class="feature-grid" style="margin-top: 16px;">
+          <div class="feature-item">
+            <div class="feature-icon">⚡</div>
+            <div class="feature-text">
+              <h4>:8080 Core</h4>
+              <p>Main API gateway</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">🌉</div>
+            <div class="feature-text">
+              <h4>:9210 Bridge</h4>
+              <p>Asset handler</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">📊</div>
+            <div class="feature-text">
+              <h4>:8765 Ledger</h4>
+              <p>State management</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">🧠</div>
+            <div class="feature-text">
+              <h4>:11434 Ollama</h4>
+              <p>Local LLM inference</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const container = document.querySelector('.dual-panel-container');
+      const canvas = document.getElementById('vortex-canvas');
+      if (!container || !canvas) return;
+      const ctx = canvas.getContext('2d');
+      let width = 0;
+      let height = 0;
+      const particles = [];
+      const particleCount = 240;
+      const palette = [
+        [255, 110, 88],
+        [255, 140, 110],
+        [255, 90, 140],
+        [255, 200, 140]
+      ];
+
+      function resize() {
+        const rect = container.getBoundingClientRect();
+        width = rect.width;
+        height = rect.height;
+        canvas.width = Math.floor(width * window.devicePixelRatio);
+        canvas.height = Math.floor(height * window.devicePixelRatio);
+        canvas.style.width = width + 'px';
+        canvas.style.height = height + 'px';
+        ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
+      }
+
+      function seedParticles() {
+        particles.length = 0;
+        const maxRadius = Math.min(width, height) * 0.48;
+        for (let i = 0; i < particleCount; i++) {
+          const radius = 80 + Math.random() * maxRadius;
+          const angle = Math.random() * Math.PI * 2;
+          const size = 0.6 + Math.random() * 2.8;
+          const speed = 0.002 + Math.random() * 0.006;
+          const color = palette[i % palette.length];
+          particles.push({
+            radius,
+            angle,
+            size,
+            speed,
+            color,
+            wobble: Math.random() * Math.PI * 2,
+            drift: 0.6 + Math.random() * 0.9
+          });
+        }
+      }
+
+      function draw(time) {
+        ctx.clearRect(0, 0, width, height);
+        ctx.globalCompositeOperation = 'lighter';
+        const cx = width / 2;
+        const cy = height / 2;
+        particles.forEach((p, i) => {
+          p.angle += p.speed;
+          const warp = Math.sin(time * 0.0015 + p.wobble) * 12;
+          const spiral = p.radius + Math.sin(time * 0.0012 + i) * 18;
+          const x = cx + Math.cos(p.angle) * spiral + warp;
+          const y = cy + Math.sin(p.angle) * spiral * 0.7;
+          const pulse = 0.4 + 0.6 * Math.sin(time * 0.002 + i);
+          const glow = p.size * (6 + pulse * 8);
+          const alpha = 0.2 + 0.6 * pulse;
+          const [r, g, b] = p.color;
+
+          const grad = ctx.createRadialGradient(x, y, 0, x, y, glow);
+          grad.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${alpha})`);
+          grad.addColorStop(0.6, `rgba(${r}, ${g}, ${b}, ${alpha * 0.35})`);
+          grad.addColorStop(1, 'rgba(0,0,0,0)');
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(x, y, glow, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+          ctx.beginPath();
+          ctx.arc(x, y, p.size * p.drift, 0, Math.PI * 2);
+          ctx.fill();
+        });
+        requestAnimationFrame(draw);
+      }
+
+      resize();
+      seedParticles();
+      window.addEventListener('resize', () => {
+        resize();
+        seedParticles();
+      });
+      requestAnimationFrame(draw);
+    })();
+  </script>
+</body>
+</html>

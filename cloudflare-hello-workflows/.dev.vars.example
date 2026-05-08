@@ -1,0 +1,7 @@
+WORKER_API_KEY=replace-me
+CF_CHAT_MODEL=@cf/zai-org/glm-4.7-flash
+CF_RESPONSES_MODEL=@cf/openai/gpt-oss-120b
+CF_AGENT_MODEL=@cf/zai-org/glm-4.7-flash
+SESSION_TTL_SECONDS=900
+ALLOW_MOCK_AI=false
+CORS_ORIGIN=*

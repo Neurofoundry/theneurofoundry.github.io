@@ -1,0 +1,19 @@
+Analyze this image and describe ONLY the atmospheric and emotional qualities. Do not mention specific objects, people, animals, vehicles, or identifiable subjects.
+
+Focus exclusively on:
+- The overall mood and actionable tone (happy, melancholic, tense, peaceful, chaotic, fighting, ominous, hopeful, etc.)
+- Lighting qualities (harsh, soft, dramatic, ethereal, warm, cold, natural, artificial, dim, bright, glowing, shadowy)
+- Color atmosphere (vibrant, muted, monochromatic, saturated, washed out, rich, pale, contrasting, harmonious)
+- Environmental feelings (cozy, oppressive, open, claustrophobic, airy, heavy, light, dense, sparse)
+- Temperature impressions (warm, cold, frigid, sweltering, temperate, cool, icy, fiery)
+- Time of day feelings (dawn, dusk, midday, midnight, golden hour, blue hour)
+- Weather and elemental moods (stormy, calm, misty, clear, foggy, windy, still, turbulent)
+- Texture and tactile impressions (smooth, rough, soft, hard, flowing, rigid, organic, mechanical)
+- Spatial camera qualities (vast, close up, confined, expansive, enclosed, layered, birds-eye, shallow)
+- Energy level (dynamic, static, energetic, lethargic, vibrant, subdued, active, dormant)
+- Emotional undertones (nostalgic, dreamlike, realistic, surreal, comforting, unsettling, inviting, alienating)
+
+Describe the scene as if you're conveying the sensory and emotional experience of being in that environment. What does it FEEL like? What's the atmosphere? What emotions does the setting evoke?
+
+Ignore all specific subjects and focus purely on the ambient, atmospheric, and emotional essence of the image.
+

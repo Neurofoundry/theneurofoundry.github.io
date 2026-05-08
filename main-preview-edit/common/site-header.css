@@ -1,0 +1,128 @@
+:root {
+  --nf-header-primary: #e0473c;
+  --nf-header-gradient-start: #ff7b6e;
+  --nf-header-gradient-mid: #e9584d;
+  --nf-header-gradient-end: #d23d33;
+  --nf-header-border: #a2362f;
+  --nf-header-shadow: rgba(224, 71, 60, 0.38);
+  --nf-header-bg: rgba(11, 12, 14, 0.95);
+  --nf-header-text: #e6e9ee;
+  --nf-header-muted: #ccc;
+}
+
+.nf-site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: var(--nf-header-bg);
+  border-bottom: 2px solid var(--nf-header-primary);
+}
+
+.nf-header-container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 clamp(14px, 3vw, 24px);
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nf-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--nf-header-text);
+  font-weight: 700;
+  font-size: 18px;
+  text-decoration: none;
+}
+
+.nf-brand-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 18px;
+  color: white;
+}
+
+.nf-brand-icon img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+.nf-nav-links {
+  display: flex;
+  gap: clamp(8px, 2vw, 20px);
+  align-items: center;
+  flex-wrap: nowrap;
+  margin-left: auto;
+  justify-content: flex-end;
+}
+
+.nf-nav-links a {
+  color: var(--nf-header-muted);
+  text-decoration: none;
+  font-size: clamp(11px, 2vw, 14px);
+}
+
+.nf-nav-links a:hover,
+.nf-nav-links a[aria-current="page"] {
+  color: var(--nf-header-primary);
+}
+
+.nf-nav-links .nf-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: linear-gradient(180deg, var(--nf-header-gradient-start) 0%, var(--nf-header-gradient-mid) 48%, var(--nf-header-gradient-end) 100%);
+  color: white;
+  font-weight: 600;
+  border: 2px solid var(--nf-header-border);
+  box-shadow: 0 4px 12px var(--nf-header-shadow);
+}
+
+@media (max-width: 768px) {
+  .nf-header-container {
+    height: 50px;
+    gap: 8px;
+  }
+
+  .nf-brand {
+    font-size: 14px;
+  }
+
+  .nf-brand span {
+    display: none;
+  }
+
+  .nf-brand-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .nf-brand-icon img {
+    width: 18px;
+    height: 18px;
+  }
+
+  .nf-nav-links {
+    gap: 6px;
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+
+  .nf-nav-links a {
+    font-size: 10px;
+    white-space: nowrap;
+  }
+}

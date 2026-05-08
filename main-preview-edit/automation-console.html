@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Browser Automation Console</title>
+  <style>
+    :root {
+      --bg: #090b0d;
+      --panel: rgba(17, 20, 23, 0.94);
+      --line: rgba(255, 120, 84, 0.35);
+      --line-strong: rgba(255, 120, 84, 0.7);
+      --text: #f3eee8;
+      --muted: #b6aca3;
+      --accent: #ff7854;
+      --success: #7bd88f;
+      --danger: #ff5f56;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top, rgba(158, 53, 26, 0.28), transparent 34%),
+        linear-gradient(180deg, #070809 0%, #101317 100%);
+      padding: 24px;
+    }
+
+    .shell {
+      max-width: 1380px;
+      margin: 0 auto;
+      display: grid;
+      gap: 20px;
+    }
+
+    .hero,
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.32);
+    }
+
+    .hero {
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .pulse {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 18px rgba(255, 120, 84, 0.7);
+      animation: pulse 1.8s infinite;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(2rem, 4vw, 3.6rem);
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+    }
+
+    .hero p,
+    .meta-card p,
+    .hint,
+    .status-line {
+      color: var(--muted);
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .meta-grid,
+    .status-stack,
+    .plan-list,
+    .element-list,
+    .event-log,
+    .examples {
+      display: grid;
+      gap: 10px;
+    }
+
+    .meta-card,
+    .status-chip,
+    .plan-item,
+    .element-item,
+    .event-item {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 120, 84, 0.16);
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .meta-card strong,
+    .status-chip strong,
+    .plan-item strong,
+    .element-item strong,
+    .event-item strong {
+      display: block;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(340px, 420px) 1fr 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .panel {
+      padding: 18px;
+    }
+
+    .panel h2 {
+      margin: 0 0 16px;
+      font-size: 1rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #ffd1c2;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 190px;
+      resize: vertical;
+      border-radius: 14px;
+      border: 1px solid var(--line-strong);
+      background: #0b0e11;
+      color: var(--text);
+      padding: 16px;
+      font: inherit;
+      line-height: 1.5;
+    }
+
+    textarea:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(255, 120, 84, 0.14);
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 12px 18px;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .primary {
+      background: linear-gradient(135deg, #ff8a5f 0%, #d54e2b 100%);
+      color: #fff7f2;
+      box-shadow: 0 12px 24px rgba(213, 78, 43, 0.2);
+    }
+
+    .secondary {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      border: 1px solid rgba(255, 120, 84, 0.24);
+    }
+
+    .example {
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 120, 84, 0.16);
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--text);
+      text-align: left;
+    }
+
+    .event-log {
+      max-height: 540px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .event-item.error {
+      border-color: rgba(255, 95, 86, 0.45);
+      background: rgba(255, 95, 86, 0.08);
+    }
+
+    .blocking-banner {
+      border: 1px solid rgba(255, 95, 86, 0.45);
+      background: rgba(255, 95, 86, 0.1);
+      border-radius: 14px;
+      padding: 14px;
+      color: #ffd9d6;
+    }
+
+    .good { color: var(--success); }
+    .bad { color: var(--danger); }
+
+    code {
+      color: #ffd4c5;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.55; transform: scale(0.88); }
+    }
+
+    @media (max-width: 1120px) {
+      .hero,
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <div>
+        <div class="eyebrow"><span class="pulse"></span> Headed Playwright Automation</div>
+        <h1>Translate plain language into visible browser action.</h1>
+        <p>
+          This console keeps a real browser open, accepts repeated natural-language commands,
+          makes deterministic UI choices from accessibility metadata and CSS hooks, and advances the page step by step with deliberate human-speed delays.
+        </p>
+      </div>
+      <div class="meta-grid">
+        <div class="meta-card">
+          <strong>Execution model</strong>
+          <p>Single persistent browser session, queued commands, live event stream, no automatic browser close.</p>
+        </div>
+        <div class="meta-card">
+          <strong>Element targeting</strong>
+          <p>Role, label, placeholder, link text, aria-label, then CSS fallback from live page analysis.</p>
+        </div>
+        <div class="meta-card">
+          <strong>Best fit commands</strong>
+          <p>Navigation, search, login/signup, form fill, click/open/select, and follow-through submit steps.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="workspace">
+      <section class="panel">
+        <h2>Command</h2>
+        <div class="blocking-banner" id="launch-banner" hidden></div>
+        <textarea id="command-input" placeholder="Example: Go to https://example.com, click login, fill email with demo@example.com, fill password with hunter2, and sign in."></textarea>
+        <div class="actions">
+          <button class="primary" id="run-command">Run Command</button>
+          <button class="secondary" id="open-browser">Open Browser</button>
+          <button class="secondary" id="stop-session">Stop Session</button>
+        </div>
+        <div class="hint">
+          Each command is queued. The browser remains open so the next instruction can continue from the current page state.
+        </div>
+        <div class="examples">
+          <button class="example" data-command="Go to https://example.com and click More information.">Navigate to a page and click a visible link</button>
+          <button class="example" data-command="Search for Playwright accessibility testing on google.">Open search and run a query</button>
+          <button class="example" data-command="Go to https://github.com/login, fill email with demo@example.com, fill password with example-password, and sign in.">Fill fields and submit an auth flow</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Status</h2>
+        <div class="status-stack" id="status-stack"></div>
+        <h2 style="margin-top:18px;">Action Plan</h2>
+        <div class="plan-list" id="plan-list"></div>
+        <h2 style="margin-top:18px;">Completion Check</h2>
+        <div class="plan-list" id="completion-list"></div>
+        <h2 style="margin-top:18px;">Deferred Goal Context</h2>
+        <div class="plan-list" id="goal-list"></div>
+        <h2 style="margin-top:18px;">Subgoals</h2>
+        <div class="plan-list" id="subgoal-list"></div>
+        <h2 style="margin-top:18px;">Live Page Map</h2>
+        <div class="element-list" id="element-list"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Execution Feed</h2>
+        <div class="event-log" id="event-log"></div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const commandInput = document.getElementById('command-input');
+    const runButton = document.getElementById('run-command');
+    const openButton = document.getElementById('open-browser');
+    const stopButton = document.getElementById('stop-session');
+    const launchBanner = document.getElementById('launch-banner');
+    const statusStack = document.getElementById('status-stack');
+    const planList = document.getElementById('plan-list');
+    const completionList = document.getElementById('completion-list');
+    const goalList = document.getElementById('goal-list');
+    const subgoalList = document.getElementById('subgoal-list');
+    const elementList = document.getElementById('element-list');
+    const eventLog = document.getElementById('event-log');
+
+    let renderedEventIds = new Set();
+    let readyState = null;
+    let eventStreamConnected = false;
+    const CANONICAL_LAUNCH_URL = 'http://127.0.0.1:3000/automation-console.html';
+    const SUPPORTED_ORIGINS = new Set(['http://127.0.0.1:3000', 'http://localhost:3000']);
+
+    function escapeHtml(value) {
+      return String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function renderStatus(status) {
+      const stateClass = status.sessionState === 'ready' ? 'good' : status.sessionState === 'error' ? 'bad' : '';
+      statusStack.innerHTML = `
+        <div class="status-chip"><strong>App URL</strong><div class="status-line">${escapeHtml(window.location.href)}</div></div>
+        <div class="status-chip"><strong>Backend Ready</strong><div class="status-line ${readyState && readyState.canAcceptCommands ? 'good' : ''}">${escapeHtml(readyState ? readyState.message : 'Checking backend readiness')}</div></div>
+        <div class="status-chip"><strong>Session</strong><div class="status-line ${stateClass}">${escapeHtml(status.sessionState || 'idle')}</div></div>
+        <div class="status-chip"><strong>Browser</strong><div class="status-line">${escapeHtml(status.browserName || 'Not launched')}</div></div>
+        <div class="status-chip"><strong>Current URL</strong><div class="status-line">${escapeHtml(status.currentUrl || 'about:blank')}</div></div>
+        <div class="status-chip"><strong>Page Title</strong><div class="status-line">${escapeHtml(status.title || 'No page loaded')}</div></div>
+        <div class="status-chip"><strong>Current Command</strong><div class="status-line">${escapeHtml(status.currentCommand ? status.currentCommand.command : 'No active command')}</div></div>
+        <div class="status-chip"><strong>Completion</strong><div class="status-line ${status.lastCompletion && status.lastCompletion.status !== 'completed' ? 'bad' : 'good'}">${escapeHtml(status.lastCompletion ? status.lastCompletion.status : 'Not assessed')}</div></div>
+        <div class="status-chip"><strong>Last Error</strong><div class="status-line ${status.lastError ? 'bad' : ''}">${escapeHtml(status.lastError || 'None')}</div></div>
+      `;
+    }
+
+    function setControlsEnabled(enabled, reason = '') {
+      runButton.disabled = !enabled;
+      openButton.disabled = !enabled;
+
+      if (reason) {
+        launchBanner.hidden = false;
+        launchBanner.innerHTML = `
+          <strong>${escapeHtml(reason)}</strong>
+          <div class="status-line">Launch this product from <code>${escapeHtml(CANONICAL_LAUNCH_URL)}</code>.</div>
+        `;
+      } else {
+        launchBanner.hidden = true;
+        launchBanner.innerHTML = '';
+      }
+    }
+
+    function detectUnsupportedLaunchContext() {
+      if (window.location.protocol === 'file:') {
+        return 'Console opened outside supported app URL.';
+      }
+
+      if (!SUPPORTED_ORIGINS.has(window.location.origin)) {
+        return 'Console opened outside supported app URL.';
+      }
+
+      return '';
+    }
+
+    function categorizeRequestError(path, error) {
+      const detail = error && error.message ? error.message : 'Unknown request failure.';
+      const unsupportedLaunch = detectUnsupportedLaunchContext();
+
+      if (unsupportedLaunch) {
+        return {
+          message: 'Console opened outside supported app URL',
+          detail
+        };
+      }
+
+      if (/Network request failed/i.test(detail)) {
+        return {
+          message: 'Cannot reach automation backend',
+          detail
+        };
+      }
+
+      if (path === '/api/automation/command' && readyState && !readyState.canAcceptCommands) {
+        return {
+          message: 'Browser session is not ready',
+          detail
+        };
+      }
+
+      return {
+        message: 'Automation service rejected command',
+        detail
+      };
+    }
+
+    function renderPlan(plan) {
+      if (!plan || !plan.length) {
+        planList.innerHTML = '<div class="plan-item"><strong>No plan built yet.</strong></div>';
+        return;
+      }
+
+      planList.innerHTML = plan.map((step, index) => `
+        <div class="plan-item">
+          <strong>${index + 1}. ${escapeHtml(step.type)}</strong>
+          <div class="status-line">Target: <code>${escapeHtml(step.target || '')}</code></div>
+          <div class="status-line">${escapeHtml(step.reason || '')}</div>
+        </div>
+      `).join('');
+    }
+
+    function renderElements(pageAnalysis) {
+      const elements = pageAnalysis && pageAnalysis.elements ? pageAnalysis.elements : [];
+      if (!elements.length) {
+        elementList.innerHTML = '<div class="element-item"><strong>No visible interactive elements captured yet.</strong></div>';
+        return;
+      }
+
+      elementList.innerHTML = elements.map((element) => `
+        <div class="element-item">
+          <strong>${escapeHtml(element.role || 'generic')}</strong>
+          <div class="status-line">${escapeHtml(element.name || element.label || element.text || '(unnamed element)')}</div>
+          <div class="status-line">Selector: <code>${escapeHtml(element.selector || 'n/a')}</code></div>
+        </div>
+      `).join('');
+    }
+
+    function renderGoals(goals) {
+      if (!goals || !goals.length) {
+        goalList.innerHTML = '<div class="plan-item"><strong>No deferred goals captured.</strong></div>';
+        return;
+      }
+
+      goalList.innerHTML = goals.map((goal, index) => `
+        <div class="plan-item">
+          <strong>${index + 1}. Deferred context</strong>
+          <div class="status-line">${escapeHtml(goal)}</div>
+        </div>
+      `).join('');
+    }
+
+    function renderCompletion(completion) {
+      if (!completion) {
+        completionList.innerHTML = '<div class="plan-item"><strong>No completion assessment yet.</strong></div>';
+        return;
+      }
+
+      completionList.innerHTML = `
+        <div class="plan-item">
+          <strong>${escapeHtml(completion.status)}</strong>
+          <div class="status-line">${escapeHtml(completion.reason || '')}</div>
+          <div class="status-line">Completed subgoals: ${escapeHtml(String(completion.completedSubgoals || 0))}</div>
+          <div class="status-line">Pending: ${escapeHtml((completion.pendingSubgoals || []).join(', ') || 'None')}</div>
+        </div>
+      `;
+    }
+
+    function renderSubgoals(subgoals) {
+      if (!subgoals || !subgoals.length) {
+        subgoalList.innerHTML = '<div class="plan-item"><strong>No explicit subgoals tracked.</strong></div>';
+        return;
+      }
+
+      subgoalList.innerHTML = subgoals.map((subgoal) => `
+        <div class="plan-item">
+          <strong>${escapeHtml(subgoal.status || 'pending')}</strong>
+          <div class="status-line">${escapeHtml(subgoal.label || '')}</div>
+          <div class="status-line">${escapeHtml(subgoal.evidence || '')}</div>
+        </div>
+      `).join('');
+    }
+
+    function appendEvent(event) {
+      if (!event || renderedEventIds.has(event.id)) {
+        return;
+      }
+
+      renderedEventIds.add(event.id);
+      const item = document.createElement('div');
+      item.className = `event-item ${event.type === 'error' ? 'error' : ''}`;
+      item.innerHTML = `
+        <strong>${escapeHtml(event.type)}</strong>
+        <div class="status-line">${escapeHtml(new Date(event.timestamp).toLocaleTimeString())}</div>
+        <div class="status-line"><code>${escapeHtml(JSON.stringify(event.data || {}))}</code></div>
+      `;
+      eventLog.prepend(item);
+    }
+
+    async function request(path, options = {}) {
+      let response;
+      try {
+        response = await fetch(path, {
+          headers: { 'Content-Type': 'application/json' },
+          ...options
+        });
+      } catch (error) {
+        const categorized = categorizeRequestError(path, error);
+        const wrapped = new Error(categorized.message);
+        wrapped.detail = categorized.detail;
+        throw wrapped;
+      }
+
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        const categorized = categorizeRequestError(path, new Error(payload.message || payload.error || 'Request failed'));
+        const wrapped = new Error(categorized.message);
+        wrapped.detail = categorized.detail;
+        throw wrapped;
+      }
+
+      return payload.data;
+    }
+
+    async function checkReadyState() {
+      const unsupportedLaunch = detectUnsupportedLaunchContext();
+      if (unsupportedLaunch) {
+        readyState = {
+          backendReachable: false,
+          currentOriginAccepted: false,
+          canAcceptCommands: false,
+          message: unsupportedLaunch
+        };
+        setControlsEnabled(false, unsupportedLaunch);
+        return readyState;
+      }
+
+      try {
+        readyState = await request('/api/automation/ready');
+        const enabled = readyState.currentOriginAccepted && eventStreamConnected && (readyState.sessionState === 'ready' || readyState.sessionState === 'running' || readyState.sessionState === 'idle');
+        setControlsEnabled(enabled, enabled ? '' : readyState.message);
+        return readyState;
+      } catch (error) {
+        readyState = {
+          backendReachable: false,
+          currentOriginAccepted: true,
+          canAcceptCommands: false,
+          message: error.message
+        };
+        setControlsEnabled(false, error.message);
+        return readyState;
+      }
+    }
+
+    async function refreshStatus(options = {}) {
+      try {
+        const status = await request('/api/automation/status');
+        await checkReadyState();
+        renderStatus(status);
+        renderPlan(status.lastPlan || []);
+        renderCompletion(status.lastCompletion || null);
+        renderGoals(status.deferredGoals || []);
+        renderSubgoals(status.subgoals || []);
+        renderElements(status.lastPageAnalysis || null);
+
+        for (const event of status.recentEvents || []) {
+          appendEvent(event);
+        }
+      } catch (error) {
+        if (!options.silent) {
+          appendEvent({
+            id: `local-${Date.now()}`,
+            type: 'error',
+            timestamp: new Date().toISOString(),
+            data: { message: error.message, detail: error.detail || '' }
+          });
+        }
+      }
+    }
+
+    async function runCommand() {
+      const command = commandInput.value.trim();
+      if (!command) {
+        return;
+      }
+
+      await checkReadyState();
+      if (!readyState || !readyState.canAcceptCommands) {
+        appendEvent({
+          id: `local-${Date.now()}`,
+          type: 'error',
+          timestamp: new Date().toISOString(),
+          data: { message: 'Browser session is not ready', detail: readyState ? readyState.message : 'Backend readiness failed.' }
+        });
+        return;
+      }
+
+      runButton.disabled = true;
+      try {
+        await request('/api/automation/command', {
+          method: 'POST',
+          body: JSON.stringify({ command })
+        });
+        commandInput.value = '';
+        await refreshStatus({ silent: true });
+      } catch (error) {
+        appendEvent({
+          id: `local-${Date.now()}`,
+          type: 'error',
+          timestamp: new Date().toISOString(),
+          data: { message: error.message, detail: error.detail || '' }
+        });
+      } finally {
+        await checkReadyState();
+      }
+    }
+
+    async function openBrowser() {
+      openButton.disabled = true;
+      try {
+        await request('/api/automation/session/start', {
+          method: 'POST',
+          body: '{}'
+        });
+        await refreshStatus({ silent: true });
+      } catch (error) {
+        appendEvent({
+          id: `local-${Date.now()}`,
+          type: 'error',
+          timestamp: new Date().toISOString(),
+          data: { message: error.message, detail: error.detail || '' }
+        });
+      } finally {
+        await checkReadyState();
+      }
+    }
+
+    async function stopSession() {
+      stopButton.disabled = true;
+      try {
+        await request('/api/automation/session/stop', {
+          method: 'POST',
+          body: '{}'
+        });
+        renderedEventIds = new Set();
+        await refreshStatus({ silent: true });
+      } catch (error) {
+        appendEvent({
+          id: `local-${Date.now()}`,
+          type: 'error',
+          timestamp: new Date().toISOString(),
+          data: { message: error.message, detail: error.detail || '' }
+        });
+      } finally {
+        stopButton.disabled = false;
+        await checkReadyState();
+      }
+    }
+
+    function bindExamples() {
+      document.querySelectorAll('.example').forEach((button) => {
+        button.addEventListener('click', () => {
+          commandInput.value = button.dataset.command || '';
+          commandInput.focus();
+        });
+      });
+    }
+
+    function connectEvents() {
+      const unsupportedLaunch = detectUnsupportedLaunchContext();
+      if (unsupportedLaunch) {
+        eventStreamConnected = false;
+        setControlsEnabled(false, unsupportedLaunch);
+        return;
+      }
+
+      const stream = new EventSource('/api/automation/events');
+      stream.onopen = async () => {
+        eventStreamConnected = true;
+        await checkReadyState();
+      };
+      stream.onmessage = async (event) => {
+        const payload = JSON.parse(event.data);
+        appendEvent(payload);
+
+        if (payload.type === 'snapshot') {
+          renderStatus(payload.data);
+          renderPlan(payload.data.lastPlan || []);
+          renderCompletion(payload.data.lastCompletion || null);
+          renderGoals(payload.data.deferredGoals || []);
+          renderSubgoals(payload.data.subgoals || []);
+          renderElements(payload.data.lastPageAnalysis || null);
+          return;
+        }
+
+        if (payload.type === 'plan' && payload.data && payload.data.plan) {
+          renderPlan(payload.data.plan);
+        }
+
+        if (['navigation', 'analysis', 'command', 'error', 'session'].includes(payload.type)) {
+          await refreshStatus({ silent: true });
+        }
+      };
+      stream.onerror = async () => {
+        eventStreamConnected = false;
+        await checkReadyState();
+      };
+    }
+
+    runButton.addEventListener('click', runCommand);
+    openButton.addEventListener('click', openBrowser);
+    stopButton.addEventListener('click', stopSession);
+    commandInput.addEventListener('keydown', (event) => {
+      if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+        event.preventDefault();
+        runCommand();
+      }
+    });
+
+    bindExamples();
+    connectEvents();
+    checkReadyState().then(() => refreshStatus({ silent: true })).catch(() => {});
+  </script>
+</body>
+</html>

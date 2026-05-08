@@ -1,0 +1,50 @@
+{
+  "name": "neurofoundry-website",
+  "version": "1.0.0",
+  "description": "Neurofoundry AI-powered platform with OAuth authentication",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "nodemon server/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "smoke:auth": "node tools/smoke-auth-live.mjs",
+    "cf:d1:provision": "node tools/cf-d1-provision.mjs"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "js-yaml": "^4.1.1",
+    "playwright": "^1.57.0",
+    "winston": "^3.19.0",
+    "bcrypt": "^5.1.1",
+    "jsonwebtoken": "^9.0.2",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
+    "passport-github2": "^0.1.12",
+    "passport-local": "^1.0.0",
+    "express-session": "^1.18.0",
+    "connect-redis": "^7.1.1",
+    "redis": "^4.6.13",
+    "helmet": "^7.1.0",
+    "cors": "^2.8.5",
+    "express-rate-limit": "^7.1.5",
+    "express-validator": "^7.0.1",
+    "cookie-parser": "^1.4.6",
+    "multer": "^2.0.2",
+    "nodemailer": "^7.0.11",
+    "uuid": "^9.0.1",
+    "firebase-admin": "^12.0.0",
+    "@supabase/supabase-js": "^2.39.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.3"
+  },
+  "keywords": [
+    "neurofoundry",
+    "ai",
+    "oauth",
+    "authentication"
+  ],
+  "author": "Neurofoundry",
+  "license": "MIT"
+}

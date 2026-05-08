@@ -1,13 +1,23 @@
 /**
  * Passport Authentication Configuration
- * Supports Google OAuth, GitHub OAuth, and Local Strategy
+ * Supports Google OAuth and Local Strategy
  */
 
 const LocalStrategy = require('passport-local').Strategy;
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const GitHubStrategy = require('passport-github2').Strategy;
 const bcrypt = require('bcrypt');
-const { findUserById, findUserByEmail, createUser, findOrCreateOAuthUser } = require('../services/userService');
+const { findUserById, findUserByEmail, findOrCreateOAuthUser } = require('../services/userService');
+
+function isPlaceholderValue(value) {
+  if (!value) return true;
+  const lower = String(value).toLowerCase();
+  return (
+    lower.includes('your-') ||
+    lower.includes('xxxxx') ||
+    lower.includes('example') ||
+    lower.includes('change-this')
+  );
+}
 
 module.exports = function(passport) {
   // Serialize user for session
@@ -59,7 +69,7 @@ module.exports = function(passport) {
 
           // Check if email is verified (skip in development for testing)
           if (!user.emailVerified && process.env.NODE_ENV === 'production') {
-            return done(null, false, { message: 'Please verify your email first' });
+            return done(null, false, { message: 'Please verify your email address' });
           }
 
           return done(null, user);
@@ -73,7 +83,7 @@ module.exports = function(passport) {
   // ============================================
   // GOOGLE OAUTH STRATEGY
   // ============================================
-  if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  if (!isPlaceholderValue(process.env.GOOGLE_CLIENT_ID) && !isPlaceholderValue(process.env.GOOGLE_CLIENT_SECRET)) {
     passport.use(
       new GoogleStrategy(
         {
@@ -93,43 +103,6 @@ module.exports = function(passport) {
               lastName: profile.name?.familyName,
               avatar: profile.photos[0]?.value,
               emailVerified: true // Google emails are pre-verified
-            };
-
-            const user = await findOrCreateOAuthUser(userData);
-            return done(null, user);
-          } catch (error) {
-            return done(error, null);
-          }
-        }
-      )
-    );
-  }
-
-  // ============================================
-  // GITHUB OAUTH STRATEGY
-  // ============================================
-  if (process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET) {
-    passport.use(
-      new GitHubStrategy(
-        {
-          clientID: process.env.GITHUB_CLIENT_ID,
-          clientSecret: process.env.GITHUB_CLIENT_SECRET,
-          callbackURL: process.env.GITHUB_CALLBACK_URL || '/api/auth/github/callback',
-          scope: ['user:email']
-        },
-        async (accessToken, refreshToken, profile, done) => {
-          try {
-            // GitHub might not provide email in profile
-            const email = profile.emails?.[0]?.value || `${profile.username}@github.local`;
-
-            const userData = {
-              authProvider: 'github',
-              authProviderId: profile.id,
-              email: email,
-              name: profile.displayName || profile.username,
-              username: profile.username,
-              avatar: profile.photos?.[0]?.value || profile.avatar_url,
-              emailVerified: profile.emails?.[0]?.verified || false
             };
 
             const user = await findOrCreateOAuthUser(userData);

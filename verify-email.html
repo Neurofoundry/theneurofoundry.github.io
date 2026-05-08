@@ -14,7 +14,7 @@
       --brand: #e0473c;
       --line: rgba(224, 71, 60, 0.25);
       --ok: #4ade80;
-      --bad: #fb7185;
+      --bad: #e0473c;
     }
     * { box-sizing: border-box; }
     body {
@@ -34,6 +34,7 @@
       border: 1px solid var(--line);
       border-radius: 12px;
       padding: 28px;
+      text-align: center;
     }
     h1 {
       margin: 0 0 12px;
@@ -45,6 +46,10 @@
     .muted { color: var(--muted); }
     .status-ok { color: var(--ok); }
     .status-bad { color: var(--bad); }
+    .countdown {
+      color: var(--muted);
+      font-size: 15px;
+    }
     .actions { margin-top: 18px; }
     .btn {
       display: inline-block;
@@ -61,9 +66,10 @@
 </head>
 <body>
   <main class="card">
-    <h1>Email Verification</h1>
+    <h1 id="heading">Email Verification</h1>
     <p id="status">Verifying your email address...</p>
     <p id="details" class="muted"></p>
+    <p id="redirect" class="countdown" style="display:none;"></p>
     <div class="actions">
       <a id="loginLink" class="btn" href="/login.html" style="display:none;">Continue to Login</a>
     </div>
@@ -71,16 +77,36 @@
 
   <script>
     (async function verifyEmail() {
+      const headingEl = document.getElementById('heading');
       const statusEl = document.getElementById('status');
       const detailsEl = document.getElementById('details');
+      const redirectEl = document.getElementById('redirect');
       const loginLink = document.getElementById('loginLink');
       const params = new URLSearchParams(window.location.search);
       const token = params.get('token');
+      const loginUrl = '/login.html?verified=1';
+
+      function startLoginRedirect() {
+        let remaining = 10;
+        redirectEl.style.display = 'block';
+        redirectEl.textContent = `Redirecting... (${remaining})`;
+
+        const timer = setInterval(() => {
+          remaining -= 1;
+          redirectEl.textContent = `Redirecting... (${remaining})`;
+
+          if (remaining <= 0) {
+            clearInterval(timer);
+            window.location.href = loginUrl;
+          }
+        }, 1000);
+      }
 
       if (!token) {
-        statusEl.textContent = 'Verification link is missing a token.';
-        statusEl.className = 'status-bad';
-        detailsEl.textContent = 'Please request a new verification email from the signup flow.';
+        headingEl.textContent = 'Verification Failed';
+        headingEl.className = 'status-bad';
+        statusEl.textContent = 'Neurofoundry could not verify your email address.';
+        detailsEl.textContent = 'Please wait a moment, then try your request again.';
         return;
       }
 
@@ -111,11 +137,12 @@
           }
 
           if (res.ok && data.success !== false) {
-            statusEl.textContent = 'Email verified successfully.';
-            statusEl.className = 'status-ok';
-            detailsEl.textContent = 'Your account is now verified. You can continue to login.';
-            loginLink.style.display = 'inline-block';
-            loginLink.href = '/login.html?verified=1';
+            headingEl.textContent = 'Email Verification: Success';
+            headingEl.className = 'status-ok';
+            statusEl.textContent = 'Your account is verified.';
+            detailsEl.textContent = '';
+            loginLink.href = loginUrl;
+            startLoginRedirect();
             return;
           }
 
@@ -130,9 +157,11 @@
         }
       }
 
-      statusEl.textContent = 'Verification failed.';
-      statusEl.className = 'status-bad';
-      detailsEl.textContent = finalError;
+      headingEl.textContent = 'Verification Failed';
+      headingEl.className = 'status-bad';
+      statusEl.textContent = 'Neurofoundry could not verify your email address.';
+      console.warn('Email verification failed:', finalError);
+      detailsEl.textContent = 'Please wait a moment, then try your request again.';
     })();
   </script>
 </body>

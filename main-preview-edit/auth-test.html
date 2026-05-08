@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Auth Testing – Neurofoundry</title>
+  <script src="./auth-client.js" onerror="handleScriptLoadError()"></script>
+  <script>
+    function handleScriptLoadError() {
+      console.error('Failed to load auth-client.js');
+      document.addEventListener('DOMContentLoaded', function() {
+        const container = document.querySelector('.container');
+        if (container) {
+          const errorDiv = document.createElement('div');
+          errorDiv.className = 'status error show';
+          errorDiv.style.marginBottom = '24px';
+          errorDiv.innerHTML = '<strong>Error:</strong> Failed to load authentication library (auth-client.js). Please ensure the file exists in the same directory as this page.';
+          container.insertBefore(errorDiv, container.firstChild);
+        }
+      });
+    }
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      background: #0f1113;
+      color: #e6e9ee;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      margin: 0;
+      padding: 40px 20px;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    h1 {
+      color: #e0473c;
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      color: #9aa3ad;
+      margin-bottom: 40px;
+    }
+    .section {
+      background: rgba(15, 17, 19, 0.95);
+      border: 1px solid rgba(224, 71, 60, 0.2);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    h2 {
+      color: #fff;
+      font-size: 20px;
+      margin-bottom: 16px;
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    label {
+      display: block;
+      color: #c9d0d8;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    input {
+      width: 100%;
+      padding: 10px 12px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(224, 71, 60, 0.3);
+      border-radius: 6px;
+      color: #e6e9ee;
+      font-size: 14px;
+      font-family: inherit;
+    }
+    input:focus {
+      outline: none;
+      border-color: #e0473c;
+      box-shadow: 0 0 0 2px rgba(224, 71, 60, 0.2);
+    }
+    .btn {
+      padding: 10px 20px;
+      background: linear-gradient(180deg, #ff7b6e 0%, #e9584d 48%, #d23d33 100%);
+      border: 2px solid #a2362f;
+      border-radius: 6px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-right: 10px;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(224, 71, 60, 0.4);
+    }
+    .btn.secondary {
+      background: rgba(224, 71, 60, 0.1);
+      border-color: rgba(224, 71, 60, 0.4);
+    }
+    .status {
+      padding: 12px 16px;
+      border-radius: 6px;
+      margin-top: 16px;
+      font-size: 14px;
+      display: none;
+    }
+    .status.show {
+      display: block;
+    }
+    .status.success {
+      background: rgba(57, 255, 20, 0.1);
+      border: 1px solid rgba(57, 255, 20, 0.3);
+      color: #39FF14;
+    }
+    .status.error {
+      background: rgba(224, 71, 60, 0.1);
+      border: 1px solid rgba(224, 71, 60, 0.3);
+      color: #ff9b93;
+    }
+    .status.info {
+      background: rgba(100, 149, 237, 0.1);
+      border: 1px solid rgba(100, 149, 237, 0.3);
+      color: #6495ED;
+    }
+    pre {
+      background: #000;
+      border: 1px solid #333;
+      border-radius: 6px;
+      padding: 12px;
+      overflow-x: auto;
+      font-size: 12px;
+      color: #39FF14;
+    }
+    .info-box {
+      background: rgba(100, 149, 237, 0.1);
+      border: 1px solid rgba(100, 149, 237, 0.3);
+      border-radius: 6px;
+      padding: 16px;
+      margin-bottom: 24px;
+      color: #c9d0d8;
+      font-size: 14px;
+    }
+    .info-box strong {
+      color: #6495ED;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔥 Authentication Test Page</h1>
+    <p class="subtitle">Sandbox environment for testing user signup, login, and OAuth flows</p>
+
+    <div class="info-box">
+      <strong>Note:</strong> This page is for testing the authentication system. Make sure the backend server is running on <code>localhost:3000</code>.
+    </div>
+
+    <!-- Server Controls -->
+    <div class="section">
+      <h2>Server Controls</h2>
+      <p style="color: #9aa3ad; font-size: 14px; margin-bottom: 16px;">
+        Quickly start or stop the local auth server on port 3000 without leaving this page.
+      </p>
+      <button class="btn" onclick="startLocalServer()">Start Server</button>
+      <button class="btn secondary" onclick="stopLocalServer()">Stop Server</button>
+      <div id="serverStatus" class="status"></div>
+    </div>
+
+    <!-- Current Auth Status -->
+    <div class="section">
+      <h2>Current Status</h2>
+      <div id="authStatus" class="status info show">Checking authentication...</div>
+      <div id="userInfo" style="display: none;">
+        <pre id="userData"></pre>
+        <button class="btn" onclick="testLogout()">Logout</button>
+      </div>
+    </div>
+
+    <!-- Register -->
+    <div class="section">
+      <h2>Test Registration</h2>
+      <form id="registerForm" onsubmit="testRegister(event)">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="regEmail" value="test@neurofoundry.com" required>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="regPassword" value="password123" required>
+        </div>
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" id="regName" value="Test User" required>
+        </div>
+        <button type="submit" class="btn">Register</button>
+        <div id="registerStatus" class="status"></div>
+      </form>
+    </div>
+
+    <!-- Login -->
+    <div class="section">
+      <h2>Test Login</h2>
+      <form id="loginForm" onsubmit="testLogin(event)">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="loginEmail" value="test@neurofoundry.com" required>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="loginPassword" value="password123" required>
+        </div>
+        <button type="submit" class="btn">Login</button>
+        <div id="loginStatus" class="status"></div>
+      </form>
+    </div>
+
+    <!-- OAuth -->
+    <div class="section">
+      <h2>Test OAuth</h2>
+      <p style="color: #9aa3ad; font-size: 14px; margin-bottom: 16px;">
+        OAuth requires valid credentials in .env file. These will fail with placeholder values but you can test the flow.
+      </p>
+      <button class="btn" onclick="testOAuth('google')">Test Google OAuth</button>
+      <button class="btn" onclick="testOAuth('github')">Test GitHub OAuth</button>
+      <div id="oauthStatus" class="status"></div>
+    </div>
+
+    <!-- Profile Test -->
+    <div class="section" id="profileSection" style="display: none;">
+      <h2>Test Profile Update</h2>
+      <form id="profileForm" onsubmit="testProfileUpdate(event)">
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" id="profileName" value="Updated Name">
+        </div>
+        <div class="form-group">
+          <label>Bio</label>
+          <input type="text" id="profileBio" value="This is my test bio">
+        </div>
+        <button type="submit" class="btn">Update Profile</button>
+        <button type="button" class="btn secondary" onclick="testGetProfile()">Get Profile</button>
+        <div id="profileStatus" class="status"></div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const auth = new window.NeurofoundryAuth();
+
+    // Check initial auth status
+    window.addEventListener('load', () => {
+      updateAuthStatus();
+    });
+
+    function updateAuthStatus() {
+      const statusDiv = document.getElementById('authStatus');
+      const userInfoDiv = document.getElementById('userInfo');
+      const profileSection = document.getElementById('profileSection');
+
+      if (auth.isAuthenticated()) {
+        const user = auth.getCurrentUser();
+        statusDiv.className = 'status success show';
+        statusDiv.textContent = '✓ Authenticated';
+        userInfoDiv.style.display = 'block';
+        profileSection.style.display = 'block';
+        document.getElementById('userData').textContent = JSON.stringify(user, null, 2);
+      } else {
+        statusDiv.className = 'status info show';
+        statusDiv.textContent = '⚠ Not authenticated';
+        userInfoDiv.style.display = 'none';
+        profileSection.style.display = 'none';
+      }
+    }
+
+    async function testRegister(event) {
+      event.preventDefault();
+      const statusDiv = document.getElementById('registerStatus');
+      statusDiv.className = 'status info show';
+      statusDiv.textContent = 'Registering...';
+
+      try {
+        const result = await auth.register({
+          email: document.getElementById('regEmail').value,
+          password: document.getElementById('regPassword').value,
+          name: document.getElementById('regName').value
+        });
+
+        statusDiv.className = 'status success show';
+        statusDiv.textContent = '✓ Registration successful! Check console for details.';
+        console.log('Register result:', result);
+
+        // Update auth status
+        setTimeout(() => {
+          updateAuthStatus();
+        }, 1000);
+      } catch (error) {
+        statusDiv.className = 'status error show';
+        statusDiv.textContent = '✗ Registration failed: ' + error.message;
+        console.error('Register error:', error);
+      }
+    }
+
+    async function testLogin(event) {
+      event.preventDefault();
+      const statusDiv = document.getElementById('loginStatus');
+      statusDiv.className = 'status info show';
+      statusDiv.textContent = 'Logging in...';
+
+      try {
+        const result = await auth.login(
+          document.getElementById('loginEmail').value,
+          document.getElementById('loginPassword').value
+        );
+
+        statusDiv.className = 'status success show';
+        statusDiv.textContent = '✓ Login successful!';
+        console.log('Login result:', result);
+
+        // Update auth status
+        setTimeout(() => {
+          updateAuthStatus();
+        }, 1000);
+      } catch (error) {
+        statusDiv.className = 'status error show';
+        statusDiv.textContent = '✗ Login failed: ' + error.message;
+        console.error('Login error:', error);
+      }
+    }
+
+    async function testOAuth(provider) {
+      const statusDiv = document.getElementById('oauthStatus');
+      statusDiv.className = 'status info show';
+      statusDiv.textContent = `Opening ${provider} OAuth...`;
+
+      try {
+        await auth.loginWithOAuth(provider);
+        statusDiv.className = 'status success show';
+        statusDiv.textContent = `✓ ${provider} OAuth successful!`;
+
+        setTimeout(() => {
+          updateAuthStatus();
+        }, 1000);
+      } catch (error) {
+        statusDiv.className = 'status error show';
+        statusDiv.textContent = `✗ ${provider} OAuth failed: ` + error.message;
+        console.error('OAuth error:', error);
+      }
+    }
+
+    async function testLogout() {
+      const statusDiv = document.getElementById('authStatus');
+      statusDiv.className = 'status info show';
+      statusDiv.textContent = 'Logging out...';
+
+      try {
+        await auth.logout();
+        statusDiv.className = 'status success show';
+        statusDiv.textContent = '✓ Logged out successfully!';
+
+        setTimeout(() => {
+          updateAuthStatus();
+        }, 500);
+      } catch (error) {
+        statusDiv.className = 'status error show';
+        statusDiv.textContent = '✗ Logout failed: ' + error.message;
+      }
+    }
+
+    async function testGetProfile() {
+      const statusDiv = document.getElementById('profileStatus');
+      statusDiv.className = 'status info show';
+      statusDiv.textContent = 'Fetching profile...';
+
+      try {
+        const result = await auth.getProfile();
+        statusDiv.className = 'status success show';
+        statusDiv.textContent = '✓ Profile fetched! Check console.';
+        console.log('Profile:', result);
+      } catch (error) {
+        statusDiv.className = 'status error show';
+        statusDiv.textContent = '✗ Failed to fetch profile: ' + error.message;
+        console.error('Profile error:', error);
+      }
+    }
+
+    async function testProfileUpdate(event) {
+      event.preventDefault();
+      const statusDiv = document.getElementById('profileStatus');
+      statusDiv.className = 'status info show';
+      statusDiv.textContent = 'Updating profile...';
+
+      try {
+        const result = await auth.updateProfile({
+          name: document.getElementById('profileName').value,
+          bio: document.getElementById('profileBio').value
+        });
+
+        statusDiv.className = 'status success show';
+        statusDiv.textContent = '✓ Profile updated!';
+        console.log('Update result:', result);
+
+        setTimeout(() => {
+          updateAuthStatus();
+        }, 1000);
+      } catch (error) {
+        statusDiv.className = 'status error show';
+        statusDiv.textContent = '✗ Profile update failed: ' + error.message;
+        console.error('Update error:', error);
+      }
+    }
+
+    async function controlServer(action) {
+      const statusDiv = document.getElementById('serverStatus');
+      statusDiv.className = 'status info show';
+      statusDiv.textContent = action === 'start' ? 'Starting server...' : 'Stopping server...';
+
+      try {
+        const response = await fetch(`/api/dev/server/${action}`, {
+          method: 'POST'
+        });
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || 'Server control failed');
+        }
+
+        statusDiv.className = 'status success show';
+        statusDiv.textContent = data.message || (action === 'start' ? 'Server started.' : 'Server stopped.');
+
+        if (action === 'start') {
+          setTimeout(() => {
+            updateAuthStatus();
+          }, 1000);
+        }
+      } catch (error) {
+        statusDiv.className = 'status error show';
+        statusDiv.textContent = '✗ ' + error.message;
+      }
+    }
+
+    function startLocalServer() {
+      return controlServer('start');
+    }
+
+    function stopLocalServer() {
+      return controlServer('stop');
+    }
+  </script>
+</body>
+</html>

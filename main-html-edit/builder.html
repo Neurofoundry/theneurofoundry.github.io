@@ -1,0 +1,2331 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Neurofoundry — Intelligence Engineered</title>
+  <meta name="description" content="AI-powered systems that think, adapt, and deliver. Transform ideas into intelligent reality.">
+  <meta name="theme-color" content="#0f1113">
+  <meta name="keywords" content="AI, artificial intelligence, machine learning, neural networks, intelligent systems, automation">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- OpenTelemetry (UMD builds) - dev only, safe guards in tracing-init.js -->
+  <script src="https://unpkg.com/@opentelemetry/sdk-trace-web/build/umd/index.min.js"></script>
+  <script src="https://unpkg.com/@opentelemetry/exporter-trace-otlp-http/build/umd/index.min.js"></script>
+  <script src="https://unpkg.com/@opentelemetry/instrumentation-document-load/build/umd/index.min.js"></script>
+  <script src="https://unpkg.com/@opentelemetry/instrumentation-fetch/build/umd/index.min.js"></script>
+  <script src="https://unpkg.com/@opentelemetry/instrumentation-xml-http-request/build/umd/index.min.js"></script>
+  <script src="tracing/tracing-init.js"></script>
+  <style>
+    body { background: #0f1113; color: #e6e9ee; margin: 0; font-family: Inter, sans-serif; }
+    header {
+      position: relative;
+      z-index: 20;
+      background: rgba(11, 12, 14, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid #e0473c;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      flex-shrink: 0;
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 0 18px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: 0.5px;
+    }
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #ff7b6e 0%, #e0473c 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 18px;
+      color: white;
+      box-shadow: 0 4px 12px rgba(224, 71, 60, 0.3);
+    }
+    .links {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    .navlink {
+      color: #ccc;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      position: relative;
+      transition: color 0.2s;
+    }
+    .navlink:hover { color: #e0473c; }
+    .nav-item { position: relative; }
+    .dropdown-toggle {
+      background: none;
+      border: none;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      color: #ccc;
+      font: 500 14px/1 Inter, sans-serif;
+      transition: color 0.2s;
+    }
+    .dropdown-toggle:hover,
+    .dropdown-toggle:focus-visible {
+      color: #e0473c;
+      outline: none;
+    }
+    .dropdown-caret {
+      font-size: 11px;
+      opacity: 0.7;
+    }
+    .dropdown-menu {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      min-width: 200px;
+      background: rgba(15, 17, 19, 0.96);
+      border: 1px solid rgba(224, 71, 60, 0.25);
+      border-radius: 12px;
+      padding: 10px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+      opacity: 0;
+      transform: translateY(6px);
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 50;
+    }
+    .dropdown::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 100%;
+      height: 10px;
+    }
+    .dropdown-menu a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      color: #c9d0d8;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      transition: background 0.2s, color 0.2s;
+    }
+    .dropdown-menu a:hover {
+      background: rgba(224, 71, 60, 0.18);
+      color: #fff;
+    }
+    .dropdown:hover .dropdown-menu,
+    .dropdown:focus-within .dropdown-menu {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 18px;
+      border-radius: 8px;
+      font: 600 13px/1 Inter, sans-serif;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: 2px solid transparent;
+    }
+    .btn.primary {
+      background: linear-gradient(180deg, #ff7b6e 0%, #e9584d 48%, #d23d33 100%);
+      border-color: #a2362f;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(224, 71, 60, 0.3);
+    }
+    .btn.primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(224, 71, 60, 0.4);
+    }
+    .btn.secondary {
+      background: transparent;
+      border: 2px solid rgba(224, 71, 60, 0.5);
+      color: #ff9b93;
+    }
+    .btn.secondary:hover {
+      background: rgba(224, 71, 60, 0.15);
+      border-color: #e0473c;
+      transform: translateY(-1px);
+    }
+    main { flex: 1; display: flex; flex-direction: column; }
+    .hero-section {
+      min-height: 420px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 48px 0 32px 0;
+      /*#---- DIVIDING SECTIONS FOR NEW ADDITIONS----#*/
+      position: relative; /* This is crucial for positioning the video */
+      overflow: hidden; /* Ensures video doesn't bleed out */
+      background: #0f1113; /* Fallback color if video fails */
+      /* The gradient background was moved to .hero-overlay */
+      /*#-------------------------------------------#*/
+    }
+    
+    /*#---- DIVIDING SECTIONS FOR NEW ADDITIONS----#*/
+    .hero-video {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+    }
+    .hero-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      /* This is your original gradient, now an overlay */
+      background: linear-gradient(180deg, rgba(15,17,19,0.8), rgba(10,11,13,0.9));
+      z-index: 2;
+    }
+    /*#-------------------------------------------#*/
+
+    .hero-content { 
+      top: 10px;
+      text-align: center; 
+      /*#---- DIVIDING SECTIONS FOR NEW ADDITIONS----#*/
+      z-index: 3; /* Changed from 2 to 3 to be on top of the overlay */
+      position: relative; /* Ensures it respects the z-index */
+      /*#-------------------------------------------#*/
+    }
+    .hero-label {
+      margin-bottom: 20px;
+      background: rgba(224,71,60,0.15);
+      border: 1px solid rgba(224,71,60,0.3);
+      border-radius: 999px;
+      display: inline-block;
+      padding: 6px 16px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #ff9b93;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      position: relative;
+    }
+    .hero-banner {
+      position: absolute;
+      top: -300px;
+      left: 50%;
+      transform: translateX(-50%);
+      max-width: 724px;
+      width: 45vw;
+      height: auto;
+      z-index: 10;
+      opacity: 0.95;
+      filter: drop-shadow(0 8px 24px rgba(224, 71, 60, 0.4));
+    }
+    h1 {
+      font-size: 32px;
+      font-weight: 800;
+      margin-top: 4px;
+      margin-bottom: 40px;
+      background: linear-gradient(135deg, #fff 0%, #ffc9c3 45%, #ff7a66 70%, #e0473c 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.01em;
+    }
+    .subtitle {
+      display: none;
+    }
+    .hero-cta {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: -10px;
+    }
+    .hero-cta .btn { padding: 12px 28px; font-size: 15px; }
+    .section-divider {
+      width: 100vw;
+      height: 3px;
+      background: linear-gradient(90deg, #ff7b6e 0%, #e0473c 100%);
+      border-radius: 1px;
+      position: relative;
+      left: 0;
+      margin: 0;
+      z-index: 5;
+      box-shadow: 0 0 16px 0 #e0473c33;
+    }
+    .skills-bar {
+      display: flex;
+      padding: 20px 18px;
+      background: none;
+      position: relative;
+      z-index: 1;
+    }
+    .skills {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      max-width: 1600px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .skill-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px;
+      background: rgba(28, 18, 16, 0.5);
+      border: 1px solid rgba(255, 160, 60, 0.4);
+      border-radius: 12px;
+      transition: all 0.3s;
+      color: #f2d3ce;
+      font-weight: 600;
+      font-size: 14px;
+      box-shadow: 0 0 8px rgba(255, 140, 40, 0.15);
+    }
+    .skill-item:hover {
+      border-color: rgba(255, 180, 80, 0.7);
+      box-shadow: 0 0 16px rgba(255, 140, 40, 0.4), 0 0 32px rgba(255, 100, 20, 0.2);
+    }
+    .skill-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, rgba(224, 71, 60, 0.2), rgba(224, 71, 60, 0.1));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .bottom-section { background: none; }
+    .content-area {
+      display: flex;
+      width: 100%;
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 24px 0;
+      box-sizing: border-box;
+    }
+    .layout-builder {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .builder-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(224, 71, 60, 0.3);
+      background: linear-gradient(135deg, rgba(15, 17, 19, 0.55), rgba(10, 11, 13, 0.5));
+    }
+    .tool-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .builder-btn {
+      position: relative;
+      padding: 8px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(224, 71, 60, 0.55);
+      background: linear-gradient(180deg, #ff8b73 0%, #e9584d 55%, #c93a31 100%);
+      color: #fff6f4;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 6px 14px rgba(224, 71, 60, 0.28);
+    }
+    .builder-btn:hover {
+      border-color: rgba(255, 170, 160, 0.95);
+      background: linear-gradient(180deg, #ff9a86 0%, #f06156 55%, #d6453a 100%);
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+    .builder-btn.primary {
+      background: linear-gradient(180deg, #ff7b6e 0%, #e9584d 48%, #d23d33 100%);
+      border-color: #a2362f;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(224, 71, 60, 0.3);
+    }
+    .builder-file {
+      display: none;
+    }
+    .builder-input {
+      min-width: 140px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid #2a2f34;
+      background: #121417;
+      color: #e6e9ee;
+      font-size: 12px;
+      font-family: inherit;
+    }
+    .builder-btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+    .builder-info {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      font-size: 12px;
+      color: #9aa3ad;
+    }
+    .builder-hint {
+      font-size: 11px;
+      color: #6f7983;
+    }
+    .layout-stage {
+      position: relative;
+      min-height: 720px;
+      border-radius: 16px;
+      border: 1px solid #2a2f34;
+      background: radial-gradient(circle at top, rgba(224, 71, 60, 0.08), rgba(10, 11, 13, 0.95));
+      box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.35);
+      overflow: auto;
+      resize: vertical;
+      user-select: none;
+    }
+    .layout-inner {
+      position: absolute;
+      inset: 24px;
+      border-radius: 12px;
+      border: 1px dashed rgba(224, 71, 60, 0.35);
+      background: rgba(12, 14, 17, 0.65);
+      overflow: hidden;
+      touch-action: none;
+    }
+    .layout-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+    }
+    .custom-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none;
+    }
+    .custom-layer > * {
+      pointer-events: auto;
+    }
+    .content-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      --backdrop: none;
+      background-image: var(--backdrop),
+        linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+      background-size: cover, 40px 40px, 40px 40px;
+      background-position: center, 0 0, 0 0;
+      background-repeat: no-repeat, repeat, repeat;
+    }
+    .content-placeholder {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: rgba(224, 71, 60, 0.45);
+    }
+    .layout-box {
+      position: absolute;
+      border-radius: 10px;
+      border: 1px solid rgba(224, 71, 60, 0.7);
+      background: rgba(224, 71, 60, 0.15);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+      cursor: move;
+    }
+    .layout-box.selected {
+      border-color: #ff9b93;
+      box-shadow: 0 0 0 2px rgba(224, 71, 60, 0.3), 0 10px 30px rgba(224, 71, 60, 0.2);
+    }
+    .box-label {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #fff;
+      background: rgba(15, 17, 19, 0.7);
+      padding: 2px 6px;
+      border-radius: 6px;
+      pointer-events: none;
+    }
+    .floating-item {
+      position: absolute;
+      z-index: 5;
+      padding: 6px;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      box-sizing: border-box;
+    }
+    .floating-item.selected {
+      border-color: rgba(255, 155, 147, 0.7);
+      box-shadow: 0 0 0 2px rgba(255, 155, 147, 0.2);
+    }
+    .floating-content {
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      display: block;
+    }
+    .floating-resize-handle {
+      position: absolute;
+      right: 4px;
+      bottom: 4px;
+      width: 12px;
+      height: 12px;
+      border-radius: 4px;
+      border: 1px solid rgba(224, 71, 60, 0.7);
+      background: rgba(255, 255, 255, 0.9);
+      cursor: se-resize;
+    }
+    .resize-handle {
+      position: absolute;
+      right: 4px;
+      bottom: 4px;
+      width: 12px;
+      height: 12px;
+      border-radius: 4px;
+      border: 1px solid rgba(224, 71, 60, 0.7);
+      background: rgba(255, 255, 255, 0.9);
+      cursor: se-resize;
+    }
+    .layout-output {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .layout-output label {
+      font-size: 12px;
+      color: #c9d0d8;
+      font-weight: 600;
+    }
+    .layout-output textarea {
+      min-height: 120px;
+      resize: vertical;
+      font-family: Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 12px;
+      background: #0c0e11;
+      border: 1px solid #2a2f34;
+      color: #e6e9ee;
+    }
+    .emoji-panel {
+      border-radius: 16px;
+      border: 1px solid rgba(224, 71, 60, 0.25);
+      background: linear-gradient(135deg, rgba(12, 14, 17, 0.85), rgba(10, 11, 13, 0.9));
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .emoji-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .emoji-title {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #ff9b93;
+    }
+    .emoji-search {
+      flex: 1;
+      min-width: 160px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid #2a2f34;
+      background: #121417;
+      color: #e6e9ee;
+      font-size: 12px;
+      font-family: inherit;
+    }
+    .emoji-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(32px, 1fr));
+      gap: 8px;
+      max-height: 240px;
+      overflow: auto;
+      padding: 4px;
+      border-radius: 10px;
+      border: 1px solid rgba(224, 71, 60, 0.2);
+      background: rgba(11, 12, 14, 0.7);
+    }
+    .emoji-btn {
+      width: 32px;
+      height: 32px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      background: transparent;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .emoji-btn:hover {
+      border-color: rgba(224, 71, 60, 0.6);
+      background: rgba(224, 71, 60, 0.1);
+    }
+    .emoji-output {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      font-size: 12px;
+      color: #c9d0d8;
+    }
+    .emoji-output input {
+      flex: 1;
+      min-width: 120px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid #2a2f34;
+      background: #121417;
+      color: #e6e9ee;
+      font-size: 12px;
+      font-family: inherit;
+    }
+    .contact-side {
+      width: 40%;
+      display: flex;
+      flex-direction: column;
+      padding: 48px 40px;
+      background: linear-gradient(135deg, rgba(15, 17, 19, 0.3), rgba(10, 11, 13, 0.5));
+      border-radius: 0 0 0 16px;
+      min-height: 1200px;
+    }
+    .contact-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 32px;
+      color: #e6e9ee;
+      margin-top: 14px;
+    }
+    .article-feed {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      width: 100%;
+      flex: 1;
+    }
+    .article-card {
+      background: linear-gradient(135deg, rgba(224, 71, 60, 0.05), rgba(224, 71, 60, 0.02));
+      border: 1px solid rgba(224, 71, 60, 0.2);
+      border-radius: 12px;
+      padding: 24px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
+      color: inherit;
+    }
+    .article-card:hover {
+      border-color: #e0473c;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(224, 71, 60, 0.2);
+    }
+    .article-date {
+      font-size: 11px;
+      color: #e0473c;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+    .article-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #e6e9ee;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+    .article-preview {
+      font-size: 13px;
+      color: #9aa3ad;
+      line-height: 1.6;
+      margin: 0;
+    }
+    .view-more-btn {
+      margin-top: auto;
+      padding: 14px 24px;
+      background: linear-gradient(180deg, rgba(224, 71, 60, 0.1), rgba(224, 71, 60, 0.05));
+      border: 2px solid rgba(224, 71, 60, 0.3);
+      border-radius: 8px;
+      color: #e0473c;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      text-decoration: none;
+      display: block;
+    }
+    .view-more-btn:hover {
+      background: linear-gradient(180deg, rgba(224, 71, 60, 0.2), rgba(224, 71, 60, 0.1));
+      border-color: #e0473c;
+      transform: scale(1.02);
+    }
+    .nav-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+      max-width: 400px;
+    }
+    .nav-button {
+      padding: 16px 24px;
+      background: linear-gradient(180deg, #ff7b6e 0%, #e9584d 48%, #d23d33 100%);
+      border: 2px solid #a2362f;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      text-align: center;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(224, 71, 60, 0.3);
+    }
+    .nav-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(224, 71, 60, 0.4);
+    }
+    .contact-form-wrapper { max-width: 400px; }
+    .form-group { margin-bottom: 12px; }
+    label {
+      font-size: 12px;
+      color: #c9d0d8;
+      margin-bottom: 4px;
+      display: block;
+      font-weight: 600;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid #2a2f34;
+      background: #121417;
+      color: #e6e9ee;
+      font-size: 13px;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #e0473c;
+      box-shadow: 0 0 0 3px rgba(224, 71, 60, 0.2);
+    }
+    textarea { min-height: 60px; resize: vertical; }
+    .work-side {
+      width: 60%;
+      display: flex;
+      flex-direction: column; 
+      align-items: flex-start; 
+      justify-content: flex-start;
+      padding: 24px 0px; 
+      position: relative;
+      background: linear-gradient(135deg, rgba(15, 17, 19, 0.15), rgba(10, 11, 13, 0.05));
+      border-radius: 0 0 16px 0;
+    }
+    .work-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      width: 100%;
+      max-width: 1000px;
+      padding: 0 40px; 
+      box-sizing: border-box; 
+    }
+    .work-card {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(15, 17, 19, 0.85), rgba(10, 11, 13, 0.95));
+      border: 1px solid #2a2f34;
+      transition: all 0.3s;
+      cursor: pointer;
+      aspect-ratio: 16/10;
+    }
+    .work-card:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 12px 30px rgba(224, 71, 60, 0.25);
+      border-color: #e0473c;
+      z-index: 10;
+    }
+    .work-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s, filter 0.3s;
+    }
+    .work-card .card-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: auto;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .work-card:hover img:not(.card-overlay) { 
+      transform: scale(1.05); 
+      filter: blur(2px);
+    }
+    .work-card:hover .card-overlay {
+      opacity: 1;
+      filter: drop-shadow(0 0 8px #ff6a00) drop-shadow(0 0 16px #ff4500);
+    }
+    .ember {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: radial-gradient(circle, #ff7840 0%, #e0473c 50%, transparent 100%);
+      border-radius: 50%;
+      box-shadow:
+        0 0 8px #e0473c,
+        0 0 16px rgba(255, 120, 80, 0.8),
+        0 0 24px rgba(255, 100, 60, 0.4);
+      pointer-events: none;
+      z-index: 100;
+      opacity: 0.9;
+    }
+    .spark {
+      position: fixed;
+      width: 3px;
+      height: 8px;
+      background: linear-gradient(180deg, #ffffff 0%, #ffd700 30%, #ff8c00 70%, transparent 100%);
+      border-radius: 2px;
+      box-shadow:
+        0 0 6px #ffd700,
+        0 0 12px rgba(255, 215, 0, 0.6);
+      pointer-events: none;
+      z-index: 100;
+      opacity: 0.95;
+    }
+    .work-header {
+      width: 100%;
+      margin-bottom: 24px;
+      padding-left: 40px; 
+      box-sizing: border-box;
+    }
+    .work-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #e6e9ee;
+    }
+    .work-subtitle {
+      font-size: 14px;
+      color: #9aa3ad;
+      margin: 0;
+      font-family: monospace;
+    }
+    .work-card-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 20px 20px 16px 20px;
+      background: linear-gradient(0deg, rgba(10, 11, 13, 0.95) 0%, rgba(10, 11, 13, 0.7) 80%, rgba(10, 11, 13, 0) 100%);
+      transform: translateY(40%); 
+      opacity: 0.8;
+      transition: all 0.3s ease-out;
+      z-index: 5;
+    }
+    .work-card:hover .work-card-content {
+      transform: translateY(0);
+      opacity: 1;
+      background: linear-gradient(0deg, rgba(10, 11, 13, 0.98) 0%, rgba(10, 11, 13, 0.8) 100%);
+    }
+    .work-card-content h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #e6e9ee;
+      margin: 0 0 4px 0;
+    }
+    .work-card-content p {
+      font-size: 13px;
+      color: #c9d0d8;
+      margin: 0;
+      line-height: 1.5;
+      opacity: 0; 
+      transition: opacity 0.3s ease-out 0.1s; 
+    }
+    .work-card:hover .work-card-content p {
+      opacity: 1;
+    }
+    footer {
+      padding: 32px 18px;
+      background: #0a0b0d; 
+      border-top: 1px solid #2a2f34;
+      margin-top: 32px;
+    }
+    
+    /* ========== VIDEO SHOWCASE SECTION ========== */
+    .video-showcase {
+      padding: 80px 40px;
+      background: linear-gradient(180deg, rgba(10, 11, 13, 0.95) 0%, rgba(15, 17, 19, 0.9) 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .video-showcase::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(224, 71, 60, 0.5), transparent);
+    }
+    .video-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .video-header {
+      margin-bottom: 40px;
+    }
+    .video-label {
+      display: inline-block;
+      padding: 6px 16px;
+      background: rgba(224, 71, 60, 0.1);
+      border: 1px solid rgba(224, 71, 60, 0.3);
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #ff9b93;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 16px;
+    }
+    .video-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: #e6e9ee;
+      margin: 0 0 12px 0;
+    }
+    .video-subtitle {
+      font-size: 15px;
+      color: #9aa3ad;
+      margin: 0;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    .video-frame {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%; /* 16:9 */
+      border-radius: 16px;
+      overflow: hidden;
+      border: 2px solid rgba(224, 71, 60, 0.3);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(224, 71, 60, 0.1);
+      background: #0a0b0d;
+    }
+    .video-frame iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .video-frame:hover {
+      border-color: #e0473c;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 60px rgba(224, 71, 60, 0.2);
+    }
+    
+    /* ========== BUSINESS VALUE SECTION ========== */
+    .business-section {
+      padding: 80px 40px;
+      background: linear-gradient(180deg, rgba(15, 17, 19, 0.9) 0%, rgba(10, 11, 13, 0.95) 100%);
+    }
+    .business-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .business-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+    .business-label {
+      display: inline-block;
+      padding: 6px 16px;
+      background: rgba(57, 255, 20, 0.1);
+      border: 1px solid rgba(57, 255, 20, 0.3);
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #39FF14;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 16px;
+    }
+    .business-title {
+      font-size: 32px;
+      font-weight: 800;
+      color: #e6e9ee;
+      margin: 0 0 12px 0;
+    }
+    .business-subtitle {
+      font-size: 15px;
+      color: #9aa3ad;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    .infographics-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      margin-bottom: 60px;
+    }
+    .info-card {
+      background: linear-gradient(135deg, rgba(224, 71, 60, 0.05), rgba(224, 71, 60, 0.02));
+      border: 1px solid rgba(224, 71, 60, 0.2);
+      border-radius: 16px;
+      padding: 32px 28px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    .info-card:hover {
+      border-color: #e0473c;
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(224, 71, 60, 0.15);
+    }
+    .info-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 20px auto;
+      background: linear-gradient(135deg, rgba(224, 71, 60, 0.15), rgba(224, 71, 60, 0.05));
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+    }
+    .info-stat {
+      font-size: 36px;
+      font-weight: 800;
+      color: #e0473c;
+      margin-bottom: 8px;
+      font-family: 'Inter', monospace;
+    }
+    .info-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #e6e9ee;
+      margin-bottom: 8px;
+    }
+    .info-desc {
+      font-size: 13px;
+      color: #9aa3ad;
+      line-height: 1.5;
+      margin: 0;
+    }
+    
+    /* System Showcase Placeholders */
+    .systems-showcase {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+      margin-top: 48px;
+    }
+    .system-preview {
+      background: linear-gradient(135deg, rgba(20, 22, 25, 0.8), rgba(15, 17, 19, 0.9));
+      border: 1px solid rgba(224, 71, 60, 0.15);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    .system-preview:hover {
+      border-color: rgba(224, 71, 60, 0.4);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+    .system-image-placeholder {
+      height: 200px;
+      background: linear-gradient(135deg, rgba(224, 71, 60, 0.08), rgba(224, 71, 60, 0.03));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid rgba(224, 71, 60, 0.1);
+    }
+    .system-image-placeholder img {
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain;
+      opacity: 0.9;
+    }
+    .placeholder-text {
+      color: rgba(224, 71, 60, 0.4);
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .system-info {
+      padding: 24px;
+    }
+    .system-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: #e6e9ee;
+      margin: 0 0 8px 0;
+    }
+    .system-desc {
+      font-size: 13px;
+      color: #9aa3ad;
+      line-height: 1.5;
+      margin: 0;
+    }
+    
+    @media (max-width: 968px) {
+      .infographics-grid { grid-template-columns: 1fr; }
+      .systems-showcase { grid-template-columns: 1fr; }
+      .video-showcase, .business-section { padding: 60px 20px; }
+      .video-title, .business-title { font-size: 24px; }
+    }
+    .footer-content {
+      max-width: 1600px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: #9aa3ad;
+    }
+    .footer-links a {
+      color: #9aa3ad;
+      text-decoration: none;
+      margin-left: 20px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover {
+      color: #e0473c;
+    }
+   
+    @media (max-width: 1200px) {
+      .skills { grid-template-columns: repeat(2, 1fr); }
+      h1 { font-size: 32px; }
+      .content-area { flex-direction: column; }
+      .contact-side, .work-side { width: 100%; border-radius: 0; }
+      .work-grid { grid-template-columns: repeat(2, 1fr); } 
+    }
+    @media (max-width: 968px) {
+      .hero-section { padding: 32px 0; }
+      .skills { grid-template-columns: 1fr; }
+      .content-area { padding: 0; }
+      .work-card { aspect-ratio: 1.5/1; }
+      .work-grid { grid-template-columns: 1fr; padding: 0 18px; } 
+      .work-header { padding-left: 18px; } 
+      .footer-content { flex-direction: column; gap: 16px; } 
+    }
+  </style>
+</head>
+<body>
+  <!-- Neural Particles Background -->
+  <canvas id="neural-particles" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.4;"></canvas>
+  
+
+  <style>
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    header { top: 40px !important; }
+    main { padding-top: 40px; }
+  </style>
+  
+  <header>
+    <div class="nav">
+      <div class="brand">
+        <div class="brand-icon">N</div>
+        <span>NEUROFOUNDRY</span>
+      </div>
+      <nav class="links">
+        <a class="navlink" href="home.html">Home</a>
+        <a class="navlink" href="https://forge.theneurofoundry.com/">Forge</a>
+        <div class="nav-item dropdown">
+          <button class="dropdown-toggle" type="button">
+            Archives <span class="dropdown-caret">v</span>
+          </button>
+          <div class="dropdown-menu">
+            <a href="technology.html">Technology</a>
+            <a href="downloads.html">Downloads</a>
+            <a href="button2.html">Manifesto</a>
+            <a href="neurofoundry-report.html">Report</a>
+          </div>
+        </div>
+        <a class="navlink" href="about.html">About</a>
+        <a class="btn primary" href="signup.html">Request Access</a>
+      </nav>
+    </div>
+    <div id="launchBanner" style="
+      background: linear-gradient(90deg, #0f1113 60%, #23272e 100%);
+      border-bottom: 1.5px solid #e0473c;
+      color: #e6e9ee;
+      font-style: normal;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      box-shadow: 0 0 18px 0 #e0473c33;
+      font-family: 'Inter', sans-serif;
+      font-size: 1.18em;
+      padding: 10px 20px;
+      margin-top: 0;
+    ">
+      <span style="font-size:1.18em; letter-spacing:0.5px; color:#e6e9ee; font-weight:700;">Official Launch</span>
+      <span id="countdown" style="font-size:1.25em; color:#e0473c; font-family:'Inter',monospace; font-weight:800; letter-spacing:1.5px; text-shadow:0 0 8px #e0473c,0 0 2px #fff;">Loading...</span>
+    </div>
+  </header>
+  <main>
+    
+    <div class="section-divider"></div>
+    
+    <section class="bottom-section">
+      <div class="content-area">
+        <div class="layout-builder">
+          <div class="builder-toolbar">
+            <div class="tool-group">
+              <button class="builder-btn" id="addBoxBtn" type="button">Add Box</button>
+              <button class="builder-btn" id="addImageBtn" type="button">Add Image</button>
+              <button class="builder-btn" id="addTextBtn" type="button">Add Text</button>
+              <button class="builder-btn" id="addButtonBtn" type="button">Add Button</button>
+              <button class="builder-btn" id="layerUpBtn" type="button" disabled>Layer Up</button>
+              <button class="builder-btn" id="layerDownBtn" type="button" disabled>Layer Down</button>
+              <button class="builder-btn" id="removeBoxBtn" type="button">Remove Selected</button>
+              <button class="builder-btn" id="saveLayoutBtn" type="button">Save Layout</button>
+              <button class="builder-btn primary" id="savePageBtn" type="button">Save Page</button>
+              <button class="builder-btn" id="loadPageBtn" type="button">Load Page</button>
+              <button class="builder-btn" id="saveSnapshotBtn" type="button">Save Snapshot</button>
+              <button class="builder-btn" id="loadSnapshotBtn" type="button">Load Snapshot</button>
+              <label class="builder-btn" for="backdropInput">Backdrop</label>
+              <input class="builder-file" id="backdropInput" type="file" accept=".png,.jpg,.jpeg">
+              <button class="builder-btn" id="clearBackdropBtn" type="button" disabled>Clear Backdrop</button>
+              <input class="builder-file" id="insertImageInput" type="file" accept="image/*">
+              <input class="builder-file" id="snapshotInput" type="file" accept=".json">
+              <input class="builder-file" id="pageInput" type="file" accept=".html,.htm">
+            </div>
+            <div class="builder-info">
+              <span id="boxCount">Boxes: 1</span>
+              <span class="builder-hint">Drag to move. Drag the corner to resize.</span>
+            </div>
+          </div>
+          <div class="layout-stage" id="layoutStage">
+            <div class="layout-inner" id="layoutInner">
+            <div class="content-layer" id="contentLayer">
+              <div class="content-placeholder">Content layer</div>
+            </div>
+            <div class="layout-layer" id="boxLayer"><div class="layout-box selected" style="left: 12px; top: 12px; width: 445px; height: 442px;"><div class="box-label">x:12 y:12 w:445 h:442</div><div class="resize-handle" data-handle="se"></div></div></div>
+            <div class="custom-layer" id="customLayer"></div>
+          </div>
+        </div>
+          <div class="layout-output">
+            <label for="layoutOutput">Saved layout</label>
+            <textarea id="layoutOutput" rows="8" readonly=""></textarea>
+          </div>
+          <div class="emoji-panel">
+            <div class="emoji-toolbar">
+              <span class="emoji-title">Emoji Bank</span>
+              <input class="emoji-search" id="emojiSearch" type="text" placeholder="Search emoji">
+              <button class="builder-btn" id="clearEmojiBtn" type="button">Clear</button>
+            </div>
+            <div class="emoji-grid" id="emojiGrid"></div>
+            <div class="emoji-output">
+              <span>Selected</span>
+              <input id="emojiOutput" type="text" readonly>
+              <span id="emojiStatus"></span>
+            </div>
+          </div>
+        </div></div>
+    </section>
+  </main>
+  <footer>
+    <div class="footer-content">
+      <p>&copy; 2025 The Neurofoundry. Forged with intent.</p>
+      <div class="footer-links">
+        <a href="home.html">Home</a>
+        <a href="technology.html">Technology</a>
+        <a href="projects.html">Projects</a>
+        <a href="https://forge.theneurofoundry.com/">Forge</a>
+        <a href="gallery.html">Gallery</a>
+      </div>
+    </div>
+  </footer>
+  <script>
+    function createEmber() {
+      const divider = document.querySelector('.section-divider');
+      if (!divider) return;
+      const startX = Math.random() * window.innerWidth;
+      const rect = divider.getBoundingClientRect();
+      const scrollY = window.scrollY || window.pageYOffset;
+      const startY = rect.top + scrollY;
+      const ember = document.createElement('span');
+      ember.className = 'ember';
+      ember.style.left = startX + 'px';
+      ember.style.top = startY + 'px';
+      const riseDistance = 220 + Math.random() * 140;
+      const drift = (Math.random() - 0.5) * 140;
+      const duration = (1600 + Math.random() * 1200) * 0.9;
+      const size = 3 + Math.random() * 4;
+      ember.style.width = size + 'px';
+      ember.style.height = size + 'px';
+      ember.style.transition = `transform ${duration}ms ease-out, opacity ${duration}ms ease-out`;
+      document.body.appendChild(ember);
+      requestAnimationFrame(() => {
+        ember.style.transform = `translate(${drift}px, -${riseDistance}px)`;
+        ember.style.opacity = '0';
+      });
+      setTimeout(() => ember.remove(), duration + 30);
+    }
+    function scheduleEmbers() {
+      createEmber();
+      const nextDelay = (65 + Math.random() * 100) * 0.8;  // 20% more embers
+      setTimeout(scheduleEmbers, nextDelay);
+    }
+    window.addEventListener('load', scheduleEmbers);
+    function createSpark() {
+      const startX = window.innerWidth - 60;
+      const startY = window.innerHeight - 60;
+      const spark = document.createElement('span');
+      spark.className = 'spark';
+      spark.style.left = startX + 'px';
+      spark.style.top = startY + 'px';
+      const angleVariation = (Math.random() - 0.5) * 60;
+      const distance = 40 + Math.random() * 80;
+      const radians = (angleVariation - 90) * (Math.PI / 180);
+      const driftX = Math.cos(radians) * distance;
+      const driftY = Math.sin(radians) * distance;
+      const duration = 800 + Math.random() * 600;
+      const rotation = (Math.random() - 0.5) * 720;
+      spark.style.transition = `transform ${duration}ms ease-out, opacity ${duration}ms ease-out`;
+      document.body.appendChild(spark);
+      requestAnimationFrame(() => {
+        spark.style.transform = `translate(${driftX}px, ${driftY}px) rotate(${rotation}deg)`;
+        spark.style.opacity = '0';
+      });
+      setTimeout(() => spark.remove(), duration + 50);
+    }
+    function scheduleSparks() {
+      if (Math.random() < 0.7) {
+        createSpark();
+      }
+      const nextDelay = 100 + Math.random() * 200;
+      setTimeout(scheduleSparks, nextDelay);
+    }
+    window.addEventListener('load', scheduleSparks);
+    function handleSubmit() {
+      alert('Form submission would be handled here. Connect to your backend or email service.');
+    }
+  </script>
+  <script>
+    window.addEventListener('load', () => {
+      function makeDraggableResizable(el, container) {
+        el.style.position = 'absolute';
+        el.style.cursor = 'move';
+        let mode = null;
+        let startX = 0;
+        let startY = 0;
+        let startLeft = 0;
+        let startTop = 0;
+        let startWidth = 0;
+        let startHeight = 0;
+
+        function startInteraction(e, nextMode) {
+          const bounds = container.getBoundingClientRect();
+          const rect = el.getBoundingClientRect();
+          mode = nextMode;
+          startX = e.clientX;
+          startY = e.clientY;
+          startLeft = rect.left - bounds.left;
+          startTop = rect.top - bounds.top;
+          startWidth = rect.width;
+          startHeight = rect.height;
+          el.setPointerCapture(e.pointerId);
+          document.body.style.userSelect = 'none';
+        }
+
+        function onPointerDown(e) {
+          if (e.button !== 0) return;
+          const isResizeHandle = e.target.classList.contains('floating-resize-handle');
+          const isEditableTarget = e.target.isContentEditable;
+          setActiveItem(el);
+          if (isEditableTarget && !isResizeHandle) {
+            e.stopPropagation();
+            return;
+          }
+          e.preventDefault();
+          startInteraction(e, isResizeHandle ? 'resize' : 'drag');
+          e.stopPropagation();
+        }
+
+        function onPointerMove(e) {
+          if (!mode) return;
+          const bounds = container.getBoundingClientRect();
+          if (mode === 'drag') {
+            const dx = e.clientX - startX;
+            const dy = e.clientY - startY;
+            const left = clamp(startLeft + dx, 0, bounds.width - startWidth);
+            const top = clamp(startTop + dy, 0, bounds.height - startHeight);
+            el.style.left = px(left);
+            el.style.top = px(top);
+          } else {
+            const dx = e.clientX - startX;
+            const dy = e.clientY - startY;
+            const minSize = 60;
+            const maxWidth = bounds.width - startLeft;
+            const maxHeight = bounds.height - startTop;
+            const width = clamp(startWidth + dx, minSize, maxWidth);
+            const height = clamp(startHeight + dy, minSize, maxHeight);
+            el.style.width = px(width);
+            el.style.height = px(height);
+          }
+        }
+
+        function endInteraction(e) {
+          if (!mode) return;
+          mode = null;
+          document.body.style.userSelect = '';
+          if (el.hasPointerCapture(e.pointerId)) {
+            el.releasePointerCapture(e.pointerId);
+          }
+        }
+
+        el.addEventListener('pointerdown', onPointerDown);
+        el.addEventListener('pointermove', onPointerMove);
+        el.addEventListener('pointerup', endInteraction);
+        el.addEventListener('pointercancel', endInteraction);
+      }
+
+      function setupBoxTools(box) {
+        const lockBtn = box.querySelector('.lock-btn');
+        const tagInput = box.querySelector('.tag-input');
+        if (!lockBtn || !tagInput) return;
+        lockBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const locked = box.classList.toggle('locked');
+          lockBtn.textContent = locked ? '🔓' : '🔒';
+          box.style.cursor = locked ? 'default' : 'move';
+          box.querySelector('.resize-handle').style.display = locked ? 'none' : '';
+        });
+        tagInput.addEventListener('input', (e) => {
+          box.setAttribute('data-tag', tagInput.value);
+        });
+      }
+
+      const addBtn = document.getElementById('addBoxBtn');
+      const removeBtn = document.getElementById('removeBoxBtn');
+      const saveBtn = document.getElementById('saveLayoutBtn');
+      const addImageBtn = document.getElementById('addImageBtn');
+      const addTextBtn = document.getElementById('addTextBtn');
+      const addButtonBtn = document.getElementById('addButtonBtn');
+      const layerUpBtn = document.getElementById('layerUpBtn');
+      const layerDownBtn = document.getElementById('layerDownBtn');
+      const savePageBtn = document.getElementById('savePageBtn');
+      const loadPageBtn = document.getElementById('loadPageBtn');
+      const saveSnapshotBtn = document.getElementById('saveSnapshotBtn');
+      const loadSnapshotBtn = document.getElementById('loadSnapshotBtn');
+      const insertImageInput = document.getElementById('insertImageInput');
+      const snapshotInput = document.getElementById('snapshotInput');
+      const pageInput = document.getElementById('pageInput');
+      const boxLayer = document.getElementById('boxLayer');
+      const layoutInner = document.getElementById('layoutInner');
+      const customLayer = document.getElementById('customLayer');
+      const layoutStage = document.getElementById('layoutStage');
+      const contentLayer = document.getElementById('contentLayer');
+      const output = document.getElementById('layoutOutput');
+      const boxCount = document.getElementById('boxCount');
+      const backdropInput = document.getElementById('backdropInput');
+      const clearBackdropBtn = document.getElementById('clearBackdropBtn');
+      const emojiGrid = document.getElementById('emojiGrid');
+      const emojiSearch = document.getElementById('emojiSearch');
+      const emojiOutput = document.getElementById('emojiOutput');
+      const emojiStatus = document.getElementById('emojiStatus');
+      const clearEmojiBtn = document.getElementById('clearEmojiBtn');
+
+      if (!addBtn || !removeBtn || !saveBtn || !addImageBtn || !addTextBtn || !addButtonBtn || !layerUpBtn || !layerDownBtn || !savePageBtn || !loadPageBtn || !saveSnapshotBtn || !loadSnapshotBtn || !insertImageInput || !snapshotInput || !pageInput || !boxLayer || !layoutInner || !customLayer || !layoutStage || !contentLayer || !output || !boxCount || !backdropInput || !clearBackdropBtn || !emojiGrid || !emojiSearch || !emojiOutput || !emojiStatus || !clearEmojiBtn) {
+        return;
+      }
+
+      const state = {
+        activeBox: null,
+        activeItem: null,
+        drag: null,
+        offsetIndex: 0,
+        customZ: 5
+      };
+      let backdropUrl = '';
+
+      function clamp(value, min, max) {
+        return Math.min(Math.max(value, min), max);
+      }
+
+      function px(value) {
+        return Math.round(value) + 'px';
+      }
+
+      function metricsFor(box) {
+        const left = parseFloat(box.style.left) || 0;
+        const top = parseFloat(box.style.top) || 0;
+        const width = parseFloat(box.style.width) || box.offsetWidth;
+        const height = parseFloat(box.style.height) || box.offsetHeight;
+        return {
+          left: Math.round(left),
+          top: Math.round(top),
+          width: Math.round(width),
+          height: Math.round(height)
+        };
+      }
+
+      function updateLabel(box) {
+        const label = box.querySelector('.box-label');
+        if (!label) return;
+        const metrics = metricsFor(box);
+        label.textContent = `x:${metrics.left} y:${metrics.top} w:${metrics.width} h:${metrics.height}`;
+      }
+
+      function updateCount() {
+        boxCount.textContent = `Boxes: ${boxLayer.children.length}`;
+      }
+
+      function setBackdrop(url) {
+        if (backdropUrl) {
+          URL.revokeObjectURL(backdropUrl);
+        }
+        backdropUrl = url || '';
+        if (backdropUrl) {
+          contentLayer.style.setProperty('--backdrop', `url("${backdropUrl}")`);
+          clearBackdropBtn.disabled = false;
+        } else {
+          contentLayer.style.setProperty('--backdrop', 'none');
+          clearBackdropBtn.disabled = true;
+        }
+      }
+
+      function selectBox(box) {
+        if (state.activeBox) {
+          state.activeBox.classList.remove('selected');
+        }
+        state.activeBox = box;
+        if (state.activeBox) {
+          state.activeBox.classList.add('selected');
+          clearActiveItem();
+        }
+        removeBtn.disabled = !state.activeBox;
+      }
+
+      function clearActiveItem() {
+        if (state.activeItem) {
+          state.activeItem.classList.remove('selected');
+        }
+        state.activeItem = null;
+        layerUpBtn.disabled = true;
+        layerDownBtn.disabled = true;
+      }
+
+      function setActiveItem(item) {
+        if (state.activeItem) {
+          state.activeItem.classList.remove('selected');
+        }
+        state.activeItem = item;
+        if (state.activeItem) {
+          state.activeItem.classList.add('selected');
+          selectBox(null);
+          layerUpBtn.disabled = false;
+          layerDownBtn.disabled = false;
+        } else {
+          layerUpBtn.disabled = true;
+          layerDownBtn.disabled = true;
+        }
+      }
+
+      function getItemZ(item) {
+        return parseInt(item.dataset.z || item.style.zIndex || '1', 10);
+      }
+
+      function setItemZ(item, value) {
+        const next = clamp(value, 1, 50);
+        item.dataset.z = String(next);
+        item.style.zIndex = String(next);
+        if (next > state.customZ) {
+          state.customZ = next;
+        }
+      }
+
+      function bumpActiveItemZ(delta) {
+        if (!state.activeItem) return;
+        const current = getItemZ(state.activeItem);
+        setItemZ(state.activeItem, current + delta);
+      }
+
+      function createFloatingItem(contentEl, options) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'floating-item';
+        wrapper.style.left = px(options.left);
+        wrapper.style.top = px(options.top);
+        wrapper.style.width = px(options.width);
+        wrapper.style.height = px(options.height);
+        setItemZ(wrapper, state.customZ + 1);
+        contentEl.classList.add('floating-content');
+        wrapper.appendChild(contentEl);
+        const handle = document.createElement('div');
+        handle.className = 'floating-resize-handle';
+        wrapper.appendChild(handle);
+        makeDraggableResizable(wrapper, layoutInner);
+        return wrapper;
+      }
+
+      function buildBoxElement(data) {
+        const box = document.createElement('div');
+        box.className = 'layout-box' + (data.locked ? ' locked' : '');
+        box.style.left = px(data.left);
+        box.style.top = px(data.top);
+        box.style.width = px(data.width);
+        box.style.height = px(data.height);
+        box.setAttribute('data-tag', data.tag || '');
+        box.innerHTML = `
+  <div class="box-label"></div>
+  <div class="box-tools">
+    <button class="lock-btn" title="Lock/Unlock">??</button>
+    <input class="tag-input" type="text" maxlength="12" placeholder="Tag (e.g. IMG)" />
+  </div>
+  <div class="resize-handle" data-handle="se"></div>
+`;
+        setupBoxTools(box);
+        if (data.locked) {
+          box.querySelector('.resize-handle').style.display = 'none';
+          box.style.cursor = 'default';
+        }
+        updateLabel(box);
+        return box;
+      }
+
+      function buildFloatingElement(data) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'floating-item';
+        wrapper.style.left = px(data.left);
+        wrapper.style.top = px(data.top);
+        wrapper.style.width = px(data.width);
+        wrapper.style.height = px(data.height);
+        setItemZ(wrapper, data.z || 5);
+        const temp = document.createElement('div');
+        temp.innerHTML = data.html || '';
+        const content = temp.firstElementChild || document.createElement('div');
+        content.classList.add('floating-content');
+        if (content.tagName === 'DIV') {
+          content.contentEditable = true;
+          content.style.outline = 'none';
+        }
+        if (content.tagName === 'IMG') {
+          content.style.width = '100%';
+          content.style.height = '100%';
+          content.style.objectFit = content.style.objectFit || 'contain';
+        }
+        if (content.tagName === 'BUTTON') {
+          content.type = 'button';
+          content.onclick = function() {
+            alert('Button clicked!');
+          };
+        }
+        wrapper.appendChild(content);
+        const handle = document.createElement('div');
+        handle.className = 'floating-resize-handle';
+        wrapper.appendChild(handle);
+        makeDraggableResizable(wrapper, layoutInner);
+        return wrapper;
+      }
+
+      const emojiList = [
+        { char: '😀', name: 'grinning face' },
+        { char: '😃', name: 'smiling face' },
+        { char: '😄', name: 'smiling face with open mouth' },
+        { char: '😁', name: 'beaming face' },
+        { char: '😆', name: 'grinning squinting face' },
+        { char: '😅', name: 'grinning sweat' },
+        { char: '🤣', name: 'rolling on the floor laughing' },
+        { char: '😂', name: 'face with tears of joy' },
+        { char: '🙂', name: 'slightly smiling face' },
+        { char: '😉', name: 'winking face' },
+        { char: '😍', name: 'smiling face with heart eyes' },
+        { char: '😎', name: 'smiling face with sunglasses' },
+        { char: '🤔', name: 'thinking face' },
+        { char: '😴', name: 'sleeping face' },
+        { char: '🤯', name: 'exploding head' },
+        { char: '😇', name: 'smiling face with halo' },
+        { char: '🥳', name: 'partying face' },
+        { char: '😤', name: 'face with steam from nose' },
+        { char: '😭', name: 'loudly crying face' },
+        { char: '😱', name: 'face screaming in fear' },
+        { char: '🤖', name: 'robot' },
+        { char: '👀', name: 'eyes' },
+        { char: '🧠', name: 'brain' },
+        { char: '🫀', name: 'anatomical heart' },
+        { char: '🧬', name: 'dna' },
+        { char: '🔬', name: 'microscope' },
+        { char: '🧪', name: 'test tube' },
+        { char: '🛰️', name: 'satellite' },
+        { char: '🚀', name: 'rocket' },
+        { char: '🛸', name: 'flying saucer' },
+        { char: '🌐', name: 'globe with meridians' },
+        { char: '🧭', name: 'compass' },
+        { char: '⚙️', name: 'gear' },
+        { char: '🖥️', name: 'desktop computer' },
+        { char: '💾', name: 'floppy disk' },
+        { char: '📡', name: 'satellite antenna' },
+        { char: '📊', name: 'bar chart' },
+        { char: '📈', name: 'chart increasing' },
+        { char: '📉', name: 'chart decreasing' },
+        { char: '🧩', name: 'puzzle piece' },
+        { char: '🧱', name: 'brick' },
+        { char: '🧲', name: 'magnet' },
+        { char: '🔋', name: 'battery' },
+        { char: '💡', name: 'light bulb' },
+        { char: '🔥', name: 'fire' },
+        { char: '⚡', name: 'high voltage' },
+        { char: '🌟', name: 'glowing star' },
+        { char: '✨', name: 'sparkles' },
+        { char: '🌀', name: 'cyclone' },
+        { char: '🌌', name: 'milky way' },
+        { char: '☄️', name: 'comet' },
+        { char: '🌙', name: 'crescent moon' },
+        { char: '☀️', name: 'sun' },
+        { char: '🛰', name: 'satellite (text)' },
+        { char: '📎', name: 'paperclip' },
+        { char: '🗂️', name: 'card index dividers' },
+        { char: '🗃️', name: 'card file box' },
+        { char: '📁', name: 'file folder' },
+        { char: '📌', name: 'pushpin' },
+        { char: '📝', name: 'memo' },
+        { char: '✏️', name: 'pencil' },
+        { char: '📐', name: 'triangular ruler' },
+        { char: '📏', name: 'straight ruler' },
+        { char: '🧰', name: 'toolbox' },
+        { char: '🪛', name: 'screwdriver' },
+        { char: '🔧', name: 'wrench' },
+        { char: '🔩', name: 'nut and bolt' },
+        { char: '🔒', name: 'locked' },
+        { char: '🛡️', name: 'shield' },
+        { char: '📣', name: 'megaphone' },
+        { char: '🎛️', name: 'control knobs' },
+        { char: '🎚️', name: 'level slider' },
+        { char: '🎯', name: 'bullseye' },
+        { char: '🏁', name: 'chequered flag' },
+        { char: '✅', name: 'check mark button' },
+        { char: '🟢', name: 'green circle' },
+        { char: '🟡', name: 'yellow circle' },
+        { char: '🔴', name: 'red circle' },
+        { char: '🟣', name: 'purple circle' },
+        { char: '🟠', name: 'orange circle' },
+        { char: '🔵', name: 'blue circle' }
+      ];
+
+      function renderEmojiGrid(filterText) {
+        const term = (filterText || '').trim().toLowerCase();
+        const fragment = document.createDocumentFragment();
+        const list = term
+          ? emojiList.filter((item) => item.name.includes(term) || item.char.includes(term))
+          : emojiList;
+        emojiGrid.innerHTML = '';
+        list.forEach((item) => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'emoji-btn';
+          btn.textContent = item.char;
+          btn.title = item.name;
+          btn.addEventListener('click', () => {
+            emojiOutput.value = item.char;
+            emojiStatus.textContent = 'Selected';
+            if (navigator.clipboard && window.isSecureContext) {
+              navigator.clipboard.writeText(item.char).then(() => {
+                emojiStatus.textContent = 'Copied';
+              }).catch(() => {
+                emojiStatus.textContent = 'Selected';
+              });
+            }
+          });
+          fragment.appendChild(btn);
+        });
+        emojiGrid.appendChild(fragment);
+      }
+
+      function addBox() {
+        const innerRect = layoutInner.getBoundingClientRect();
+        const width = 180;
+        const height = 120;
+        const offset = 12 + state.offsetIndex * 18;
+        const left = clamp(offset, 0, innerRect.width - width);
+        const top = clamp(offset, 0, innerRect.height - height);
+        const box = document.createElement('div');
+        box.className = 'layout-box';
+        box.style.left = px(left);
+        box.style.top = px(top);
+        box.style.width = px(width);
+        box.style.height = px(height);
+        box.innerHTML = `
+  <div class="box-label"></div>
+  <div class="box-tools">
+    <button class="lock-btn" title="Lock/Unlock">🔒</button>
+    <input class="tag-input" type="text" maxlength="12" placeholder="Tag (e.g. IMG)" />
+  </div>
+  <div class="resize-handle" data-handle="se"></div>
+`;
+setupBoxTools(box);
+
+        boxLayer.appendChild(box);
+        state.offsetIndex = (state.offsetIndex + 1) % 6;
+        updateLabel(box);
+        selectBox(box);
+        updateCount();
+      }
+
+      function removeBox() {
+        if (!state.activeBox) return;
+        state.activeBox.remove();
+        selectBox(null);
+        updateCount();
+      }
+
+      function startMove(e, box) {
+        const rect = box.getBoundingClientRect();
+        const innerRect = layoutInner.getBoundingClientRect();
+        state.drag = {
+          mode: 'move',
+          box,
+          startX: e.clientX,
+          startY: e.clientY,
+          startLeft: rect.left - innerRect.left,
+          startTop: rect.top - innerRect.top,
+          width: rect.width,
+          height: rect.height
+        };
+      }
+
+      function startResize(e, box) {
+        const rect = box.getBoundingClientRect();
+        const innerRect = layoutInner.getBoundingClientRect();
+        state.drag = {
+          mode: 'resize',
+          box,
+          startX: e.clientX,
+          startY: e.clientY,
+          startLeft: rect.left - innerRect.left,
+          startTop: rect.top - innerRect.top,
+          startWidth: rect.width,
+          startHeight: rect.height
+        };
+      }
+
+      function onPointerDown(e) {
+        const box = e.target.closest('.layout-box');
+        if (!box) {
+          selectBox(null);
+          clearActiveItem();
+          return;
+        }
+        e.preventDefault();
+        selectBox(box);
+        if (box.classList.contains('locked')) return;
+        if (e.target.classList.contains('resize-handle')) {
+          startResize(e, box);
+        } else if (!e.target.classList.contains('lock-btn') && !e.target.classList.contains('tag-input')) {
+          startMove(e, box);
+        }
+      }
+
+      function onPointerMove(e) {
+        if (!state.drag) return;
+        const innerRect = layoutInner.getBoundingClientRect();
+        if (state.drag.mode === 'move') {
+          const dx = e.clientX - state.drag.startX;
+          const dy = e.clientY - state.drag.startY;
+          const left = clamp(state.drag.startLeft + dx, 0, innerRect.width - state.drag.width);
+          const top = clamp(state.drag.startTop + dy, 0, innerRect.height - state.drag.height);
+          state.drag.box.style.left = px(left);
+          state.drag.box.style.top = px(top);
+        } else {
+          const dx = e.clientX - state.drag.startX;
+          const dy = e.clientY - state.drag.startY;
+          const minSize = 40;
+          const maxWidth = innerRect.width - state.drag.startLeft;
+          const maxHeight = innerRect.height - state.drag.startTop;
+          const width = clamp(state.drag.startWidth + dx, minSize, maxWidth);
+          const height = clamp(state.drag.startHeight + dy, minSize, maxHeight);
+          state.drag.box.style.width = px(width);
+          state.drag.box.style.height = px(height);
+        }
+        updateLabel(state.drag.box);
+      }
+
+      function onPointerUp() {
+        state.drag = null;
+      }
+
+      function saveLayout() {
+        const boxes = Array.from(boxLayer.querySelectorAll('.layout-box'));
+        const floatingItems = Array.from(customLayer.querySelectorAll('.floating-item'));
+        const boxLines = boxes.map((box) => {
+          const metrics = metricsFor(box);
+          const tag = box.getAttribute('data-tag') || '';
+          const locked = box.classList.contains('locked');
+          return `      <div class=\"layout-box${locked ? ' locked' : ''}\" style=\"left:${metrics.left}px; top:${metrics.top}px; width:${metrics.width}px; height:${metrics.height}px;\" data-tag=\"${tag}\"></div>`;
+        });
+        const floatingLines = floatingItems.map((item) => {
+          const metrics = metricsFor(item);
+          const zIndex = item.dataset.z || item.style.zIndex || '1';
+          const content = item.querySelector('.floating-content');
+          if (!content) return '';
+          const clone = content.cloneNode(true);
+          clone.removeAttribute('contenteditable');
+          const html = clone.outerHTML;
+          return `      <div class=\"floating-item\" style=\"left:${metrics.left}px; top:${metrics.top}px; width:${metrics.width}px; height:${metrics.height}px; z-index:${zIndex};\">${html}</div>`;
+        }).filter(Boolean);
+        const backdrop = contentLayer.style.getPropertyValue('--backdrop');
+        const backdropStyle = backdrop ? ` style=\"--backdrop:${backdrop};\"` : '';
+        const htmlLines = [
+          '<section class=\"layout-export\">',
+          '  <div class=\"layout-stage\">',
+          '    <div class=\"layout-inner\">',
+          `      <div class=\"content-layer\"${backdropStyle}></div>`,
+          '      <div class=\"layout-layer\">',
+          ...boxLines,
+          '      </div>',
+          '      <div class=\"custom-layer\">',
+          ...floatingLines,
+          '      </div>',
+          '    </div>',
+          '  </div>',
+          '</section>'
+        ];
+        const cssLines = [
+          `.layout-stage { position: relative; width: 100%; height: ${Math.round(layoutInner.clientHeight)}px; }`,
+          '.layout-inner { position: relative; width: 100%; height: 100%; }',
+          '.content-layer { position: absolute; inset: 0; }',
+          '.layout-layer { position: absolute; inset: 0; }',
+          '.custom-layer { position: absolute; inset: 0; }',
+          '.layout-box { position: absolute; }',
+          '.floating-item { position: absolute; }',
+          '.floating-content { width: 100%; height: 100%; display: block; box-sizing: border-box; }'
+        ];
+        output.value = htmlLines.join('\n') + '\n\n<style>\n' + cssLines.join('\n') + '\n</style>';
+        output.focus();
+        output.select();
+      }
+
+      function savePage() {
+        const header = document.querySelector('header');
+        const main = document.querySelector('main');
+        if (!header || !main) return;
+        const canvas = document.getElementById('neural-particles');
+        const mainClone = main.cloneNode(true);
+        const stage = mainClone.querySelector('.layout-stage');
+        mainClone.querySelectorAll('.builder-toolbar, .layout-output, .emoji-panel').forEach((el) => el.remove());
+        if (stage) {
+          stage.querySelectorAll('.box-label, .box-tools, .resize-handle, .floating-resize-handle, .content-placeholder').forEach((el) => el.remove());
+          stage.querySelectorAll('.layout-box').forEach((box) => box.classList.remove('selected'));
+          stage.querySelectorAll('.floating-item').forEach((item) => item.classList.remove('selected'));
+          stage.querySelectorAll('[contenteditable]').forEach((el) => el.removeAttribute('contenteditable'));
+        }
+        const bodyParts = [];
+        if (canvas) {
+          bodyParts.push(canvas.outerHTML);
+        }
+        bodyParts.push(header.outerHTML);
+        bodyParts.push(mainClone.outerHTML);
+        const snapshotJson = JSON.stringify(serializeSnapshot()).replace(/</g, '\\u003c');
+        bodyParts.push('<script id="nf-snapshot" type="application/json">' + snapshotJson + '</' + 'script>');
+        const html = [
+          '<!doctype html>',
+          '<html>',
+          '<head>',
+          document.head.innerHTML,
+          '</head>',
+          '<body>',
+          bodyParts.join('\n'),
+          '</body>',
+          '</html>'
+        ].join('\n');
+        const blob = new Blob([html], { type: 'text/html' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `layout-export-${Date.now()}.html`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+      }
+
+      function loadPageFromHtml(htmlText) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlText, 'text/html');
+        const snapshotScript = doc.querySelector('#nf-snapshot');
+        if (!snapshotScript || !snapshotScript.textContent) {
+          return false;
+        }
+        try {
+          const data = JSON.parse(snapshotScript.textContent);
+          applySnapshot(data);
+          return true;
+        } catch (err) {
+          console.error('Invalid embedded snapshot', err);
+          return false;
+        }
+      }
+
+      function readPrefabsFromStorage() {
+        try {
+          return JSON.parse(localStorage.getItem('nf_builder_prefabs')) || [];
+        } catch {
+          return [];
+        }
+      }
+
+      function serializeSnapshot() {
+        const boxes = Array.from(boxLayer.querySelectorAll('.layout-box')).map((box) => {
+          const metrics = metricsFor(box);
+          return {
+            left: metrics.left,
+            top: metrics.top,
+            width: metrics.width,
+            height: metrics.height,
+            tag: box.getAttribute('data-tag') || '',
+            locked: box.classList.contains('locked')
+          };
+        });
+        const items = Array.from(customLayer.querySelectorAll('.floating-item')).map((item) => {
+          const metrics = metricsFor(item);
+          const content = item.querySelector('.floating-content');
+          return {
+            left: metrics.left,
+            top: metrics.top,
+            width: metrics.width,
+            height: metrics.height,
+            z: parseInt(item.dataset.z || item.style.zIndex || '5', 10),
+            html: content ? content.outerHTML : ''
+          };
+        });
+        return {
+          version: 1,
+          layoutStageHeight: Math.round(layoutStage.clientHeight),
+          backdrop: contentLayer.style.getPropertyValue('--backdrop') || '',
+          prefabs: readPrefabsFromStorage(),
+          emoji: {
+            search: emojiSearch.value || '',
+            output: emojiOutput.value || ''
+          },
+          boxes,
+          items
+        };
+      }
+
+      function saveSnapshot() {
+        const data = serializeSnapshot();
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `layout-snapshot-${Date.now()}.json`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+      }
+
+      function clearLayout() {
+        boxLayer.innerHTML = '';
+        customLayer.innerHTML = '';
+        selectBox(null);
+        clearActiveItem();
+        updateCount();
+      }
+
+      function applySnapshot(data) {
+        if (!data || typeof data !== 'object') return;
+        clearLayout();
+        if (typeof data.layoutStageHeight === 'number') {
+          layoutStage.style.height = px(data.layoutStageHeight);
+        }
+        if (data.backdrop) {
+          contentLayer.style.setProperty('--backdrop', data.backdrop);
+          clearBackdropBtn.disabled = false;
+        } else {
+          contentLayer.style.setProperty('--backdrop', 'none');
+          clearBackdropBtn.disabled = true;
+        }
+        (data.boxes || []).forEach((boxData) => {
+          const box = buildBoxElement(boxData);
+          boxLayer.appendChild(box);
+        });
+        (data.items || []).forEach((itemData) => {
+          const item = buildFloatingElement(itemData);
+          customLayer.appendChild(item);
+        });
+        if (Array.isArray(data.prefabs)) {
+          try {
+            localStorage.setItem('nf_builder_prefabs', JSON.stringify(data.prefabs));
+          } catch {}
+        }
+        if (data.emoji) {
+          emojiSearch.value = data.emoji.search || '';
+          emojiOutput.value = data.emoji.output || '';
+          emojiStatus.textContent = emojiOutput.value ? 'Restored' : '';
+          renderEmojiGrid(emojiSearch.value);
+        }
+        updateCount();
+      }
+
+      addBtn.addEventListener('click', addBox);
+      removeBtn.addEventListener('click', removeBox);
+      saveBtn.addEventListener('click', saveLayout);
+      savePageBtn.addEventListener('click', savePage);
+      loadPageBtn.addEventListener('click', () => pageInput.click());
+      saveSnapshotBtn.addEventListener('click', saveSnapshot);
+      loadSnapshotBtn.addEventListener('click', () => snapshotInput.click());
+      layerUpBtn.addEventListener('click', () => bumpActiveItemZ(1));
+      layerDownBtn.addEventListener('click', () => bumpActiveItemZ(-1));
+      addImageBtn.addEventListener('click', () => {
+        insertImageInput.click();
+      });
+      insertImageInput.addEventListener('change', (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+          const img = document.createElement('img');
+          img.src = ev.target.result;
+          img.style.width = '100%';
+          img.style.height = '100%';
+          img.style.objectFit = 'contain';
+          img.style.borderRadius = '8px';
+          img.style.boxShadow = '0 2px 8px rgba(0,0,0,0.12)';
+          img.style.background = '#fff';
+          const wrapper = createFloatingItem(img, {
+            left: 80,
+            top: 80,
+            width: 320,
+            height: 240
+          });
+          customLayer.appendChild(wrapper);
+          insertImageInput.value = '';
+        };
+        reader.readAsDataURL(file);
+      });
+      addTextBtn.addEventListener('click', () => {
+        const textDiv = document.createElement('div');
+        textDiv.contentEditable = true;
+        textDiv.textContent = 'Edit me!';
+        textDiv.style.minWidth = '120px';
+        textDiv.style.minHeight = '40px';
+        textDiv.style.fontSize = '1rem';
+        textDiv.style.color = '#222c36';
+        textDiv.style.background = '#eaf6ff';
+        textDiv.style.borderRadius = '8px';
+        textDiv.style.boxShadow = '0 2px 8px rgba(0,0,0,0.10)';
+        textDiv.style.padding = '10px 14px';
+        textDiv.style.outline = 'none';
+        const wrapper = createFloatingItem(textDiv, {
+          left: 120,
+          top: 120,
+          width: 240,
+          height: 120
+        });
+        customLayer.appendChild(wrapper);
+      });
+      addButtonBtn.addEventListener('click', () => {
+        const btn = document.createElement('button');
+        btn.textContent = 'Custom Button';
+        btn.style.fontSize = '0.95rem';
+        btn.style.background = '#8ec6ff';
+        btn.style.color = '#222c36';
+        btn.style.border = 'none';
+        btn.style.borderRadius = '8px';
+        btn.style.padding = '10px 18px';
+        btn.style.boxShadow = '0 2px 8px rgba(0,0,0,0.10)';
+        btn.onclick = function() {
+          alert('Button clicked!');
+        };
+        const wrapper = createFloatingItem(btn, {
+          left: 160,
+          top: 160,
+          width: 200,
+          height: 60
+        });
+        customLayer.appendChild(wrapper);
+      });
+      snapshotInput.addEventListener('change', (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+          try {
+            const data = JSON.parse(ev.target.result);
+            applySnapshot(data);
+          } catch (err) {
+            console.error('Invalid snapshot file', err);
+          }
+          snapshotInput.value = '';
+        };
+        reader.readAsText(file);
+      });
+      pageInput.addEventListener('change', (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+          const loaded = loadPageFromHtml(ev.target.result);
+          if (!loaded) {
+            console.warn('No embedded snapshot found in HTML');
+          }
+          pageInput.value = '';
+        };
+        reader.readAsText(file);
+      });
+      backdropInput.addEventListener('change', () => {
+        const file = backdropInput.files && backdropInput.files[0];
+        if (!file) return;
+        if (!/image\/(png|jpeg)/.test(file.type)) {
+          backdropInput.value = '';
+          return;
+        }
+        setBackdrop(URL.createObjectURL(file));
+      });
+      clearBackdropBtn.addEventListener('click', () => {
+        backdropInput.value = '';
+        setBackdrop('');
+      });
+      emojiSearch.addEventListener('input', () => {
+        renderEmojiGrid(emojiSearch.value);
+      });
+      clearEmojiBtn.addEventListener('click', () => {
+        emojiSearch.value = '';
+        emojiOutput.value = '';
+        emojiStatus.textContent = '';
+        renderEmojiGrid('');
+      });
+      layoutInner.addEventListener('pointerdown', onPointerDown);
+      window.addEventListener('pointermove', onPointerMove);
+      window.addEventListener('pointerup', onPointerUp);
+      updateCount();
+      renderEmojiGrid('');
+
+    // Prefab build tools
+    const prefabKey = 'nf_builder_prefabs';
+    function getPrefabs() {
+      try {
+        return JSON.parse(localStorage.getItem(prefabKey)) || [];
+      } catch { return []; }
+    }
+    function savePrefab(index) {
+      const prefabs = getPrefabs();
+      while (prefabs.length < 10) prefabs.push(null);
+      prefabs[index] = Array.from(boxLayer.children).map(box => {
+        const m = metricsFor(box);
+        return {
+          left: m.left, top: m.top, width: m.width, height: m.height,
+          tag: box.getAttribute('data-tag')||'', locked: box.classList.contains('locked')
+        };
+      });
+      localStorage.setItem(prefabKey, JSON.stringify(prefabs));
+      alert('Prefab saved to slot ' + (index+1));
+    }
+    function loadPrefab(index) {
+      const prefabs = getPrefabs();
+      const data = prefabs[index];
+      if (!data) return alert('No prefab in slot ' + (index+1));
+      boxLayer.innerHTML = '';
+      data.forEach(d => {
+        const box = document.createElement('div');
+        box.className = 'layout-box' + (d.locked ? ' locked' : '');
+        box.style.left = px(d.left);
+        box.style.top = px(d.top);
+        box.style.width = px(d.width);
+        box.style.height = px(d.height);
+        box.innerHTML = `\n  <div class=\"box-label\"></div>\n  <div class=\"box-tools\">\n    <button class=\"lock-btn\" title=\"Lock/Unlock\">${d.locked ? '🔓' : '🔒'}</button>\n    <input class=\"tag-input\" type=\"text\" maxlength=\"12\" placeholder=\"Tag (e.g. IMG)\" value=\"${d.tag.replace(/"/g,'&quot;')}\" />\n  </div>\n  <div class=\"resize-handle\" data-handle=\"se\"></div>\n`;
+        box.setAttribute('data-tag', d.tag);
+        boxLayer.appendChild(box);
+        updateLabel(box);
+        setupBoxTools(box);
+      });
+      updateCount();
+    }
+    // Prefab UI
+    const prefabBar = document.createElement('div');
+    prefabBar.className = 'prefab-bar';
+    prefabBar.style = 'margin:12px 0;display:flex;gap:8px;align-items:center;';
+    prefabBar.innerHTML = '<span style="font-size:13px;color:#ff7840;">Prefabs:</span>' +
+      Array.from({length:10},(_,i)=>`<button class="builder-btn prefab-save" data-i="${i}">Save ${i+1}</button><button class="builder-btn prefab-load" data-i="${i}">Load ${i+1}</button>`).join('');
+    document.querySelector('.builder-toolbar').appendChild(prefabBar);
+    prefabBar.querySelectorAll('.prefab-save').forEach(btn=>btn.onclick=e=>savePrefab(+btn.dataset.i));
+    prefabBar.querySelectorAll('.prefab-load').forEach(btn=>btn.onclick=e=>loadPrefab(+btn.dataset.i));
+    // End prefab tools
+    });
+  </script>
+  <script src="shared/page-transitions.js"></script>
+  <script src="shared/micro-interactions.js"></script>
+  <script src="shared/neural-particles.js"></script>
+  <script src="chatbot-component.js"></script>
+  <script>
+  // Countdown to midnight tonight (local time)
+  function updateCountdown() {
+    const now = new Date();
+    let year = now.getFullYear();
+    let month = now.getMonth();
+    let day = now.getDate();
+    // If already past midnight, set to next day
+    let target = new Date(year, month, day + 1, 0, 0, 0, 0);
+    const diff = target - now;
+    if (diff <= 0) {
+      document.getElementById('countdown').textContent = '00:00:00';
+      return;
+    }
+    const hours = String(Math.floor(diff / 1000 / 60 / 60)).padStart(2, '0');
+    const minutes = String(Math.floor((diff / 1000 / 60) % 60)).padStart(2, '0');
+    const seconds = String(Math.floor((diff / 1000) % 60)).padStart(2, '0');
+    document.getElementById('countdown').textContent = `${hours}:${minutes}:${seconds}`;
+  }
+  setInterval(updateCountdown, 1000);
+  updateCountdown();
+  </script>
+</body>
+</html>

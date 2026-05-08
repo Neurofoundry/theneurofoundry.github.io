@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Stack — Neurofoundry Technology</title>
+  <meta name="description" content="Explore the Neurofoundry technology stack: Thalamus Engine for 3D scene direction, and custom AI deployment solutions.">
+  <meta name="theme-color" content="#0f1113">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { 
+      background: #0f1113; 
+      color: #e6e9ee; 
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    
+    /* Header */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(11, 12, 14, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid #e0473c;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 0 18px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: 0.5px;
+      text-decoration: none;
+      color: #e6e9ee;
+    }
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #ff7b6e 0%, #e0473c 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 18px;
+      color: white;
+      box-shadow: 0 4px 12px rgba(224, 71, 60, 0.3);
+    }
+    .links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .navlink {
+      color: #ccc;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .navlink:hover { color: #e0473c; }
+    .nav-item { position: relative; }
+    .dropdown-toggle {
+      background: none;
+      border: none;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      color: #ccc;
+      font: 500 14px/1 Inter, sans-serif;
+      transition: color 0.2s;
+    }
+    .dropdown-toggle:hover,
+    .dropdown-toggle:focus-visible {
+      color: #e0473c;
+      outline: none;
+    }
+    .dropdown-caret {
+      font-size: 11px;
+      opacity: 0.7;
+    }
+    .dropdown-menu {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      min-width: 200px;
+      background: rgba(15, 17, 19, 0.96);
+      border: 1px solid rgba(224, 71, 60, 0.25);
+      border-radius: 12px;
+      padding: 10px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+      opacity: 0;
+      transform: translateY(6px);
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 50;
+    }
+    .dropdown::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 100%;
+      height: 10px;
+    }
+    .dropdown-menu a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      color: #d6d6d6;
+      text-decoration: none;
+      font-size: 13px;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .dropdown-menu a:hover {
+      background: rgba(224, 71, 60, 0.15);
+      color: #fff;
+    }
+    .dropdown:hover .dropdown-menu,
+    .dropdown:focus-within .dropdown-menu {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font: 600 13px/1 Inter, sans-serif;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: 2px solid transparent;
+    }
+    .btn.primary {
+      background: linear-gradient(180deg, #ff7b6e 0%, #e9584d 48%, #d23d33 100%);
+      border-color: #a2362f;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(224, 71, 60, 0.3);
+    }
+    .btn.primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(224, 71, 60, 0.4);
+    }
+    .btn.secondary {
+      background: transparent;
+      border: 2px solid rgba(224, 71, 60, 0.5);
+      color: #e0473c;
+    }
+    .btn.secondary:hover {
+      background: rgba(224, 71, 60, 0.1);
+      border-color: #e0473c;
+    }
+    
+    /* Main Content */
+    main {
+      padding-top: 64px;
+      min-height: 100vh;
+    }
+    
+    /* Hero Section */
+    .tech-hero {
+      padding: 70px 20px 50px;
+      text-align: center;
+      background: linear-gradient(180deg, rgba(224, 71, 60, 0.08) 0%, transparent 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .tech-hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(circle, rgba(224, 71, 60, 0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-label {
+      display: inline-block;
+      padding: 8px 20px;
+      background: rgba(224, 71, 60, 0.15);
+      border: 1px solid rgba(224, 71, 60, 0.3);
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #ff9b93;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 24px;
+    }
+    .tech-hero h1 {
+      font-size: 48px;
+      font-weight: 900;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #fff 0%, #ffc9c3 45%, #ff7a66 70%, #e0473c 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: relative;
+      z-index: 1;
+    }
+    .tech-hero p {
+      font-size: 18px;
+      color: #9aa3ad;
+      max-width: 700px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Product Section */
+    .products-section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 20px 50px;
+    }
+    
+    /* Framed container for showcase cards (accented) */
+    .framed-card {
+      margin-bottom: 36px;
+      border-radius: 22px;
+      padding: 10px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.02));
+      border: 1px solid rgba(224,71,60,0.08);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+      position: relative;
+      overflow: visible;
+    }
+    .framed-card::after {
+      content: '';
+      position: absolute;
+      right: 6px;
+      top: 10px;
+      bottom: 10px;
+      width: 8px;
+      border-radius: 14px;
+      background: linear-gradient(180deg, #ff7b6e, #e0473c);
+      box-shadow: 0 8px 18px rgba(224,71,60,0.12);
+      opacity: 0.9;
+      pointer-events: none;
+      mix-blend-mode: screen;
+    }
+
+    /* Product Card (inner) */
+    .product-card {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 28px;
+      align-items: start;
+      padding: 28px;
+      margin-bottom: 0;
+      background: linear-gradient(135deg, rgba(10,11,13,0.88), rgba(8,9,10,0.98));
+      border: 1px solid rgba(224,71,60,0.12);
+      border-radius: 16px;
+      position: relative;
+      overflow: hidden;
+      transition: transform .22s ease, box-shadow .22s ease;
+    }
+    .product-card:hover { transform: translateY(-6px); box-shadow: 0 20px 60px rgba(224,71,60,0.06); }
+    .product-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 6px;
+      height: 100%;
+      background: linear-gradient(180deg, #e0473c, #ff7b6e);
+      box-shadow: 0 0 20px rgba(224,71,60,0.08);
+    }
+    .product-card.reverse { direction: rtl; }
+    .product-card.reverse > * { direction: ltr; }
+    .product-card.reverse::before { left: auto; right: 0; }
+
+    /* Code block visual enhancement (terminal feel) */
+    .product-visual .code-block {
+      border-radius: 12px;
+      border: 1px solid rgba(224,71,60,0.2);
+      background: linear-gradient(180deg, #060606, #0b0b0d);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 2px 8px rgba(255,255,255,0.02);
+    }
+    .product-visual .code-header { background: linear-gradient(90deg, rgba(224,71,60,0.06), rgba(255,123,110,0.04)); }
+    .product-visual .code-body { padding: 20px 22px; }
+    .product-visual .code-body pre { background: transparent; padding: 0; }
+
+    /* Video fallback box in visual */
+    .product-video { position: relative; }
+    .video-fallback {
+      position: absolute;
+      inset: 0;
+      display:flex; align-items:center; justify-content:center;
+      background: linear-gradient(180deg, #2b2b2b, #1f1f1f);
+      border-radius: 12px; border: 1px solid rgba(0,0,0,0.4);
+      color:#d6d6d6; text-align:center; padding:20px; z-index: 10;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+    }
+    .video-fallback .vf-inner{ max-width: 80%; }
+    .vf-title{ font-weight:700; color:#fff; margin-bottom:8px }
+    .vf-desc{ color:#bfbfbf; font-size:13px }
+    
+    .product-content {
+      padding: 8px;
+    }
+    .product-badge {
+      display: inline-block;
+      padding: 6px 14px;
+      background: rgba(224, 71, 60, 0.15);
+      border: 1px solid rgba(224, 71, 60, 0.3);
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #e0473c;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+    }
+    .product-title {
+      font-size: 36px;
+      font-weight: 800;
+      color: #e6e9ee;
+      margin-bottom: 16px;
+    }
+    .product-subtitle {
+      font-size: 18px;
+      color: #ff9b93;
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+    .product-description {
+      font-size: 16px;
+      color: #9aa3ad;
+      margin-bottom: 28px;
+      line-height: 1.8;
+    }
+    
+    .feature-list {
+      list-style: none;
+      margin-bottom: 32px;
+    }
+    .feature-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(224, 71, 60, 0.1);
+      font-size: 13px;
+      color: #c9d0d8;
+    }
+    .feature-list li:last-child {
+      border-bottom: none;
+    }
+    .feature-icon {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(224, 71, 60, 0.15);
+      border-radius: 6px;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+    
+    .product-visual {
+      position: relative;
+      background: linear-gradient(135deg, rgba(224, 71, 60, 0.05), rgba(224, 71, 60, 0.02));
+      border: 1px solid rgba(224, 71, 60, 0.2);
+      border-radius: 16px;
+      padding: 24px;
+      min-height: 260px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .product-visual > * {
+      width: 100%;
+    }
+    .product-video {
+      width: 100%;
+      max-width: 460px;
+      aspect-ratio: 16 / 9;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(224, 71, 60, 0.3);
+      background: #070709;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+      margin: 0 auto;
+    }
+    .product-video iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+    }
+    
+    /* Code Block Styling */
+    .code-block {
+      background: #0a0b0d;
+      border: 1px solid rgba(224, 71, 60, 0.2);
+      border-radius: 12px;
+      overflow: hidden;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      width: 100%;
+    }
+    .code-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      background: rgba(224, 71, 60, 0.1);
+      border-bottom: 1px solid rgba(224, 71, 60, 0.2);
+    }
+    .code-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    .code-dot.red { background: #ff5f56; }
+    .code-dot.yellow { background: #ffbd2e; }
+    .code-dot.green { background: #27ca3f; }
+    .code-filename {
+      margin-left: auto;
+      font-size: 11px;
+      color: #666;
+    }
+    .code-body {
+      padding: 20px;
+      overflow-x: auto;
+    }
+    .code-body pre {
+      margin: 0;
+      color: #c9d0d8;
+      line-height: 1.6;
+    }
+    .code-comment { color: #6a737d; }
+    .code-keyword { color: #ff7b6e; }
+    .code-string { color: #a5d6ff; }
+    .code-function { color: #d2a8ff; }
+    .code-variable { color: #ffa657; }
+    
+    /* Architecture Diagram */
+    .architecture-visual {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+    }
+    .arch-layer {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+    .arch-box {
+      padding: 16px 24px;
+      background: rgba(224, 71, 60, 0.1);
+      border: 1px solid rgba(224, 71, 60, 0.3);
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #e6e9ee;
+      text-align: center;
+      min-width: 120px;
+      transition: all 0.3s ease;
+    }
+    .arch-box:hover {
+      background: rgba(224, 71, 60, 0.2);
+      border-color: #e0473c;
+      transform: translateY(-2px);
+    }
+    .arch-box.highlight {
+      background: linear-gradient(135deg, rgba(224, 71, 60, 0.3), rgba(224, 71, 60, 0.15));
+      border-color: #e0473c;
+    }
+    .arch-connector {
+      width: 2px;
+      height: 24px;
+      background: rgba(224, 71, 60, 0.3);
+      margin: 0 auto;
+    }
+    .arch-label {
+      font-size: 10px;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    
+    /* CTA Section */
+    .cta-section {
+      padding: 70px 20px;
+      text-align: center;
+      background: linear-gradient(180deg, transparent 0%, rgba(224, 71, 60, 0.05) 100%);
+    }
+    .cta-section h2 {
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      color: #e6e9ee;
+    }
+    .cta-section p {
+      font-size: 16px;
+      color: #9aa3ad;
+      margin-bottom: 32px;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .cta-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+    }
+    
+    /* Footer */
+    footer {
+      padding: 40px 20px;
+      background: #0a0b0d;
+      border-top: 1px solid rgba(224, 71, 60, 0.2);
+    }
+    .footer-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: #666;
+    }
+    .footer-links a {
+      color: #666;
+      text-decoration: none;
+      margin-left: 24px;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover {
+      color: #e0473c;
+    }
+    
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .product-card {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+      .product-card.reverse {
+        direction: ltr;
+      }
+    }
+    @media (max-width: 768px) {
+      .tech-hero h1 { font-size: 36px; }
+      .product-card { padding: 32px; }
+      .product-title { font-size: 28px; }
+      .cta-buttons { flex-direction: column; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav">
+      <a href="home.html" class="brand">
+        <div class="brand-icon">N</div>
+        <span>NEUROFOUNDRY</span>
+      </a>
+      <div class="links">
+        <a class="navlink" href="home.html">Home</a>
+        <a class="navlink" href="https://forge.theneurofoundry.com/">Forge</a>
+        <div class="nav-item dropdown">
+          <button class="dropdown-toggle" type="button">
+            Archives <span class="dropdown-caret">v</span>
+          </button>
+          <div class="dropdown-menu">
+            <a href="technology.html">Technology</a>
+            <a href="downloads.html">Downloads</a>
+            <a href="button2.html">Manifesto</a>
+            <a href="neurofoundry-report.html">Report</a>
+          </div>
+        </div>
+        <a class="navlink" href="technology.html">Technology</a>
+        <a class="btn primary" href="signup.html">Request Access</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="tech-hero">
+      <div class="hero-label">🔥 The Infrastructure</div>
+      <h1>Utilizing Creativity to Engineer Unique Systems</h1>
+      <p>A little preview into the architecture in some of my work...</p>
+    </section>
+
+    <!-- Products -->
+    <section class="products-section">
+      
+      <!-- Thalamus Engine -->
+      <div class="product-card" id="thalamus">
+        <div class="product-content">
+          <div class="product-badge"> Coming Soon</div>
+          <h2 class="product-title">Thalamus Engine</h2>
+          <p class="product-subtitle">3D Scene Director & Neural Workbench</p>
+          <p class="product-description">
+            A modular 3D workbench that converts language into scene graphs. Engine, editor, director, and asset foundry in one continuous system.
+          </p>
+          <ul class="feature-list">
+            <li>
+              <span class="feature-icon">??</span>
+              <span><strong>Runtime Ledger</strong> - Single source of truth for all subsystems.</span>
+            </li>
+            <li>
+              <span class="feature-icon">??</span>
+              <span><strong>Scene Director</strong> - Natural language to scene graph conversion.</span>
+            </li>
+            <li>
+              <span class="feature-icon">??</span>
+              <span><strong></strong>How does that tie into todays work? You'll have to wait and see...</span>
+            </li>
+          </ul>
+          <a href="https://forge.theneurofoundry.com/" class="btn primary">🔥 Try the Forge</a>
+        </div>
+        <div class="product-visual">
+          <div class="architecture-visual">
+            <div class="arch-label">Frontend</div>
+            <div class="arch-layer">
+              <div class="arch-box">Three.js Editor</div>
+              <div class="arch-box">Runtime HUD</div>
+            </div>
+            <div class="arch-connector"></div>
+            <div class="arch-label">API Layer</div>
+            <div class="arch-layer">
+              <div class="arch-box highlight">Runtime Ledger</div>
+            </div>
+            <div class="arch-connector"></div>
+            <div class="arch-label">Backend Services</div>
+            <div class="arch-layer">
+              <div class="arch-box">Director</div>
+              <div class="arch-box">Foundry</div>
+              <div class="arch-box">Stage Server</div>
+            </div>
+            <div class="arch-connector"></div>
+            <div class="arch-label">Persistence</div>
+            <div class="arch-layer">
+              <div class="arch-box">Scene JSON</div>
+              <div class="arch-box">Event Log</div>
+              <div class="arch-box">Snapshots</div>
+            </div>
+          </div>
+          <div class="product-video">
+            <iframe src="https://www.youtube.com/embed/U7TI85x0uWc" title="Thalamus Engine" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          </div>
+        </div>
+      </div>
+
+      <!-- DevConsole -->
+      <div class="framed-card">
+        <div class="product-card reverse" id="devconsole">
+        <div class="product-content">
+          <div class="product-badge">💻 Custom Solutions</div>
+          <h2 class="product-title">Custom AI Deployment</h2>
+          <p class="product-subtitle">Bots Built for Your Workflow</p>
+          <p class="product-description">
+            We build and deploy AI assistants tailored to your needs, with memory, personality, and a unified interface.
+          </p>
+          <ul class="feature-list">
+            <li>
+              <span class="feature-icon">??</span>
+              <span><strong>Purpose-Built</strong> - Designed around your exact use case.</span>
+            </li>
+            <li>
+              <span class="feature-icon">??</span>
+              <span><strong>Persistent Memory</strong> - Remembers context across sessions.</span>
+            </li>
+            <li>
+              <span class="feature-icon">??</span>
+              <span><strong>Tool Integration</strong> - Browser automation, code execution, APIs.</span>
+            </li>
+          </ul>
+          <a href="crew.html" class="btn primary">See Examples →</a>
+        </div>
+        <div class="product-visual">
+          <div class="code-block">
+            <div class="code-header">
+              <div class="code-dot red"></div>
+              <div class="code-dot yellow"></div>
+              <div class="code-dot green"></div>
+              <span class="code-filename">eden.yaml</span>
+            </div>
+            <div class="code-body">
+<pre><span class="code-variable">name</span>: <span class="code-string">"Eden"</span>
+<span class="code-variable">color</span>: <span class="code-string">"#14b8a6"</span>
+<span class="code-variable">endpoint</span>: <span class="code-string">"router"</span>
+
+<span class="code-variable">system_prompt</span>: |
+  <span class="code-string">You are Eden, the heart of the team.</span>
+  <span class="code-string">The user is your lead — you genuinely</span>
+  <span class="code-string">like working with them and it shows.</span>
+  <span class="code-string">Be bubbly, sweet, and fun.</span>
+  <span class="code-string">Celebrate wins, empathize with frustrations.</span>
+
+<span class="code-variable">rules</span>:
+<span class="code-variable">never_say</span>:
+    - <span class="code-string">"as an AI"</span>
+    - <span class="code-string">"as a language model"</span></pre>
+            </div>
+          </div>
+          <div class="product-video">
+            <iframe src="https://www.youtube.com/embed/KNJFZP7DXXA" title="Dev Console" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            <div class="video-fallback" role="status" aria-hidden="false">
+              <div class="vf-inner">
+                <p class="vf-title">Watch video on YouTube</p>
+                <p class="vf-desc">Error 153<br>Video player configuration error</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+      <h2>Ready to See It Run?</h2>
+      <p>This isn't a pitch deck. It's working infrastructure. Request access and see for yourself.</p>
+      <div class="cta-buttons">
+        <a href="signup.html" class="btn primary">🔥 Request Access</a>
+        <a href="gallery.html" class="btn secondary">View Gallery</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <span>© 2025 Neurofoundry. Forged with intent.</span>
+      <div class="footer-links">
+        <a href="home.html">Home</a>
+        <a href="technology.html">Technology</a>
+        <a href="projects.html">Projects</a>
+        <a href="button2.html">About</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="shared/page-transitions.js"></script>
+  <script src="shared/micro-interactions.js"></script>
+</body>
+</html>
+

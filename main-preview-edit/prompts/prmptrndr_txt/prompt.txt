@@ -1,0 +1,32 @@
+Write a detailed, multi-sentence visual description of this image.
+
+Be precise and specific. Do not summarize or generalize visually salient details.
+
+First, identify and retain important visual features before composing the description.
+Do not omit distinctive materials, constructions, colors, or illuminated elements in favor of generic labels.
+
+When the image contains a character, describe distinguishing features that distinguish the character specifically.
+Treat these as identity-defining elements, not optional details.
+
+Describe the following, and include invariant details such as:
+
+- The primary subject(s) and their physical appearance.
+- Mask or face covering shape, material, and surface finish (e.g., metal, fabric, composite; smooth, segmented, plated)
+  - Facial coverage (full-face, half-mask, visor, open face)
+- Hair style or hair coverage (if visible)
+- Body build and proportions (slim, athletic, heavy, broad-shouldered)
+- Overall silhouette, posture, or action pose
+- Clothing, armor, and accessories, including garment type
+  (e.g., trench coat vs jacket, long overcoat vs short coat, leather vs metal, layered vs rigid, fitted vs loose).
+- If armor or specialized clothing is present, describe its material or surface appearance.
+- Environment and setting.
+- Lighting conditions and apparent time of day.
+- Camera angle, framing, and perspective.
+- Artistic, cinematic, or rendering style if apparent
+  (e.g., photorealistic, cinematic, illustrated, graphic novel, 3D render, anime-style).
+
+Use accurate visual categories rather than generic terms whenever possible.
+Please do not automatically imply heroic characters are "superheroes" or "comic characters".
+Avoid vague phrasing such as “appears to be” or “seems to be” when a detail is clearly visible.
+Describe only what is visible; do not infer unseen details, identities, or narrative context.
+

@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neurofoundry – Mobile</title>
+  <!-- Import Inter font for consistent typography -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    /*
+      Mobile‑first layout for Neurofoundry.
+      This version keeps all original phrasing and content but rearranges
+      the layout into a vertically stacked, easy‑to‑read format suitable for
+      smaller screens. Responsive units are used throughout to ensure
+      proportional scaling on different devices.
+    */
+    :root {
+      --primary-color: #e0473c;
+      --gradient-start: #ff7b6e;
+      --gradient-end: #e0473c;
+      --dark-bg: #0f1113;
+      --dark-overlay: rgba(15, 17, 19, 0.95);
+      --light-text: #e6e9ee;
+      --muted-text: #9aa3ad;
+      --card-bg: rgba(30, 34, 36, 0.85);
+      --border-color: rgba(224, 71, 60, 0.25);
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--dark-bg);
+      color: var(--light-text);
+      line-height: 1.5;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* Header */
+    header {
+      background: var(--dark-overlay);
+      border-bottom: 2px solid var(--primary-color);
+      padding: 12px 16px;
+    }
+    .header-inner {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+    .brand-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, var(--gradient-start), var(--primary-color));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: #fff;
+    }
+    .nav-links {
+      width: 100%;
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 8px;
+      font-size: 0.85rem;
+    }
+    .nav-links a {
+      padding: 8px;
+      text-align: center;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      color: var(--light-text);
+    }
+    .nav-links a.btn-primary {
+      background: linear-gradient(180deg, var(--gradient-start), var(--primary-color));
+      border-color: #a2362f;
+      font-weight: 600;
+    }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 48px 16px;
+      background: #0e1318;
+    }
+    .hero h1 {
+      font-size: clamp(1.5rem, 6vw, 2rem);
+      font-weight: 800;
+      margin: 0 0 12px;
+    }
+    .hero .subtitle {
+      font-size: 0.9rem;
+      color: var(--muted-text);
+      margin-bottom: 20px;
+    }
+    .hero-cta {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .hero-cta a img {
+      width: 140px;
+      height: auto;
+    }
+
+    /* Section divider */
+    .divider {
+      height: 2px;
+      background: var(--primary-color);
+      width: 80%;
+      margin: 32px auto;
+    }
+
+    /* Skills */
+    .skills {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      max-width: 400px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .skills div {
+      padding: 10px;
+      border: 1px solid rgba(224, 71, 60, 0.4);
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #ff9b93;
+    }
+
+    /* Section headings */
+    h2.section-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin: 40px 0 16px;
+      text-align: center;
+    }
+    p.section-subtitle {
+      font-size: 0.9rem;
+      color: var(--muted-text);
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    /* Article and work cards for mobile */
+    .card-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 0 16px;
+    }
+    .article-card, .work-card, .business-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 16px;
+      color: inherit;
+    }
+    .article-card:hover, .work-card:hover, .business-card:hover {
+      text-decoration: none;
+    }
+    .article-card .meta {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #ff9b93;
+      margin-bottom: 4px;
+    }
+    .article-card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin: 0 0 6px 0;
+    }
+    .article-card p {
+      font-size: 0.8rem;
+      color: var(--muted-text);
+      margin: 0;
+    }
+
+    .work-card img {
+      width: 100%;
+      height: auto;
+      border-radius: 6px;
+      margin-bottom: 8px;
+    }
+    .work-card h3 {
+      font-size: 1rem;
+      margin: 0 0 4px;
+    }
+    .work-card p {
+      font-size: 0.8rem;
+      color: var(--muted-text);
+      margin: 0;
+    }
+
+    /* Utility row */
+    .utility-banner {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 16px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      margin: 24px 16px;
+      align-items: center;
+    }
+    .utility-banner .free-tools {
+      background: rgba(224, 71, 60, 0.15);
+      border: 1px solid rgba(224, 71, 60, 0.3);
+      border-radius: 4px;
+      font-size: 0.6rem;
+      font-weight: 700;
+      color: #ff9b93;
+      text-transform: uppercase;
+      padding: 4px 8px;
+    }
+    .utility-banner h3 {
+      font-size: 1rem;
+      margin: 4px 0;
+    }
+    .utility-banner p {
+      font-size: 0.8rem;
+      color: var(--muted-text);
+      margin: 0 0 12px 0;
+      text-align: center;
+    }
+    .utility-banner a {
+      display: inline-block;
+      padding: 10px 20px;
+      background: linear-gradient(180deg, var(--gradient-start), var(--primary-color));
+      border: 2px solid #a2362f;
+      border-radius: 6px;
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    /* Mini lists for research and gallery */
+    .mini-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: 24px 16px;
+    }
+    .mini-item {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 12px;
+    }
+    .mini-item h4 {
+      font-size: 0.9rem;
+      margin: 0 0 4px;
+    }
+    .mini-item p {
+      font-size: 0.75rem;
+      color: var(--muted-text);
+      margin: 0;
+    }
+
+    /* Business cards */
+    .business-card h3 {
+      font-size: 1rem;
+      margin: 0 0 4px;
+    }
+    .business-card p {
+      font-size: 0.8rem;
+      color: var(--muted-text);
+      margin: 0;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--dark-overlay);
+      border-top: 2px solid var(--primary-color);
+      padding: 16px;
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--muted-text);
+    }
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .footer-links a {
+      color: var(--primary-color);
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header with brand and navigation links -->
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-icon">N</div>
+        <span>Neurofoundry</span>
+      </div>
+    </div>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="https://forge.theneurofoundry.com/" target="_blank" rel="noopener noreferrer">Forge</a>
+      <a href="technology.html">Technology</a>
+      <a href="downloads.html">Downloads</a>
+      <a href="button2.html">Manifesto</a>
+      <a href="neurofoundry-report.html">Report</a>
+      <a href="about.html">About</a>
+      <a class="btn-primary" href="signup.html">Request Access</a>
+    </nav>
+  </header>
+
+  <!-- Hero section -->
+  <section class="hero">
+    <h1>The Engine is a Mind—for the Network you Design.</h1>
+    <p class="subtitle">We build systems that think, adapt, and deliver. From neural architectures to production‑ready AI solutions—transform your vision into intelligent reality.</p>
+    <div class="hero-cta">
+      <a href="https://forge.theneurofoundry.com/" aria-label="Launch the Forge application">
+        <img src="assets/forge_btn.png" alt="Launch the Forge">
+      </a>
+      <a href="projects.html" aria-label="View our projects portfolio">
+        <img src="assets/proj_btn.png" alt="View Projects">
+      </a>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Skills list -->
+  <div class="skills">
+    <div>Neural Architecture</div>
+    <div>Real‑time Processing</div>
+    <div>Precision Systems</div>
+    <div>Production Ready</div>
+  </div>
+
+  <!-- Video title (we link to YouTube on mobile) -->
+  <h2 class="section-title">Behind the Forge</h2>
+  <p class="section-subtitle">See the Architect in Action</p>
+  <p class="section-subtitle" style="padding: 0 16px;">Watch how ideas transform into intelligent systems—from concept to deployment. Tap below to view the video.</p>
+  <div style="text-align:center; margin-bottom:32px;">
+    <a class="btn-primary" href="https://www.youtube.com/watch?v=SbL6dWf9k20" target="_blank" rel="noopener noreferrer" style="display:inline-block; padding:12px 24px; border-radius:8px; background:linear-gradient(180deg, var(--gradient-start), var(--primary-color)); color:#fff; font-size:0.9rem; font-weight:600; border:2px solid #a2362f;">Watch Video</a>
+  </div>
+
+  <!-- From the Lab -->
+  <h2 class="section-title">From the Lab</h2>
+  <div class="card-list">
+    <a class="article-card" href="technology.html">
+      <div class="meta">Flagship - Active Development</div>
+      <h3>Thalamus Engine</h3>
+      <p>3D scene director powered by natural language. Runtime ledger, time‑travel debugging, and a continuously‑running workbench.</p>
+    </a>
+    <a class="article-card" href="button2.html">
+      <div class="meta">Philosophy - Manifesto</div>
+      <h3>What is Neurofoundry?</h3>
+      <p>Our core philosophy: build systems that don't just respond – they understand, anticipate, and evolve.</p>
+    </a>
+    <a class="article-card" href="technology.html#devconsole">
+      <div class="meta">Active - Custom Solutions</div>
+      <h3>256 Encryption</h3>
+      <p>Don't lose your API keys. Lock down secrets with a clean, free app built for clarity and control.</p>
+    </a>
+  </div>
+
+  <!-- Utility download card -->
+  <div class="utility-banner">
+    <div class="free-tools">Free Tools</div>
+    <h3>Grab Some Utilities</h3>
+    <p>Lightweight tools we built for ourselves. Now yours.</p>
+    <a href="downloads.html">Downloads</a>
+  </div>
+  <div style="text-align:center; margin-bottom:32px;">
+    <a href="#all-articles" style="color: var(--primary-color); font-size: 0.9rem;">View All Articles →</a>
+  </div>
+
+  <!-- Concept to deployment -->
+  <h2 class="section-title">Concept → Creation → Deployment</h2>
+  <p class="section-subtitle">End‑to‑end intelligent solutions</p>
+  <div class="card-list">
+    <div class="work-card">
+      <img src="thumbnails/design.png" alt="Design Phase - Neural network architecture design">
+      <h3>Architect</h3>
+      <p>Neural network design and intelligent systems architecture.</p>
+    </div>
+    <div class="work-card">
+      <img src="thumbnails/deliver.png" alt="Deliver Phase - AI integration into workflows">
+      <h3>Integrate</h3>
+      <p>Seamless AI integration into existing workflows and systems.</p>
+    </div>
+    <div class="work-card">
+      <img src="thumbnails/deploy.png" alt="Deploy Phase - Production deployment with monitoring">
+      <h3>Deploy</h3>
+      <p>Production‑grade deployment with monitoring and optimization.</p>
+    </div>
+  </div>
+
+  <!-- Research mini posts and gallery list -->
+  <h2 class="section-title">Research & Gallery</h2>
+  <div class="mini-list">
+    <a class="mini-item" href="neurofoundry-report.html">
+      <h4>Cognition Trace</h4>
+      <p>Short‑form findings from live model behavior.</p>
+    </a>
+    <a class="mini-item" href="neurofoundry-report.html">
+      <h4>Signal Audit</h4>
+      <p>What the system learned in the last iteration.</p>
+    </a>
+    <a class="mini-item" href="neurofoundry-report.html">
+      <h4>Memory Loops</h4>
+      <p>Patterns we are reinforcing and retiring.</p>
+    </a>
+    <a class="mini-item" href="gallery.html">
+      <h4>The Synthesis Gallery</h4>
+      <p>Where algorithms meet artistry. Explore AI‑generated visuals.</p>
+    </a>
+  </div>
+
+  <!-- Business Impact section -->
+  <h2 class="section-title">Business Impact</h2>
+  <p class="section-subtitle">Grow Smarter, Not Harder</p>
+  <div class="card-list">
+    <div class="business-card">
+      <h3>Thalamus Engine</h3>
+      <p>Natural language scene direction. Describe what you want to see, watch it come to life in real‑time 3D.</p>
+    </div>
+    <div class="business-card">
+      <h3>AI Integration</h3>
+      <p>Seamless AI integration into your workflows with monitoring and optimization.</p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 The Neurofoundry. Forged with intent.</p>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="technology.html">Technology</a>
+      <a href="projects.html">Projects</a>
+      <a href="https://forge.theneurofoundry.com/" target="_blank" rel="noopener noreferrer">Forge</a>
+      <a href="gallery.html">Gallery</a>
+      <a href="privacy-policy.html">Privacy Policy</a>
+    </div>
+  </footer>
+</body>
+</html>

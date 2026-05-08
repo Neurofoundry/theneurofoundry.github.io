@@ -1,0 +1,24 @@
+name = "apprentice"
+main = "src/index.ts"
+compatibility_date = "2026-03-01"
+workers_dev = true
+
+[ai]
+binding = "AI"
+
+[vars]
+# Set AUTH_KEY as a Wrangler secret in production:
+#   wrangler secret put AUTH_KEY
+PROMPTS_MEDIA_BASE = ""
+PROMPTS_MEDIA_PATH_TEMPLATE = "/prompts/{mode}"
+VISION_MODEL_PRIMARY = "@cf/meta/llama-3.2-11b-vision-instruct"
+VISION_MODEL_FALLBACK = "@cf/llava-hf/llava-1.5-7b-hf"
+TEXT_MODEL_PRIMARY = "@cf/qwen/qwen3-30b-a3b-fp8"
+TEXT_MODEL_FALLBACK = "@cf/mistral/mistral-7b-instruct-v0.2-lora"
+ALLOW_ORIGINS = "https://forge.theneurofoundry.com,http://localhost:8000,http://127.0.0.1:8000"
+ORIGIN_MODEL_SDXL = "@cf/stabilityai/stable-diffusion-xl-base-1.0"
+ORIGIN_MODEL_PHOENIX = "@cf/leonardo/phoenix-1.0"
+ORIGIN_MODEL_FLUX = "@cf/black-forest-labs/flux-1-schnell"
+ORIGIN_MODEL_DREAMSHAPER = "@cf/lykon/dreamshaper-8-lcm"
+FRACTAL_MODEL_A = "@cf/lykon/dreamshaper-8-lcm"
+FRACTAL_MODEL_B = "@cf/stabilityai/stable-diffusion-xl-base-1.0"

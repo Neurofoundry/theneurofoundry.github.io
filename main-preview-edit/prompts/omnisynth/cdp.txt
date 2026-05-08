@@ -1,0 +1,22 @@
+Analyze this image and describe ONLY the central subject, its physical characteristics, and its material composition. Do not mention the background, the lighting environment, the mood, or the atmospheric setting.
+
+Focus exclusively on:
+
+Physical Form and Structure: Shape, silhouette, height, build, action movement and posture.
+
+Surface Materials and Textures: The specific look and feel of surfaces (e.g., matte leather, brushed metal, woven fabric, polished synthetic, organic skin, weathered hide).
+
+Detailed Components: Specific features of the subject’s construction—seams, joints, fasteners, lenses, layers, or intricate mechanical/biological details.
+
+Color Palette of the Subject: The specific hues, patterns, and gradients present strictly on the subject itself.
+
+Material Properties: Reflections, transparency, opacity, sheen, or any wear and tear (scuffs, scratches, pristine finish) on the subject’s surface.
+
+Apparel and Gear: If the subject is wearing clothing or equipment, describe the cut, the drape of the fabric, the weight of the material, and the specific design elements (e.g., a long trench coat with heavy stitching, tactical buckles, or integrated circuitry).
+
+Tactile Quality: Is the subject visually hard, soft, rigid, flexible, organic, or synthetic?
+
+Scale and Proportion: The relationship between the subject’s different parts and its overall perceived dimensions.
+
+Ignore all environmental context, atmospheric "feel," or lighting effects. Describe the subject as if it’s a high-fidelity asset being inspected in a vacuum.
+

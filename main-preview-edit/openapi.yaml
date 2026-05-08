@@ -1,0 +1,210 @@
+openapi: 3.1.1
+info:
+  title: Neuroforge Public API (Bridge & Selected Core)
+  version: 1.0.0
+  description: Public endpoints for the Neuroforge Bridge. Includes optional proxy
+    to Core Feature-4 if you route it via the same host.
+servers:
+- url: https://forge.theneurofoundry.com
+components:
+  securitySchemes:
+    api_key:
+      type: apiKey
+      in: header
+      name: x-api-key
+  schemas:
+    BridgeUploadResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - uploaded
+        file:
+          type: string
+          description: Resolved path on server
+    BridgeListResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        folder:
+          type: string
+        count:
+          type: integer
+        files:
+          type: array
+          items:
+            type: string
+    RenderRequest:
+      type: object
+      properties:
+        prompt:
+          type: string
+        width:
+          type: integer
+          default: 512
+        height:
+          type: integer
+          default: 512
+        seed:
+          type: integer
+      required:
+      - prompt
+    RenderResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        image:
+          type: string
+          description: Base64 data URL of the rendered image
+        saved_path:
+          type: string
+          description: Server-side saved file path (if configured)
+security:
+- api_key: []
+paths:
+  /bridge/health:
+    get:
+      operationId: bridge_health
+      summary: Health check (no auth)
+      security: []
+      responses:
+        '200':
+          description: Service is reachable
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  timestamp:
+                    type: string
+                    format: date-time
+  /bridge/base64:
+    post:
+      operationId: bridge_base64
+      summary: Upload a file via base64 (form fields)
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - base64_data
+              - filename
+              - content_type
+              properties:
+                base64_data:
+                  type: string
+                  description: Base64 payload; data URL allowed
+                filename:
+                  type: string
+                content_type:
+                  type: string
+                  default: application/octet-stream
+                tags:
+                  type: string
+                  description: JSON array of strings, e.g. ["chatgpt","image"]
+      responses:
+        '200':
+          description: Stored
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BridgeUploadResponse'
+  /bridge/upload:
+    post:
+      operationId: bridge_upload
+      summary: Upload a binary file via multipart
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+              - file
+              - filename
+              - content_type
+              properties:
+                file:
+                  type: string
+                  format: binary
+                filename:
+                  type: string
+                content_type:
+                  type: string
+                  default: application/octet-stream
+                tags:
+                  type: string
+                  description: JSON array of strings
+      responses:
+        '200':
+          description: Stored
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BridgeUploadResponse'
+  /bridge/list:
+    get:
+      operationId: bridge_list
+      summary: List files in a routed folder
+      parameters:
+      - name: key
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Folder listing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BridgeListResponse'
+  /bridge/read:
+    get:
+      operationId: bridge_read
+      summary: Retrieve a stored file (raw bytes)
+      parameters:
+      - name: filename
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: key
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: File stream
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: File not found
+  /features/4/render:
+    post:
+      operationId: feature4_render
+      summary: Render an image via Core Feature-4 (if proxied at this host)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RenderRequest'
+      responses:
+        '200':
+          description: Rendered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenderResponse'

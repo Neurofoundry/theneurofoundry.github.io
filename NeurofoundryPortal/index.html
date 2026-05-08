@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NeurofoundryPortal | Mythos Fragments</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="sigil"></div>
+        <div>
+          <h1>NeurofoundryPortal</h1>
+          <p>Mythos Fragment Utility Interface</p>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <button id="btnExportAll" class="btn ghost">Export All JSON</button>
+        <button id="btnExportCsv" class="btn ghost">Export All CSV</button>
+        <label class="btn ghost file-btn">
+          Import JSON
+          <input id="fileImport" type="file" accept="application/json" />
+        </label>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="panel generation-panel">
+        <div class="panel-head">
+          <h2>Fragment Generation</h2>
+          <p>Define parameters. Invoke synthesis.</p>
+        </div>
+
+        <form id="fragmentForm" class="form-grid" novalidate>
+          <label>
+            Fragment Title
+            <input id="title" name="title" placeholder="ex: Signal Cathedral: Third Relay" />
+          </label>
+
+          <label>
+            Classification
+            <select id="classification" name="classification">
+              <option value="Doctrine">Doctrine</option>
+              <option value="Incident">Incident</option>
+              <option value="Entity">Entity</option>
+              <option value="Protocol">Protocol</option>
+              <option value="Artifact">Artifact</option>
+              <option value="Unknown">Unknown</option>
+            </select>
+          </label>
+
+          <label>
+            Signature
+            <input id="signature" name="signature" placeholder="ex: NF-OPS-77A" />
+          </label>
+
+          <label>
+            Thematic Influence
+            <select id="theme" name="theme">
+              <option value="Iron Litany">Iron Litany</option>
+              <option value="Velvet Signal">Velvet Signal</option>
+              <option value="Cold Horizon">Cold Horizon</option>
+              <option value="Electric Pale">Electric Pale</option>
+              <option value="Null Choir">Null Choir</option>
+            </select>
+          </label>
+
+          <label class="full">
+            Content Seed
+            <textarea id="seed" name="seed" rows="4" placeholder="What fragment pressure are we articulating?"></textarea>
+          </label>
+
+          <label>
+            Intensity
+            <input id="intensity" name="intensity" type="range" min="1" max="10" value="6" />
+          </label>
+
+          <label>
+            Complexity
+            <input id="complexity" name="complexity" type="range" min="1" max="10" value="5" />
+          </label>
+
+          <label>
+            Cryptic Ratio
+            <input id="cryptic" name="cryptic" type="range" min="1" max="10" value="7" />
+          </label>
+
+          <label>
+            Length Profile
+            <select id="length" name="length">
+              <option value="short">Short Pulse</option>
+              <option value="medium" selected>Operational Standard</option>
+              <option value="long">Deep Transmission</option>
+            </select>
+          </label>
+
+          <div class="actions full">
+            <button id="btnGenerate" type="button" class="btn accent">Generate Fragment</button>
+            <button id="btnSave" type="submit" class="btn">Persist Fragment</button>
+            <button id="btnReset" type="reset" class="btn ghost">Reset</button>
+          </div>
+        </form>
+
+        <div class="preview-wrap">
+          <h3>Generated Draft</h3>
+          <pre id="preview">No draft generated.</pre>
+        </div>
+      </section>
+
+      <section class="panel registry-panel">
+        <div class="panel-head">
+          <h2>Fragment Registry</h2>
+          <p>Index, filter, retrieve, and operate at scale.</p>
+        </div>
+
+        <div class="controls-grid">
+          <label>
+            Search
+            <input id="search" placeholder="title, content, signature..." />
+          </label>
+          <label>
+            Classification
+            <select id="filterClassification">
+              <option value="">All</option>
+              <option>Doctrine</option>
+              <option>Incident</option>
+              <option>Entity</option>
+              <option>Protocol</option>
+              <option>Artifact</option>
+              <option>Unknown</option>
+            </select>
+          </label>
+          <label>
+            Theme
+            <select id="filterTheme">
+              <option value="">All</option>
+              <option>Iron Litany</option>
+              <option>Velvet Signal</option>
+              <option>Cold Horizon</option>
+              <option>Electric Pale</option>
+              <option>Null Choir</option>
+            </select>
+          </label>
+          <label>
+            Sort
+            <select id="sortBy">
+              <option value="newest">Newest</option>
+              <option value="oldest">Oldest</option>
+              <option value="title">Title A-Z</option>
+              <option value="classification">Classification</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="bulk-actions">
+          <button id="btnSelectAll" class="btn ghost">Select Visible</button>
+          <button id="btnClearSelection" class="btn ghost">Clear Selection</button>
+          <button id="btnBulkDelete" class="btn danger">Delete Selected</button>
+          <button id="btnBulkExport" class="btn">Export Selected JSON</button>
+          <span id="selectionCount">0 selected</span>
+        </div>
+
+        <div id="listState" class="list-state">Loading registry...</div>
+        <div id="fragmentList" class="fragment-list"></div>
+      </section>
+    </main>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="./app.js"></script>
+</body>
+</html>

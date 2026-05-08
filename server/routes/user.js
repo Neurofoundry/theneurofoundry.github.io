@@ -7,6 +7,15 @@ const express = require('express');
 const router = express.Router();
 const { updateUser } = require('../services/userService');
 
+function hasSkeletonKeyAccess(user) {
+  const metadata = user?.metadata && typeof user.metadata === 'object' ? user.metadata : {};
+  return !!(
+    metadata.skeletonKeyAccessCompleted ||
+    metadata.skeleton_key_access_completed ||
+    metadata.skeletonKeyAccess?.completed
+  );
+}
+
 // ============================================
 // GET CURRENT USER
 // ============================================
@@ -27,7 +36,9 @@ router.get('/me', async (req, res, next) => {
           role: req.user.role,
           authProvider: req.user.authProvider,
           createdAt: req.user.createdAt,
-          preferences: req.user.preferences
+          preferences: req.user.preferences,
+          metadata: req.user.metadata,
+          skeletonKeyAccessCompleted: hasSkeletonKeyAccess(req.user)
         }
       }
     });

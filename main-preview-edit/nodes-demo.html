@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Interactive Node Workflow</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: #0f1113;
+      color: #e6e9ee;
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+    }
+    .canvas {
+      position: relative;
+      width: 900px;
+      height: 700px;
+      margin: 40px auto;
+      background: url('brain.png') center center/contain no-repeat, linear-gradient(135deg, #181a1d 0%, #0f1113 100%);
+      border-radius: 32px;
+      box-shadow: 0 8px 32px rgba(224,71,60,0.12);
+      overflow: hidden;
+      border: 2px solid #e0473c;
+    }
+    .node {
+      position: absolute;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #e0473c 0%, #ff7b6e 100%);
+      color: #fff;
+      text-align: center;
+      font-weight: 700;
+      font-size: 1.1em;
+      cursor: grab;
+      box-shadow: 0 8px 32px rgba(224,71,60,0.18);
+      user-select: none;
+      transition: box-shadow 0.2s, transform 0.2s, background 0.3s;
+      border: 3px solid #e0473c;
+      outline: none;
+      z-index: 1;
+      letter-spacing: 0.5px;
+    }
+    .node.dragging {
+      opacity: 0.7;
+      z-index: 10;
+      cursor: grabbing;
+    }
+    .node:hover {
+      box-shadow: 0 0 0 8px rgba(255,122,24,0.15), 0 8px 32px rgba(224,71,60,0.24);
+      transform: scale(1.08);
+      background: linear-gradient(135deg, #ff7a18 0%, #ffb15a 100%);
+      z-index: 2;
+    }
+    .node:active {
+      box-shadow: 0 0 0 12px rgba(255,122,24,0.22), 0 8px 32px rgba(224,71,60,0.24);
+      transform: scale(0.97);
+    }
+    .node.me {
+      width: 90px; height: 90px; left: 405px; top: 90px;
+      font-size: 1.1em; line-height: 90px;
+      background: linear-gradient(135deg, #e0473c 0%, #ff7b6e 100%);
+      color: #fff;
+      border: 3px solid #ff7b6e;
+      box-shadow: 0 8px 32px rgba(224,71,60,0.18);
+    }
+    .node.lead {
+      width: 70px; height: 70px; font-size: 1em; line-height: 70px;
+      background: linear-gradient(135deg, #e0473c 0%, #ff7b6e 100%);
+      color: #fff;
+      border: 2px solid #e0473c;
+    }
+    .node.lead1 { left: 260px; top: 230px; }
+    .node.lead2 { left: 570px; top: 230px; }
+    .node.worker {
+      width: 50px; height: 50px; font-size: 0.9em; line-height: 50px;
+      background: linear-gradient(135deg, #181a1d 0%, #e0473c 100%);
+      color: #fff;
+      border: 2px solid #e0473c;
+      box-shadow: 0 2px 8px rgba(224,71,60,0.10);
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 #ff7a18; }
+      70% { box-shadow: 0 0 0 16px #ff7a1822; }
+      100% { box-shadow: 0 0 0 0 #ff7a18; }
+    }
+    .node.me {
+      animation: pulse 2s infinite;
+    }
+  </style>
+</head>
+<body>
+  <div class="canvas" id="canvas">
+    <div class="node me" id="me"></div>
+    <div class="node lead lead1" id="lead1"></div>
+    <div class="node lead lead2" id="lead2"></div>
+    <div class="node worker" id="worker-0"></div>
+    <div class="node worker" id="worker-1"></div>
+    <div class="node worker" id="worker-2"></div>
+    <div class="node worker" id="worker-3"></div>
+    <div class="node worker" id="worker-4"></div>
+    <div class="node worker" id="worker-5"></div>
+    <canvas id="lines" width="900" height="700" style="position:absolute;top:0;left:0;pointer-events:none;"></canvas>
+  </div>
+  <script>
+    // Position workers in a circle
+    const centerX = 450, centerY = 420, radius = 180;
+    for(let i=0; i<6; i++) {
+      const angle = (i/6)*2*Math.PI - Math.PI/2;
+      const x = centerX + radius * Math.cos(angle) - 35;
+      const y = centerY + radius * Math.sin(angle) - 35;
+      const el = document.getElementById('worker-'+i);
+      el.style.left = x + 'px';
+      el.style.top = y + 'px';
+    }
+        // Drag-and-drop logic
+    let dragNode = null, offsetX = 0, offsetY = 0;
+    document.querySelectorAll('.node').forEach(node => {
+      node.addEventListener('mousedown', function(e) {
+        dragNode = this;
+        dragNode.classList.add('dragging');
+        const rect = dragNode.getBoundingClientRect();
+        offsetX = e.clientX - rect.left;
+        offsetY = e.clientY - rect.top;
+        document.body.style.userSelect = 'none';
+      });
+    });
+    document.addEventListener('mousemove', function(e) {
+      if (!dragNode) return;
+      const canvasRect = document.getElementById('canvas').getBoundingClientRect();
+      const x = e.clientX - canvasRect.left - offsetX;
+      const y = e.clientY - canvasRect.top - offsetY;
+      dragNode.style.left = x + 'px';
+      dragNode.style.top = y + 'px';
+    });
+    document.addEventListener('mouseup', function() {
+      if (dragNode) {
+        dragNode.classList.remove('dragging');
+      }
+      dragNode = null;
+      document.body.style.userSelect = '';
+    });
+    // Draw animated connectors
+    function getCenter(id) {
+      const el = document.getElementById(id);
+      const rect = el.getBoundingClientRect();
+      const parentRect = document.getElementById('canvas').getBoundingClientRect();
+      return [rect.left-parentRect.left+rect.width/2, rect.top-parentRect.top+rect.height/2];
+    }
+    function drawLines(anim=0) {
+      const ctx = document.getElementById('lines').getContext('2d');
+      ctx.clearRect(0,0,900,700);
+      connections.forEach(([from,to],i) => {
+        const [x1,y1] = getCenter(from);
+        const [x2,y2] = getCenter(to);
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(x1,y1);
+        // Draw a curve for style
+        const mx = (x1+x2)/2, my = (y1+y2)/2;
+        ctx.quadraticCurveTo(mx, my-40, x2, y2);
+        ctx.strokeStyle = '#ff7a18';
+        ctx.lineWidth = 4 + Math.sin(anim/10+i)*2;
+        ctx.setLineDash([12, 8]);
+        ctx.lineDashOffset = -anim*6;
+        ctx.shadowColor = ctx.strokeStyle;
+        ctx.shadowBlur = 12;
+        ctx.globalAlpha = 0.8 + 0.2*Math.sin(anim/20+i);
+        ctx.stroke();
+        ctx.restore();
+      });
+    }
+    let animFrame = 0;
+    function animateLines() {
+      drawLines(animFrame);
+      animFrame++;
+      requestAnimationFrame(animateLines);
+    }
+    window.addEventListener('resize', () => drawLines(animFrame));
+    setTimeout(animateLines, 100);
+    // Restore neural connector lines for the workflow cycle
+    const connections = [
+        ['me', 'lead1'],
+        ['me', 'lead2'],
+        ['lead1', 'worker-0'],
+        ['worker-0', 'lead2'],
+        ['worker-0', 'worker-1'],
+        ['worker-1', 'worker-2'],
+        ['worker-2', 'worker-3'],
+        ['worker-3', 'worker-4'],
+        ['worker-4', 'worker-5'],
+        ['worker-5', 'worker-0']
+      ];
+  </script>
+</body>
+</html>
+

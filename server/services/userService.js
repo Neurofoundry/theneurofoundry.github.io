@@ -6,6 +6,7 @@
 
 const { db, dbType } = require('../config/database');
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 const { v4: uuidv4 } = require('uuid');
 
 const D1_SELECT_USER = `
@@ -26,6 +27,9 @@ const D1_SELECT_USER = `
     last_login_at AS lastLoginAt,
     is_active AS isActive,
     role,
+    plan_tier AS planTier,
+    account_status AS accountStatus,
+    billing_id AS billingId,
     preferences,
     metadata,
     verification_token AS verificationToken,
@@ -84,28 +88,121 @@ function toD1Column(key) {
   return key.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
 }
 
+function hashSkeletonKeyCode(code) {
+  const secret = process.env.SKELETON_KEY_CODE_SECRET || process.env.JWT_SECRET || 'skeleton-key-dev-secret';
+  return crypto
+    .createHmac('sha256', secret)
+    .update(String(code).trim())
+    .digest('hex');
+}
+
+function makeNumericCode(length = 4) {
+  const min = 10 ** (length - 1);
+  const max = (10 ** length) - 1;
+  return String(crypto.randomInt(min, max + 1));
+}
+
+async function createSkeletonKeyAuthCode(userId, purpose, ttlMinutes = 10, codeLength = 4) {
+  const code = makeNumericCode(codeLength);
+  const codeHash = hashSkeletonKeyCode(code);
+  const now = new Date().toISOString();
+  const expiresAt = new Date(Date.now() + ttlMinutes * 60 * 1000).toISOString();
+
+  if (dbType === 'cloudflare_d1') {
+    await db.exec(
+      `INSERT INTO skeleton_key_auth_codes (
+        code_hash, user_id, purpose, expires_at, used_at, created_at
+      ) VALUES (?, ?, ?, ?, NULL, ?)`,
+      [codeHash, userId, purpose, expiresAt, now]
+    );
+  } else {
+    db.set(`skeleton_key_auth_code:${codeHash}`, {
+      codeHash,
+      userId,
+      purpose,
+      expiresAt,
+      usedAt: null,
+      createdAt: now
+    });
+  }
+
+  return { code, expiresAt, purpose };
+}
+
+async function redeemSkeletonKeyAuthCode(code, purpose) {
+  const codeHash = hashSkeletonKeyCode(code);
+  const now = new Date();
+  let record = null;
+
+  if (dbType === 'cloudflare_d1') {
+    const rows = await db.query(
+      `SELECT code_hash AS codeHash, user_id AS userId, purpose, expires_at AS expiresAt,
+        used_at AS usedAt, created_at AS createdAt
+       FROM skeleton_key_auth_codes
+       WHERE code_hash = ? AND purpose = ? LIMIT 1`,
+      [codeHash, purpose]
+    );
+    record = rows[0] || null;
+  } else {
+    record = db.get(`skeleton_key_auth_code:${codeHash}`) || null;
+  }
+
+  if (!record || record.usedAt || new Date(record.expiresAt) < now) {
+    return null;
+  }
+
+  if (dbType === 'cloudflare_d1') {
+    await db.exec(
+      'UPDATE skeleton_key_auth_codes SET used_at = ? WHERE code_hash = ?',
+      [now.toISOString(), codeHash]
+    );
+  } else {
+    db.set(`skeleton_key_auth_code:${codeHash}`, {
+      ...record,
+      usedAt: now.toISOString()
+    });
+  }
+
+  return await findUserById(record.userId);
+}
+
+async function getSkeletonKeyAuthCodeStatus(code, purpose) {
+  const codeHash = hashSkeletonKeyCode(code);
+  let record = null;
+
+  if (dbType === 'cloudflare_d1') {
+    const rows = await db.query(
+      `SELECT code_hash AS codeHash, user_id AS userId, purpose, expires_at AS expiresAt,
+        used_at AS usedAt, created_at AS createdAt
+       FROM skeleton_key_auth_codes
+       WHERE code_hash = ? AND purpose = ? LIMIT 1`,
+      [codeHash, purpose]
+    );
+    record = rows[0] || null;
+  } else {
+    record = db.get(`skeleton_key_auth_code:${codeHash}`) || null;
+  }
+
+  if (!record) return null;
+
+  return {
+    purpose: record.purpose,
+    expiresAt: record.expiresAt,
+    usedAt: record.usedAt || null,
+    expired: new Date(record.expiresAt) < new Date(),
+    used: !!record.usedAt
+  };
+}
+
 /**
  * Find user by ID
  */
 async function findUserById(userId) {
   try {
-    if (dbType === 'firebase') {
-      const userDoc = await db.collection('users').doc(userId).get();
-      if (!userDoc.exists) return null;
-      return { id: userDoc.id, ...userDoc.data() };
-    } else if (dbType === 'cloudflare_d1') {
+    if (dbType === 'cloudflare_d1') {
       const rows = await db.query(`${D1_SELECT_USER} WHERE id = ? LIMIT 1`, [userId]);
       return normalizeD1User(rows[0] || null);
-    } else if (dbType === 'supabase') {
-      const { data, error } = await db
-        .from('users')
-        .select('*')
-        .eq('id', userId)
-        .single();
-      if (error) throw error;
-      return data;
     } else {
-      // In-memory
       return db.get(userId) || null;
     }
   } catch (error) {
@@ -119,29 +216,10 @@ async function findUserById(userId) {
  */
 async function findUserByEmail(email) {
   try {
-    if (dbType === 'firebase') {
-      const snapshot = await db.collection('users')
-        .where('email', '==', email)
-        .limit(1)
-        .get();
-
-      if (snapshot.empty) return null;
-      const doc = snapshot.docs[0];
-      return { id: doc.id, ...doc.data() };
-    } else if (dbType === 'cloudflare_d1') {
+    if (dbType === 'cloudflare_d1') {
       const rows = await db.query(`${D1_SELECT_USER} WHERE email = ? LIMIT 1`, [email]);
       return normalizeD1User(rows[0] || null);
-    } else if (dbType === 'supabase') {
-      const { data, error } = await db
-        .from('users')
-        .select('*')
-        .eq('email', email)
-        .single();
-
-      if (error && error.code !== 'PGRST116') throw error; // PGRST116 = not found
-      return data;
     } else {
-      // In-memory
       for (const [id, user] of db.entries()) {
         if (user.email === email) return user;
       }
@@ -158,34 +236,13 @@ async function findUserByEmail(email) {
  */
 async function findUserByAuthProvider(provider, providerId) {
   try {
-    if (dbType === 'firebase') {
-      const snapshot = await db.collection('users')
-        .where('authProvider', '==', provider)
-        .where('authProviderId', '==', providerId)
-        .limit(1)
-        .get();
-
-      if (snapshot.empty) return null;
-      const doc = snapshot.docs[0];
-      return { id: doc.id, ...doc.data() };
-    } else if (dbType === 'cloudflare_d1') {
+    if (dbType === 'cloudflare_d1') {
       const rows = await db.query(
         `${D1_SELECT_USER} WHERE auth_provider = ? AND auth_provider_id = ? LIMIT 1`,
         [provider, providerId]
       );
       return normalizeD1User(rows[0] || null);
-    } else if (dbType === 'supabase') {
-      const { data, error } = await db
-        .from('users')
-        .select('*')
-        .eq('auth_provider', provider)
-        .eq('auth_provider_id', providerId)
-        .single();
-
-      if (error && error.code !== 'PGRST116') throw error;
-      return data;
     } else {
-      // In-memory
       for (const [id, user] of db.entries()) {
         if (user.authProvider === provider && user.authProviderId === providerId) {
           return user;
@@ -224,21 +281,23 @@ async function createUser(userData) {
       lastLoginAt: now,
       isActive: true,
       role: 'user',
+      planTier: userData.planTier || 'free',
+      accountStatus: userData.accountStatus || (userData.emailVerified ? 'active' : 'pending_verification'),
+      billingId: userData.billingId || null,
       preferences: {},
       metadata: {}
     };
 
-    if (dbType === 'firebase') {
-      await db.collection('users').doc(userId).set(user);
-    } else if (dbType === 'cloudflare_d1') {
+    if (dbType === 'cloudflare_d1') {
       await db.exec(
         `INSERT INTO users (
           id, email, name, first_name, last_name, username, avatar,
           auth_provider, auth_provider_id, password, email_verified,
-          created_at, updated_at, last_login_at, is_active, role,
+          created_at, updated_at, last_login_at, is_active, role, plan_tier,
+          account_status, billing_id,
           preferences, metadata, verification_token, verification_token_expires,
           reset_password_token, reset_password_expires
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           user.id,
           user.email,
@@ -256,6 +315,9 @@ async function createUser(userData) {
           user.lastLoginAt,
           user.isActive ? 1 : 0,
           user.role,
+          user.planTier,
+          user.accountStatus,
+          user.billingId,
           JSON.stringify(user.preferences || {}),
           JSON.stringify(user.metadata || {}),
           user.verificationToken || null,
@@ -264,29 +326,7 @@ async function createUser(userData) {
           user.resetPasswordExpires || null
         ]
       );
-    } else if (dbType === 'supabase') {
-      const { error } = await db.from('users').insert([{
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        first_name: user.firstName,
-        last_name: user.lastName,
-        username: user.username,
-        avatar: user.avatar,
-        auth_provider: user.authProvider,
-        auth_provider_id: user.authProviderId,
-        password: user.password,
-        email_verified: user.emailVerified,
-        created_at: user.createdAt,
-        updated_at: user.updatedAt,
-        last_login_at: user.lastLoginAt,
-        is_active: user.isActive,
-        role: user.role
-      }]);
-
-      if (error) throw error;
     } else {
-      // In-memory
       db.set(userId, user);
     }
 
@@ -319,9 +359,11 @@ async function findOrCreateOAuthUser(userData) {
       await updateUser(user.id, {
         authProvider: userData.authProvider,
         authProviderId: userData.authProviderId,
+        emailVerified: true,
+        accountStatus: 'active',
         lastLoginAt: new Date().toISOString()
       });
-      return { ...user, authProvider: userData.authProvider };
+      return { ...user, authProvider: userData.authProvider, emailVerified: true, accountStatus: 'active' };
     }
 
     // Create new user
@@ -339,9 +381,7 @@ async function updateUser(userId, updates) {
   try {
     updates.updatedAt = new Date().toISOString();
 
-    if (dbType === 'firebase') {
-      await db.collection('users').doc(userId).update(updates);
-    } else if (dbType === 'cloudflare_d1') {
+    if (dbType === 'cloudflare_d1') {
       const assignments = [];
       const values = [];
 
@@ -368,21 +408,7 @@ async function updateUser(userId, updates) {
         `UPDATE users SET ${assignments.join(', ')} WHERE id = ?`,
         values
       );
-    } else if (dbType === 'supabase') {
-      const supabaseUpdates = {};
-      Object.keys(updates).forEach(key => {
-        const snakeKey = key.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
-        supabaseUpdates[snakeKey] = updates[key];
-      });
-
-      const { error } = await db
-        .from('users')
-        .update(supabaseUpdates)
-        .eq('id', userId);
-
-      if (error) throw error;
     } else {
-      // In-memory
       const user = db.get(userId);
       if (user) {
         db.set(userId, { ...user, ...updates });
@@ -419,7 +445,11 @@ async function registerUser(email, password, name) {
       password: hashedPassword,
       name,
       authProvider: 'local',
-      emailVerified: false
+      emailVerified: false,
+      role: 'user',
+      planTier: 'free',
+      accountStatus: 'pending_verification',
+      billingId: null
     };
 
     return await createUser(userData);
@@ -434,19 +464,9 @@ async function registerUser(email, password, name) {
  */
 async function deleteUser(userId) {
   try {
-    if (dbType === 'firebase') {
-      await db.collection('users').doc(userId).delete();
-    } else if (dbType === 'cloudflare_d1') {
+    if (dbType === 'cloudflare_d1') {
       await db.exec('DELETE FROM users WHERE id = ?', [userId]);
-    } else if (dbType === 'supabase') {
-      const { error } = await db
-        .from('users')
-        .delete()
-        .eq('id', userId);
-
-      if (error) throw error;
     } else {
-      // In-memory
       db.delete(userId);
     }
 
@@ -464,32 +484,13 @@ async function verifyEmailToken(token) {
   try {
     let user = null;
 
-    if (dbType === 'firebase') {
-      const snapshot = await db.collection('users')
-        .where('verificationToken', '==', token)
-        .limit(1)
-        .get();
-
-      if (!snapshot.empty) {
-        const doc = snapshot.docs[0];
-        user = { id: doc.id, ...doc.data() };
-      }
-    } else if (dbType === 'cloudflare_d1') {
+    if (dbType === 'cloudflare_d1') {
       const rows = await db.query(
         `${D1_SELECT_USER} WHERE verification_token = ? LIMIT 1`,
         [token]
       );
       user = normalizeD1User(rows[0] || null);
-    } else if (dbType === 'supabase') {
-      const { data, error } = await db
-        .from('users')
-        .select('*')
-        .eq('verification_token', token)
-        .single();
-
-      if (!error) user = data;
     } else {
-      // In-memory
       for (const [id, u] of db.entries()) {
         if (u.verificationToken === token) {
           user = u;
@@ -508,6 +509,7 @@ async function verifyEmailToken(token) {
     // Mark email as verified
     await updateUser(user.id, {
       emailVerified: true,
+      accountStatus: 'active',
       verificationToken: null,
       verificationTokenExpires: null
     });
@@ -526,32 +528,13 @@ async function resetPassword(token, newPassword) {
   try {
     let user = null;
 
-    if (dbType === 'firebase') {
-      const snapshot = await db.collection('users')
-        .where('resetPasswordToken', '==', token)
-        .limit(1)
-        .get();
-
-      if (!snapshot.empty) {
-        const doc = snapshot.docs[0];
-        user = { id: doc.id, ...doc.data() };
-      }
-    } else if (dbType === 'cloudflare_d1') {
+    if (dbType === 'cloudflare_d1') {
       const rows = await db.query(
         `${D1_SELECT_USER} WHERE reset_password_token = ? LIMIT 1`,
         [token]
       );
       user = normalizeD1User(rows[0] || null);
-    } else if (dbType === 'supabase') {
-      const { data, error } = await db
-        .from('users')
-        .select('*')
-        .eq('reset_password_token', token)
-        .single();
-
-      if (!error) user = data;
     } else {
-      // In-memory
       for (const [id, u] of db.entries()) {
         if (u.resetPasswordToken === token) {
           user = u;
@@ -587,6 +570,41 @@ async function resetPassword(token, newPassword) {
   }
 }
 
+/**
+ * Find user by active password reset token
+ */
+async function findUserByResetPasswordToken(token) {
+  try {
+    let user = null;
+
+    if (dbType === 'cloudflare_d1') {
+      const rows = await db.query(
+        `${D1_SELECT_USER} WHERE reset_password_token = ? LIMIT 1`,
+        [token]
+      );
+      user = normalizeD1User(rows[0] || null);
+    } else {
+      for (const [, u] of db.entries()) {
+        if (u.resetPasswordToken === token) {
+          user = u;
+          break;
+        }
+      }
+    }
+
+    if (!user) return null;
+
+    if (user.resetPasswordExpires && new Date(user.resetPasswordExpires) < new Date()) {
+      return null;
+    }
+
+    return user;
+  } catch (error) {
+    console.error('Error finding reset password token:', error);
+    throw error;
+  }
+}
+
 module.exports = {
   findUserById,
   findUserByEmail,
@@ -597,5 +615,9 @@ module.exports = {
   registerUser,
   deleteUser,
   verifyEmailToken,
-  resetPassword
+  findUserByResetPasswordToken,
+  resetPassword,
+  createSkeletonKeyAuthCode,
+  redeemSkeletonKeyAuthCode,
+  getSkeletonKeyAuthCodeStatus
 };

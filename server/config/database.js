@@ -1,6 +1,6 @@
 /**
  * Database Configuration
- * Supports Firebase Firestore and Supabase
+ * Supports Cloudflare D1 with local file fallback.
  */
 
 let db = null;
@@ -19,7 +19,7 @@ function isPlaceholderValue(value) {
   );
 }
 
-// Initialize Firebase if configured
+// Initialize Cloudflare D1 if configured.
 if (
   !db
   && !isPlaceholderValue(process.env.CLOUDFLARE_ACCOUNT_ID)
@@ -34,48 +34,14 @@ if (
     });
     dbType = 'cloudflare_d1';
     db.ensureSchema()
-      .then(() => console.log('✅ Connected to Cloudflare D1'))
-      .catch((error) => console.error('❌ Cloudflare D1 schema/init error:', error.message));
+      .then(() => console.log('Connected to Cloudflare D1'))
+      .catch((error) => console.error('Cloudflare D1 schema/init error:', error.message));
   } catch (error) {
-    console.error('❌ Cloudflare D1 initialization error:', error.message);
+    console.error('Cloudflare D1 initialization error:', error.message);
   }
 }
 
-// Initialize Firebase if configured
-if (!db && !isPlaceholderValue(process.env.FIREBASE_PROJECT_ID)) {
-  const admin = require('firebase-admin');
-
-  try {
-    admin.initializeApp({
-      credential: admin.credential.applicationDefault(),
-      projectId: process.env.FIREBASE_PROJECT_ID
-    });
-
-    db = admin.firestore();
-    dbType = 'firebase';
-    console.log('✅ Connected to Firebase Firestore');
-  } catch (error) {
-    console.error('❌ Firebase initialization error:', error.message);
-  }
-}
-
-// Initialize Supabase if configured and Firebase is not
-if (!db && !isPlaceholderValue(process.env.SUPABASE_URL) && !isPlaceholderValue(process.env.SUPABASE_SERVICE_ROLE_KEY)) {
-  const { createClient } = require('@supabase/supabase-js');
-
-  try {
-    db = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_SERVICE_ROLE_KEY
-    );
-    dbType = 'supabase';
-    console.log('✅ Connected to Supabase');
-  } catch (error) {
-    console.error('❌ Supabase initialization error:', error.message);
-  }
-}
-
-// Fallback to in-memory storage (development only)
+// Local file fallback keeps development usable without external infrastructure.
 if (!db) {
   const defaultPath = process.env.NODE_ENV === 'production'
     ? '/data/auth-users.json'
@@ -85,10 +51,10 @@ if (!db) {
   try {
     db = new LocalFileStore(filePath);
     dbType = 'localfile';
-    console.warn(`⚠️  No external database configured. Using local file store: ${filePath}`);
+    console.warn(`No external database configured. Using local file store: ${filePath}`);
   } catch (error) {
-    console.warn('⚠️  Local file store unavailable. Falling back to in-memory storage.');
-    db = new Map(); // Last-resort fallback
+    console.warn('Local file store unavailable. Falling back to in-memory storage.');
+    db = new Map();
     dbType = 'memory';
   }
 }

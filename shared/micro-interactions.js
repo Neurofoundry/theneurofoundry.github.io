@@ -56,9 +56,9 @@
     <style>
       .cursor-glow {
         position: fixed;
-        width: 400px;
-        height: 400px;
-        background: radial-gradient(circle, rgba(224, 71, 60, 0.08) 0%, transparent 70%);
+        width: 260px;
+        height: 260px;
+        background: radial-gradient(circle, rgba(224, 71, 60, 0.035) 0%, transparent 68%);
         border-radius: 50%;
         pointer-events: none;
         z-index: 0;
@@ -67,7 +67,7 @@
         opacity: 0;
       }
       .cursor-glow.active {
-        opacity: 1;
+        opacity: 0.72;
       }
     </style>
   `;
