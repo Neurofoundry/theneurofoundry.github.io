@@ -50,6 +50,10 @@ async function uploadProfileAvatar({ file, user }) {
 
   const payload = await response.json().catch(() => ({}));
   if (!response.ok || payload.success === false) {
+    if (response.status === 401 || response.status === 403) {
+      throw new Error('Cloudflare Images token is missing Cloudflare Images Edit permission');
+    }
+
     const message = payload?.errors?.[0]?.message
       || payload?.messages?.[0]?.message
       || `Cloudflare Images upload failed (${response.status})`;
@@ -89,6 +93,10 @@ async function deleteProfileAvatar(imageId) {
 
   const payload = await response.json().catch(() => ({}));
   if (!response.ok || payload.success === false) {
+    if (response.status === 401 || response.status === 403) {
+      throw new Error('Cloudflare Images token is missing Cloudflare Images Edit permission');
+    }
+
     const message = payload?.errors?.[0]?.message
       || payload?.messages?.[0]?.message
       || `Cloudflare Images delete failed (${response.status})`;

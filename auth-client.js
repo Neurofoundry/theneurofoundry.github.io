@@ -133,7 +133,9 @@ class NeurofoundryAuth {
         body: JSON.stringify({
           email: userData.email,
           password: userData.password,
-          name: userData.name || `${userData.firstName || ''} ${userData.lastName || ''}`.trim()
+          name: userData.name || `${userData.firstName || ''} ${userData.lastName || ''}`.trim(),
+          firstName: userData.firstName || '',
+          lastName: userData.lastName || ''
         })
       });
 
@@ -407,10 +409,10 @@ class NeurofoundryAuth {
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
     const error = urlParams.get('error');
-    const rawRedirectPath = urlParams.get('redirect') || '/profile.html';
+    const rawRedirectPath = urlParams.get('redirect') || '/members/profile/';
     const redirectPath = rawRedirectPath.startsWith('/') && !rawRedirectPath.startsWith('//')
       ? rawRedirectPath
-      : '/profile.html';
+      : '/members/profile/';
 
     if (error) {
       if (window.opener) {

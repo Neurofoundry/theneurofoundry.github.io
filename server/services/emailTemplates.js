@@ -144,9 +144,9 @@ function renderLayout({
               <p style="margin:0 0 8px 0; font-family:Arial, sans-serif; font-size:10px; letter-spacing:2px; color:#9a958e;">NEUROFOUNDRY</p>
               <p style="margin:0; font-family:Inter, Arial, sans-serif; color:#a09a93; font-size:12px; line-height:1.6;">${escapeHtml(footerNote)}</p>
               <p style="margin:8px 0 0 0; font-family:Inter, Arial, sans-serif; color:#8a857e; font-size:12px;">
-                <a href="https://www.theneurofoundry.com/privacy-policy.html" style="color:#8a857e;">Privacy</a>
+                <a href="https://www.theneurofoundry.com/docs/privacy-policy/" style="color:#8a857e;">Privacy</a>
                 &nbsp;|&nbsp;
-                <a href="https://www.theneurofoundry.com/terms-of-service.html" style="color:#8a857e;">Terms</a>
+                <a href="https://www.theneurofoundry.com/docs/terms-of-service/" style="color:#8a857e;">Terms</a>
               </p>
             </td>
           </tr>
@@ -167,8 +167,8 @@ function renderVerificationEmailTemplate({ name, verificationUrl }) {
   return replaceTemplateTokens(template, {
     '[Recipient Name]': safeName,
     '[verification link]': safeVerificationUrl,
-    '[privacy link]': 'https://www.theneurofoundry.com/privacy-policy.html',
-    '[terms link]': 'https://www.theneurofoundry.com/terms-of-service.html'
+    '[privacy link]': 'https://www.theneurofoundry.com/docs/privacy-policy/',
+    '[terms link]': 'https://www.theneurofoundry.com/docs/terms-of-service/'
   });
 }
 
@@ -180,8 +180,8 @@ function renderWelcomeEmailTemplate({ name }) {
   return replaceTemplateTokens(template, {
     '[Recipient Name]': safeName,
     '[verification link]': safeHomeUrl,
-    '[privacy link]': 'https://www.theneurofoundry.com/privacy-policy.html',
-    '[terms link]': 'https://www.theneurofoundry.com/terms-of-service.html'
+    '[privacy link]': 'https://www.theneurofoundry.com/docs/privacy-policy/',
+    '[terms link]': 'https://www.theneurofoundry.com/docs/terms-of-service/'
   });
 }
 
@@ -194,8 +194,8 @@ function renderPasswordResetEmailTemplate({ name, resetUrl, requestLocation }) {
     '[Recipient Name]': safeName,
     '[request location]': formatRequestLocation(requestLocation),
     '[reset link]': safeResetUrl,
-    '[privacy link]': 'https://www.theneurofoundry.com/privacy-policy.html',
-    '[terms link]': 'https://www.theneurofoundry.com/terms-of-service.html'
+    '[privacy link]': 'https://www.theneurofoundry.com/docs/privacy-policy/',
+    '[terms link]': 'https://www.theneurofoundry.com/docs/terms-of-service/'
   });
 }
 
@@ -207,8 +207,8 @@ function renderSkeletonKeyPinResetEmailTemplate({ name, code, appName = 'Skeleto
     '[AppName]': escapeHtml(appName),
     '[request location]': formatRequestLocation(requestLocation),
     '[pin code]': escapeHtml(code),
-    '[privacy link]': 'https://www.theneurofoundry.com/privacy-policy.html',
-    '[terms link]': 'https://www.theneurofoundry.com/terms-of-service.html'
+    '[privacy link]': 'https://www.theneurofoundry.com/docs/privacy-policy/',
+    '[terms link]': 'https://www.theneurofoundry.com/docs/terms-of-service/'
   });
 }
 

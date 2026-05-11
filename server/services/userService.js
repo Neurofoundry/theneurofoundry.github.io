@@ -425,7 +425,7 @@ async function updateUser(userId, updates) {
 /**
  * Register new local user
  */
-async function registerUser(email, password, name) {
+async function registerUser(email, password, name, firstName = '', lastName = '') {
   try {
     // Check if user already exists
     const existingUser = await findUserByEmail(email);
@@ -444,6 +444,8 @@ async function registerUser(email, password, name) {
       email,
       password: hashedPassword,
       name,
+      firstName: firstName || null,
+      lastName: lastName || null,
       authProvider: 'local',
       emailVerified: false,
       role: 'user',

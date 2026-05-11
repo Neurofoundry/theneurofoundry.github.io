@@ -36,9 +36,17 @@ let isShuttingDown = false;
 
 // Security middleware
 app.use(helmet({
-  // Auth test pages and OAuth callback rely on inline scripts in development.
-  // Keep strict CSP in production by leaving Helmet defaults enabled there.
-  contentSecurityPolicy: process.env.NODE_ENV === 'production' ? undefined : false
+  // Auth/member pages are static HTML with inline scripts.
+  // Keep Helmet protections, but allow those page scripts on Fly-hosted previews.
+  contentSecurityPolicy: process.env.NODE_ENV === 'production'
+    ? {
+        directives: {
+          ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+          'script-src': ["'self'", "'unsafe-inline'"],
+          'img-src': ["'self'", 'data:', 'https:']
+        }
+      }
+    : false
 }));
 app.use(cors(corsOptions));
 

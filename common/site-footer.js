@@ -11,11 +11,11 @@
     { href: 'projects.html', label: 'Projects' },
     { href: 'https://forge.theneurofoundry.com/', label: 'Forge', external: true },
     { href: 'gallery.html', label: 'Gallery' },
-    { href: 'docs/privacy-policy/', label: 'Privacy Policy' }
+    { href: 'docs/privacy-policy/', label: 'Privacy Policy', external: true }
   ];
 
   const linkHtml = links.map((link) => {
-    const href = link.external ? link.href : `${basePath}${link.href}`;
+    const href = link.external && /^https?:\/\//i.test(link.href) ? link.href : `${basePath}${link.href}`;
     const externalAttrs = link.external ? ' target="_blank" rel="noopener noreferrer"' : '';
     return `<a href="${href}"${externalAttrs}>${link.label}</a>`;
   }).join('');

@@ -226,9 +226,19 @@ BCRYPT_ROUNDS=12                        # Password hashing rounds
 RATE_LIMIT_WINDOW_MS=900000            # 15 minutes
 RATE_LIMIT_MAX_REQUESTS=100            # Max requests per window
 
-# File Upload
+# Avatar Images
 MAX_FILE_SIZE=5242880                  # 5MB in bytes
-UPLOAD_DIR=uploads/avatars             # Avatar upload directory
+CLOUDFLARE_IMAGES_ACCOUNT_ID=...       # Optional; falls back to CLOUDFLARE_ACCOUNT_ID
+CLOUDFLARE_IMAGES_API_TOKEN=...        # Token with Cloudflare Images Edit permission
+CLOUDFLARE_IMAGES_AVATAR_VARIANT=public
+CLOUDFLARE_IMAGES_REQUIRE_SIGNED_URLS=false
+```
+
+For Fly production, set the Images-specific token separately from the D1 token:
+
+```bash
+fly secrets set CLOUDFLARE_IMAGES_ACCOUNT_ID=<cloudflare-account-id> CLOUDFLARE_IMAGES_API_TOKEN=<token-with-cloudflare-images-edit> -a nf-auth-clean-20260219
+npm run cf:images:check
 ```
 
 ## Database Configuration

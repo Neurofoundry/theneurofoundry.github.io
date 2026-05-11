@@ -157,6 +157,8 @@ function publicUser(user) {
     id: user.id,
     email: user.email,
     name: user.name,
+    firstName: user.firstName,
+    lastName: user.lastName,
     avatar: user.avatar,
     emailVerified: isEmailVerified(user),
     authProvider: user.authProvider,
@@ -718,7 +720,9 @@ router.post(
       .matches(/[A-Z]/).withMessage('Password must include at least one capital letter')
       .matches(/[0-9]/).withMessage('Password must include at least one number')
       .matches(/[^A-Za-z0-9]/).withMessage('Password must include at least one special character'),
-    body('name').trim().notEmpty().withMessage('Name is required')
+    body('name').trim().notEmpty().withMessage('Name is required'),
+    body('firstName').optional().trim().isLength({ max: 50 }),
+    body('lastName').optional().trim().isLength({ max: 50 })
   ],
   async (req, res, next) => {
     try {
@@ -732,10 +736,10 @@ router.post(
         });
       }
 
-      const { email, password, name } = req.body;
+      const { email, password, name, firstName, lastName } = req.body;
 
       // Register user
-      const user = await registerUser(email, password, name);
+      const user = await registerUser(email, password, name, firstName, lastName);
 
       // Emit user.registered event for email pipeline
       let emailStatus = null;
