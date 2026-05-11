@@ -71,7 +71,7 @@
     <p id="details" class="muted"></p>
     <p id="redirect" class="countdown" style="display:none;"></p>
     <div class="actions">
-      <a id="loginLink" class="btn" href="/login.html" style="display:none;">Continue to Login</a>
+      <a id="loginLink" class="btn" href="/members/login/" style="display:none;">Continue to Login</a>
     </div>
   </main>
 
@@ -84,7 +84,7 @@
       const loginLink = document.getElementById('loginLink');
       const params = new URLSearchParams(window.location.search);
       const token = params.get('token');
-      const loginUrl = '/login.html?verified=1';
+      const loginUrl = '/members/login/?verified=1';
 
       function startLoginRedirect() {
         let remaining = 10;

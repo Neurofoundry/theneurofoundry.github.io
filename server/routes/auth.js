@@ -46,9 +46,9 @@ function isDevOAuthMockEnabled() {
 }
 
 function sanitizeRedirectPath(redirect) {
-  if (!redirect || typeof redirect !== 'string') return '/profile.html';
-  if (!redirect.startsWith('/')) return '/profile.html';
-  if (redirect.startsWith('//')) return '/profile.html';
+  if (!redirect || typeof redirect !== 'string') return '/members/profile/';
+  if (!redirect.startsWith('/')) return '/members/profile/';
+  if (redirect.startsWith('//')) return '/members/profile/';
   return redirect;
 }
 
@@ -64,7 +64,7 @@ function encodeOAuthState({ redirectPath, expectedEmail }) {
 }
 
 function decodeOAuthState(rawState) {
-  if (!rawState) return { redirectPath: '/profile.html', expectedEmail: '' };
+  if (!rawState) return { redirectPath: '/members/profile/', expectedEmail: '' };
   const decoded = decodeURIComponent(String(rawState));
   try {
     const parsed = JSON.parse(Buffer.from(decoded, 'base64url').toString('utf8'));
@@ -641,7 +641,7 @@ function issueOAuthSuccessRedirect(res, user, provider, redirectPath, mock = fal
 
 function issueOAuthFailureRedirect(res, errorCode) {
   return res.redirect(
-    buildFrontendUrl('/login.html', {
+    buildFrontendUrl('/members/login/', {
       error: errorCode || 'oauth_failed'
     })
   );

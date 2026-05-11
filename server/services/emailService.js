@@ -120,7 +120,7 @@ async function sendVerificationEmail(user) {
   });
 
   const verificationBase = process.env.FRONTEND_URL || process.env.APP_URL || 'http://localhost:3000';
-  const verificationUrlObj = new URL('/verify-email.html', verificationBase);
+  const verificationUrlObj = new URL('/members/verify-email/', verificationBase);
   verificationUrlObj.searchParams.set('token', token);
   const verificationUrl = verificationUrlObj.toString();
 
@@ -186,7 +186,7 @@ async function sendPasswordResetEmail(user, context = {}) {
   });
 
   const resetBase = process.env.FRONTEND_URL || process.env.APP_URL || 'http://localhost:3000';
-  const resetUrlObj = new URL('/reset-password.html', resetBase);
+  const resetUrlObj = new URL('/members/reset-password/', resetBase);
   resetUrlObj.searchParams.set('token', token);
   const resetUrl = resetUrlObj.toString();
 
