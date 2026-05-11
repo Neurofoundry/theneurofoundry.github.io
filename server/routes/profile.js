@@ -89,6 +89,7 @@ router.get('/', async (req, res, next) => {
           lastName: nameParts.lastName,
           username: req.user.username,
           avatar: req.user.avatar,
+          authProvider: req.user.authProvider || 'local',
           location: getProfileLocation(req, profilePreferences),
           planTier: req.user.planTier || 'free',
           accountStatus: req.user.accountStatus || 'pending_verification',
@@ -126,12 +127,14 @@ router.patch(
         });
       }
 
-      const allowedFields = [
-        'name',
-        'firstName',
-        'lastName',
-        'username'
-      ];
+      const allowedFields = req.user.authProvider && req.user.authProvider !== 'local'
+        ? ['username']
+        : [
+            'name',
+            'firstName',
+            'lastName',
+            'username'
+          ];
 
       const updates = {};
       allowedFields.forEach(field => {

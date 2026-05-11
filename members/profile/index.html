@@ -43,9 +43,9 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 18px;
+      gap: 24px;
       width: 100%;
-      max-width: 260px;
+      max-width: 100%;
       min-height: 88px;
     }
 
@@ -68,6 +68,15 @@
       cursor: pointer;
     }
 
+    .avatar {
+      border-width: 3px;
+      box-shadow:
+        0 6px 16px rgba(0, 0, 0, 0.52),
+        0 0 0 2px rgba(255, 115, 104, 0.18),
+        inset 0 1px 2px rgba(255, 255, 255, 0.24),
+        inset 0 -5px 12px rgba(0, 0, 0, 0.5);
+    }
+
     .avatar img,
     .avatar-choice img {
       width: 100%;
@@ -77,6 +86,7 @@
 
     .avatar-choice-tray {
       display: flex;
+      margin-left: auto;
       flex: 0 0 auto;
     }
 
@@ -313,7 +323,7 @@
       .form-grid { grid-template-columns: 1fr; }
       .avatar-picker,
       .avatar-actions {
-        max-width: 230px;
+        max-width: 100%;
       }
       .avatar,
       .avatar-choice {
@@ -382,7 +392,7 @@
 
           <div class="form-group full">
             <label class="field-label" for="location">Location</label>
-            <input type="text" id="location" name="location" autocomplete="address-level2" placeholder="Unavailable">
+            <input type="text" id="location" name="location" class="muted-field" autocomplete="address-level2" placeholder="Unavailable" readonly>
           </div>
 
           <div class="preferences-field">
@@ -400,14 +410,14 @@
 
           <div class="profile-meta">
             <span>Member Since:<strong id="memberSince">Loading...</strong></span>
-            <span>Plan:<strong id="planStatus">Loading...</strong></span>
             <span>Last Login:<strong id="lastLogin">Loading...</strong></span>
+            <span>Plan:<strong id="planStatus">Loading...</strong></span>
           </div>
         </div>
 
         <div class="profile-actions">
-          <button type="button" class="btn secondary" onclick="handleLogout()">Logout</button>
           <button type="submit" class="btn primary" id="saveProfileButton">Save Profile</button>
+          <button type="button" class="btn secondary" onclick="handleLogout()">Logout</button>
         </div>
       </form>
     </div>
@@ -498,6 +508,20 @@
       return location;
     }
 
+    function isOAuthUser(user) {
+      const authProvider = String(user.authProvider || 'local').toLowerCase();
+      return authProvider && authProvider !== 'local';
+    }
+
+    function setIdentityFieldsLocked(locked) {
+      ['firstName', 'lastName'].forEach((fieldId) => {
+        const field = document.getElementById(fieldId);
+        field.readOnly = locked;
+        field.classList.toggle('muted-field', locked);
+      });
+      document.getElementById('profileForm').dataset.identityLocked = locked ? 'true' : 'false';
+    }
+
     function locationForSave() {
       const location = document.getElementById('location').value.trim();
       return location === 'Unavailable' ? '' : location;
@@ -514,15 +538,21 @@
         };
         const avatarImg = document.getElementById('avatarImg');
         const avatarInitial = document.getElementById('avatarInitial');
+        const firstName = user.firstName || '';
 
         if (user.avatar) {
+          avatarImg.onerror = () => {
+            avatarImg.style.display = 'none';
+            avatarInitial.style.display = 'block';
+            avatarInitial.textContent = (firstName || 'N')[0].toUpperCase();
+          };
           avatarImg.src = profileImageSrc(user.avatar);
           avatarImg.style.display = 'block';
           avatarInitial.style.display = 'none';
         } else {
           avatarImg.style.display = 'none';
           avatarInitial.style.display = 'block';
-          avatarInitial.textContent = (user.firstName || 'N')[0].toUpperCase();
+          avatarInitial.textContent = (firstName || 'N')[0].toUpperCase();
         }
 
         document.getElementById('memberSince').textContent = formatMemberSince(user.createdAt);
@@ -535,6 +565,7 @@
 
         document.getElementById('firstName').value = user.firstName || '';
         document.getElementById('lastName').value = user.lastName || '';
+        setIdentityFieldsLocked(isOAuthUser(user));
         document.getElementById('email').value = user.email || '';
         document.getElementById('email').dataset.currentEmail = user.email || '';
         document.getElementById('location').value = formatLocation(user.location);
@@ -555,11 +586,13 @@
       saveButton.textContent = 'Saving...';
 
       try {
-        await window.nfAuth.updateProfile({
-          firstName,
-          lastName,
-          name: `${firstName} ${lastName}`.trim()
-        });
+        if (document.getElementById('profileForm').dataset.identityLocked !== 'true') {
+          await window.nfAuth.updateProfile({
+            firstName,
+            lastName,
+            name: `${firstName} ${lastName}`.trim()
+          });
+        }
 
         await window.nfAuth.apiRequest('/user/preferences', {
           method: 'PATCH',

@@ -21,6 +21,8 @@ const passportConfig = require('./config/passport');
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 const profileRoutes = require('./routes/profile');
+const { findUserById } = require('./services/userService');
+const { getProfileAvatar } = require('./services/r2AvatarClient');
 const { getLastSentEmail, getSentEmailLog } = require('./services/emailService');
 const { getEmailDeliveryLog, getEmailQueueSnapshot } = require('./services/emailOrchestrator');
 const skeletonKeyChangelog = require('./data/skeleton-key-changelog.json');
@@ -76,6 +78,31 @@ app.use(session(sessionConfig));
 app.use(passport.initialize());
 app.use(passport.session());
 passportConfig(passport);
+
+app.get('/api/profile/avatar/public/:userId', async (req, res, next) => {
+  try {
+    const user = await findUserById(req.params.userId);
+    const preferences = user?.preferences && typeof user.preferences === 'object'
+      ? user.preferences
+      : {};
+    const avatarKey = preferences.r2Avatar?.key;
+
+    if (!avatarKey) {
+      return res.status(404).json({
+        success: false,
+        message: 'Avatar not found'
+      });
+    }
+
+    const avatarResponse = await getProfileAvatar(avatarKey);
+    res.set('Content-Type', avatarResponse.headers.get('content-type') || 'image/webp');
+    res.set('Cache-Control', 'public, max-age=3600');
+    const arrayBuffer = await avatarResponse.arrayBuffer();
+    return res.send(Buffer.from(arrayBuffer));
+  } catch (error) {
+    return next(error);
+  }
+});
 
 // API routes
 app.use('/api/auth', authRoutes);
