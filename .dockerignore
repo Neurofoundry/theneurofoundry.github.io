@@ -32,6 +32,9 @@ Forge/
 import_scripts/
 tracing/
 telemetry/
+hidden/
+editing/
+log/
 assets/videos/
 assets/neurofoundry-hero-bg.mp4
 assets/thalamaspreview.mp4
