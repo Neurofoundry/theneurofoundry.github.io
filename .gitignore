@@ -5,6 +5,9 @@ nodes/
 .env.*.local
 *.log
 logs/
+log/
+editing/
+hidden/
 .DS_Store
 .vscode/settings.json
 dist/
