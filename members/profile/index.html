@@ -42,14 +42,11 @@
     .avatar-picker {
       display: flex;
       align-items: center;
-      gap: 10px;
+      justify-content: space-between;
+      gap: 18px;
       width: 100%;
-      max-width: 506px;
+      max-width: 260px;
       min-height: 88px;
-      overflow-x: auto;
-      overflow-y: hidden;
-      scrollbar-width: thin;
-      scrollbar-color: rgba(232, 61, 52, 0.62) rgba(255, 255, 255, 0.04);
     }
 
     .avatar,
@@ -80,7 +77,6 @@
 
     .avatar-choice-tray {
       display: flex;
-      gap: 10px;
       flex: 0 0 auto;
     }
 
@@ -120,7 +116,7 @@
     }
 
     .avatar-actions {
-      max-width: 506px;
+      max-width: 100%;
     }
 
     .avatar-actions p,
@@ -317,7 +313,7 @@
       .form-grid { grid-template-columns: 1fr; }
       .avatar-picker,
       .avatar-actions {
-        max-width: 266px;
+        max-width: 230px;
       }
       .avatar,
       .avatar-choice {
@@ -357,22 +353,6 @@
               <img id="avatarImg" alt="" style="display: none;">
             </button>
             <div class="avatar-choice-tray" aria-label="Avatar choices">
-              <button class="avatar-choice preset-avatar" type="button" data-avatar-src="/assets/profile-avatars/av_1.png" aria-label="Choose preset avatar 1">
-                <img src="/assets/profile-avatars/av_1.png" alt="" loading="lazy">
-                <span>A1</span>
-              </button>
-              <button class="avatar-choice preset-avatar" type="button" data-avatar-src="/assets/profile-avatars/av_2.png" aria-label="Choose preset avatar 2">
-                <img src="/assets/profile-avatars/av_2.png" alt="" loading="lazy">
-                <span>A2</span>
-              </button>
-              <button class="avatar-choice preset-avatar" type="button" data-avatar-src="/assets/profile-avatars/av_3.png" aria-label="Choose preset avatar 3">
-                <img src="/assets/profile-avatars/av_3.png" alt="" loading="lazy">
-                <span>A3</span>
-              </button>
-              <button class="avatar-choice preset-avatar" type="button" data-avatar-src="/assets/profile-avatars/av_4.png" aria-label="Choose preset avatar 4">
-                <img src="/assets/profile-avatars/av_4.png" alt="" loading="lazy">
-                <span>A4</span>
-              </button>
               <button class="avatar-choice custom-avatar-choice" id="customAvatarButton" type="button" aria-label="Upload custom avatar">
                 <img src="/assets/profile-avatars/av_upload.png" alt="" loading="lazy">
               </button>
@@ -380,7 +360,7 @@
             <input type="file" id="avatarInput" accept="image/*">
           </div>
           <div class="avatar-actions">
-            <p>PNG, JPG, GIF, or WEBP.<br>Max 5MB.</p>
+            <p>PNG, JPG, GIF, or WEBP. Max 5MB.</p>
           </div>
         </div>
 
