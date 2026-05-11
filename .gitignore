@@ -12,3 +12,4 @@ build/
 .cache/
 uploads/*
 !uploads/avatars/.gitkeep
+import_scripts/Forge/
