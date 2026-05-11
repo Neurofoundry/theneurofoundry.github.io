@@ -7,22 +7,13 @@ const express = require('express');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const { updateUser } = require('../services/userService');
+const { uploadProfileAvatar, deleteProfileAvatar } = require('../services/cloudflareImagesClient');
 const multer = require('multer');
 const path = require('path');
 
 // Configure multer for avatar uploads
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/avatars/');
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, req.user.id + '-' + uniqueSuffix + path.extname(file.originalname));
-  }
-});
-
 const upload = multer({
-  storage: storage,
+  storage: multer.memoryStorage(),
   limits: {
     fileSize: 5 * 1024 * 1024 // 5MB limit
   },
@@ -44,6 +35,14 @@ const upload = multer({
 // ============================================
 router.get('/', async (req, res, next) => {
   try {
+    const preferences = req.user.preferences && typeof req.user.preferences === 'object'
+      ? req.user.preferences
+      : {};
+    const profilePreferences = {
+      howHeardAboutNeurofoundry: '',
+      ...preferences
+    };
+
     res.json({
       success: true,
       data: {
@@ -55,10 +54,10 @@ router.get('/', async (req, res, next) => {
           lastName: req.user.lastName,
           username: req.user.username,
           avatar: req.user.avatar,
-          bio: req.user.bio,
-          location: req.user.location,
-          website: req.user.website,
-          company: req.user.company,
+          location: profilePreferences.location || '',
+          planTier: req.user.planTier || 'free',
+          accountStatus: req.user.accountStatus || 'pending_verification',
+          preferences: profilePreferences,
           emailVerified: req.user.emailVerified,
           createdAt: req.user.createdAt
         }
@@ -78,11 +77,7 @@ router.patch(
     body('name').optional().trim().isLength({ min: 1, max: 100 }),
     body('firstName').optional().trim().isLength({ max: 50 }),
     body('lastName').optional().trim().isLength({ max: 50 }),
-    body('username').optional().trim().isLength({ min: 3, max: 30 }).matches(/^[a-zA-Z0-9_-]+$/),
-    body('bio').optional().trim().isLength({ max: 500 }),
-    body('location').optional().trim().isLength({ max: 100 }),
-    body('website').optional().trim().isURL(),
-    body('company').optional().trim().isLength({ max: 100 })
+    body('username').optional().trim().isLength({ min: 3, max: 30 }).matches(/^[a-zA-Z0-9_-]+$/)
   ],
   async (req, res, next) => {
     try {
@@ -99,11 +94,7 @@ router.patch(
         'name',
         'firstName',
         'lastName',
-        'username',
-        'bio',
-        'location',
-        'website',
-        'company'
+        'username'
       ];
 
       const updates = {};
@@ -125,10 +116,7 @@ router.patch(
             firstName: updatedUser.firstName,
             lastName: updatedUser.lastName,
             username: updatedUser.username,
-            bio: updatedUser.bio,
-            location: updatedUser.location,
-            website: updatedUser.website,
-            company: updatedUser.company
+            preferences: updatedUser.preferences || {}
           }
         }
       });
@@ -153,17 +141,40 @@ router.post(
         });
       }
 
-      const avatarUrl = `/uploads/avatars/${req.file.filename}`;
+      const previousPreferences = req.user.preferences && typeof req.user.preferences === 'object'
+        ? req.user.preferences
+        : {};
+      const previousAvatarImageId = previousPreferences.cloudflareImages?.avatarImageId;
+      const uploadedAvatar = await uploadProfileAvatar({
+        file: req.file,
+        user: req.user
+      });
 
       await updateUser(req.user.id, {
-        avatar: avatarUrl
+        avatar: uploadedAvatar.avatarUrl,
+        preferences: {
+          ...previousPreferences,
+          cloudflareImages: {
+            ...(previousPreferences.cloudflareImages || {}),
+            avatarImageId: uploadedAvatar.id,
+            avatarUrl: uploadedAvatar.avatarUrl,
+            avatarUploadedAt: uploadedAvatar.uploaded || new Date().toISOString()
+          }
+        }
       });
+
+      if (previousAvatarImageId && previousAvatarImageId !== uploadedAvatar.id) {
+        deleteProfileAvatar(previousAvatarImageId).catch((error) => {
+          console.warn('Previous Cloudflare avatar delete failed:', error.message);
+        });
+      }
 
       res.json({
         success: true,
         message: 'Avatar uploaded successfully',
         data: {
-          avatar: avatarUrl
+          avatar: uploadedAvatar.avatarUrl,
+          imageId: uploadedAvatar.id
         }
       });
     } catch (error) {
@@ -177,11 +188,20 @@ router.post(
 // ============================================
 router.delete('/avatar', async (req, res, next) => {
   try {
-    await updateUser(req.user.id, {
-      avatar: null
-    });
+    const previousPreferences = req.user.preferences && typeof req.user.preferences === 'object'
+      ? req.user.preferences
+      : {};
+    const previousAvatarImageId = previousPreferences.cloudflareImages?.avatarImageId;
+    const { cloudflareImages, ...remainingPreferences } = previousPreferences;
 
-    // TODO: Delete actual file from storage
+    if (previousAvatarImageId) {
+      await deleteProfileAvatar(previousAvatarImageId);
+    }
+
+    await updateUser(req.user.id, {
+      avatar: null,
+      preferences: remainingPreferences
+    });
 
     res.json({
       success: true,

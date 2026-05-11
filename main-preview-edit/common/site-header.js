@@ -25,7 +25,7 @@
     <header class="nf-site-header">
       <div class="nf-header-container">
         <a class="nf-brand" href="${basePath}index.html" aria-label="Neurofoundry home">
-          <div class="nf-brand-icon"><img src="${basePath}assets/ui/anvil.png" alt=""></div>
+          <div class="nf-brand-icon"><img src="${basePath}anvil.png" alt=""></div>
           <span>NEUROFOUNDRY</span>
         </a>
         <nav class="nf-nav-links" aria-label="Main navigation">
