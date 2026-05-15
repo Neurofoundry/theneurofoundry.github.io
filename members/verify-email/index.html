@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Verify Email | Neurofoundry</title>
   <meta name="description" content="Verify your Neurofoundry account email address.">
+  <script src="/auth-client.js?v=20260421"></script>
   <style>
     :root {
       --bg: #0f1113;
@@ -110,51 +111,37 @@
         return;
       }
 
-      const candidates = [];
-      if (window.location.protocol !== 'file:') {
-        candidates.push(window.location.origin + '/api');
-      }
-      candidates.push('https://api.theneurofoundry.com/api');
-      candidates.push('https://nf-auth-clean-20260219.fly.dev/api');
-
-      const apiBases = [...new Set(candidates)];
+      const apiBase = window.NeurofoundryAuth.resolveDefaultApiUrl();
       let finalError = 'Unable to reach verification service.';
 
-      for (const apiBase of apiBases) {
+      try {
+        const url = apiBase + '/auth/verify-email/' + encodeURIComponent(token);
+        const res = await fetch(url, {
+          method: 'GET',
+          headers: { Accept: 'application/json' }
+        });
+
+        const text = await res.text();
+        let data = {};
         try {
-          const url = apiBase + '/auth/verify-email/' + encodeURIComponent(token);
-          const res = await fetch(url, {
-            method: 'GET',
-            headers: { Accept: 'application/json' }
-          });
-
-          const text = await res.text();
-          let data = {};
-          try {
-            data = JSON.parse(text);
-          } catch (_) {
-            data = { message: text.slice(0, 140) };
-          }
-
-          if (res.ok && data.success !== false) {
-            headingEl.textContent = 'Email Verification: Success';
-            headingEl.className = 'status-ok';
-            statusEl.textContent = 'Your account is verified.';
-            detailsEl.textContent = '';
-            loginLink.href = loginUrl;
-            startLoginRedirect();
-            return;
-          }
-
-          if (res.status === 404) {
-            continue;
-          }
-
-          finalError = data.message || ('Verification failed with status ' + res.status + '.');
-          break;
+          data = JSON.parse(text);
         } catch (_) {
-          finalError = 'Could not connect to the verification API.';
+          data = { message: text.slice(0, 140) };
         }
+
+        if (res.ok && data.success !== false) {
+          headingEl.textContent = 'Email Verification: Success';
+          headingEl.className = 'status-ok';
+          statusEl.textContent = 'Your account is verified.';
+          detailsEl.textContent = '';
+          loginLink.href = loginUrl;
+          startLoginRedirect();
+          return;
+        }
+
+        finalError = data.message || ('Verification failed with status ' + res.status + '.');
+      } catch (_) {
+        finalError = 'Could not connect to the verification API.';
       }
 
       headingEl.textContent = 'Verification Failed';

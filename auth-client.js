@@ -278,7 +278,7 @@ class NeurofoundryAuth {
   /**
    * OAuth Login - opens popup window
    */
-  loginWithOAuth(provider, redirectPath = '/profile.html') {
+  loginWithOAuth(provider, redirectPath = '/members/profile/') {
     const width = 600;
     const height = 700;
     const left = (window.innerWidth - width) / 2;

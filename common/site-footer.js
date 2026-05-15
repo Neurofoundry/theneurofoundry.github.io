@@ -7,11 +7,11 @@
 
   const links = [
     { href: 'index.html', label: 'Home' },
-    { href: 'technology.html', label: 'Technology' },
-    { href: 'projects.html', label: 'Projects' },
+    { href: 'services/', label: 'Services' },
+    { href: 'downloads/', label: 'Downloads' },
     { href: 'https://forge.theneurofoundry.com/', label: 'Forge', external: true },
-    { href: 'gallery.html', label: 'Gallery' },
-    { href: 'docs/privacy-policy/', label: 'Privacy Policy', external: true }
+    { href: 'about/', label: 'About' },
+    { href: 'docs/privacy-policy/', label: 'Privacy Policy' }
   ];
 
   const linkHtml = links.map((link) => {

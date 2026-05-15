@@ -52,7 +52,7 @@
         // Show error and redirect
         document.querySelector('.loading p').textContent = 'Authentication failed. Redirecting...';
         setTimeout(() => {
-          window.location.href = '/login.html?error=' + encodeURIComponent(error.message);
+          window.location.href = '/members/login/?error=' + encodeURIComponent(error.message);
         }, 2000);
       }
     })();

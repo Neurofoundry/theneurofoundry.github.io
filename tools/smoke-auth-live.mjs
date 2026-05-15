@@ -74,7 +74,7 @@ try {
   report.push({ check: 'profile', status: meRes.status, success: !!meBody.success });
 
   if (!skipOAuth) {
-    const oauthInit = await fetch(`${baseUrl}/api/auth/google?redirect=/profile.html`, {
+    const oauthInit = await fetch(`${baseUrl}/api/auth/google?redirect=/members/profile/`, {
       redirect: 'manual'
     });
     const location = oauthInit.headers.get('location');

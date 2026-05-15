@@ -170,14 +170,19 @@
       flex: 1;
       position: relative;
       overflow: auto;
+      padding: 28px 28px 80px;
       background: #0f1113;
       background-image: linear-gradient(0deg, transparent 24%, rgba(255,255,255,.05) 25%, rgba(255,255,255,.05) 26%, transparent 27%, transparent 74%, rgba(255,255,255,.05) 75%, rgba(255,255,255,.05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(255,255,255,.05) 25%, rgba(255,255,255,.05) 26%, transparent 27%, transparent 74%, rgba(255,255,255,.05) 75%, rgba(255,255,255,.05) 76%, transparent 77%, transparent);
       background-size: 50px 50px;
     }
     .layout-inner {
       position: relative;
-      width: 100%;
+      width: 1180px;
+      margin: 0 auto;
       background: #0f1113;
+      transform: scale(var(--builder-stage-scale, 0.78));
+      transform-origin: top center;
+      box-shadow: 9px 11px 12px rgba(0, 0, 0, 0.62);
     }
 
     /* Layout Components */
@@ -500,6 +505,18 @@
       </div>
 
       <div class="sidebar-section">
+        <div class="section-title">Index Layout Recipes</div>
+        <div class="tool-group">
+          <button class="tool-btn" id="seedIndexFlowBtn">Seed Mixed Index Flow</button>
+          <button class="tool-btn" id="layoutTwoUpBtn">Format 2-Up Cards</button>
+          <button class="tool-btn" id="layoutFeatureRowBtn">Format Utility / Image Row</button>
+          <button class="tool-btn" id="layoutWideBtn">Format Wide Feature</button>
+          <button class="tool-btn" id="layoutTileStripBtn">Format 3-Tile Strip</button>
+          <button class="tool-btn" id="layoutMosaicBtn">Format Mosaic Flow</button>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
         <div class="section-title">Stage</div>
         <div class="property-row">
           <label class="input-label">Height (px)</label>
@@ -521,7 +538,7 @@
 
     <!-- Center Canvas -->
     <div class="canvas-container">
-      <div class="canvas-header">Drag to move / resize from corner / click to select / uploaded pictures render in place</div>
+      <div class="canvas-header">Scaled 1180px design canvas / export writes full-size page / drag to move / resize from corner</div>
       <div class="layout-stage" id="layoutStage">
         <div class="layout-inner" id="layoutInner"></div>
       </div>
@@ -650,6 +667,11 @@
     // Utility
     const px = (n) => `${n}px`;
     const generateId = () => `box-${Date.now()}-${Math.random()}`;
+    const DESIGN_WIDTH = 1180;
+    const getCanvasScale = () => {
+      const rect = layoutInner.getBoundingClientRect();
+      return rect.width / (layoutInner.offsetWidth || DESIGN_WIDTH) || 1;
+    };
     const escapeHTML = (value = '') => String(value).replace(/[&<>"']/g, (char) => ({
       '&': '&amp;',
       '<': '&lt;',
@@ -922,6 +944,256 @@
       });
     };
 
+    const getPageFrame = () => {
+      return { left: 0, width: DESIGN_WIDTH, gutter: 20 };
+    };
+
+    const getLayoutTargets = () => [...boxes].sort((a, b) => {
+      if (a.top !== b.top) return a.top - b.top;
+      if (a.left !== b.left) return a.left - b.left;
+      return a.zIndex - b.zIndex;
+    });
+
+    const applyGeometry = (box, geometry) => {
+      Object.assign(box, {
+        ...geometry,
+        borderRadius: geometry.borderRadius ?? box.borderRadius ?? 8,
+        borderColor: geometry.borderColor || box.borderColor,
+        borderWidth: geometry.borderWidth ?? box.borderWidth,
+        shadow: geometry.shadow || box.shadow
+      });
+    };
+
+    const stretchStageToContent = () => {
+      const bottom = boxes.reduce((max, box) => Math.max(max, box.top + box.height), 0);
+      stageHeight = Math.max(stageHeight, bottom + 80);
+      document.getElementById('stageHeightInput').value = stageHeight;
+    };
+
+    const formatTwoUp = (startTop = 120) => {
+      const targets = getLayoutTargets().slice(0, 2);
+      if (targets.length < 1) return;
+      const frame = getPageFrame();
+      const cardWidth = Math.round((frame.width - frame.gutter) / 2);
+
+      targets.forEach((box, index) => {
+        applyGeometry(box, {
+          left: frame.left + index * (cardWidth + frame.gutter),
+          top: startTop,
+          width: targets.length === 1 ? frame.width : cardWidth,
+          height: 220,
+          shadow: 'none'
+        });
+      });
+      stretchStageToContent();
+      saveToHistory();
+      render();
+    };
+
+    const formatFeatureRow = (startTop = 360) => {
+      const targets = getLayoutTargets().slice(0, 2);
+      if (targets.length < 1) return;
+      const frame = getPageFrame();
+      const cardWidth = Math.round((frame.width - frame.gutter) / 2);
+
+      targets.forEach((box, index) => {
+        applyGeometry(box, {
+          left: frame.left + index * (cardWidth + frame.gutter),
+          top: startTop,
+          width: targets.length === 1 ? frame.width : cardWidth,
+          height: 350,
+          shadow: 'none'
+        });
+      });
+      stretchStageToContent();
+      saveToHistory();
+      render();
+    };
+
+    const formatWideFeature = (startTop = 740) => {
+      const target = boxes.find(b => b.id === selectedBoxId) || getLayoutTargets()[0];
+      if (!target) return;
+      const frame = getPageFrame();
+
+      applyGeometry(target, {
+        left: frame.left,
+        top: startTop,
+        width: frame.width,
+        height: 190,
+        shadow: 'none'
+      });
+      stretchStageToContent();
+      saveToHistory();
+      render();
+    };
+
+    const formatTileStrip = (startTop = 980) => {
+      const targets = getLayoutTargets().slice(0, 3);
+      if (targets.length < 1) return;
+      const frame = getPageFrame();
+      const cardWidth = Math.round((frame.width - frame.gutter * 2) / 3);
+
+      targets.forEach((box, index) => {
+        applyGeometry(box, {
+          left: frame.left + index * (cardWidth + frame.gutter),
+          top: startTop,
+          width: targets.length === 1 ? frame.width : cardWidth,
+          height: 185,
+          shadow: 'none'
+        });
+      });
+      stretchStageToContent();
+      saveToHistory();
+      render();
+    };
+
+    const formatMosaicFlow = () => {
+      const targets = getLayoutTargets();
+      if (!targets.length) return;
+      const frame = getPageFrame();
+      const half = Math.round((frame.width - frame.gutter) / 2);
+      const third = Math.round((frame.width - frame.gutter * 2) / 3);
+      const pattern = [
+        { left: frame.left, top: 120, width: half, height: 220 },
+        { left: frame.left + half + frame.gutter, top: 120, width: half, height: 220 },
+        { left: frame.left, top: 360, width: half, height: 350 },
+        { left: frame.left + half + frame.gutter, top: 360, width: half, height: 350 },
+        { left: frame.left, top: 730, width: frame.width, height: 190 },
+        { left: frame.left, top: 940, width: third, height: 190 },
+        { left: frame.left + third + frame.gutter, top: 940, width: third, height: 190 },
+        { left: frame.left + (third + frame.gutter) * 2, top: 940, width: third, height: 190 }
+      ];
+
+      targets.forEach((box, index) => {
+        const geometry = pattern[index] || {
+          left: frame.left,
+          top: 1160 + (index - pattern.length) * 170,
+          width: frame.width,
+          height: 150
+        };
+        applyGeometry(box, { ...geometry, shadow: 'none' });
+      });
+      stretchStageToContent();
+      saveToHistory();
+      render();
+    };
+
+    const seedIndexFlow = ({ recordHistory = true } = {}) => {
+      boxes = [];
+      selectedBoxId = null;
+      const frame = getPageFrame();
+      const half = Math.round((frame.width - frame.gutter) / 2);
+      const third = Math.round((frame.width - frame.gutter * 2) / 3);
+
+      boxes.push(
+        createBox({
+          left: frame.left,
+          top: 0,
+          width: frame.width,
+          height: 64,
+          tag: 'NAV',
+          type: 'nav',
+          borderWidth: 0,
+          title: 'Neurofoundry',
+          body: 'Home / Services / Downloads / About'
+        }),
+        createBox({
+          left: frame.left,
+          top: 90,
+          width: frame.width,
+          height: 390,
+          tag: 'HERO',
+          type: 'hero',
+          borderWidth: 0,
+          eyebrow: 'Services',
+          title: 'The Work Has To Land.',
+          body: 'Code, branding, and marketing arranged as one coherent customer path.',
+          cta: 'Start Here'
+        }),
+        createBox({
+          left: frame.left,
+          top: 520,
+          width: half,
+          height: 220,
+          tag: 'CARD-1',
+          type: 'card',
+          eyebrow: 'Software',
+          title: 'Systems that work',
+          body: 'Checkout, login, product pages, internal tools, and automation.'
+        }),
+        createBox({
+          left: frame.left + half + frame.gutter,
+          top: 520,
+          width: half,
+          height: 220,
+          tag: 'CARD-2',
+          type: 'card',
+          eyebrow: 'Branding',
+          title: 'Identity with a pulse',
+          body: 'Visual direction, copy hierarchy, product language, and launch polish.'
+        }),
+        createBox({
+          left: frame.left,
+          top: 760,
+          width: frame.width,
+          height: 190,
+          tag: 'WIDE',
+          type: 'card',
+          eyebrow: 'Marketing',
+          title: 'Pages that sell without begging',
+          body: 'Offer pages, service pages, trust signals, and customer paths that make sense.'
+        }),
+        createBox({
+          left: frame.left,
+          top: 980,
+          width: third,
+          height: 190,
+          tag: 'DESIGN',
+          type: 'image',
+          title: 'Design',
+          body: 'Make the shape obvious.'
+        }),
+        createBox({
+          left: frame.left + third + frame.gutter,
+          top: 980,
+          width: third,
+          height: 190,
+          tag: 'BUILD',
+          type: 'image',
+          title: 'Build',
+          body: 'Make the thing work.'
+        }),
+        createBox({
+          left: frame.left + (third + frame.gutter) * 2,
+          top: 980,
+          width: third,
+          height: 190,
+          tag: 'LAUNCH',
+          type: 'image',
+          title: 'Launch',
+          body: 'Make it feel official.'
+        }),
+        createBox({
+          left: frame.left,
+          top: 1210,
+          width: frame.width,
+          height: 110,
+          tag: 'FOOTER',
+          type: 'footer',
+          title: 'Neurofoundry',
+          body: 'Home / Services / Downloads / About'
+        })
+      );
+
+      stageHeight = 1400;
+      document.getElementById('stageHeightInput').value = stageHeight;
+      selectedBoxId = boxes[1].id;
+      if (recordHistory) {
+        saveToHistory();
+      }
+      render();
+    };
+
     const renderBoxContent = (box) => {
       const eyebrow = escapeHTML(box.eyebrow || box.tag || 'Neurofoundry');
       const title = escapeHTML(box.title || box.tag || 'Preview');
@@ -963,6 +1235,7 @@
     const render = () => {
       layoutInner.innerHTML = '';
       layoutInner.style.height = px(stageHeight);
+      layoutInner.style.marginBottom = px(Math.round(stageHeight * (getCanvasScale() - 1)));
       if (backdrop) layoutInner.style.backgroundImage = `url('${backdrop}')`;
       layoutInner.style.backgroundSize = 'cover';
       layoutInner.style.backgroundPosition = 'center';
@@ -1013,7 +1286,11 @@
       selectedBoxId = id;
       isDragging = true;
       const rect = layoutInner.getBoundingClientRect();
-      dragOffset = { x: e.clientX - rect.left - box.left, y: e.clientY - rect.top - box.top };
+      const scale = getCanvasScale();
+      dragOffset = {
+        x: (e.clientX - rect.left) / scale - box.left,
+        y: (e.clientY - rect.top) / scale - box.top
+      };
       render();
     };
 
@@ -1025,14 +1302,16 @@
 
       if (isDragging) {
         const rect = layoutInner.getBoundingClientRect();
-        box.left = Math.max(0, e.clientX - rect.left - dragOffset.x);
-        box.top = Math.max(0, e.clientY - rect.top - dragOffset.y);
+        const scale = getCanvasScale();
+        box.left = Math.max(0, (e.clientX - rect.left) / scale - dragOffset.x);
+        box.top = Math.max(0, (e.clientY - rect.top) / scale - dragOffset.y);
         render();
       }
 
       if (isResizing) {
-        const deltaX = e.clientX - resizeStart.x;
-        const deltaY = e.clientY - resizeStart.y;
+        const scale = getCanvasScale();
+        const deltaX = (e.clientX - resizeStart.x) / scale;
+        const deltaY = (e.clientY - resizeStart.y) / scale;
         box.width = Math.max(50, resizeStart.width + deltaX);
         box.height = Math.max(50, resizeStart.height + deltaY);
         render();
@@ -1138,6 +1417,12 @@
     document.getElementById('addFeatureBtn').addEventListener('click', addFeatures);
     document.getElementById('addAuthBtn').addEventListener('click', addAuthCard);
     document.getElementById('addEmailBtn').addEventListener('click', addEmailTemplate);
+    document.getElementById('seedIndexFlowBtn').addEventListener('click', () => seedIndexFlow());
+    document.getElementById('layoutTwoUpBtn').addEventListener('click', () => formatTwoUp());
+    document.getElementById('layoutFeatureRowBtn').addEventListener('click', () => formatFeatureRow());
+    document.getElementById('layoutWideBtn').addEventListener('click', () => formatWideFeature());
+    document.getElementById('layoutTileStripBtn').addEventListener('click', () => formatTileStrip());
+    document.getElementById('layoutMosaicBtn').addEventListener('click', formatMosaicFlow);
     document.getElementById('undoBtn').addEventListener('click', undo);
     document.getElementById('redoBtn').addEventListener('click', redo);
     document.getElementById('duplicateBtn').addEventListener('click', () => {
@@ -1224,7 +1509,7 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background: #0f1113; color: #e6e9ee; font-family: Inter, sans-serif; }
-    .layout { position: relative; width: 100%; height: ${stageHeight}px; background: ${backdrop ? `url('${backdrop}')` : '#0f1113'}; background-size: cover; }
+    .layout { position: relative; width: 1180px; max-width: 100%; margin: 0 auto; height: ${stageHeight}px; background: ${backdrop ? `url('${backdrop}')` : '#0f1113'}; background-size: cover; }
     .layout-box { overflow: hidden; }
     .component-render { width: 100%; height: 100%; pointer-events: none; overflow: hidden; color: #e6e9ee; }
     .nf-kicker { color: #ff9b93; font-size: 11px; font-weight: 800; letter-spacing: 1.8px; text-transform: uppercase; }
@@ -1265,6 +1550,7 @@
     });
 
     // Initialize
+    seedIndexFlow({ recordHistory: false });
     saveToHistory();
     render();
   </script>

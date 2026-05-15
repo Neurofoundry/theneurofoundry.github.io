@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skeleton Key Checkout | Neurofoundry</title>
+  <meta name="description" content="Purchase Skeleton Key, Neurofoundry's local-first desktop tool for securing API keys, tokens, and sensitive developer credentials.">
+  <meta name="keywords" content="Skeleton Key, Neurofoundry checkout, secure credential storage, API key vault, local-first desktop app, Square checkout">
+  <meta name="author" content="Neurofoundry">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#0f1113">
+  <link rel="canonical" href="https://www.theneurofoundry.com/checkout/skeleton-key/">
+  <meta property="og:type" content="product">
+  <meta property="og:site_name" content="Neurofoundry">
+  <meta property="og:url" content="https://www.theneurofoundry.com/checkout/skeleton-key/">
+  <meta property="og:title" content="Skeleton Key Checkout | Neurofoundry">
+  <meta property="og:description" content="Secure checkout for Skeleton Key, a local-first desktop credential tool.">
+  <meta property="og:image" content="https://www.theneurofoundry.com/thskey.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Skeleton Key Checkout | Neurofoundry">
+  <meta name="twitter:description" content="Purchase Skeleton Key, a secure local-first desktop tool for sensitive developer credentials.">
+  <meta name="twitter:image" content="https://www.theneurofoundry.com/thskey.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Aldrich&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../common/site-header.css">
+  <style>
+    :root {
+      --panel: rgba(12, 15, 18, 0.92);
+      --line: rgba(255, 255, 255, 0.12);
+      --text: #f4f0e8;
+      --muted: rgba(244, 240, 232, 0.72);
+      --accent: #e9584d;
+      --accent-strong: #ff7b6e;
+      --gold: #d8a85e;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(216, 168, 94, 0.14), transparent 28%),
+        linear-gradient(180deg, #070707 0%, #0f1114 48%, #050505 100%);
+      color: var(--text);
+      font-family: Inter, Arial, sans-serif;
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+      padding: 124px 20px 72px;
+    }
+
+    .page-nav {
+      width: min(1120px, 100%);
+      margin: 0 auto 24px;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      min-height: 40px;
+      padding: 0 13px 0 11px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 8px;
+      background: rgba(10, 12, 14, 0.72);
+      color: rgba(244, 240, 232, 0.82);
+      font-size: 13px;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .back-link:hover {
+      border-color: rgba(216, 168, 94, 0.46);
+      color: var(--text);
+    }
+
+    .back-link span {
+      font-size: 19px;
+      line-height: 1;
+    }
+
+    .checkout-shell {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 380px;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .checkout-copy {
+      padding-top: 8px;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 760px;
+      font-family: Aldrich, Inter, sans-serif;
+      font-size: clamp(38px, 6vw, 70px);
+      line-height: 0.95;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .lead {
+      max-width: 690px;
+      margin: 24px 0 0;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.7;
+    }
+
+    .proof-list {
+      display: grid;
+      gap: 11px;
+      margin: 28px 0 0;
+      padding: 0;
+      list-style: none;
+      max-width: 640px;
+    }
+
+    .proof-list li {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      color: rgba(244, 240, 232, 0.78);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .proof-list li::before {
+      content: "";
+      flex: 0 0 auto;
+      width: 8px;
+      height: 8px;
+      margin-top: 7px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 14px rgba(216, 168, 94, 0.44);
+    }
+
+    .summary-card,
+    .status-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: 9px 11px 12px rgba(0, 0, 0, 0.62);
+    }
+
+    .summary-card {
+      padding: 22px;
+      margin-top: -34px;
+    }
+
+    .product-row {
+      display: grid;
+      grid-template-columns: 68px minmax(0, 1fr);
+      gap: 16px;
+      align-items: center;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .product-icon {
+      width: 68px;
+      height: 68px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .product-icon img {
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+    }
+
+    .product-name {
+      margin: 0 0 6px;
+      font-size: 19px;
+      font-weight: 800;
+    }
+
+    .product-desc {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 20px 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .price-row strong {
+      color: var(--text);
+      font-size: 22px;
+    }
+
+    .checkout-form {
+      display: grid;
+      gap: 12px;
+    }
+
+    label {
+      display: grid;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    input {
+      width: 100%;
+      min-height: 46px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 6px;
+      background: rgba(0, 0, 0, 0.22);
+      color: var(--text);
+      padding: 0 13px;
+      font: inherit;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      border: 1px solid #a2362f;
+      border-radius: 8px;
+      background: linear-gradient(180deg, var(--accent-strong) 0%, var(--accent) 54%, #d23d33 100%);
+      color: #fff;
+      font-weight: 800;
+      text-decoration: none;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(224, 71, 60, 0.26);
+    }
+
+    .button:disabled {
+      cursor: wait;
+      opacity: 0.68;
+    }
+
+    .fine-print {
+      margin: 12px 0 0;
+      color: rgba(244, 240, 232, 0.56);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .status-card {
+      margin-top: 22px;
+      padding: 18px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .status-card[hidden] {
+      display: none;
+    }
+
+    .status-card.good {
+      border-color: rgba(71, 199, 132, 0.35);
+      color: #baf1d1;
+    }
+
+    .status-card.bad {
+      border-color: rgba(255, 123, 110, 0.42);
+      color: #ffb5ad;
+    }
+
+    @media (max-width: 860px) {
+      main {
+        padding-top: 104px;
+      }
+
+      .checkout-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .summary-card {
+        margin-top: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div data-site-header></div>
+  <script src="../../common/site-header.js" data-base="../../"></script>
+  <script src="../../auth-client.js?v=20260421"></script>
+
+  <main>
+    <nav class="page-nav" aria-label="Checkout Navigation">
+      <a class="back-link" href="/downloads/"><span aria-hidden="true">&larr;</span>Back to Downloads</a>
+    </nav>
+
+    <div class="checkout-shell">
+      <section class="checkout-copy" aria-labelledby="checkout-heading">
+        <p class="eyebrow">Secure Checkout</p>
+        <h1 id="checkout-heading">Skeleton Key</h1>
+        <p class="lead">Encrypted Local Key Storage for API Keys, Tokens, and Sensitive Developer Credentials. Confirm your Access Details here, then complete your Purchase securely.</p>
+        <ul class="proof-list" aria-label="Checkout Details">
+          <li>Secure Checkout powered by Square.</li>
+          <li>Unlock Full Vault Capacity with Unlimited Keys and Secure Notes.</li>
+          <li>Your Receipt and Access Confirmation are sent to your Verified Account Email.</li>
+        </ul>
+        <aside id="statusCard" class="status-card" hidden></aside>
+      </section>
+
+      <aside class="summary-card" aria-label="Order Summary">
+        <div class="product-row">
+          <div class="product-icon" aria-hidden="true">
+            <img src="../../anvil.png" alt="">
+          </div>
+          <div>
+            <h2 id="productName" class="product-name">Skeleton Key</h2>
+            <p id="productDescription" class="product-desc">Encrypted Local Key Storage for Developer Credentials.</p>
+          </div>
+        </div>
+
+        <div class="price-row">
+          <span>Skeleton Key Access</span>
+          <strong id="priceLabel">Loading</strong>
+        </div>
+
+        <form id="checkoutForm" class="checkout-form">
+          <label>
+            Confirm Account Email
+            <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com">
+          </label>
+          <button id="checkoutButton" class="button" type="submit">Continue to Secure Payment</button>
+        </form>
+        <p class="fine-print">Secure Payment powered by Square. Receipt and Access Confirmation are sent after Purchase.</p>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    const productId = 'skeleton_key';
+    const auth = new window.NeurofoundryAuth({
+      apiUrl: window.NeurofoundryAuth.resolveDefaultApiUrl()
+    });
+    let signedInUser = null;
+    const apiBase = (() => {
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        return 'http://localhost:3000/api';
+      }
+      if (window.location.hostname === 'www.theneurofoundry.com' || window.location.hostname === 'theneurofoundry.com') {
+        return 'https://api.theneurofoundry.com/api';
+      }
+      return `${window.location.origin}/api`;
+    })();
+
+    const statusCard = document.getElementById('statusCard');
+    const form = document.getElementById('checkoutForm');
+    const button = document.getElementById('checkoutButton');
+    const priceLabel = document.getElementById('priceLabel');
+    const productName = document.getElementById('productName');
+    const productDescription = document.getElementById('productDescription');
+    const email = document.getElementById('email');
+
+    function normalizeEmail(value) {
+      return String(value || '').trim().toLowerCase();
+    }
+
+    function getCheckoutRedirectPath() {
+      if (window.location.protocol === 'file:') {
+        return '/checkout/skeleton-key/';
+      }
+
+      return window.location.pathname || '/checkout/skeleton-key/';
+    }
+
+    function goToLogin() {
+      const redirect = encodeURIComponent(getCheckoutRedirectPath());
+      const loginPath = `/members/login/?redirect=${redirect}`;
+
+      if (window.location.protocol === 'file:') {
+        window.location.href = `http://localhost:3000${loginPath}`;
+        return;
+      }
+
+      window.location.href = loginPath;
+    }
+
+    function setStatus(message, kind) {
+      statusCard.textContent = message;
+      statusCard.className = `status-card ${kind || ''}`.trim();
+      statusCard.hidden = !message;
+    }
+
+    function formatMoney(amount, currency) {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: currency || 'USD'
+      }).format((amount || 0) / 100);
+    }
+
+    async function loadProduct() {
+      try {
+        const response = await fetch(`${apiBase}/payments/products/${encodeURIComponent(productId)}`);
+        const data = await response.json();
+        const product = data.product;
+
+        productName.textContent = product.name;
+        productDescription.textContent = product.description;
+        priceLabel.textContent = formatMoney(product.amount, product.currency);
+      } catch (error) {
+        priceLabel.textContent = 'Unavailable';
+        button.disabled = true;
+        setStatus('Checkout Pricing is Not Available Yet.', 'bad');
+      }
+    }
+
+    async function loadAccount() {
+      try {
+        const profile = await auth.getProfile();
+        signedInUser = profile.data && profile.data.user;
+
+        if (!signedInUser) {
+          throw new Error('Sign In Required.');
+        }
+
+        email.placeholder = signedInUser.email || 'you@example.com';
+
+        if (!signedInUser.emailVerified) {
+          setStatus('Email Verification is Required Before Purchase.', 'bad');
+        }
+      } catch (error) {
+        setStatus('Sign In is Required Before Purchase.', 'bad');
+      }
+    }
+
+    async function startCheckout(event) {
+      event.preventDefault();
+
+      if (!signedInUser) {
+        setStatus('Sign In is Required Before Purchase.', 'bad');
+        window.setTimeout(() => {
+          goToLogin();
+        }, 450);
+        return;
+      }
+
+      if (!signedInUser.emailVerified) {
+        setStatus('Email Verification is Required Before Purchase.', 'bad');
+        return;
+      }
+
+      if (normalizeEmail(email.value) !== normalizeEmail(signedInUser.email)) {
+        setStatus('Email Does Not Match Signed-In Account.', 'bad');
+        return;
+      }
+
+      button.disabled = true;
+      button.textContent = 'Opening Secure Payment';
+      setStatus('', '');
+
+      try {
+        const data = await auth.apiRequest('/payments/checkout', {
+          method: 'POST',
+          body: JSON.stringify({
+            productId,
+            email: email.value.trim()
+          })
+        });
+
+        if (!data.checkoutUrl) {
+          throw new Error('Secure Payment is Unavailable.');
+        }
+
+        window.location.href = data.checkoutUrl;
+      } catch (error) {
+        button.disabled = false;
+        button.textContent = 'Continue to Secure Payment';
+        setStatus(error.message || 'Checkout Could Not Be Started.', 'bad');
+      }
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('status') === 'complete') {
+      setStatus('Thank you! Your Purchase is Being Confirmed. Check your Email for Details.', 'good');
+    }
+
+    form.addEventListener('submit', startCheckout);
+    loadAccount();
+    loadProduct();
+  </script>
+</body>
+</html>

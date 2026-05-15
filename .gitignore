@@ -16,3 +16,5 @@ build/
 uploads/*
 !uploads/avatars/.gitkeep
 import_scripts/Forge/
+outdated/
+output/playwright/

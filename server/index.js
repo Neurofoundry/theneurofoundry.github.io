@@ -21,6 +21,7 @@ const passportConfig = require('./config/passport');
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 const profileRoutes = require('./routes/profile');
+const paymentRoutes = require('./routes/payments');
 const { findUserById } = require('./services/userService');
 const { getProfileAvatar } = require('./services/r2AvatarClient');
 const { getLastSentEmail, getSentEmailLog } = require('./services/emailService');
@@ -61,6 +62,7 @@ const limiter = rateLimit({
 app.use('/api/', limiter);
 
 // Body parsing middleware
+app.use('/api/payments/square/webhook', express.raw({ type: 'application/json' }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -108,6 +110,7 @@ app.get('/api/profile/avatar/public/:userId', async (req, res, next) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/user', authMiddleware, userRoutes);
 app.use('/api/profile', authMiddleware, profileRoutes);
+app.use('/api/payments', paymentRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

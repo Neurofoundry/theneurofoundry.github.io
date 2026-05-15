@@ -1,10 +1,11 @@
 :root {
+  --nf-header-brand-font: Changa, Inter, Arial, sans-serif;
   --nf-header-primary: #e0473c;
   --nf-header-gradient-start: #ff7b6e;
   --nf-header-gradient-mid: #e9584d;
   --nf-header-gradient-end: #d23d33;
   --nf-header-border: #a2362f;
-  --nf-header-shadow: rgba(224, 71, 60, 0.38);
+  --nf-header-shadow: rgba(224, 71, 60, 0.18);
   --nf-header-bg: rgba(11, 12, 14, 0.95);
   --nf-header-text: #e6e9ee;
   --nf-header-muted: #ccc;
@@ -28,13 +29,15 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 16px;
 }
 
 .nf-brand {
   display: flex;
   align-items: center;
   gap: 8px;
-  flex: 0 0 auto;
+  flex: 0 1 auto;
+  min-width: 0;
   color: var(--nf-header-text);
   font-weight: 700;
   font-size: 18px;
@@ -51,12 +54,26 @@
   font-weight: 900;
   font-size: 18px;
   color: white;
+  flex: 0 0 auto;
 }
 
 .nf-brand-icon img {
   width: 22px;
   height: 22px;
   object-fit: contain;
+}
+
+.nf-brand span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--nf-header-brand-font);
+  font-weight: 700;
+}
+
+.nf-brand span.nf-brand-font-loading {
+  opacity: 0;
 }
 
 .nf-nav-links {
@@ -92,45 +109,147 @@
   box-shadow: 0 4px 12px var(--nf-header-shadow);
 }
 
+.nf-mobile-actions {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  position: relative;
+}
+
+.nf-login-link {
+  min-height: 34px;
+  border-radius: 8px;
+  border: 1px solid var(--nf-header-border);
+  background: linear-gradient(180deg, var(--nf-header-gradient-start) 0%, var(--nf-header-gradient-mid) 48%, var(--nf-header-gradient-end) 100%);
+  box-shadow: 0 4px 12px var(--nf-header-shadow);
+  color: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 0 10px;
+  text-decoration: none;
+}
+
+.nf-nav-links .nf-login-link {
+  color: white;
+  margin-left: 4px;
+}
+
+.nf-nav-links .nf-login-link:hover {
+  color: white;
+}
+
+.nf-menu-toggle {
+  width: 28px;
+  min-height: 34px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--nf-header-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.nf-menu-toggle span {
+  width: 14px;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+  display: block;
+}
+
+.nf-menu-toggle:hover,
+.nf-menu-toggle[aria-expanded="true"] {
+  color: var(--nf-header-text);
+}
+
+.nf-mobile-menu {
+  display: none;
+}
+
 @media (max-width: 768px) {
   .nf-header-container {
-    height: 50px;
+    height: 52px;
     gap: 8px;
+    padding: 0 10px;
   }
 
   .nf-brand {
-    font-size: 14px;
-  }
-
-  .nf-brand span {
-    display: none;
+    font-size: 13px;
+    letter-spacing: 0;
   }
 
   .nf-brand-icon {
-    width: 28px;
-    height: 28px;
+    width: 30px;
+    height: 30px;
   }
 
   .nf-brand-icon img {
-    width: 18px;
-    height: 18px;
+    width: 19px;
+    height: 19px;
   }
 
   .nf-nav-links {
-    flex: 1 1 auto;
-    min-width: 0;
-    scrollbar-width: none;
-    gap: 6px;
-    overflow-x: auto;
-    padding-bottom: 2px;
-  }
-
-  .nf-nav-links::-webkit-scrollbar {
     display: none;
   }
 
-  .nf-nav-links a {
-    font-size: 10px;
+  .nf-mobile-actions {
+    display: flex;
+  }
+
+  .nf-login-link,
+  .nf-menu-toggle {
+    min-height: 32px;
+  }
+
+  .nf-menu-toggle {
+    width: 28px;
+  }
+
+  .nf-mobile-menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    width: max-content;
+    max-width: calc(100vw - 20px);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2px;
+    padding: 6px;
+    background: rgba(13, 14, 16, 0.96);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.42);
+  }
+
+  .nf-mobile-menu[hidden] {
+    display: none;
+  }
+
+  .nf-mobile-menu a {
+    min-height: 31px;
+    border-radius: 6px;
+    color: var(--nf-header-muted);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 9px;
+    font-size: 12px;
+    text-align: right;
     white-space: nowrap;
+  }
+
+  .nf-mobile-menu a:hover,
+  .nf-mobile-menu a[aria-current="page"] {
+    color: var(--nf-header-primary);
+    background: rgba(255, 255, 255, 0.06);
   }
 }

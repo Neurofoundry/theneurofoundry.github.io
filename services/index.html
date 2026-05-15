@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Services | Neurofoundry</title>
+  <meta name="description" content="Neurofoundry services for AI systems, automation workflows, software tooling, checkout flows, web experiences, and launch-ready product infrastructure.">
+  <meta name="keywords" content="AI services, automation services, software development, web development, workflow automation, product launch support, Neurofoundry">
+  <meta name="author" content="Neurofoundry">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#0f1113">
+  <link rel="canonical" href="https://www.theneurofoundry.com/services/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Neurofoundry">
+  <meta property="og:url" content="https://www.theneurofoundry.com/services/">
+  <meta property="og:title" content="Services | Neurofoundry">
+  <meta property="og:description" content="AI systems, automation, web experiences, secure tools, and launch support built around practical delivery.">
+  <meta property="og:image" content="https://www.theneurofoundry.com/banner.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Services | Neurofoundry">
+  <meta name="twitter:description" content="Practical AI, automation, software, and launch support from Neurofoundry.">
+  <meta name="twitter:image" content="https://www.theneurofoundry.com/banner.png">
+  <link rel="icon" type="image/png" href="../anvil.png">
+  <link rel="apple-touch-icon" href="../anvil.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../common/site-header.css">
+  <link rel="stylesheet" href="../common/site-footer.css">
+  <style>
+    :root {
+      --primary-color: #e0473c;
+      --primary-gradient-start: #ff7b6e;
+      --primary-gradient-end: #d23d33;
+      --primary-soft: #ff9b93;
+      --primary-border: rgba(224, 71, 60, 0.34);
+      --primary-border-strong: rgba(224, 71, 60, 0.48);
+      --dark-bg: #0f1113;
+      --section-bg: rgba(15, 17, 19, 0.78);
+      --surface-card: #0f1113;
+      --line: #2c333a;
+      --light-text: #e6e9ee;
+      --muted-text: #9aa3ad;
+      --page-max: 1180px;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scrollbar-gutter: stable;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding-top: 58px;
+      background: var(--dark-bg);
+      color: var(--light-text);
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .services-hero {
+      position: relative;
+      min-height: clamp(430px, 62vw, 620px);
+      overflow: hidden;
+      display: grid;
+      align-items: end;
+      padding: clamp(44px, 7vw, 82px) clamp(14px, 3vw, 24px) clamp(34px, 5vw, 58px);
+      border-bottom: 2px solid var(--primary-color);
+      background: #090b0d;
+    }
+
+    .hero-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+      transform: scale(1.18);
+      opacity: 0.38;
+      z-index: 0;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 18% 18%, rgba(224, 71, 60, 0.18), transparent 34%),
+        linear-gradient(180deg, rgba(7, 8, 10, 0.48), rgba(7, 8, 10, 0.92));
+      z-index: 1;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      width: min(var(--page-max), 100%);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(300px, 0.46fr);
+      gap: clamp(28px, 5vw, 72px);
+      align-items: end;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--primary-soft);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 820px;
+      color: #fff;
+      font-size: clamp(46px, 7vw, 86px);
+      font-weight: 900;
+      line-height: 0.94;
+    }
+
+    .hero-copy {
+      max-width: 700px;
+      margin: 22px 0 0;
+      color: var(--muted-text);
+      font-size: clamp(15px, 2vw, 18px);
+      line-height: 1.62;
+    }
+
+    .hero-card {
+      padding: clamp(20px, 3vw, 28px);
+      background: rgba(15, 17, 19, 0.86);
+      border: 1px solid var(--primary-border);
+      border-radius: 8px;
+      box-shadow: 9px 11px 12px rgba(0, 0, 0, 0.62);
+    }
+
+    .hero-card strong {
+      display: block;
+      color: #fff;
+      font-size: 20px;
+      line-height: 1.2;
+    }
+
+    .hero-card p {
+      margin: 12px 0 0;
+      color: var(--muted-text);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .skills-bar {
+      background: var(--section-bg);
+      padding: 20px 0;
+    }
+
+    .skills {
+      width: min(var(--page-max), 100%);
+      margin: 0 auto;
+      padding: 0 clamp(14px, 3vw, 24px);
+      display: flex;
+      justify-content: center;
+      gap: clamp(8px, 1.2vw, 14px);
+      flex-wrap: nowrap;
+    }
+
+    .skill-item {
+      padding: clamp(6px, 1.4vw, 8px) clamp(10px, 2.4vw, 16px);
+      border: 1px solid var(--primary-border-strong);
+      border-radius: 20px;
+      color: var(--primary-soft);
+      font-size: clamp(10px, 1.6vw, 14px);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .offer-section {
+      width: min(var(--page-max), 100%);
+      margin: 0 auto;
+      padding: clamp(34px, 6vw, 64px) clamp(14px, 3vw, 24px);
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .offer-main,
+    .offer-card,
+    .tile,
+    .contact-panel {
+      background: linear-gradient(180deg, rgba(15, 17, 19, 0.94), rgba(10, 11, 13, 0.92));
+      border: 1px solid var(--primary-border);
+      border-radius: 8px;
+      box-shadow: 9px 11px 12px rgba(0, 0, 0, 0.62);
+    }
+
+    .offer-main {
+      padding: clamp(22px, 4vw, 34px);
+      display: grid;
+      align-content: end;
+      min-height: 360px;
+    }
+
+    .offer-main h2,
+    .contact-panel h2 {
+      margin: 0;
+      color: #fff;
+      font-size: clamp(28px, 5vw, 48px);
+      line-height: 1.02;
+    }
+
+    .offer-main p,
+    .contact-panel p {
+      margin: 16px 0 0;
+      color: var(--muted-text);
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .offer-stack {
+      display: grid;
+      gap: 20px;
+    }
+
+    .offer-card {
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 92px minmax(0, 1fr);
+      gap: 18px;
+      align-items: center;
+      min-height: 150px;
+    }
+
+    .offer-mark {
+      aspect-ratio: 1;
+      border-radius: 8px;
+      background:
+        radial-gradient(circle at 50% 38%, rgba(224, 71, 60, 0.32), transparent 42%),
+        #090b0d;
+      border: 1px solid rgba(224, 71, 60, 0.26);
+      display: grid;
+      place-items: center;
+      color: var(--primary-soft);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .offer-card h3 {
+      margin: 0;
+      color: #fff;
+      font-size: 20px;
+      line-height: 1.15;
+    }
+
+    .offer-card p {
+      margin: 8px 0 0;
+      color: var(--muted-text);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .tile-section {
+      padding: 0 clamp(14px, 3vw, 24px) clamp(34px, 6vw, 64px);
+    }
+
+    .tile-grid {
+      width: min(var(--page-max), 100%);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .tile {
+      position: relative;
+      overflow: hidden;
+      min-height: 320px;
+    }
+
+    .tile img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.62;
+      filter: saturate(0.92) contrast(1.06);
+    }
+
+    .tile::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(0deg, rgba(9, 11, 13, 0.96) 0%, rgba(9, 11, 13, 0.62) 58%, rgba(9, 11, 13, 0.12) 100%);
+    }
+
+    .tile-content {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 1;
+      padding: 20px;
+    }
+
+    .tile-content h3 {
+      margin: 0;
+      color: #fff;
+      font-size: 22px;
+      line-height: 1.1;
+    }
+
+    .tile-content p {
+      margin: 10px 0 0;
+      color: var(--muted-text);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .contact-section {
+      padding: 0 clamp(14px, 3vw, 24px) clamp(58px, 8vw, 96px);
+    }
+
+    .contact-panel {
+      width: min(var(--page-max), 100%);
+      margin: 0 auto;
+      padding: clamp(24px, 5vw, 40px);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .contact-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0 18px;
+      border: 1px solid #a2362f;
+      border-radius: 8px;
+      background: linear-gradient(180deg, var(--primary-gradient-start) 0%, var(--primary-color) 52%, var(--primary-gradient-end) 100%);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(224, 71, 60, 0.18);
+      white-space: nowrap;
+    }
+
+    @media (max-width: 900px) {
+      .hero-inner,
+      .offer-section,
+      .contact-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .tile-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding-top: 52px;
+      }
+
+      .services-hero {
+        min-height: 274px;
+        padding: 24px 14px 16px;
+      }
+
+      .hero-video {
+        transform: scale(1.45);
+        opacity: 0.26;
+      }
+
+      .hero-inner {
+        gap: 14px;
+      }
+
+      h1 {
+        font-size: clamp(25px, 7.4vw, 29px);
+        line-height: 0.98;
+      }
+
+      .hero-copy {
+        margin-top: 10px;
+        font-size: 13px;
+        line-height: 1.42;
+      }
+
+      .hero-card {
+        padding: 11px 12px;
+      }
+
+      .hero-card strong {
+        font-size: 13px;
+        line-height: 1.25;
+      }
+
+      .hero-card p {
+        display: none;
+      }
+
+      .skills-bar {
+        display: none;
+      }
+
+      .offer-section {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-auto-rows: auto;
+        padding: 18px 14px 12px;
+        gap: 10px;
+      }
+
+      .offer-main {
+        grid-column: 1;
+        grid-row: 1;
+        min-height: 154px;
+        padding: 13px;
+        overflow: hidden;
+      }
+
+      .offer-main h2,
+      .contact-panel h2 {
+        font-size: 19px;
+        line-height: 1.08;
+      }
+
+      .offer-main p {
+        margin-top: 9px;
+        font-size: 11px;
+        line-height: 1.38;
+      }
+
+      .offer-stack {
+        display: contents;
+      }
+
+      .offer-card {
+        grid-template-columns: 1fr;
+        align-content: start;
+        min-height: 0;
+        padding: 12px;
+        gap: 8px;
+      }
+
+      .offer-card:nth-child(1),
+      .offer-card:nth-child(2) {
+        grid-column: auto;
+      }
+
+      .offer-card:nth-child(1) {
+        grid-column: 1;
+        grid-row: 2;
+      }
+
+      .offer-card:nth-child(2) {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+      }
+
+      .offer-card:nth-child(3) {
+        grid-column: 1 / -1;
+        grid-row: 3;
+        grid-template-columns: 46px minmax(0, 1fr);
+        align-items: center;
+      }
+
+      .offer-card h3 {
+        font-size: 13px;
+        line-height: 1.18;
+      }
+
+      .offer-card p {
+        font-size: 11px;
+        line-height: 1.35;
+      }
+
+      .offer-mark {
+        width: 42px;
+        font-size: 8px;
+      }
+
+      .tile-section {
+        padding: 0 14px 12px;
+      }
+
+      .tile-grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      .tile:nth-child(1),
+      .tile:nth-child(2) {
+        display: none;
+      }
+
+      .tile {
+        min-height: 150px;
+      }
+
+      .tile-content {
+        padding: 14px;
+      }
+
+      .tile-content .eyebrow {
+        margin-bottom: 4px;
+        font-size: 8px;
+        letter-spacing: 1.2px;
+      }
+
+      .tile-content h3 {
+        font-size: 18px;
+        line-height: 1.08;
+      }
+
+      .tile-content p {
+        display: block;
+        margin-top: 8px;
+        font-size: 12px;
+        line-height: 1.35;
+      }
+
+      .contact-section {
+        padding: 0 14px 54px;
+      }
+
+      .contact-panel {
+        padding: 15px;
+        gap: 12px;
+      }
+
+      .contact-panel p {
+        font-size: 12px;
+        line-height: 1.45;
+      }
+
+      .contact-link {
+        width: 100%;
+        min-height: 44px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div data-site-header></div>
+  <script src="../common/site-header.js" data-base="../"></script>
+
+  <main>
+    <section class="services-hero" aria-labelledby="services-heading">
+      <video class="hero-video" autoplay muted loop playsinline>
+        <source src="../assets/videos/loopz2.mp4" type="video/mp4">
+      </video>
+      <div class="hero-overlay"></div>
+      <div class="hero-inner">
+        <div>
+          <p class="eyebrow">Services</p>
+          <h1 id="services-heading">The Work Has To Land.</h1>
+          <p class="hero-copy">I build the pieces that make a project feel real: code that works, branding that has a point of view, and marketing pages that know exactly what they are trying to sell.</p>
+        </div>
+        <aside class="hero-card">
+          <strong>Software. Branding. Marketing. One coherent path.</strong>
+          <p>This is for people who need the page, the product, and the pitch to stop fighting each other.</p>
+        </aside>
+      </div>
+    </section>
+
+    <div class="skills-bar" aria-label="Service Signals">
+      <div class="skills">
+        <div class="skill-item">Coding</div>
+        <div class="skill-item">Brand Identity</div>
+        <div class="skill-item">Marketing Pages</div>
+        <div class="skill-item">Automation</div>
+      </div>
+    </div>
+
+    <section class="offer-section" aria-label="Service Offers">
+      <article class="offer-main">
+        <p class="eyebrow">What I Can Sell You</p>
+        <h2>Sharper execution for people building something with teeth.</h2>
+        <p>Need a site that stops looking generic? A checkout flow that feels official? A brand that finally has a voice? A tool that handles the ugly work behind the curtain? That is the lane.</p>
+      </article>
+
+      <div class="offer-stack">
+        <article class="offer-card">
+          <div class="offer-mark">Code</div>
+          <div>
+            <h3>Software and systems</h3>
+            <p>Web pages, account flows, checkout paths, internal tools, automation, and local-first utilities.</p>
+          </div>
+        </article>
+        <article class="offer-card">
+          <div class="offer-mark">Brand</div>
+          <div>
+            <h3>Brand and presentation</h3>
+            <p>Visual direction, messaging hierarchy, product language, launch polish, and page composition.</p>
+          </div>
+        </article>
+        <article class="offer-card">
+          <div class="offer-mark">Market</div>
+          <div>
+            <h3>Marketing and conversion</h3>
+            <p>Offer pages, service pages, copy cleanup, trust signals, and customer paths that make sense.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="tile-section" aria-label="Service Focus">
+      <div class="tile-grid">
+        <article class="tile">
+          <img src="../assets/thumbnails/design.png" alt="">
+          <div class="tile-content">
+            <p class="eyebrow">Design</p>
+            <h3>Make the shape obvious.</h3>
+            <p>Structure, hierarchy, and visual weight so people understand what they are looking at fast.</p>
+          </div>
+        </article>
+        <article class="tile">
+          <img src="../assets/thumbnails/deliver.png" alt="">
+          <div class="tile-content">
+            <p class="eyebrow">Build</p>
+            <h3>Make the thing work.</h3>
+            <p>Practical implementation, live paths, real data, and systems that survive outside a mockup.</p>
+          </div>
+        </article>
+        <article class="tile">
+          <img src="../assets/thumbnails/deploy.png" alt="">
+          <div class="tile-content">
+            <p class="eyebrow">Launch</p>
+            <h3>Make it feel official.</h3>
+            <p>Polish, copy, checkout, contact paths, and launch details that stop the experience from feeling unfinished.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="contact-section" aria-label="Start a Project">
+      <div class="contact-panel">
+        <div>
+          <p class="eyebrow">Start Here</p>
+          <h2>Bring the rough idea. I can help forge the shape.</h2>
+          <p>Send the project, the problem, or the page that is not landing right. If it needs code, branding, marketing, or all three, that is the lane.</p>
+        </div>
+        <a class="contact-link" href="mailto:info@theneurofoundry.com">info@theneurofoundry.com</a>
+      </div>
+    </section>
+  </main>
+
+  <div data-site-footer></div>
+  <script src="../common/site-footer.js" data-base="../"></script>
+</body>
+</html>
