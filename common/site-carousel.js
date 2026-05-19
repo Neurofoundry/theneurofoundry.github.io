@@ -37,10 +37,10 @@
     style.textContent = `
       .nf-shared-carousel {
         position: absolute;
-        top: clamp(18px, 4vw, 34px);
-        right: clamp(14px, 3vw, 32px);
-        bottom: clamp(18px, 4vw, 34px);
-        width: min(46vw, 640px);
+        top: clamp(16px, 3.2vw, 24px);
+        right: clamp(12px, 1.8vw, 24px);
+        bottom: clamp(16px, 3.2vw, 24px);
+        width: min(58vw, 920px);
         min-height: 150px;
         pointer-events: none;
         overflow: hidden;
@@ -48,8 +48,8 @@
         border-radius: 8px;
         background: rgba(8, 9, 9, 0.35);
         z-index: 1;
-        mask-image: linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.18) 14%, #000 38%);
-        -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.18) 14%, #000 38%);
+        mask-image: linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.18) 12%, rgba(0, 0, 0, 0.72) 34%, #000 58%);
+        -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.18) 12%, rgba(0, 0, 0, 0.72) 34%, #000 58%);
       }
 
       .nf-shared-carousel-track {
@@ -62,18 +62,13 @@
         position: absolute;
         inset: 0;
         opacity: 0;
-        transform: translateX(18%);
-        transition: opacity 900ms ease, transform 900ms ease;
+        transform: scale(1.015);
+        transition: opacity 1100ms ease, transform 1100ms ease;
       }
 
       .nf-shared-carousel-slide.is-active {
         opacity: 1;
-        transform: translateX(0);
-      }
-
-      .nf-shared-carousel-slide.is-exiting {
-        opacity: 0;
-        transform: translateX(-18%);
+        transform: scale(1);
       }
 
       .nf-shared-carousel-slide img {
@@ -86,14 +81,26 @@
 
       @media (max-width: 860px) {
         .nf-shared-carousel {
-          opacity: 0.26;
-          width: min(70vw, 520px);
+          opacity: 0.68;
+          width: min(66vw, 560px);
+          mask-image: linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.28) 20%, #000 62%);
+          -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.28) 20%, #000 62%);
         }
       }
 
       @media (max-width: 640px) {
         .nf-shared-carousel {
-          display: none;
+          display: block;
+          top: 23px;
+          right: 14px;
+          bottom: auto;
+          width: min(50vw, 190px);
+          height: 98px;
+          min-height: 0;
+          opacity: 1;
+          border-color: rgba(224, 71, 60, 0.28);
+          mask-image: linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.42) 26%, #000 72%);
+          -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.42) 26%, #000 72%);
         }
       }
     `;
@@ -131,17 +138,8 @@
   if (slides.length < 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
   window.setInterval(() => {
-    const previous = slides[current];
+    slides[current].classList.remove('is-active');
     current = (current + 1) % slides.length;
-    const next = slides[current];
-
-    previous.classList.remove('is-active');
-    previous.classList.add('is-exiting');
-    next.classList.remove('is-exiting');
-    next.classList.add('is-active');
-
-    window.setTimeout(() => {
-      previous.classList.remove('is-exiting');
-    }, 950);
+    slides[current].classList.add('is-active');
   }, Math.max(delay, 2000));
 })();
