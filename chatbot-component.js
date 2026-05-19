@@ -24,7 +24,7 @@
     // Assistant instruction defaults and response policy
     assistant_instructions: "You are the Neurofoundry assistant. Be concise (20-80 words), avoid long encyclopedia-like answers, and guide the user to sign up or explore site features when appropriate.",
     cta_text: "Want more detail? Sign up to get a full walkthrough:",
-    cta_url: "/signup.html",
+    cta_url: "/members/signup/",
     max_response_length: 300,
     shorten_policy: true
   };

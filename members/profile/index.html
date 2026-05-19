@@ -531,6 +531,10 @@
       try {
         const response = await window.nfAuth.apiRequest('/profile');
         const user = response.data.profile;
+        window.nfAuth.saveAuthState({
+          ...window.nfAuth.getCurrentUser(),
+          ...user
+        }, window.nfAuth.token);
         const preferences = user.preferences || {};
         currentPreferences = {
           howHeardAboutNeurofoundry: '',

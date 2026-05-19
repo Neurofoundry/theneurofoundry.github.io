@@ -118,17 +118,22 @@ app.get('/api/health', (req, res) => {
 });
 
 app.get('/api/skeleton-key/changelog', (req, res) => {
-  const version = String(req.query.version || '').trim();
-  const changelog = skeletonKeyChangelog[version] || null;
+  const requested = String(req.query.messageId || req.query.version || '').trim();
+  const latest = String(skeletonKeyChangelog.latest || '').trim();
+  const key = requested || latest;
+  const changelog = skeletonKeyChangelog[key] || null;
 
   if (!changelog) {
     return res.status(404).type('application/json').json({
       error: 'changelog_not_found',
-      version
+      key
     });
   }
 
-  return res.type('application/json').json(changelog);
+  return res.type('application/json').json({
+    messageId: changelog.messageId || key,
+    ...changelog
+  });
 });
 
 // Dev-only server controls

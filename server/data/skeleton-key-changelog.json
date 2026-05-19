@@ -1,5 +1,35 @@
 {
+  "latest": "2.1.0",
+  "2.1.0": {
+    "messageId": "2.1.0",
+    "version": "2.1.0",
+    "title": "What's New?",
+    "subtitle": "The Vault is Officially Live!",
+    "items": [
+      {
+        "label": "New Unlimited Access Tier Available. Visit www.theneurofoundry.com for details!"
+      },
+      {
+        "label": "Auto-locking Timer, and Export Controls"
+      },
+      {
+        "label": "Audit Log for Monitoring Account Activity"
+      },
+      {
+        "label": "Encrypted Key & Note Storage - Secure Your Secrets with Confidence"
+      },
+      {
+        "label": "Password Generator with Optional Prefixes"
+      },
+      {
+        "label": "AES-256 Vault Lock with PBKDF2-SHA256 Encryption-- thats over 480,000 iterations."
+      }
+    ],
+    "footer": "Your secrets are yours to keep. Nothing leaves your machine.",
+    "cta": "CONFIRM"
+  },
   "2.0.0": {
+    "messageId": "2.0.0",
     "version": "2.0.0",
     "title": "What's New?",
     "subtitle": "The Vault has been rebuilt from the ground up.",

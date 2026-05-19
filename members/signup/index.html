@@ -33,7 +33,127 @@
       --ok: #4ade80;
     }
     *, *::before, *::after { box-sizing: border-box; }
-    .signup-container { width: 100%; max-width: min(520px, 100%); margin: 0 auto; }
+    .signup-container { width: 100%; max-width: min(1040px, 100%); margin: 0 auto; }
+    .signup-layout {
+      display: grid;
+      grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
+      gap: 0;
+      overflow: hidden;
+      background: rgba(10, 11, 13, 0.72);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 9px 11px 12px rgba(0, 0, 0, 0.62);
+    }
+    .signup-rail {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      padding: clamp(24px, 4vw, 34px);
+      background: #0e0f0f;
+      border-right: 1px solid var(--line-soft);
+    }
+    .signup-wordmark {
+      color: var(--light-text);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+    .signup-rail-spacer { flex: 1; min-height: 260px; }
+    .tier-list {
+      display: grid;
+      gap: 8px;
+    }
+    .tier-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 13px;
+      background: #161919;
+      border: 1px solid var(--line-soft);
+      border-radius: 8px;
+    }
+    .tier-item.is-active {
+      border-color: var(--primary-color);
+      background: rgba(224, 71, 60, 0.08);
+    }
+    .tier-name { color: var(--light-text); font-size: 12px; font-weight: 700; }
+    .tier-desc { color: var(--muted-text); font-size: 11px; margin-top: 2px; }
+    .tier-price {
+      color: var(--primary-color);
+      font-family: "JetBrains Mono", Consolas, monospace;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+    .signup-form-panel {
+      padding: clamp(24px, 5vw, 44px);
+      background: #101111;
+    }
+    .form-header {
+      display: grid;
+      gap: 7px;
+      padding-bottom: 22px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--line-soft);
+      position: relative;
+    }
+    .form-eyebrow {
+      color: var(--primary-color);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    .form-header h1 {
+      margin: 0;
+      color: var(--light-text);
+      font-size: clamp(24px, 4vw, 34px);
+      line-height: 1.1;
+    }
+    .form-header p {
+      max-width: 560px;
+      margin: 0;
+      color: var(--muted-text);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+    .step-track {
+      position: absolute;
+      top: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .step-pip {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--line);
+    }
+    .step-pip.active {
+      background: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(224, 71, 60, 0.16);
+    }
+    .section-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 24px 0 16px;
+      color: #626b73;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    .section-divider::before,
+    .section-divider::after {
+      content: "";
+      height: 1px;
+      flex: 1;
+      background: var(--line-soft);
+    }
     .modal-panel {
       background: var(--surface);
       border: 1px solid var(--line);
@@ -78,6 +198,58 @@
       color: var(--muted-text);
       font-size: 12px;
       line-height: 1.45;
+    }
+    .source-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .source-card {
+      min-height: 68px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 10px 8px;
+      border: 1px solid var(--line-soft);
+      border-radius: 8px;
+      background: #161919;
+      color: #626b73;
+      cursor: pointer;
+    }
+    .source-card.is-selected {
+      border-color: var(--primary-color);
+      background: rgba(224, 71, 60, 0.08);
+      color: var(--primary-color);
+    }
+    .source-card span {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .retention-panel {
+      display: grid;
+      gap: 10px;
+      padding: 14px;
+      border: 1px solid var(--line-soft);
+      border-radius: 8px;
+      background: rgba(15, 17, 19, 0.64);
+    }
+    .retention-title {
+      color: var(--light-text);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .retention-note {
+      margin: 0;
+      color: var(--muted-text);
+      font-size: 12px;
+      line-height: 1.5;
     }
     .checkbox-group {
       display: flex;
@@ -205,12 +377,22 @@
     .modal-panel h2 { margin: 0 0 10px; color: var(--ok); font-size: 22px; }
     .modal-panel p { margin: 0; color: var(--muted-text); font-size: 14px; line-height: 1.5; }
     @media (max-width: 640px) {
-      .form-row, .social-login { grid-template-columns: 1fr; }
+      .form-row, .social-login, .source-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 860px) {
+      .signup-layout { grid-template-columns: 1fr; }
+      .signup-rail { border-right: 0; border-bottom: 1px solid var(--line-soft); }
+      .step-track { position: static; margin-top: 8px; }
     }
   </style>
   <link rel="stylesheet" href="../../common/site-header.css">
   <link rel="stylesheet" href="../../common/site-footer.css">
   <link rel="stylesheet" href="../../common/account-shell.css">
+  <style>
+    body.nf-account-page .nf-account-main {
+      max-width: 1120px;
+    }
+  </style>
 </head>
 <body class="nf-account-page">
   <div data-site-header></div>
@@ -219,14 +401,44 @@
 
   <main class="nf-account-main">
     <div class="signup-container nf-account-shell">
-      <div class="signup-header nf-account-heading">
-        <h1>Sign Up</h1>
-        <p class="signup-subtitle">Join the Neurofoundry network</p>
-      </div>
+      <div class="signup-layout">
+        <aside class="signup-rail" aria-label="Neurofoundry account tiers">
+          <div class="signup-wordmark">NEUROFOUNDRY</div>
+          <div class="signup-rail-spacer"></div>
+          <div class="tier-list" aria-label="Account tier options">
+            <div class="tier-item is-active">
+              <div>
+                <div class="tier-name">Free Tier</div>
+                <div class="tier-desc">Start with limited local vault access</div>
+              </div>
+              <div class="tier-price">$0</div>
+            </div>
+            <div class="tier-item">
+              <div>
+                <div class="tier-name">Paid Tier</div>
+                <div class="tier-desc">Unlock full Skeleton Key usage</div>
+              </div>
+              <div class="tier-price">Upgrade</div>
+            </div>
+          </div>
+        </aside>
 
-      <form id="signupForm" class="signup-form nf-account-card" onsubmit="handleSignup(event)">
+        <section class="signup-form-panel">
+          <div class="form-header">
+            <div class="form-eyebrow">Member Profile Set</div>
+            <h1>Create your Neurofoundry account</h1>
+            <p>Use one verified profile for downloads, paid access, and account support. Verification is required before login.</p>
+            <div class="step-track" aria-label="Signup step">
+              <span class="step-pip active"></span>
+              <span class="step-pip"></span>
+              <span class="step-pip"></span>
+            </div>
+          </div>
+
+          <form id="signupForm" class="signup-form" onsubmit="handleSignup(event)">
         <div class="error-message" id="errorMessage">Please fill in all required fields correctly.</div>
 
+        <div class="section-divider">Identity</div>
         <div class="form-row">
           <div class="form-group">
             <label for="firstName">First Name <span class="required">*</span></label>
@@ -255,6 +467,30 @@
         </div>
         <div class="hint">Use at least 10 characters, one capital letter, one number, and one special character.</div>
 
+        <div class="section-divider">Source</div>
+        <input type="hidden" id="howHeardAboutNeurofoundry" name="howHeardAboutNeurofoundry" value="direct">
+        <div class="source-grid" aria-label="How you found Neurofoundry">
+          <button class="source-card is-selected" type="button" data-source="direct"><span>Direct</span></button>
+          <button class="source-card" type="button" data-source="download"><span>Download</span></button>
+          <button class="source-card" type="button" data-source="referral"><span>Referral</span></button>
+          <button class="source-card" type="button" data-source="other"><span>Other</span></button>
+        </div>
+
+        <div class="section-divider">Data Retention</div>
+        <div class="retention-panel">
+          <div class="retention-title">Account data only</div>
+          <p class="retention-note">Neurofoundry stores account identity, verification, access, billing, and support metadata. Skeleton Key vault secrets remain local to your device.</p>
+          <div class="checkbox-group">
+            <input type="checkbox" id="dataRetentionAcknowledged" name="dataRetentionAcknowledged" required>
+            <label for="dataRetentionAcknowledged">I understand account metadata is retained for login, access, billing, and support records <span class="required">*</span></label>
+          </div>
+          <div class="checkbox-group">
+            <input type="checkbox" id="marketingOptOut" name="marketingOptOut">
+            <label for="marketingOptOut">Do not send product update emails outside required account and purchase messages</label>
+          </div>
+        </div>
+
+        <div class="section-divider">Terms</div>
         <div class="checkbox-group">
           <input type="checkbox" id="terms" name="terms" required>
           <label for="terms">
@@ -283,6 +519,8 @@
           Already Signed Up? <a href="../login/">Login Here</a>
         </div>
       </form>
+        </section>
+      </div>
     </div>
   </main>
 
@@ -354,6 +592,11 @@
         return false;
       }
 
+      if (!form.dataRetentionAcknowledged.checked) {
+        showError('Please acknowledge the account data retention notice.');
+        return false;
+      }
+
       clearError();
       submitBtn.disabled = true;
       submitBtn.textContent = 'SUBMITTING...';
@@ -364,7 +607,10 @@
           password,
           name: `${form.firstName.value.trim()} ${form.lastName.value.trim()}`.trim(),
           firstName: form.firstName.value.trim(),
-          lastName: form.lastName.value.trim()
+          lastName: form.lastName.value.trim(),
+          howHeardAboutNeurofoundry: form.howHeardAboutNeurofoundry.value,
+          dataRetentionAcknowledged: form.dataRetentionAcknowledged.checked,
+          marketingOptOut: form.marketingOptOut.checked
         });
 
         form.reset();
@@ -386,6 +632,14 @@
         showError('OAuth signup failed: ' + (error.message || 'Could not connect to ' + provider));
       }
     }
+
+    document.querySelectorAll('.source-card').forEach((button) => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('.source-card').forEach((item) => item.classList.remove('is-selected'));
+        button.classList.add('is-selected');
+        document.getElementById('howHeardAboutNeurofoundry').value = button.dataset.source || 'direct';
+      });
+    });
 
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape') closeSignupModal();

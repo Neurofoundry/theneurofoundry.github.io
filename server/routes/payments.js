@@ -4,7 +4,9 @@ const { authMiddleware, requireEmailVerification } = require('../middleware/auth
 const { db, dbType } = require('../config/database');
 const {
   buildPublicUrl,
+  createPayment,
   createPaymentLink,
+  getClientConfig,
   getProduct,
   verifySquareWebhookSignature
 } = require('../services/squareCheckoutService');
@@ -72,6 +74,67 @@ async function createUniqueConfirmationId(userId) {
   error.statusCode = 503;
   throw error;
 }
+
+async function markSkeletonKeyPurchase({ user, productId, confirmationId, payment }) {
+  if (!user || productId !== 'skeleton_key' || !payment) return;
+
+  const metadata = user.metadata && typeof user.metadata === 'object' ? user.metadata : {};
+  const squareCheckout = metadata.squareCheckout && typeof metadata.squareCheckout === 'object'
+    ? metadata.squareCheckout
+    : {};
+  const pending = squareCheckout.pending && typeof squareCheckout.pending === 'object'
+    ? squareCheckout.pending
+    : {};
+  const completedAt = payment.updated_at || payment.created_at || new Date().toISOString();
+  const paymentKey = payment.order_id || payment.id;
+
+  await updateUser(user.id, {
+    billingId: payment.id,
+    metadata: {
+      ...metadata,
+      skeletonKeyPurchase: {
+        purchased: true,
+        status: 'paid',
+        productId,
+        confirmationId: confirmationId || null,
+        email: user.email,
+        purchasedAt: completedAt,
+        squarePaymentId: payment.id,
+        squareOrderId: payment.order_id || null,
+        receiptUrl: payment.receipt_url || null
+      },
+      squareCheckout: {
+        ...squareCheckout,
+        lastCompletedPaymentId: payment.id,
+        lastCompletedOrderId: payment.order_id || null,
+        lastCompletedAt: completedAt,
+        pending: {
+          ...pending,
+          [paymentKey]: {
+            ...(pending[paymentKey] || {}),
+            productId,
+            confirmationId: confirmationId || null,
+            email: user.email,
+            status: 'paid',
+            paymentId: payment.id,
+            completedAt
+          }
+        }
+      }
+    }
+  });
+}
+
+router.get('/config', (req, res, next) => {
+  try {
+    return res.json({
+      success: true,
+      square: getClientConfig()
+    });
+  } catch (error) {
+    return next(error);
+  }
+});
 
 router.get('/products/:productId', (req, res, next) => {
   try {
@@ -168,6 +231,74 @@ router.post('/checkout', authMiddleware, requireEmailVerification, async (req, r
   }
 });
 
+router.post('/charge', authMiddleware, requireEmailVerification, async (req, res, next) => {
+  try {
+    const productId = String(req.body.productId || 'skeleton_key').trim();
+    const product = getProduct(productId);
+    const confirmedEmail = normalizeEmail(req.body.email);
+    const accountEmail = normalizeEmail(req.user.email);
+    const sourceId = String(req.body.sourceId || '').trim();
+    const buyerName = String(req.body.buyerName || req.user.name || '').trim();
+
+    if (!confirmedEmail || confirmedEmail !== accountEmail) {
+      return res.status(403).json({
+        success: false,
+        message: 'Email Does Not Match Signed-In Account.'
+      });
+    }
+
+    if (!sourceId) {
+      return res.status(400).json({
+        success: false,
+        message: 'Payment Source Is Required.'
+      });
+    }
+
+    const confirmationId = await createUniqueConfirmationId(req.user.id);
+    const noteParts = [
+      `neurofoundry_product=${product.id}`,
+      `user_id=${req.user.id}`,
+      `email=${req.user.email}`,
+      `confirmation_id=${confirmationId}`
+    ];
+    const payment = await createPayment({
+      productId: product.id,
+      sourceId,
+      buyer: {
+        email: req.user.email,
+        name: buyerName
+      },
+      note: noteParts.join('; '),
+      referenceId: confirmationId
+    });
+
+    if (String(payment.status || '').toUpperCase() !== 'COMPLETED') {
+      return res.status(402).json({
+        success: false,
+        message: 'Payment Was Not Completed.',
+        status: payment.status || null
+      });
+    }
+
+    await markSkeletonKeyPurchase({
+      user: req.user,
+      productId: product.id,
+      confirmationId,
+      payment
+    });
+
+    return res.json({
+      success: true,
+      confirmationId,
+      orderId: payment.order_id || payment.id,
+      paymentId: payment.id,
+      receiptUrl: payment.receipt_url || null
+    });
+  } catch (error) {
+    return next(error);
+  }
+});
+
 router.post('/square/webhook', async (req, res) => {
   const rawBody = req.body;
   const signature = req.get('x-square-hmacsha256-signature');
@@ -201,48 +332,11 @@ router.post('/square/webhook', async (req, res) => {
       try {
         const user = await findUserById(userId);
         if (user && normalizeEmail(user.email) === normalizeEmail(note.email)) {
-          const metadata = user.metadata && typeof user.metadata === 'object' ? user.metadata : {};
-          const squareCheckout = metadata.squareCheckout && typeof metadata.squareCheckout === 'object'
-            ? metadata.squareCheckout
-            : {};
-          const pending = squareCheckout.pending && typeof squareCheckout.pending === 'object'
-            ? squareCheckout.pending
-            : {};
-          const completedAt = payment.updated_at || payment.created_at || new Date().toISOString();
-
-          await updateUser(user.id, {
-            metadata: {
-              ...metadata,
-              skeletonKeyPurchase: {
-                purchased: true,
-                status: 'paid',
-                productId,
-                confirmationId: note.confirmation_id || null,
-                email: user.email,
-                purchasedAt: completedAt,
-                squarePaymentId: payment.id,
-                squareOrderId: payment.order_id || null,
-                receiptUrl: payment.receipt_url || null
-              },
-              squareCheckout: {
-                ...squareCheckout,
-                lastCompletedPaymentId: payment.id,
-                lastCompletedOrderId: payment.order_id || null,
-                lastCompletedAt: completedAt,
-                pending: {
-                  ...pending,
-                  [payment.order_id || payment.id]: {
-                    ...(pending[payment.order_id || payment.id] || {}),
-                    productId,
-                    confirmationId: note.confirmation_id || null,
-                    email: user.email,
-                    status: 'paid',
-                    paymentId: payment.id,
-                    completedAt
-                  }
-                }
-              }
-            }
+          await markSkeletonKeyPurchase({
+            user,
+            productId,
+            confirmationId: note.confirmation_id || null,
+            payment
           });
         }
       } catch (error) {

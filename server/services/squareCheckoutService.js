@@ -14,6 +14,7 @@ const productCatalog = {
 
 function getSquareConfig() {
   const environment = String(process.env.SQUARE_ENVIRONMENT || 'sandbox').toLowerCase();
+  const applicationId = process.env.SQUARE_APPLICATION_ID || process.env.SQUARE_APP_ID;
   const accessToken = process.env.SQUARE_ACCESS_TOKEN;
   const locationId = process.env.SQUARE_LOCATION_ID;
   const baseUrl = environment === 'production'
@@ -21,10 +22,30 @@ function getSquareConfig() {
     : 'https://connect.squareupsandbox.com';
 
   return {
+    applicationId,
     accessToken,
     locationId,
     baseUrl,
     environment
+  };
+}
+
+function getClientConfig() {
+  const config = getSquareConfig();
+
+  if (!config.applicationId || !config.locationId) {
+    const error = new Error('Square client checkout is not configured');
+    error.statusCode = 503;
+    throw error;
+  }
+
+  return {
+    applicationId: config.applicationId,
+    locationId: config.locationId,
+    environment: config.environment,
+    sdkUrl: config.environment === 'production'
+      ? 'https://web.squarecdn.com/v1/square.js'
+      : 'https://sandbox.web.squarecdn.com/v1/square.js'
   };
 }
 
@@ -115,6 +136,67 @@ async function createPaymentLink({ productId, buyer, redirectUrl, note }) {
   };
 }
 
+async function createPayment({ productId, sourceId, buyer, note, referenceId }) {
+  const config = getSquareConfig();
+
+  if (!config.accessToken || !config.locationId) {
+    const error = new Error('Square checkout is not configured');
+    error.statusCode = 503;
+    throw error;
+  }
+
+  if (!sourceId) {
+    const error = new Error('Square payment source is required');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const product = getProduct(productId);
+  const body = {
+    idempotency_key: crypto.randomUUID(),
+    source_id: sourceId,
+    amount_money: {
+      amount: product.amount,
+      currency: product.currency
+    },
+    location_id: config.locationId,
+    autocomplete: true,
+    note: note || product.description
+  };
+
+  if (buyer && buyer.email) {
+    body.buyer_email_address = buyer.email;
+  }
+
+  if (referenceId) {
+    body.reference_id = referenceId;
+  }
+
+  const response = await fetch(`${config.baseUrl}/v2/payments`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${config.accessToken}`,
+      'Content-Type': 'application/json',
+      'Square-Version': SQUARE_API_VERSION
+    },
+    body: JSON.stringify(body)
+  });
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    const message = data.errors && data.errors[0] && data.errors[0].detail
+      ? data.errors[0].detail
+      : 'Square payment request failed';
+    const error = new Error(message);
+    error.statusCode = response.status;
+    error.squareErrors = data.errors || [];
+    throw error;
+  }
+
+  return data.payment;
+}
+
 function verifySquareWebhookSignature({ signature, rawBody, notificationUrl }) {
   const signatureKey = process.env.SQUARE_WEBHOOK_SIGNATURE_KEY;
 
@@ -137,7 +219,9 @@ function verifySquareWebhookSignature({ signature, rawBody, notificationUrl }) {
 
 module.exports = {
   buildPublicUrl,
+  createPayment,
   createPaymentLink,
+  getClientConfig,
   getProduct,
   verifySquareWebhookSignature
 };

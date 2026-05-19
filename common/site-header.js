@@ -75,7 +75,78 @@
     return `<a href="${href}"${currentAttr}>${link.label}</a>`;
   }).join('');
   const mobileNavItems = `${navItems}<a href="${basePath}members/signup/">Sign Up</a>`;
-  const loginLink = `<a class="nf-login-link" href="${basePath}members/login/">Login</a>`;
+
+  const escapeHtml = (value) => String(value || '').replace(/[&<>"']/g, (char) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  }[char]));
+
+  const getAuthState = () => {
+    try {
+      const stored = window.localStorage && window.localStorage.getItem('nf_auth');
+      if (!stored) return null;
+      const data = JSON.parse(stored);
+      if (!data || !data.token || !data.user) return null;
+      return data;
+    } catch (_) {
+      return null;
+    }
+  };
+
+  const getProfileInitial = (user) => {
+    const source = user.firstName || user.name || user.email || 'N';
+    return String(source).trim().charAt(0).toUpperCase() || 'N';
+  };
+
+  const getProfileDisplayName = (user) => {
+    const source = user.firstName || user.name || user.email || 'Profile';
+    return String(source).trim().split(/\s+/)[0] || 'Profile';
+  };
+
+  const getProfileLabel = (user) => {
+    const name = user.firstName || user.name || user.email || 'Profile';
+    return `${name}'s profile`;
+  };
+
+  const getAvatarSrc = (avatar) => {
+    if (!avatar) return '';
+    const value = String(avatar);
+    if (/^https?:\/\//i.test(value)) return value;
+    if (value.startsWith('/api/') && window.NeurofoundryAuth && window.NeurofoundryAuth.resolveDefaultApiUrl) {
+      try {
+        return `${new URL(window.NeurofoundryAuth.resolveDefaultApiUrl()).origin}${value}`;
+      } catch (_) {
+        return value;
+      }
+    }
+    if (value.startsWith('/')) return value;
+    return `${basePath}${value.replace(/^\.?\//, '')}`;
+  };
+
+  const renderAuthLink = () => {
+    const authState = getAuthState();
+    if (!authState) {
+      return `<a class="nf-login-link" href="${basePath}members/login/">Login</a>`;
+    }
+
+    const user = authState.user;
+    const initial = escapeHtml(getProfileInitial(user));
+    const displayName = escapeHtml(getProfileDisplayName(user));
+    const avatarSrc = getAvatarSrc(user.avatar);
+    const avatarImg = avatarSrc ? `<img src="${escapeHtml(avatarSrc)}" alt="">` : '';
+    return `
+      <a class="nf-profile-link" href="${basePath}members/profile/" aria-label="${escapeHtml(getProfileLabel(user))}" title="Profile">
+        <span class="nf-profile-avatar" aria-hidden="true">
+          ${avatarImg}
+          <span>${initial}</span>
+        </span>
+        <span class="nf-profile-name">${displayName}</span>
+      </a>
+    `;
+  };
 
   mount.innerHTML = `
     <header class="nf-site-header">
@@ -86,10 +157,10 @@
         </a>
         <nav class="nf-nav-links" aria-label="Main navigation">
           ${navItems}
-          ${loginLink}
+          <span class="nf-auth-slot" data-nf-auth-slot></span>
         </nav>
         <div class="nf-mobile-actions">
-          ${loginLink}
+          <span class="nf-auth-slot" data-nf-auth-slot></span>
           <button class="nf-menu-toggle" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="nf-mobile-menu">
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
@@ -106,6 +177,20 @@
   const toggle = mount.querySelector('.nf-menu-toggle');
   const menu = mount.querySelector('#nf-mobile-menu');
   const brandText = mount.querySelector('.nf-brand span');
+
+  const updateAuthSlots = () => {
+    mount.querySelectorAll('[data-nf-auth-slot]').forEach((slot) => {
+      slot.innerHTML = renderAuthLink();
+    });
+    mount.querySelectorAll('.nf-profile-avatar img').forEach((image) => {
+      image.addEventListener('error', () => {
+        image.remove();
+      }, { once: true });
+    });
+  };
+
+  updateAuthSlots();
+  window.addEventListener('auth-state-changed', updateAuthSlots);
 
   const showBrandText = () => {
     if (brandText) {

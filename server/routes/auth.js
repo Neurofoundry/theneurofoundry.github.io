@@ -722,7 +722,10 @@ router.post(
       .matches(/[^A-Za-z0-9]/).withMessage('Password must include at least one special character'),
     body('name').trim().notEmpty().withMessage('Name is required'),
     body('firstName').optional().trim().isLength({ max: 50 }),
-    body('lastName').optional().trim().isLength({ max: 50 })
+    body('lastName').optional().trim().isLength({ max: 50 }),
+    body('howHeardAboutNeurofoundry').optional().trim().isLength({ max: 50 }),
+    body('dataRetentionAcknowledged').optional().isBoolean(),
+    body('marketingOptOut').optional().isBoolean()
   ],
   async (req, res, next) => {
     try {
@@ -739,7 +742,39 @@ router.post(
       const { email, password, name, firstName, lastName } = req.body;
 
       // Register user
-      const user = await registerUser(email, password, name, firstName, lastName);
+      let user = await registerUser(email, password, name, firstName, lastName);
+
+      const metadataUpdates = {};
+      const preferencesUpdates = {};
+      if (typeof req.body.howHeardAboutNeurofoundry === 'string' && req.body.howHeardAboutNeurofoundry.trim()) {
+        preferencesUpdates.howHeardAboutNeurofoundry = req.body.howHeardAboutNeurofoundry.trim();
+      }
+      if (req.body.dataRetentionAcknowledged === true) {
+        metadataUpdates.dataRetentionAcknowledged = true;
+        metadataUpdates.dataRetentionAcknowledgedAt = new Date().toISOString();
+      }
+      if (req.body.marketingOptOut === true) {
+        preferencesUpdates.marketingOptOut = true;
+      }
+      if (Object.keys(metadataUpdates).length || Object.keys(preferencesUpdates).length) {
+        user = await updateUser(user.id, {
+          ...(Object.keys(preferencesUpdates).length ? {
+            preferences: {
+              ...(user.preferences || {}),
+              ...preferencesUpdates
+            }
+          } : {}),
+          ...(Object.keys(metadataUpdates).length ? {
+            metadata: {
+              ...(user.metadata || {}),
+              signup: {
+                ...((user.metadata || {}).signup || {}),
+                ...metadataUpdates
+              }
+            }
+          } : {})
+        });
+      }
 
       // Emit user.registered event for email pipeline
       let emailStatus = null;

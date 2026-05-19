@@ -1,0 +1,888 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Downloads | Neurofoundry</title>
+  <meta name="description" content="Download and access Neurofoundry tools, including Skeleton Key, a secure local-first desktop utility for API keys, tokens, and sensitive developer credentials.">
+  <meta name="keywords" content="Neurofoundry downloads, Skeleton Key, secure desktop app, local credential vault, API key storage, developer tools">
+  <meta name="author" content="Neurofoundry">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#0f1113">
+  <link rel="canonical" href="https://www.theneurofoundry.com/downloads/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Neurofoundry">
+  <meta property="og:url" content="https://www.theneurofoundry.com/downloads/">
+  <meta property="og:title" content="Downloads | Neurofoundry">
+  <meta property="og:description" content="Access Neurofoundry tools and Skeleton Key from the downloads shelf.">
+  <meta property="og:image" content="https://www.theneurofoundry.com/banner.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Downloads | Neurofoundry">
+  <meta name="twitter:description" content="Neurofoundry tools, Skeleton Key access, and release resources.">
+  <meta name="twitter:image" content="https://www.theneurofoundry.com/banner.png">
+  <link rel="icon" type="image/png" href="../anvil.png">
+  <link rel="apple-touch-icon" href="../anvil.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Michroma&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../common/site-header.css">
+  <link rel="stylesheet" href="../common/site-footer.css">
+  <style>
+    :root {
+      --bg-0: #080909;
+      --bg-1: #0e0f0f;
+      --bg-2: #101111;
+      --bg-3: #161919;
+      --fg-0: #ffffff;
+      --fg-1: #e6e7e7;
+      --fg-2: #bcbbbc;
+      --fg-3: #8a8a8b;
+      --fg-4: #5a5c5c;
+      --line-1: #1f2222;
+      --line-2: #2a2e2e;
+      --accent: #d14b20;
+      --accent-hi: #e25c30;
+      --accent-tint: rgba(209, 75, 32, 0.12);
+      --ok: #6fb178;
+      --warn: #e2a23a;
+      --font-display: "Michroma", "Eurostile", "Bahnschrift", system-ui, sans-serif;
+      --font-sans: "Inter", ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      --page-max: 1264px;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scrollbar-gutter: stable;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+      background: var(--bg-2);
+      color: var(--fg-1);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      line-height: 20px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      overflow-x: hidden;
+      padding-top: 58px;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+      background-size: 54px 54px;
+      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), transparent 72%);
+      z-index: 0;
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+    }
+
+    .downloads-hero {
+      position: relative;
+      overflow: hidden;
+      background: var(--bg-1);
+      border-bottom: 1px solid var(--line-1);
+      padding: clamp(34px, 6vw, 58px) clamp(14px, 3vw, 32px) clamp(38px, 6vw, 56px);
+      min-height: 250px;
+      display: flex;
+      align-items: center;
+    }
+
+    .hero-inner {
+      width: min(var(--page-max), 100%);
+      margin: 0 auto;
+      position: relative;
+      display: grid;
+      gap: 16px;
+    }
+
+    .hero-hex-grid {
+      position: absolute;
+      right: max(-24px, calc((100vw - var(--page-max)) / -2));
+      top: 0;
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .downloads-hero h1 {
+      max-width: 720px;
+      color: var(--fg-0);
+      font-size: clamp(32px, 6vw, 62px);
+      font-weight: 800;
+      letter-spacing: -0.015em;
+      line-height: 0.98;
+    }
+
+    .downloads-hero p {
+      max-width: 560px;
+      color: var(--fg-3);
+      font-size: 15px;
+      line-height: 24px;
+    }
+
+    .hero-cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .btn-primary,
+    .btn-ghost,
+    .dl-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      min-height: 42px;
+      gap: 8px;
+      padding: 10px 20px;
+      background: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: 7px;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      transition: background 120ms, border-color 120ms;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hi);
+      border-color: var(--accent-hi);
+    }
+
+    .btn-ghost {
+      min-height: 42px;
+      gap: 8px;
+      padding: 10px 20px;
+      background: transparent;
+      border: 1px solid var(--line-2);
+      border-radius: 7px;
+      color: var(--fg-2);
+      font-size: 13px;
+      font-weight: 600;
+      transition: border-color 120ms, color 120ms;
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--fg-4);
+      color: var(--fg-0);
+    }
+
+    .downloads-section {
+      width: min(var(--page-max), 100%);
+      margin: 0 auto;
+      padding: 28px clamp(14px, 3vw, 32px) 60px;
+    }
+
+    .section-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      color: var(--fg-0);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .section-count {
+      color: var(--fg-4);
+      font-size: 12px;
+    }
+
+    .toolbar-spacer {
+      flex: 1;
+    }
+
+    .filter-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border: 1px solid var(--line-1);
+      border-radius: 6px;
+      background: var(--bg-3);
+      color: var(--fg-3);
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: default;
+    }
+
+    .downloads-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .downloads-section + .downloads-section {
+      padding-top: 0;
+    }
+
+    .dl-card {
+      min-height: 178px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 18px;
+      border: 1px solid var(--line-1);
+      border-radius: 10px;
+      background: var(--bg-1);
+      transition: border-color 180ms, background 180ms;
+    }
+
+    .dl-card:hover {
+      border-color: var(--line-2);
+      background: var(--bg-3);
+    }
+
+    .dl-card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .dl-hex-icon {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+    }
+
+    .dl-card-meta {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .dl-name {
+      color: var(--fg-0);
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .dl-version {
+      margin-top: 2px;
+      color: var(--fg-4);
+      font-family: var(--font-mono);
+      font-size: 11px;
+    }
+
+    .dl-badge {
+      flex-shrink: 0;
+      display: inline-block;
+      margin-top: 2px;
+      padding: 2px 7px;
+      border-radius: 3px;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      line-height: 16px;
+      text-transform: uppercase;
+    }
+
+    .dl-badge.stable {
+      color: var(--ok);
+      background: rgba(111, 177, 120, 0.12);
+      border: 1px solid rgba(111, 177, 120, 0.2);
+    }
+
+    .dl-badge.paid {
+      color: #e2a23a;
+      background: rgba(226, 162, 58, 0.12);
+      border: 1px solid rgba(226, 162, 58, 0.24);
+    }
+
+    .dl-badge.pending {
+      color: var(--fg-4);
+      background: rgba(90, 92, 92, 0.1);
+      border: 1px solid rgba(90, 92, 92, 0.18);
+    }
+
+    .dl-desc {
+      color: var(--fg-3);
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    .dl-footer {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: auto;
+      padding-top: 4px;
+    }
+
+    .dl-platform {
+      color: var(--fg-4);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    .dl-spacer {
+      flex: 1;
+    }
+
+    .dl-btn {
+      gap: 6px;
+      min-height: 30px;
+      padding: 6px 14px;
+      border: 1px solid var(--line-2);
+      border-radius: 6px;
+      background: var(--bg-0);
+      color: var(--fg-1);
+      font-size: 12px;
+      font-weight: 700;
+      transition: border-color 120ms, color 120ms, background 120ms;
+    }
+
+    .dl-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-tint);
+    }
+
+    .dl-btn.is-disabled {
+      pointer-events: none;
+      color: var(--fg-4);
+      opacity: 0.72;
+    }
+
+    .slot-card {
+      justify-content: space-between;
+    }
+
+    .slot-line {
+      width: 72%;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .slot-line.short {
+      width: 46%;
+    }
+
+    @media (max-width: 860px) {
+      body {
+        padding-top: 50px;
+      }
+
+      .downloads-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 540px) {
+      .downloads-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .downloads-hero {
+        padding-top: 30px;
+      }
+
+      .downloads-section {
+        padding-bottom: 44px;
+      }
+
+      .hero-cta,
+      .btn-primary,
+      .btn-ghost {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div data-site-header></div>
+  <script src="../common/site-header.js" data-base="../"></script>
+
+  <main>
+    <section class="downloads-hero">
+      <div class="hero-inner">
+        <svg class="hero-hex-grid" width="240" height="200" viewBox="0 0 240 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <g>
+            <polygon points="15,0 38,12 38,34 15,46 -8,34 -8,12" fill="none" stroke="#2A2E2E" stroke-width="1"/>
+            <polygon points="69,0 92,12 92,34 69,46 46,34 46,12" fill="none" stroke="#2A2E2E" stroke-width="1"/>
+            <polygon points="123,0 146,12 146,34 123,46 100,34 100,12" fill="none" stroke="#2A2E2E" stroke-width="1"/>
+            <polygon points="177,0 200,12 200,34 177,46 154,34 154,12" fill="none" stroke="#2A2E2E" stroke-width="1"/>
+            <polygon points="42,46 65,58 65,80 42,92 19,80 19,58" fill="none" stroke="#2A2E2E" stroke-width="1"/>
+            <polygon points="96,46 119,58 119,80 96,92 73,80 73,58" fill="none" stroke="#2A2E2E" stroke-width="1"/>
+            <polygon points="150,46 173,58 173,80 150,92 127,80 127,58" fill="none" stroke="#2A2E2E" stroke-width="1"/>
+            <polygon points="204,46 227,58 227,80 204,92 181,80 181,58" fill="none" stroke="#2A2E2E" stroke-width="1"/>
+            <polygon points="15,92 38,104 38,126 15,138 -8,126 -8,104" fill="none" stroke="#2A2E2E" stroke-width="1"/>
+            <polygon points="69,92 92,104 92,126 69,138 46,126 46,104" fill="none" stroke="#D14B20" stroke-width="1" opacity="0.6"/>
+            <polygon points="123,92 146,104 146,126 123,138 100,126 100,104" fill="none" stroke="#2A2E2E" stroke-width="1"/>
+            <polygon points="177,92 200,104 200,126 177,138 154,126 154,104" fill="none" stroke="#2A2E2E" stroke-width="1"/>
+            <polygon points="42,138 65,150 65,172 42,184 19,172 19,150" fill="none" stroke="#2A2E2E" stroke-width="1"/>
+            <polygon points="96,138 119,150 119,172 96,184 73,172 73,150" fill="none" stroke="#2A2E2E" stroke-width="1"/>
+            <polygon points="150,138 173,150 173,172 150,184 127,172 127,150" fill="none" stroke="#2A2E2E" stroke-width="1"/>
+            <polygon points="204,138 227,150 227,172 204,184 181,172 181,150" fill="none" stroke="#2A2E2E" stroke-width="1"/>
+          </g>
+        </svg>
+        <a class="eyebrow" href="../index.html">&larr; Back to Home</a>
+        <h1>Downloads</h1>
+        <p>Public utilities, release builds, and support links for Neurofoundry software. Skeleton Key is the first active package on the shelf.</p>
+        <div class="hero-cta">
+          <a href="SkeletonKeySetup.exe" class="btn-primary">Download Skeleton Key</a>
+          <a href="../checkout/skeleton-key/" class="btn-ghost">Unlock full usage</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="downloads-section" id="packages" aria-labelledby="packages-heading">
+      <div class="section-toolbar">
+        <h2 id="packages-heading" class="section-title">Available Packages</h2>
+        <span class="section-count">1 active / 6 coming soon</span>
+        <span class="toolbar-spacer"></span>
+        <button class="filter-btn" type="button">Filter: All Products</button>
+      </div>
+
+      <div class="downloads-grid">
+        <article class="dl-card">
+          <div class="dl-card-header">
+            <svg class="dl-hex-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <polygon points="16,2 28,9 28,23 16,30 4,23 4,9" fill="#161919" stroke="#D14B20" stroke-width="1.5"/>
+              <rect x="10" y="14" width="12" height="10" rx="1.5" stroke="#D14B20" stroke-width="1.5"/>
+              <path d="M12 14v-3a4 4 0 0 1 8 0v3" stroke="#D14B20" stroke-width="1.5" stroke-linecap="round"/>
+              <circle cx="16" cy="19" r="1.5" fill="#D14B20"/>
+            </svg>
+            <div class="dl-card-meta">
+              <h3 class="dl-name">Aegis: Skeleton Key</h3>
+              <div class="dl-version">v2.1.0 Windows installer</div>
+            </div>
+            <span class="dl-badge stable">Free Tier</span>
+            <span class="dl-badge paid">Paid Tier</span>
+          </div>
+          <p class="dl-desc">Local-first credential storage for API keys, tokens, and sensitive developer secrets. Public download is available; purchase unlocks full usage.</p>
+          <div class="dl-footer">
+            <span class="dl-platform">Windows / 0 downloads</span>
+            <span class="dl-spacer"></span>
+            <a href="SkeletonKeySetup.exe" class="dl-btn">Download</a>
+            <a href="../checkout/skeleton-key/" class="dl-btn">Unlock</a>
+          </div>
+        </article>
+
+        <article class="dl-card slot-card" aria-label="Reserved download slot">
+          <div class="dl-card-header">
+            <svg class="dl-hex-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <polygon points="16,2 28,9 28,23 16,30 4,23 4,9" fill="#161919" stroke="#2A2E2E" stroke-width="1.5"/>
+            </svg>
+            <div class="dl-card-meta">
+              <div class="slot-line"></div>
+              <div class="slot-line short" style="margin-top: 8px;"></div>
+            </div>
+            <span class="dl-badge pending">Soon</span>
+          </div>
+          <div class="slot-line"></div>
+          <div class="slot-line short"></div>
+          <div class="dl-footer">
+            <span class="dl-platform">Reserved</span>
+            <span class="dl-spacer"></span>
+            <span class="dl-btn is-disabled">Pending</span>
+          </div>
+        </article>
+
+        <article class="dl-card slot-card" aria-label="Reserved download slot">
+          <div class="dl-card-header">
+            <svg class="dl-hex-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <polygon points="16,2 28,9 28,23 16,30 4,23 4,9" fill="#161919" stroke="#2A2E2E" stroke-width="1.5"/>
+            </svg>
+            <div class="dl-card-meta">
+              <div class="slot-line"></div>
+              <div class="slot-line short" style="margin-top: 8px;"></div>
+            </div>
+            <span class="dl-badge pending">Soon</span>
+          </div>
+          <div class="slot-line"></div>
+          <div class="slot-line short"></div>
+          <div class="dl-footer">
+            <span class="dl-platform">Reserved</span>
+            <span class="dl-spacer"></span>
+            <span class="dl-btn is-disabled">Pending</span>
+          </div>
+        </article>
+
+        <article class="dl-card slot-card" aria-label="Reserved download slot">
+          <div class="dl-card-header">
+            <svg class="dl-hex-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <polygon points="16,2 28,9 28,23 16,30 4,23 4,9" fill="#161919" stroke="#2A2E2E" stroke-width="1.5"/>
+            </svg>
+            <div class="dl-card-meta">
+              <div class="slot-line"></div>
+              <div class="slot-line short" style="margin-top: 8px;"></div>
+            </div>
+            <span class="dl-badge pending">Soon</span>
+          </div>
+          <div class="slot-line"></div>
+          <div class="slot-line short"></div>
+          <div class="dl-footer">
+            <span class="dl-platform">Reserved</span>
+            <span class="dl-spacer"></span>
+            <span class="dl-btn is-disabled">Pending</span>
+          </div>
+        </article>
+
+        <article class="dl-card slot-card" aria-label="Reserved download slot">
+          <div class="dl-card-header">
+            <svg class="dl-hex-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <polygon points="16,2 28,9 28,23 16,30 4,23 4,9" fill="#161919" stroke="#2A2E2E" stroke-width="1.5"/>
+            </svg>
+            <div class="dl-card-meta">
+              <div class="slot-line"></div>
+              <div class="slot-line short" style="margin-top: 8px;"></div>
+            </div>
+            <span class="dl-badge pending">Soon</span>
+          </div>
+          <div class="slot-line"></div>
+          <div class="slot-line short"></div>
+          <div class="dl-footer">
+            <span class="dl-platform">Reserved</span>
+            <span class="dl-spacer"></span>
+            <span class="dl-btn is-disabled">Pending</span>
+          </div>
+        </article>
+
+        <article class="dl-card slot-card" aria-label="Reserved download slot">
+          <div class="dl-card-header">
+            <svg class="dl-hex-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <polygon points="16,2 28,9 28,23 16,30 4,23 4,9" fill="#161919" stroke="#2A2E2E" stroke-width="1.5"/>
+            </svg>
+            <div class="dl-card-meta">
+              <div class="slot-line"></div>
+              <div class="slot-line short" style="margin-top: 8px;"></div>
+            </div>
+            <span class="dl-badge pending">Soon</span>
+          </div>
+          <div class="slot-line"></div>
+          <div class="slot-line short"></div>
+          <div class="dl-footer">
+            <span class="dl-platform">Reserved</span>
+            <span class="dl-spacer"></span>
+            <span class="dl-btn is-disabled">Pending</span>
+          </div>
+        </article>
+
+        <article class="dl-card slot-card" aria-label="Reserved download slot">
+          <div class="dl-card-header">
+            <svg class="dl-hex-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <polygon points="16,2 28,9 28,23 16,30 4,23 4,9" fill="#161919" stroke="#2A2E2E" stroke-width="1.5"/>
+            </svg>
+            <div class="dl-card-meta">
+              <div class="slot-line"></div>
+              <div class="slot-line short" style="margin-top: 8px;"></div>
+            </div>
+            <span class="dl-badge pending">Soon</span>
+          </div>
+          <div class="slot-line"></div>
+          <div class="slot-line short"></div>
+          <div class="dl-footer">
+            <span class="dl-platform">Reserved</span>
+            <span class="dl-spacer"></span>
+            <span class="dl-btn is-disabled">Pending</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="downloads-section" aria-labelledby="skills-heading">
+      <div class="section-toolbar">
+        <h2 id="skills-heading" class="section-title">Skills</h2>
+        <span class="section-count">0 active / 6 coming soon</span>
+      </div>
+
+      <div class="downloads-grid">
+        <article class="dl-card slot-card" aria-label="Reserved skill slot">
+          <div class="dl-card-header">
+            <svg class="dl-hex-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <polygon points="16,2 28,9 28,23 16,30 4,23 4,9" fill="#161919" stroke="#2A2E2E" stroke-width="1.5"/>
+            </svg>
+            <div class="dl-card-meta">
+              <div class="slot-line"></div>
+              <div class="slot-line short" style="margin-top: 8px;"></div>
+            </div>
+            <span class="dl-badge pending">Soon</span>
+          </div>
+          <div class="slot-line"></div>
+          <div class="slot-line short"></div>
+          <div class="dl-footer">
+            <span class="dl-platform">Null</span>
+            <span class="dl-spacer"></span>
+            <span class="dl-btn is-disabled">Pending</span>
+          </div>
+        </article>
+
+        <article class="dl-card slot-card" aria-label="Reserved skill slot">
+          <div class="dl-card-header">
+            <svg class="dl-hex-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <polygon points="16,2 28,9 28,23 16,30 4,23 4,9" fill="#161919" stroke="#2A2E2E" stroke-width="1.5"/>
+            </svg>
+            <div class="dl-card-meta">
+              <div class="slot-line"></div>
+              <div class="slot-line short" style="margin-top: 8px;"></div>
+            </div>
+            <span class="dl-badge pending">Soon</span>
+          </div>
+          <div class="slot-line"></div>
+          <div class="slot-line short"></div>
+          <div class="dl-footer">
+            <span class="dl-platform">Null</span>
+            <span class="dl-spacer"></span>
+            <span class="dl-btn is-disabled">Pending</span>
+          </div>
+        </article>
+
+        <article class="dl-card slot-card" aria-label="Reserved skill slot">
+          <div class="dl-card-header">
+            <svg class="dl-hex-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <polygon points="16,2 28,9 28,23 16,30 4,23 4,9" fill="#161919" stroke="#2A2E2E" stroke-width="1.5"/>
+            </svg>
+            <div class="dl-card-meta">
+              <div class="slot-line"></div>
+              <div class="slot-line short" style="margin-top: 8px;"></div>
+            </div>
+            <span class="dl-badge pending">Soon</span>
+          </div>
+          <div class="slot-line"></div>
+          <div class="slot-line short"></div>
+          <div class="dl-footer">
+            <span class="dl-platform">Null</span>
+            <span class="dl-spacer"></span>
+            <span class="dl-btn is-disabled">Pending</span>
+          </div>
+        </article>
+
+        <article class="dl-card slot-card" aria-label="Reserved skill slot">
+          <div class="dl-card-header">
+            <svg class="dl-hex-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <polygon points="16,2 28,9 28,23 16,30 4,23 4,9" fill="#161919" stroke="#2A2E2E" stroke-width="1.5"/>
+            </svg>
+            <div class="dl-card-meta">
+              <div class="slot-line"></div>
+              <div class="slot-line short" style="margin-top: 8px;"></div>
+            </div>
+            <span class="dl-badge pending">Soon</span>
+          </div>
+          <div class="slot-line"></div>
+          <div class="slot-line short"></div>
+          <div class="dl-footer">
+            <span class="dl-platform">Null</span>
+            <span class="dl-spacer"></span>
+            <span class="dl-btn is-disabled">Pending</span>
+          </div>
+        </article>
+
+        <article class="dl-card slot-card" aria-label="Reserved skill slot">
+          <div class="dl-card-header">
+            <svg class="dl-hex-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <polygon points="16,2 28,9 28,23 16,30 4,23 4,9" fill="#161919" stroke="#2A2E2E" stroke-width="1.5"/>
+            </svg>
+            <div class="dl-card-meta">
+              <div class="slot-line"></div>
+              <div class="slot-line short" style="margin-top: 8px;"></div>
+            </div>
+            <span class="dl-badge pending">Soon</span>
+          </div>
+          <div class="slot-line"></div>
+          <div class="slot-line short"></div>
+          <div class="dl-footer">
+            <span class="dl-platform">Null</span>
+            <span class="dl-spacer"></span>
+            <span class="dl-btn is-disabled">Pending</span>
+          </div>
+        </article>
+
+        <article class="dl-card slot-card" aria-label="Reserved skill slot">
+          <div class="dl-card-header">
+            <svg class="dl-hex-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <polygon points="16,2 28,9 28,23 16,30 4,23 4,9" fill="#161919" stroke="#2A2E2E" stroke-width="1.5"/>
+            </svg>
+            <div class="dl-card-meta">
+              <div class="slot-line"></div>
+              <div class="slot-line short" style="margin-top: 8px;"></div>
+            </div>
+            <span class="dl-badge pending">Soon</span>
+          </div>
+          <div class="slot-line"></div>
+          <div class="slot-line short"></div>
+          <div class="dl-footer">
+            <span class="dl-platform">Null</span>
+            <span class="dl-spacer"></span>
+            <span class="dl-btn is-disabled">Pending</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="downloads-section" aria-labelledby="tools-scripts-heading">
+      <div class="section-toolbar">
+        <h2 id="tools-scripts-heading" class="section-title">Tools/Scripts</h2>
+        <span class="section-count">0 active / 6 coming soon</span>
+      </div>
+
+      <div class="downloads-grid">
+        <article class="dl-card slot-card" aria-label="Reserved tool or script slot">
+          <div class="dl-card-header">
+            <svg class="dl-hex-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <polygon points="16,2 28,9 28,23 16,30 4,23 4,9" fill="#161919" stroke="#2A2E2E" stroke-width="1.5"/>
+            </svg>
+            <div class="dl-card-meta">
+              <div class="slot-line"></div>
+              <div class="slot-line short" style="margin-top: 8px;"></div>
+            </div>
+            <span class="dl-badge pending">Soon</span>
+          </div>
+          <div class="slot-line"></div>
+          <div class="slot-line short"></div>
+          <div class="dl-footer">
+            <span class="dl-platform">Null</span>
+            <span class="dl-spacer"></span>
+            <span class="dl-btn is-disabled">Pending</span>
+          </div>
+        </article>
+
+        <article class="dl-card slot-card" aria-label="Reserved tool or script slot">
+          <div class="dl-card-header">
+            <svg class="dl-hex-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <polygon points="16,2 28,9 28,23 16,30 4,23 4,9" fill="#161919" stroke="#2A2E2E" stroke-width="1.5"/>
+            </svg>
+            <div class="dl-card-meta">
+              <div class="slot-line"></div>
+              <div class="slot-line short" style="margin-top: 8px;"></div>
+            </div>
+            <span class="dl-badge pending">Soon</span>
+          </div>
+          <div class="slot-line"></div>
+          <div class="slot-line short"></div>
+          <div class="dl-footer">
+            <span class="dl-platform">Null</span>
+            <span class="dl-spacer"></span>
+            <span class="dl-btn is-disabled">Pending</span>
+          </div>
+        </article>
+
+        <article class="dl-card slot-card" aria-label="Reserved tool or script slot">
+          <div class="dl-card-header">
+            <svg class="dl-hex-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <polygon points="16,2 28,9 28,23 16,30 4,23 4,9" fill="#161919" stroke="#2A2E2E" stroke-width="1.5"/>
+            </svg>
+            <div class="dl-card-meta">
+              <div class="slot-line"></div>
+              <div class="slot-line short" style="margin-top: 8px;"></div>
+            </div>
+            <span class="dl-badge pending">Soon</span>
+          </div>
+          <div class="slot-line"></div>
+          <div class="slot-line short"></div>
+          <div class="dl-footer">
+            <span class="dl-platform">Null</span>
+            <span class="dl-spacer"></span>
+            <span class="dl-btn is-disabled">Pending</span>
+          </div>
+        </article>
+
+        <article class="dl-card slot-card" aria-label="Reserved tool or script slot">
+          <div class="dl-card-header">
+            <svg class="dl-hex-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <polygon points="16,2 28,9 28,23 16,30 4,23 4,9" fill="#161919" stroke="#2A2E2E" stroke-width="1.5"/>
+            </svg>
+            <div class="dl-card-meta">
+              <div class="slot-line"></div>
+              <div class="slot-line short" style="margin-top: 8px;"></div>
+            </div>
+            <span class="dl-badge pending">Soon</span>
+          </div>
+          <div class="slot-line"></div>
+          <div class="slot-line short"></div>
+          <div class="dl-footer">
+            <span class="dl-platform">Null</span>
+            <span class="dl-spacer"></span>
+            <span class="dl-btn is-disabled">Pending</span>
+          </div>
+        </article>
+
+        <article class="dl-card slot-card" aria-label="Reserved tool or script slot">
+          <div class="dl-card-header">
+            <svg class="dl-hex-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <polygon points="16,2 28,9 28,23 16,30 4,23 4,9" fill="#161919" stroke="#2A2E2E" stroke-width="1.5"/>
+            </svg>
+            <div class="dl-card-meta">
+              <div class="slot-line"></div>
+              <div class="slot-line short" style="margin-top: 8px;"></div>
+            </div>
+            <span class="dl-badge pending">Soon</span>
+          </div>
+          <div class="slot-line"></div>
+          <div class="slot-line short"></div>
+          <div class="dl-footer">
+            <span class="dl-platform">Null</span>
+            <span class="dl-spacer"></span>
+            <span class="dl-btn is-disabled">Pending</span>
+          </div>
+        </article>
+
+        <article class="dl-card slot-card" aria-label="Reserved tool or script slot">
+          <div class="dl-card-header">
+            <svg class="dl-hex-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <polygon points="16,2 28,9 28,23 16,30 4,23 4,9" fill="#161919" stroke="#2A2E2E" stroke-width="1.5"/>
+            </svg>
+            <div class="dl-card-meta">
+              <div class="slot-line"></div>
+              <div class="slot-line short" style="margin-top: 8px;"></div>
+            </div>
+            <span class="dl-badge pending">Soon</span>
+          </div>
+          <div class="slot-line"></div>
+          <div class="slot-line short"></div>
+          <div class="dl-footer">
+            <span class="dl-platform">Null</span>
+            <span class="dl-spacer"></span>
+            <span class="dl-btn is-disabled">Pending</span>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <div data-site-footer></div>
+  <script src="../common/site-footer.js" data-base="../"></script>
+</body>
+</html>

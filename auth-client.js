@@ -135,7 +135,10 @@ class NeurofoundryAuth {
           password: userData.password,
           name: userData.name || `${userData.firstName || ''} ${userData.lastName || ''}`.trim(),
           firstName: userData.firstName || '',
-          lastName: userData.lastName || ''
+          lastName: userData.lastName || '',
+          howHeardAboutNeurofoundry: userData.howHeardAboutNeurofoundry || '',
+          dataRetentionAcknowledged: !!userData.dataRetentionAcknowledged,
+          marketingOptOut: !!userData.marketingOptOut
         })
       });
 

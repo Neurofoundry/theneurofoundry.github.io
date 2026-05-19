@@ -22,17 +22,28 @@
   <meta name="twitter:image" content="https://www.theneurofoundry.com/thskey.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Aldrich&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../common/site-header.css">
+  <link rel="stylesheet" href="../../common/site-footer.css">
   <style>
     :root {
-      --panel: rgba(12, 15, 18, 0.92);
-      --line: rgba(255, 255, 255, 0.12);
-      --text: #f4f0e8;
-      --muted: rgba(244, 240, 232, 0.72);
-      --accent: #e9584d;
-      --accent-strong: #ff7b6e;
-      --gold: #d8a85e;
+      --primary-color: #e0473c;
+      --primary-gradient-start: #ff7b6e;
+      --primary-gradient-mid: #e9584d;
+      --primary-gradient-end: #d23d33;
+      --primary-soft: #ff9b93;
+      --primary-border: rgba(224, 71, 60, 0.34);
+      --primary-border-strong: rgba(224, 71, 60, 0.48);
+      --primary-shadow: rgba(224, 71, 60, 0.38);
+      --dark-bg: #0f1113;
+      --dark-overlay: rgba(11, 12, 14, 0.95);
+      --section-bg: rgba(15, 17, 19, 0.78);
+      --surface: rgba(15, 17, 19, 0.94);
+      --surface-deep: rgba(10, 11, 13, 0.92);
+      --line: rgba(224, 71, 60, 0.25);
+      --light-text: #e6e9ee;
+      --muted-text: #9aa3ad;
+      --page-max: 1200px;
     }
 
     * {
@@ -42,21 +53,33 @@
     body {
       margin: 0;
       min-height: 100vh;
-      background:
-        radial-gradient(circle at 18% 18%, rgba(216, 168, 94, 0.14), transparent 28%),
-        linear-gradient(180deg, #070707 0%, #0f1114 48%, #050505 100%);
-      color: var(--text);
-      font-family: Inter, Arial, sans-serif;
+      width: 100%;
+      padding-top: 58px;
+      background-color: var(--dark-bg);
+      color: var(--light-text);
+      font-family: 'Inter', Arial, sans-serif;
+      overflow-x: hidden;
     }
 
     main {
       position: relative;
       z-index: 1;
-      padding: 124px 20px 72px;
+      padding: 30px clamp(14px, 3vw, 24px) 60px;
+      background: var(--dark-bg);
+    }
+
+    main::before {
+      content: "";
+      position: fixed;
+      inset: 58px 0 auto;
+      height: 210px;
+      pointer-events: none;
+      background: linear-gradient(180deg, rgba(224, 71, 60, 0.1), rgba(15, 17, 19, 0));
+      z-index: -1;
     }
 
     .page-nav {
-      width: min(1120px, 100%);
+      width: min(var(--page-max), 100%);
       margin: 0 auto 24px;
     }
 
@@ -66,18 +89,18 @@
       gap: 9px;
       min-height: 40px;
       padding: 0 13px 0 11px;
-      border: 1px solid rgba(255, 255, 255, 0.14);
+      border: 1px solid var(--primary-border);
       border-radius: 8px;
       background: rgba(10, 12, 14, 0.72);
-      color: rgba(244, 240, 232, 0.82);
+      color: var(--primary-soft);
       font-size: 13px;
-      font-weight: 800;
+      font-weight: 700;
       text-decoration: none;
     }
 
     .back-link:hover {
-      border-color: rgba(216, 168, 94, 0.46);
-      color: var(--text);
+      border-color: var(--primary-color);
+      color: #fff;
     }
 
     .back-link span {
@@ -86,49 +109,75 @@
     }
 
     .checkout-shell {
-      width: min(1120px, 100%);
+      width: min(var(--page-max), 100%);
       margin: 0 auto;
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 380px;
-      gap: 28px;
-      align-items: start;
+      grid-template-columns: minmax(0, 1.08fr) minmax(340px, 0.48fr);
+      gap: 20px;
+      align-items: stretch;
     }
 
     .checkout-copy {
-      padding-top: 8px;
+      position: relative;
+      min-height: 100%;
+      padding: clamp(22px, 4vw, 30px);
+      border: 1px solid var(--primary-border);
+      border-radius: 12px;
+      background: linear-gradient(180deg, rgba(15, 17, 19, 0.94), rgba(10, 11, 13, 0.9));
+      box-shadow: 9px 11px 12px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+    }
+
+    .checkout-copy > :not(.checkout-guardian) {
+      position: relative;
+      z-index: 1;
+    }
+
+    .checkout-guardian {
+      position: absolute;
+      right: -42px;
+      bottom: -40px;
+      z-index: 0;
+      width: min(42%, 260px);
+      height: auto;
+      max-height: 88%;
+      object-fit: contain;
+      object-position: right bottom;
+      opacity: 0.42;
+      pointer-events: none;
+      filter: drop-shadow(0 16px 30px rgba(0, 0, 0, 0.64));
     }
 
     .eyebrow {
-      margin: 0 0 14px;
-      color: var(--gold);
+      margin: 0 0 8px;
+      color: var(--primary-soft);
       font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0.18em;
+      font-weight: 700;
+      letter-spacing: 1px;
       text-transform: uppercase;
     }
 
     h1 {
       margin: 0;
-      max-width: 760px;
-      font-family: Aldrich, Inter, sans-serif;
-      font-size: clamp(38px, 6vw, 70px);
-      line-height: 0.95;
+      max-width: 680px;
+      font-size: clamp(38px, 6vw, 66px);
+      line-height: 1;
       letter-spacing: 0;
       text-transform: uppercase;
     }
 
     .lead {
-      max-width: 690px;
-      margin: 24px 0 0;
-      color: var(--muted);
-      font-size: 18px;
-      line-height: 1.7;
+      max-width: 720px;
+      margin: 18px 0 0;
+      color: var(--muted-text);
+      font-size: clamp(15px, 2vw, 18px);
+      line-height: 1.65;
     }
 
     .proof-list {
       display: grid;
       gap: 11px;
-      margin: 28px 0 0;
+      margin: 24px 0 0;
       padding: 0;
       list-style: none;
       max-width: 640px;
@@ -138,7 +187,7 @@
       display: flex;
       gap: 10px;
       align-items: flex-start;
-      color: rgba(244, 240, 232, 0.78);
+      color: var(--muted-text);
       font-size: 14px;
       line-height: 1.55;
     }
@@ -150,21 +199,21 @@
       height: 8px;
       margin-top: 7px;
       border-radius: 50%;
-      background: var(--gold);
-      box-shadow: 0 0 14px rgba(216, 168, 94, 0.44);
+      background: var(--primary-color);
+      box-shadow: 0 0 14px var(--primary-shadow);
     }
 
     .summary-card,
     .status-card {
       border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
+      border-radius: 12px;
+      background: linear-gradient(180deg, var(--surface), var(--surface-deep));
       box-shadow: 9px 11px 12px rgba(0, 0, 0, 0.62);
     }
 
     .summary-card {
       padding: 22px;
-      margin-top: -34px;
+      margin: 0;
     }
 
     .product-row {
@@ -183,7 +232,7 @@
       place-items: center;
       border-radius: 8px;
       background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--primary-border);
     }
 
     .product-icon img {
@@ -195,12 +244,12 @@
     .product-name {
       margin: 0 0 6px;
       font-size: 19px;
-      font-weight: 800;
+      font-weight: 700;
     }
 
     .product-desc {
       margin: 0;
-      color: var(--muted);
+      color: var(--muted-text);
       font-size: 14px;
       line-height: 1.5;
     }
@@ -210,12 +259,12 @@
       justify-content: space-between;
       gap: 16px;
       padding: 20px 0;
-      color: var(--muted);
+      color: var(--muted-text);
       font-size: 14px;
     }
 
     .price-row strong {
-      color: var(--text);
+      color: var(--light-text);
       font-size: 22px;
     }
 
@@ -224,23 +273,125 @@
       gap: 12px;
     }
 
+    .payment-fields {
+      display: grid;
+      gap: 0;
+      border: 1px solid #f4f6f8;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #0f1113;
+    }
+
+    .payment-fields #postalCode {
+      margin-top: 0;
+      border: 0;
+      border-top: 1px solid rgba(244, 246, 248, 0.86);
+      border-radius: 0;
+      min-height: 48px;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
     label {
       display: grid;
       gap: 7px;
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 700;
+      color: var(--muted-text);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
     }
 
     input {
       width: 100%;
       min-height: 46px;
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      border-radius: 6px;
-      background: rgba(0, 0, 0, 0.22);
-      color: var(--text);
-      padding: 0 13px;
+      border: 1px solid #2c333a;
+      border-radius: 8px;
+      background: #0f1113;
+      color: var(--light-text);
+      padding: 0 14px;
       font: inherit;
+      font-size: 14px;
+    }
+
+    input:focus {
+      border-color: var(--primary-color);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(224, 71, 60, 0.14);
+    }
+
+    .card-wrap {
+      height: 96px;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      overflow: hidden;
+      transition: border-color 150ms, box-shadow 150ms;
+    }
+
+    .card-placeholder {
+      min-height: 56px;
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+      color: var(--muted-text);
+      font-size: 13px;
+    }
+
+    .card-note {
+      margin-top: 7px;
+      color: var(--muted-text);
+      font-size: 11px;
+      line-height: 1.45;
+      text-transform: none;
+      letter-spacing: 0;
+      font-weight: 500;
+    }
+
+    .square-secure {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin: 14px 0 0;
+      color: var(--muted-text);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .square-mark {
+      width: 18px;
+      height: 18px;
+      object-fit: contain;
+      flex: 0 0 auto;
+    }
+
+    .card-wrap.focused {
+      box-shadow: none;
+    }
+
+    .card-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      justify-content: center;
+      margin-top: 2px;
+    }
+
+    .card-badge {
+      padding: 4px 9px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--muted-text);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
     .button {
@@ -248,14 +399,15 @@
       align-items: center;
       justify-content: center;
       min-height: 48px;
-      border: 1px solid #a2362f;
+      border: 2px solid #a2362f;
       border-radius: 8px;
-      background: linear-gradient(180deg, var(--accent-strong) 0%, var(--accent) 54%, #d23d33 100%);
+      background: linear-gradient(180deg, var(--primary-gradient-start) 0%, var(--primary-gradient-mid) 48%, var(--primary-gradient-end) 100%);
       color: #fff;
-      font-weight: 800;
+      font-size: 14px;
+      font-weight: 700;
       text-decoration: none;
       cursor: pointer;
-      box-shadow: 0 10px 24px rgba(224, 71, 60, 0.26);
+      box-shadow: 0 4px 12px var(--primary-shadow);
     }
 
     .button:disabled {
@@ -263,9 +415,13 @@
       opacity: 0.68;
     }
 
+    #buttonAmount {
+      margin-left: 4px;
+    }
+
     .fine-print {
       margin: 12px 0 0;
-      color: rgba(244, 240, 232, 0.56);
+      color: var(--muted-text);
       font-size: 12px;
       line-height: 1.5;
     }
@@ -273,7 +429,7 @@
     .status-card {
       margin-top: 22px;
       padding: 18px;
-      color: var(--muted);
+      color: var(--muted-text);
       line-height: 1.55;
     }
 
@@ -292,11 +448,25 @@
     }
 
     @media (max-width: 860px) {
+      body {
+        padding-top: 52px;
+      }
+
       main {
-        padding-top: 104px;
+        padding-top: 24px;
       }
 
       .checkout-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .checkout-guardian {
+        right: -60px;
+        width: min(54%, 240px);
+        opacity: 0.28;
+      }
+
+      .field-row {
         grid-template-columns: 1fr;
       }
 
@@ -318,13 +488,12 @@
 
     <div class="checkout-shell">
       <section class="checkout-copy" aria-labelledby="checkout-heading">
+        <img class="checkout-guardian" src="../../assets/e3e1dc81-a8ac-4210-be8e-8f1225cd7c32%20(1).png" alt="">
         <p class="eyebrow">Secure Checkout</p>
-        <h1 id="checkout-heading">Skeleton Key</h1>
-        <p class="lead">Encrypted Local Key Storage for API Keys, Tokens, and Sensitive Developer Credentials. Confirm your Access Details here, then complete your Purchase securely.</p>
+        <h1 id="checkout-heading">Aegis: Skeleton Key</h1>
+        <p class="lead">Engineered to integrate seamlessly into any stack, Skeleton Key features native generators for high-entropy passwords and custom-prefixed API keys. To ensure compliance and complete operational visibility, an immutable local audit log tracks every reveal, copy, and access attempt with precise local timestamps. This security is balanced with operational efficiency, offering rapid, PIN-protected re-entry and configurable auto-lock timers optimized for active workstations.</p>
         <ul class="proof-list" aria-label="Checkout Details">
-          <li>Secure Checkout powered by Square.</li>
-          <li>Unlock Full Vault Capacity with Unlimited Keys and Secure Notes.</li>
-          <li>Your Receipt and Access Confirmation are sent to your Verified Account Email.</li>
+          <li>Protect your environment without compromising your workflow. Your data. Your machine. Your control.</li>
         </ul>
         <aside id="statusCard" class="status-card" hidden></aside>
       </section>
@@ -332,7 +501,7 @@
       <aside class="summary-card" aria-label="Order Summary">
         <div class="product-row">
           <div class="product-icon" aria-hidden="true">
-            <img src="../../anvil.png" alt="">
+            <img src="../../assets/SkeletonKey_Lock3.png" alt="">
           </div>
           <div>
             <h2 id="productName" class="product-name">Skeleton Key</h2>
@@ -350,36 +519,75 @@
             Confirm Account Email
             <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com">
           </label>
-          <button id="checkoutButton" class="button" type="submit">Continue to Secure Payment</button>
+          <div class="field-row">
+            <label>
+              First Name
+              <input id="firstName" name="firstName" type="text" autocomplete="given-name" placeholder="Jane">
+            </label>
+            <label>
+              Last Name
+              <input id="lastName" name="lastName" type="text" autocomplete="family-name" placeholder="Doe">
+            </label>
+          </div>
+          <label>
+            Secure Card Details
+          </label>
+          <div class="payment-fields">
+            <div class="card-wrap" id="cardWrap">
+              <div id="cardContainer">
+                <div class="card-placeholder">Secure Square card fields load after checkout connects.</div>
+              </div>
+            </div>
+            <input id="postalCode" name="postalCode" type="text" autocomplete="postal-code" placeholder="Billing ZIP / Postal Code" aria-label="Billing ZIP / Postal Code">
+          </div>
+          <button id="checkoutButton" class="button" type="submit" disabled>Pay <span id="buttonAmount"></span></button>
+          <div class="card-badges" aria-label="Accepted Card Types">
+            <span class="card-badge">Visa</span>
+            <span class="card-badge">Mastercard</span>
+            <span class="card-badge">Amex</span>
+            <span class="card-badge">Discover</span>
+          </div>
         </form>
-        <p class="fine-print">Secure Payment powered by Square. Receipt and Access Confirmation are sent after Purchase.</p>
+        <p class="square-secure"><img class="square-mark" src="../../assets/buttons/squarepay.png" alt="">Secure payments courtesy of Square</p>
       </aside>
     </div>
   </main>
 
   <script>
     const productId = 'skeleton_key';
-    const auth = new window.NeurofoundryAuth({
-      apiUrl: window.NeurofoundryAuth.resolveDefaultApiUrl()
-    });
     let signedInUser = null;
+    let productData = null;
+    let squareCard = null;
+    let squareConfig = null;
+    let formattedPrice = '';
     const apiBase = (() => {
-      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      if (window.location.protocol === 'file:') {
         return 'http://localhost:3000/api';
+      }
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        return `${window.location.origin}/api`;
       }
       if (window.location.hostname === 'www.theneurofoundry.com' || window.location.hostname === 'theneurofoundry.com') {
         return 'https://api.theneurofoundry.com/api';
       }
       return `${window.location.origin}/api`;
     })();
+    const auth = new window.NeurofoundryAuth({
+      apiUrl: apiBase
+    });
 
     const statusCard = document.getElementById('statusCard');
     const form = document.getElementById('checkoutForm');
     const button = document.getElementById('checkoutButton');
     const priceLabel = document.getElementById('priceLabel');
+    const buttonAmount = document.getElementById('buttonAmount');
     const productName = document.getElementById('productName');
     const productDescription = document.getElementById('productDescription');
     const email = document.getElementById('email');
+    const firstName = document.getElementById('firstName');
+    const lastName = document.getElementById('lastName');
+    const postalCode = document.getElementById('postalCode');
+    const cardWrap = document.getElementById('cardWrap');
 
     function normalizeEmail(value) {
       return String(value || '').trim().toLowerCase();
@@ -411,6 +619,20 @@
       statusCard.hidden = !message;
     }
 
+    function checkoutApiError(action, error) {
+      if (error && error.message === 'Failed to fetch') {
+        return `Checkout API is not reachable while trying to ${action}. Open this page from the running site server, not as a standalone file.`;
+      }
+
+      return error && error.message
+        ? error.message
+        : `Checkout could not ${action}.`;
+    }
+
+    function updateReadyState() {
+      button.disabled = !(signedInUser && signedInUser.emailVerified && productData && squareCard);
+    }
+
     function formatMoney(amount, currency) {
       return new Intl.NumberFormat('en-US', {
         style: 'currency',
@@ -423,14 +645,76 @@
         const response = await fetch(`${apiBase}/payments/products/${encodeURIComponent(productId)}`);
         const data = await response.json();
         const product = data.product;
+        productData = product;
+        formattedPrice = formatMoney(product.amount, product.currency);
 
         productName.textContent = product.name;
         productDescription.textContent = product.description;
-        priceLabel.textContent = formatMoney(product.amount, product.currency);
+        priceLabel.textContent = formattedPrice;
+        buttonAmount.textContent = formattedPrice;
+        updateReadyState();
       } catch (error) {
         priceLabel.textContent = 'Unavailable';
         button.disabled = true;
-        setStatus('Checkout Pricing is Not Available Yet.', 'bad');
+        setStatus(checkoutApiError('load pricing', error), 'bad');
+      }
+    }
+
+    async function loadSquareConfig() {
+      const response = await fetch(`${apiBase}/payments/config`);
+      const data = await response.json();
+
+      if (!response.ok || !data.square) {
+        throw new Error(data.message || 'Square checkout is not configured.');
+      }
+
+      squareConfig = data.square;
+    }
+
+    function loadSquareSdk() {
+      return new Promise((resolve, reject) => {
+        if (window.Square) {
+          resolve();
+          return;
+        }
+
+        const script = document.createElement('script');
+        script.src = squareConfig.sdkUrl;
+        script.async = true;
+        script.onload = resolve;
+        script.onerror = () => reject(new Error('Square SDK failed to load.'));
+        document.head.appendChild(script);
+      });
+    }
+
+    async function initSquareCard() {
+      try {
+        await loadSquareConfig();
+        await loadSquareSdk();
+
+        const payments = window.Square.payments(squareConfig.applicationId, squareConfig.locationId);
+        squareCard = await payments.card({
+          style: {
+            input: {
+              backgroundColor: '#0f1113',
+              color: '#e6e9ee'
+            },
+            'input::placeholder': {
+              color: '#9aa3ad'
+            },
+            '.message-text': {
+              color: '#ffb5ad'
+            }
+          }
+        });
+        document.getElementById('cardContainer').innerHTML = '';
+        await squareCard.attach('#cardContainer');
+        squareCard.addEventListener('focusClassAdded', () => cardWrap.classList.add('focused'));
+        squareCard.addEventListener('focusClassRemoved', () => cardWrap.classList.remove('focused'));
+        updateReadyState();
+      } catch (error) {
+        button.disabled = true;
+        setStatus(checkoutApiError('load Square card fields', error), 'bad');
       }
     }
 
@@ -444,10 +728,17 @@
         }
 
         email.placeholder = signedInUser.email || 'you@example.com';
+        email.value = signedInUser.email || '';
+
+        const nameParts = String(signedInUser.name || '').trim().split(/\s+/).filter(Boolean);
+        if (nameParts.length && !firstName.value) firstName.value = nameParts[0];
+        if (nameParts.length > 1 && !lastName.value) lastName.value = nameParts.slice(1).join(' ');
 
         if (!signedInUser.emailVerified) {
           setStatus('Email Verification is Required Before Purchase.', 'bad');
         }
+
+        updateReadyState();
       } catch (error) {
         setStatus('Sign In is Required Before Purchase.', 'bad');
       }
@@ -474,28 +765,65 @@
         return;
       }
 
+      if (!firstName.value.trim() || !lastName.value.trim()) {
+        setStatus('First and Last Name Are Required Before Purchase.', 'bad');
+        return;
+      }
+
+      if (!postalCode.value.trim()) {
+        setStatus('Billing ZIP / Postal Code Is Required Before Purchase.', 'bad');
+        return;
+      }
+
+      if (!squareCard || !productData) {
+        setStatus('Secure Card Fields Are Still Loading.', 'bad');
+        return;
+      }
+
       button.disabled = true;
-      button.textContent = 'Opening Secure Payment';
+      button.textContent = 'Processing Payment';
       setStatus('', '');
 
       try {
-        const data = await auth.apiRequest('/payments/checkout', {
+        const verificationDetails = {
+          amount: String((productData.amount || 0) / 100),
+          currencyCode: productData.currency || 'USD',
+          intent: 'CHARGE',
+          billingContact: {
+            givenName: firstName.value.trim(),
+            familyName: lastName.value.trim(),
+            email: email.value.trim(),
+            postalCode: postalCode.value.trim()
+          }
+        };
+        const tokenResult = await squareCard.tokenize(verificationDetails);
+
+        if (tokenResult.status !== 'OK') {
+          const message = (tokenResult.errors || []).map((item) => item.message).join(' ');
+          throw new Error(message || 'Card Details Could Not Be Verified.');
+        }
+
+        const data = await auth.apiRequest('/payments/charge', {
           method: 'POST',
           body: JSON.stringify({
             productId,
-            email: email.value.trim()
+            sourceId: tokenResult.token,
+            email: email.value.trim(),
+            buyerName: `${firstName.value.trim()} ${lastName.value.trim()}`,
+            postalCode: postalCode.value.trim()
           })
         });
 
-        if (!data.checkoutUrl) {
-          throw new Error('Secure Payment is Unavailable.');
+        if (!data.success) {
+          throw new Error(data.message || data.error || 'Payment Could Not Be Completed.');
         }
 
-        window.location.href = data.checkoutUrl;
+        const confirmation = encodeURIComponent(data.confirmationId || data.orderId || '');
+        window.location.href = `/checkout/skeleton-key/success/?product=${encodeURIComponent(productId)}&confirmation=${confirmation}`;
       } catch (error) {
         button.disabled = false;
-        button.textContent = 'Continue to Secure Payment';
-        setStatus(error.message || 'Checkout Could Not Be Started.', 'bad');
+        button.innerHTML = `Pay <span id="buttonAmount">${formattedPrice}</span>`;
+        setStatus(error.message || 'Payment Could Not Be Completed.', 'bad');
       }
     }
 
@@ -507,6 +835,7 @@
     form.addEventListener('submit', startCheckout);
     loadAccount();
     loadProduct();
+    initSquareCard();
   </script>
 </body>
 </html>
