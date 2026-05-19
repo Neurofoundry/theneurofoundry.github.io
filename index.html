@@ -225,6 +225,15 @@ header {
   box-shadow: 0 8px 22px rgba(224, 71, 60, 0.24);
   outline: none;
 }
+.hero-socials a.is-muted {
+  filter: grayscale(1);
+  opacity: 0.46;
+}
+.hero-socials a.is-muted:hover,
+.hero-socials a.is-muted:focus-visible {
+  transform: none;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
+}
 .hero-socials img {
   width: 100%;
   height: 100%;
@@ -1024,12 +1033,13 @@ header {
   <img class="hero-logo" src="assets/logo_hero2.png" alt="Neurofoundry hero logo">
   <h1>The Engine is a Mind—for the Network you Design.</h1>
     <nav class="hero-socials" aria-label="Social media links">
-      <a href="#" aria-label="Facebook"><img src="assets/social/facebook_128.png" alt=""></a>
-      <a href="#" aria-label="Instagram"><img src="assets/social/instagram_128.png" alt=""></a>
-      <a href="#" aria-label="X"><img src="assets/social/x_128.png" alt=""></a>
-      <a href="#" aria-label="TikTok"><img src="assets/social/tiktok_128.png" alt=""></a>
-      <a href="#" aria-label="YouTube"><img src="assets/social/youtube_128.png" alt=""></a>
-      <a href="#" aria-label="LinkedIn"><img src="assets/social/linkedin_128.png" alt=""></a>
+      <a href="https://www.facebook.com/Neurofoundry" aria-label="Facebook"><img src="assets/social/facebook_128.png" alt=""></a>
+      <a href="https://www.instagram.com/the_neurofoundry/" aria-label="Instagram"><img src="assets/social/instagram_128.png" alt=""></a>
+      <a href="https://www.threads.net/@the_neurofoundry" aria-label="Threads"><img src="assets/social/threads_128.png" alt=""></a>
+      <a href="https://x.com/Neurofoundry_" aria-label="X"><img src="assets/social/x_128.png" alt=""></a>
+      <a class="is-muted" href="#" aria-label="TikTok"><img src="assets/social/tiktok_128.png" alt=""></a>
+      <a href="https://www.youtube.com/@TheNeurofoundry" aria-label="YouTube"><img src="assets/social/youtube_128.png" alt=""></a>
+      <a href="https://www.linkedin.com/company/neurofoundry" aria-label="LinkedIn"><img src="assets/social/linkedin_128.png" alt=""></a>
     </nav>
   </div>
   <div class="section-divider"></div>

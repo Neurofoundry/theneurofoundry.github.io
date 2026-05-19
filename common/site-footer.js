@@ -8,10 +8,9 @@
   const links = [
     { href: 'index.html', label: 'Home' },
     { href: 'services/', label: 'Services' },
-    { href: 'downloads/', label: 'Downloads' },
-    { href: 'https://forge.theneurofoundry.com/', label: 'Forge', external: true },
     { href: 'about/', label: 'About' },
-    { href: 'docs/privacy-policy/', label: 'Privacy Policy' }
+    { href: 'docs/privacy-policy/', label: 'Privacy Policy' },
+    { href: 'docs/terms-of-service/', label: 'Terms of Service' }
   ];
 
   const linkHtml = links.map((link) => {
@@ -23,7 +22,7 @@
   mount.innerHTML = `
     <footer class="nf-site-footer">
       <div class="nf-footer-content">
-        <p>&copy; 2025 The Neurofoundry. Forged with intent.</p>
+        <p>&copy; 2025 The Neurofoundry.</p>
         <nav class="nf-footer-links" aria-label="Footer navigation">
           ${linkHtml}
         </nav>

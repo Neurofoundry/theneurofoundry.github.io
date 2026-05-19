@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workshop | Neurofoundry</title>
+  <meta name="description" content="Neurofoundry workshop resources are coming soon.">
+  <meta name="keywords" content="Neurofoundry workshop, AI workshop, local tech workshop, developer workshop">
+  <meta name="author" content="Neurofoundry">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#0f1113">
+  <link rel="canonical" href="https://www.theneurofoundry.com/workshop/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Neurofoundry">
+  <meta property="og:url" content="https://www.theneurofoundry.com/workshop/">
+  <meta property="og:title" content="Workshop | Neurofoundry">
+  <meta property="og:description" content="Neurofoundry workshop resources are coming soon.">
+  <meta property="og:image" content="https://www.theneurofoundry.com/banner.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Workshop | Neurofoundry">
+  <meta name="twitter:description" content="Neurofoundry workshop resources are coming soon.">
+  <meta name="twitter:image" content="https://www.theneurofoundry.com/banner.png">
+  <link rel="icon" type="image/png" href="../anvil.png">
+  <link rel="apple-touch-icon" href="../anvil.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Michroma&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../common/site-header.css?v=20260519b">
+  <link rel="stylesheet" href="../common/site-footer.css">
+  <style>
+    :root {
+      --bg-0: #080909;
+      --bg-1: #0e0f0f;
+      --bg-2: #101111;
+      --bg-3: #161919;
+      --fg-0: #ffffff;
+      --fg-1: #e6e7e7;
+      --fg-2: #bcbbbc;
+      --fg-3: #8a8a8b;
+      --fg-4: #5a5c5c;
+      --line-1: #1f2222;
+      --line-2: #2a2e2e;
+      --accent: #e0473c;
+      --accent-hi: #ff9b93;
+      --accent-tint: rgba(224, 71, 60, 0.12);
+      --accent-border: rgba(224, 71, 60, 0.34);
+      --font-display: "Michroma", "Eurostile", "Bahnschrift", system-ui, sans-serif;
+      --font-sans: "Inter", ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      --page-max: 1264px;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scrollbar-gutter: stable;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+      background: var(--bg-2);
+      color: var(--fg-1);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      line-height: 20px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      overflow-x: hidden;
+      padding-top: 58px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+      background-size: 54px 54px;
+      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), transparent 72%);
+      z-index: 0;
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+    }
+
+    .workshop-warning-cover {
+      position: fixed;
+      inset: 58px 0 0;
+      width: 100%;
+      height: calc(100vh - 58px);
+      object-fit: cover;
+      z-index: 50;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .workshop-soon-window {
+      position: fixed;
+      top: calc(58px + 50%);
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 60;
+      width: min(420px, calc(100vw - 32px));
+      padding: 24px 28px;
+      border: 1px solid rgba(224, 71, 60, 0.42);
+      border-radius: 8px;
+      background: rgba(10, 12, 14, 0.88);
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.48);
+      color: var(--fg-0);
+      text-align: center;
+      font-size: clamp(24px, 5vw, 38px);
+      font-weight: 800;
+      line-height: 1.1;
+    }
+
+    .workshop-hero {
+      position: relative;
+      overflow: hidden;
+      background: var(--bg-1);
+      border-bottom: 1px solid var(--line-1);
+      padding: clamp(34px, 6vw, 58px) clamp(14px, 3vw, 32px) clamp(38px, 6vw, 56px);
+      min-height: 250px;
+      display: flex;
+      align-items: center;
+    }
+
+    .hero-inner {
+      width: min(var(--page-max), 100%);
+      margin: 0 auto;
+      position: relative;
+      display: grid;
+      gap: 16px;
+    }
+
+    .hero-hex-grid {
+      position: absolute;
+      right: max(-24px, calc((100vw - var(--page-max)) / -2));
+      top: 0;
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      min-height: 40px;
+      width: max-content;
+      padding: 0 13px 0 11px;
+      border: 1px solid var(--accent-border);
+      border-radius: 8px;
+      background: rgba(10, 12, 14, 0.72);
+      color: var(--accent-hi);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: none;
+    }
+
+    .eyebrow:hover {
+      border-color: var(--accent);
+      color: var(--fg-0);
+    }
+
+    .eyebrow span {
+      font-size: 19px;
+      line-height: 1;
+    }
+
+    .workshop-hero h1 {
+      max-width: 720px;
+      color: var(--fg-0);
+      font-size: clamp(32px, 6vw, 62px);
+      font-weight: 800;
+      letter-spacing: -0.015em;
+      line-height: 0.98;
+    }
+
+    .workshop-hero p {
+      max-width: 560px;
+      color: var(--fg-3);
+      font-size: 15px;
+      line-height: 24px;
+    }
+
+    .workshop-section {
+      width: min(var(--page-max), 100%);
+      margin: 0 auto;
+      padding: 28px clamp(14px, 3vw, 32px) 60px;
+    }
+
+    .section-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      color: var(--fg-0);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .section-count {
+      color: var(--fg-4);
+      font-size: 12px;
+    }
+
+    .workshop-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .workshop-card {
+      min-height: 178px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 18px;
+      border: 1px solid var(--line-1);
+      border-radius: 10px;
+      background: var(--bg-1);
+      transition: border-color 180ms, background 180ms;
+    }
+
+    .workshop-card:hover {
+      border-color: var(--line-2);
+      background: var(--bg-3);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .hex-icon {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+    }
+
+    .card-meta {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .card-name {
+      color: var(--fg-0);
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .card-version {
+      margin-top: 2px;
+      color: var(--fg-4);
+      font-family: var(--font-mono);
+      font-size: 11px;
+    }
+
+    .badge {
+      flex-shrink: 0;
+      display: inline-block;
+      margin-top: 2px;
+      padding: 2px 7px;
+      border-radius: 3px;
+      color: var(--fg-4);
+      background: rgba(90, 92, 92, 0.1);
+      border: 1px solid rgba(90, 92, 92, 0.18);
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      line-height: 16px;
+      text-transform: uppercase;
+    }
+
+    .card-desc {
+      color: var(--fg-3);
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: auto;
+      padding-top: 4px;
+    }
+
+    .card-platform {
+      color: var(--fg-4);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    .card-spacer {
+      flex: 1;
+    }
+
+    .card-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-height: 30px;
+      padding: 6px 14px;
+      border: 1px solid var(--line-2);
+      border-radius: 6px;
+      background: var(--bg-0);
+      color: var(--fg-4);
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      opacity: 0.72;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 860px) {
+      body {
+        padding-top: 50px;
+      }
+
+      .workshop-warning-cover {
+        inset: 50px 0 0;
+        height: calc(100vh - 50px);
+      }
+
+      .workshop-soon-window {
+        top: calc(50px + 50%);
+      }
+
+      .workshop-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 540px) {
+      .workshop-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .workshop-hero {
+        padding-top: 30px;
+      }
+
+      .workshop-section {
+        padding-bottom: 44px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div data-site-header></div>
+  <script src="../common/site-header.js?v=20260519b" data-base="../"></script>
+  <img class="workshop-warning-cover" src="../assets/underconstruction.png" alt="" aria-hidden="true">
+  <div class="workshop-soon-window" role="status">Sorry! Check Back Soon!</div>
+
+  <main>
+    <section class="workshop-hero">
+      <div class="hero-inner">
+        <svg class="hero-hex-grid" width="240" height="200" viewBox="0 0 240 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <g>
+            <polygon points="15,0 38,12 38,34 15,46 -8,34 -8,12" fill="none" stroke="#2A2E2E" stroke-width="1"/>
+            <polygon points="69,0 92,12 92,34 69,46 46,34 46,12" fill="none" stroke="#2A2E2E" stroke-width="1"/>
+            <polygon points="123,0 146,12 146,34 123,46 100,34 100,12" fill="none" stroke="#2A2E2E" stroke-width="1"/>
+            <polygon points="177,0 200,12 200,34 177,46 154,34 154,12" fill="none" stroke="#2A2E2E" stroke-width="1"/>
+            <polygon points="42,46 65,58 65,80 42,92 19,80 19,58" fill="none" stroke="#2A2E2E" stroke-width="1"/>
+            <polygon points="96,46 119,58 119,80 96,92 73,80 73,58" fill="none" stroke="#2A2E2E" stroke-width="1"/>
+            <polygon points="150,46 173,58 173,80 150,92 127,80 127,58" fill="none" stroke="#2A2E2E" stroke-width="1"/>
+            <polygon points="204,46 227,58 227,80 204,92 181,80 181,58" fill="none" stroke="#2A2E2E" stroke-width="1"/>
+            <polygon points="15,92 38,104 38,126 15,138 -8,126 -8,104" fill="none" stroke="#2A2E2E" stroke-width="1"/>
+            <polygon points="69,92 92,104 92,126 69,138 46,126 46,104" fill="none" stroke="#D14B20" stroke-width="1" opacity="0.6"/>
+            <polygon points="123,92 146,104 146,126 123,138 100,126 100,104" fill="none" stroke="#2A2E2E" stroke-width="1"/>
+            <polygon points="177,92 200,104 200,126 177,138 154,126 154,104" fill="none" stroke="#2A2E2E" stroke-width="1"/>
+            <polygon points="42,138 65,150 65,172 42,184 19,172 19,150" fill="none" stroke="#2A2E2E" stroke-width="1"/>
+            <polygon points="96,138 119,150 119,172 96,184 73,172 73,150" fill="none" stroke="#2A2E2E" stroke-width="1"/>
+            <polygon points="150,138 173,150 173,172 150,184 127,172 127,150" fill="none" stroke="#2A2E2E" stroke-width="1"/>
+            <polygon points="204,138 227,150 227,172 204,184 181,172 181,150" fill="none" stroke="#2A2E2E" stroke-width="1"/>
+          </g>
+        </svg>
+        <a class="eyebrow" href="../index.html"><span aria-hidden="true">&larr;</span>Back to Homepage</a>
+        <h1>Workshop</h1>
+        <p>Neurofoundry workshop resources are coming soon.</p>
+      </div>
+    </section>
+
+    <section class="workshop-section" aria-labelledby="workshop-heading">
+      <div class="section-toolbar">
+        <h2 id="workshop-heading" class="section-title">Workshop</h2>
+        <span class="section-count">1 coming soon</span>
+      </div>
+
+      <div class="workshop-grid">
+        <article class="workshop-card" aria-label="Workshop coming soon">
+          <div class="card-header">
+            <svg class="hex-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <polygon points="16,2 28,9 28,23 16,30 4,23 4,9" fill="#161919" stroke="#2A2E2E" stroke-width="1.5"/>
+            </svg>
+            <div class="card-meta">
+              <h3 class="card-name">Workshop</h3>
+              <div class="card-version">Coming soon</div>
+            </div>
+            <span class="badge">Soon</span>
+          </div>
+          <p class="card-desc">Details for the Neurofoundry workshop will be added here.</p>
+          <div class="card-footer">
+            <span class="card-platform">Reserved</span>
+            <span class="card-spacer"></span>
+            <span class="card-btn">Pending</span>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <div data-site-footer></div>
+  <script src="../common/site-footer.js" data-base="../"></script>
+</body>
+</html>

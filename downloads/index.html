@@ -40,9 +40,10 @@
       --fg-4: #5a5c5c;
       --line-1: #1f2222;
       --line-2: #2a2e2e;
-      --accent: #d14b20;
-      --accent-hi: #e25c30;
-      --accent-tint: rgba(209, 75, 32, 0.12);
+      --accent: #e0473c;
+      --accent-hi: #ff9b93;
+      --accent-tint: rgba(224, 71, 60, 0.12);
+      --accent-border: rgba(224, 71, 60, 0.34);
       --ok: #6fb178;
       --warn: #e2a23a;
       --font-display: "Michroma", "Eurostile", "Bahnschrift", system-ui, sans-serif;
@@ -125,13 +126,31 @@
     }
 
     .eyebrow {
-      display: inline-block;
-      color: var(--accent);
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.14em;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      min-height: 40px;
+      width: max-content;
+      padding: 0 13px 0 11px;
+      border: 1px solid var(--accent-border);
+      border-radius: 8px;
+      background: rgba(10, 12, 14, 0.72);
+      color: var(--accent-hi);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0;
       text-decoration: none;
-      text-transform: uppercase;
+      text-transform: none;
+    }
+
+    .eyebrow:hover {
+      border-color: var(--accent);
+      color: var(--fg-0);
+    }
+
+    .eyebrow span {
+      font-size: 19px;
+      line-height: 1;
     }
 
     .downloads-hero h1 {
@@ -449,7 +468,7 @@
             <polygon points="150,46 173,58 173,80 150,92 127,80 127,58" fill="none" stroke="#2A2E2E" stroke-width="1"/>
             <polygon points="204,46 227,58 227,80 204,92 181,80 181,58" fill="none" stroke="#2A2E2E" stroke-width="1"/>
             <polygon points="15,92 38,104 38,126 15,138 -8,126 -8,104" fill="none" stroke="#2A2E2E" stroke-width="1"/>
-            <polygon points="69,92 92,104 92,126 69,138 46,126 46,104" fill="none" stroke="#D14B20" stroke-width="1" opacity="0.6"/>
+            <polygon points="69,92 92,104 92,126 69,138 46,126 46,104" fill="none" stroke="#E0473C" stroke-width="1" opacity="0.6"/>
             <polygon points="123,92 146,104 146,126 123,138 100,126 100,104" fill="none" stroke="#2A2E2E" stroke-width="1"/>
             <polygon points="177,92 200,104 200,126 177,138 154,126 154,104" fill="none" stroke="#2A2E2E" stroke-width="1"/>
             <polygon points="42,138 65,150 65,172 42,184 19,172 19,150" fill="none" stroke="#2A2E2E" stroke-width="1"/>
@@ -458,7 +477,7 @@
             <polygon points="204,138 227,150 227,172 204,184 181,172 181,150" fill="none" stroke="#2A2E2E" stroke-width="1"/>
           </g>
         </svg>
-        <a class="eyebrow" href="../index.html">&larr; Back to Home</a>
+        <a class="eyebrow" href="../index.html"><span aria-hidden="true">&larr;</span>Back to Homepage</a>
         <h1>Downloads</h1>
         <p>Public utilities, release builds, and support links for Neurofoundry software. Skeleton Key is the first active package on the shelf.</p>
         <div class="hero-cta">
@@ -492,12 +511,12 @@
             <span class="dl-badge stable">Free Tier</span>
             <span class="dl-badge paid">Paid Tier</span>
           </div>
-          <p class="dl-desc">Local-first credential storage for API keys, tokens, and sensitive developer secrets. Public download is available; purchase unlocks full usage.</p>
+          <p class="dl-desc">Credential storage for API keys, tokens, and sensitive developer secrets. Free access tier available.</p>
           <div class="dl-footer">
             <span class="dl-platform">Windows / 0 downloads</span>
             <span class="dl-spacer"></span>
             <a href="SkeletonKeySetup.exe" class="dl-btn">Download</a>
-            <a href="../checkout/skeleton-key/" class="dl-btn">Unlock</a>
+            <a href="../checkout/skeleton-key/" class="dl-btn">Purchase</a>
           </div>
         </article>
 
