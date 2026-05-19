@@ -10,12 +10,7 @@
       'assets/indexgallery/1.png',
       'assets/indexgallery/2.png',
       'assets/indexgallery/3.png',
-      'assets/indexgallery/4.png',
-      'assets/indexgallery/5.png',
-      'assets/indexgallery/6.png',
-      'assets/indexgallery/7.png',
-      'assets/indexgallery/8.png',
-      'assets/indexgallery/9.png'
+      'assets/indexgallery/4.png'
     ],
     downloads: [
       'assets/indexgallery/1.png',
