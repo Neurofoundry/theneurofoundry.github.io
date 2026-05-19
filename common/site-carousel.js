@@ -62,13 +62,11 @@
         position: absolute;
         inset: 0;
         opacity: 0;
-        transform: scale(1.015);
-        transition: opacity 1100ms ease, transform 1100ms ease;
+        transition: opacity 900ms ease;
       }
 
       .nf-shared-carousel-slide.is-active {
         opacity: 1;
-        transform: scale(1);
       }
 
       .nf-shared-carousel-slide img {
@@ -77,6 +75,20 @@
         object-fit: cover;
         object-position: center;
         display: block;
+        transform: scale(1.04) translateX(2%);
+      }
+
+      .nf-shared-carousel-slide.is-active img {
+        animation: nf-carousel-drift var(--nf-carousel-delay, 8000ms) linear forwards;
+      }
+
+      @keyframes nf-carousel-drift {
+        from {
+          transform: scale(1.04) translateX(2%);
+        }
+        to {
+          transform: scale(1.08) translateX(-4%);
+        }
       }
 
       @media (max-width: 860px) {
@@ -122,6 +134,7 @@
 
   mount.classList.add('nf-shared-carousel');
   mount.setAttribute('aria-hidden', 'true');
+  mount.style.setProperty('--nf-carousel-delay', `${Math.max(delay, 2000)}ms`);
   mount.innerHTML = `
     <div class="nf-shared-carousel-track">
       ${images.map((src, index) => `
