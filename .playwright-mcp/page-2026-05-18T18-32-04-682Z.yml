@@ -1,0 +1,88 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Neurofoundry home" [ref=e4] [cursor=pointer]:
+        - /url: ../../index.html
+        - generic [ref=e6]: NEUROFOUNDRY
+      - navigation "Main navigation" [ref=e7]:
+        - link "Home" [ref=e8] [cursor=pointer]:
+          - /url: ../../index.html
+        - link "Services" [ref=e9] [cursor=pointer]:
+          - /url: /services/
+        - link "Downloads" [ref=e10] [cursor=pointer]:
+          - /url: /downloads/
+        - link "Workshop" [ref=e11] [cursor=pointer]:
+          - /url: /workshop/
+        - link "About" [ref=e12] [cursor=pointer]:
+          - /url: /about/
+        - link "Dev Google User's profile" [ref=e63] [cursor=pointer]:
+          - /url: ../../members/profile/
+          - generic [ref=e65]: D
+          - generic [ref=e66]: Dev
+  - main [ref=e18]:
+    - navigation "Checkout Navigation" [ref=e19]:
+      - link "Back to Downloads" [ref=e20] [cursor=pointer]:
+        - /url: /downloads/
+        - generic [ref=e21]: ←
+        - text: Back to Downloads
+    - generic [ref=e22]:
+      - region "Skeleton Key" [ref=e23]:
+        - paragraph [ref=e24]: Secure Checkout
+        - heading "Skeleton Key" [level=1] [ref=e25]
+        - paragraph [ref=e26]: Encrypted Local Key Storage for API Keys, Tokens, and Sensitive Developer Credentials. Confirm your Access Details here, then complete your Purchase securely.
+        - list "Checkout Details" [ref=e27]:
+          - listitem [ref=e28]: Secure Checkout powered by Square.
+          - listitem [ref=e29]: Unlock Full Vault Capacity with Unlimited Keys and Secure Notes.
+          - listitem [ref=e30]: Your Receipt and Access Confirmation are sent to your Verified Account Email.
+      - complementary "Order Summary" [ref=e31]:
+        - generic [ref=e34]:
+          - heading "Skeleton Key" [level=2] [ref=e35]
+          - paragraph [ref=e36]: "Aegis: Skeleton Key desktop access"
+        - generic [ref=e37]:
+          - generic [ref=e38]: Skeleton Key Access
+          - strong [ref=e39]: $3.00
+        - generic [ref=e40]:
+          - generic [ref=e41]:
+            - generic [ref=e42]:
+              - text: First Name
+              - textbox "First Name" [ref=e43]:
+                - /placeholder: Jane
+                - text: Dev
+            - generic [ref=e44]:
+              - text: Last Name
+              - textbox "Last Name" [ref=e45]:
+                - /placeholder: Doe
+                - text: Google User
+          - generic [ref=e46]:
+            - text: Confirm Account Email
+            - textbox "Confirm Account Email" [ref=e47]:
+              - /placeholder: dev-google-user@neurofoundry.local
+              - text: dev-google-user@neurofoundry.local
+          - generic [ref=e48]:
+            - text: Secure Card Details
+            - iframe [ref=e69]:
+              - generic [ref=f24e3]:
+                - generic [ref=f24e4]:
+                  - textbox "Card number" [ref=f24e6]
+                  - img "Unknown card" [ref=f24e7]:
+                    - img [ref=f24e9]
+                    - img [ref=f24e14]
+                - generic [ref=f24e23]:
+                  - textbox "MM/YY" [ref=f24e25]
+                  - textbox "CVV" [ref=f24e27]
+                  - textbox [disabled] [ref=f24e29]:
+                    - /placeholder: ZIP
+            - generic [ref=e52]: Card number, expiration date, and CVV are collected inside Square's secure card frame. ZIP/postal code is used for billing verification.
+          - generic [ref=e53]:
+            - text: Billing ZIP / Postal Code
+            - textbox "Billing ZIP / Postal Code" [ref=e54]:
+              - /placeholder: "12345"
+          - button "Pay $3.00" [ref=e55] [cursor=pointer]:
+            - text: Pay
+            - generic [ref=e56]: $3.00
+          - generic "Accepted Card Types" [ref=e57]:
+            - generic [ref=e58]: Visa
+            - generic [ref=e59]: Mastercard
+            - generic [ref=e60]: Amex
+            - generic [ref=e61]: Discover
+        - paragraph [ref=e62]: Card fields are provided by Square. Neurofoundry receives a one-time payment token only.

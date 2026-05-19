@@ -1,0 +1,68 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Neurofoundry home" [ref=e4] [cursor=pointer]:
+        - /url: ../../index.html
+        - generic [ref=e6]: NEUROFOUNDRY
+      - navigation "Main navigation" [ref=e7]:
+        - link "Home" [ref=e8] [cursor=pointer]:
+          - /url: ../../index.html
+        - link "Services" [ref=e9] [cursor=pointer]:
+          - /url: /services/
+        - link "Downloads" [ref=e10] [cursor=pointer]:
+          - /url: /downloads/
+        - link "Workshop" [ref=e11] [cursor=pointer]:
+          - /url: /workshop/
+        - link "About" [ref=e12] [cursor=pointer]:
+          - /url: /about/
+        - link "Login" [ref=e14] [cursor=pointer]:
+          - /url: ../../members/login/
+  - main [ref=e15]:
+    - generic [ref=e16]:
+      - generic [ref=e17]:
+        - heading "Welcome Back" [level=1] [ref=e18]
+        - paragraph [ref=e19]: Enter your credentials to access the foundry
+      - generic [ref=e20]:
+        - generic [ref=e21]:
+          - generic [ref=e22]: Email Address
+          - textbox "Email Address" [ref=e23]:
+            - /placeholder: user@example.com
+        - generic [ref=e24]:
+          - generic [ref=e25]: Password
+          - textbox "Password" [ref=e26]:
+            - /placeholder: ••••••••••••
+        - generic [ref=e27]:
+          - generic [ref=e28]:
+            - checkbox "Stay connected" [ref=e29] [cursor=pointer]
+            - generic [ref=e30] [cursor=pointer]: Stay connected
+          - link "Forgot Password?" [ref=e31] [cursor=pointer]:
+            - /url: "#forgot-password"
+        - button "LOGIN" [ref=e32] [cursor=pointer]
+        - generic [ref=e34]: or authenticate via
+        - generic [ref=e35]:
+          - button "Continue with Google" [ref=e36] [cursor=pointer]:
+            - img [ref=e37]
+            - text: Google
+          - button "Continue with GitHub" [ref=e42] [cursor=pointer]:
+            - img [ref=e43]
+            - text: GitHub
+        - generic [ref=e45]:
+          - text: New to Neurofoundry?
+          - link "Sign Up Here" [ref=e46] [cursor=pointer]:
+            - /url: ../signup/
+  - contentinfo [ref=e48]:
+    - generic [ref=e49]:
+      - paragraph [ref=e50]: © 2025 The Neurofoundry. Forged with intent.
+      - navigation "Footer navigation" [ref=e51]:
+        - link "Home" [ref=e52] [cursor=pointer]:
+          - /url: ../../index.html
+        - link "Services" [ref=e53] [cursor=pointer]:
+          - /url: ../../services/
+        - link "Downloads" [ref=e54] [cursor=pointer]:
+          - /url: ../../downloads/
+        - link "Forge" [ref=e55] [cursor=pointer]:
+          - /url: https://forge.theneurofoundry.com/
+        - link "About" [ref=e56] [cursor=pointer]:
+          - /url: ../../about/
+        - link "Privacy Policy" [ref=e57] [cursor=pointer]:
+          - /url: ../../docs/privacy-policy/

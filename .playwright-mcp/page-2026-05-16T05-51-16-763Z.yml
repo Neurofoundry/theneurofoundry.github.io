@@ -1,0 +1,118 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Neurofoundry home" [ref=e4] [cursor=pointer]:
+        - /url: ../index.html
+        - generic [ref=e6]: NEUROFOUNDRY
+      - navigation "Main navigation" [ref=e7]:
+        - link "Home" [ref=e8] [cursor=pointer]:
+          - /url: ../index.html
+        - link "Services" [ref=e9] [cursor=pointer]:
+          - /url: /services/
+        - link "Downloads" [ref=e10] [cursor=pointer]:
+          - /url: /downloads/
+        - link "Workshop" [ref=e11] [cursor=pointer]:
+          - /url: /workshop/
+        - link "About" [ref=e12] [cursor=pointer]:
+          - /url: /about/
+        - link "Dev's profile" [ref=e14] [cursor=pointer]:
+          - /url: ../members/profile/
+          - generic [ref=e16]: D
+  - main [ref=e17]:
+    - generic [ref=e19]:
+      - img
+      - link "Back to Home" [ref=e20] [cursor=pointer]:
+        - /url: ../index.html
+      - heading "Downloads" [level=1] [ref=e21]
+      - paragraph [ref=e22]: Public utilities, release builds, and support links for Neurofoundry software. Skeleton Key is the first active package on the shelf.
+      - generic [ref=e23]:
+        - link "Download Skeleton Key" [ref=e24] [cursor=pointer]:
+          - /url: SkeletonKeySetup.exe
+        - link "Unlock full usage" [ref=e25] [cursor=pointer]:
+          - /url: ../checkout/skeleton-key/
+    - region "Available Packages" [ref=e26]:
+      - generic [ref=e27]:
+        - heading "Available Packages" [level=2] [ref=e28]
+        - generic [ref=e29]: 2 active / 5 coming soon
+        - link "Purchase Unlock" [ref=e30] [cursor=pointer]:
+          - /url: ../checkout/skeleton-key/
+      - generic [ref=e31]:
+        - article [ref=e32]:
+          - generic [ref=e33]:
+            - img [ref=e34]
+            - generic [ref=e39]:
+              - heading "Skeleton Key" [level=3] [ref=e40]
+              - generic [ref=e41]: v2.1.0 Windows installer
+            - generic [ref=e42]: Active
+          - paragraph [ref=e43]: Local-first credential storage for API keys, tokens, and sensitive developer secrets. Public download is available; purchase unlocks full usage.
+          - generic [ref=e44]:
+            - generic [ref=e45]: Windows
+            - link "Download" [ref=e46] [cursor=pointer]:
+              - /url: SkeletonKeySetup.exe
+            - link "Unlock" [ref=e47] [cursor=pointer]:
+              - /url: ../checkout/skeleton-key/
+        - article [ref=e48]:
+          - generic [ref=e49]:
+            - img [ref=e50]
+            - generic [ref=e52]:
+              - heading "Free/Pair Tier" [level=3] [ref=e53]
+              - generic [ref=e54]: Skeleton Key access
+            - generic [ref=e55]: Active
+          - paragraph [ref=e56]: Free accounts stay available for local vault use, with purchase unlocks tied to verified Neurofoundry profile access.
+          - generic [ref=e57]:
+            - generic [ref=e58]: Account
+            - link "Free" [ref=e59] [cursor=pointer]:
+              - /url: ../members/signup/
+            - link "Pair" [ref=e60] [cursor=pointer]:
+              - /url: ../checkout/skeleton-key/
+        - article "Reserved download slot" [ref=e61]:
+          - generic [ref=e62]:
+            - img [ref=e63]
+            - generic [ref=e68]: Soon
+          - generic [ref=e71]:
+            - generic [ref=e72]: Reserved
+            - generic: Pending
+        - article "Reserved download slot" [ref=e73]:
+          - generic [ref=e74]:
+            - img [ref=e75]
+            - generic [ref=e80]: Soon
+          - generic [ref=e83]:
+            - generic [ref=e84]: Reserved
+            - generic: Pending
+        - article "Reserved download slot" [ref=e85]:
+          - generic [ref=e86]:
+            - img [ref=e87]
+            - generic [ref=e92]: Soon
+          - generic [ref=e95]:
+            - generic [ref=e96]: Reserved
+            - generic: Pending
+        - article "Reserved download slot" [ref=e97]:
+          - generic [ref=e98]:
+            - img [ref=e99]
+            - generic [ref=e104]: Soon
+          - generic [ref=e107]:
+            - generic [ref=e108]: Reserved
+            - generic: Pending
+        - article "Reserved download slot" [ref=e109]:
+          - generic [ref=e110]:
+            - img [ref=e111]
+            - generic [ref=e116]: Soon
+          - generic [ref=e119]:
+            - generic [ref=e120]: Reserved
+            - generic: Pending
+  - contentinfo [ref=e122]:
+    - generic [ref=e123]:
+      - paragraph [ref=e124]: © 2025 The Neurofoundry. Forged with intent.
+      - navigation "Footer navigation" [ref=e125]:
+        - link "Home" [ref=e126] [cursor=pointer]:
+          - /url: ../index.html
+        - link "Services" [ref=e127] [cursor=pointer]:
+          - /url: ../services/
+        - link "Downloads" [ref=e128] [cursor=pointer]:
+          - /url: ../downloads/
+        - link "Forge" [ref=e129] [cursor=pointer]:
+          - /url: https://forge.theneurofoundry.com/
+        - link "About" [ref=e130] [cursor=pointer]:
+          - /url: ../about/
+        - link "Privacy Policy" [ref=e131] [cursor=pointer]:
+          - /url: ../docs/privacy-policy/

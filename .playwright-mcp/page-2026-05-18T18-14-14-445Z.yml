@@ -1,0 +1,74 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Neurofoundry home" [ref=e4] [cursor=pointer]:
+        - /url: ../../index.html
+        - generic [ref=e6]: NEUROFOUNDRY
+      - navigation "Main navigation" [ref=e7]:
+        - link "Home" [ref=e8] [cursor=pointer]:
+          - /url: ../../index.html
+        - link "Services" [ref=e9] [cursor=pointer]:
+          - /url: /services/
+        - link "Downloads" [ref=e10] [cursor=pointer]:
+          - /url: /downloads/
+        - link "Workshop" [ref=e11] [cursor=pointer]:
+          - /url: /workshop/
+        - link "About" [ref=e12] [cursor=pointer]:
+          - /url: /about/
+        - link "Dev Google User's profile" [ref=e61] [cursor=pointer]:
+          - /url: ../../members/profile/
+          - generic [ref=e63]: D
+          - generic [ref=e64]: Dev
+  - main [ref=e18]:
+    - navigation "Checkout Navigation" [ref=e19]:
+      - link "Back to Downloads" [ref=e20] [cursor=pointer]:
+        - /url: /downloads/
+        - generic [ref=e21]: ←
+        - text: Back to Downloads
+    - generic [ref=e22]:
+      - region "Skeleton Key" [ref=e23]:
+        - paragraph [ref=e24]: Secure Checkout
+        - heading "Skeleton Key" [level=1] [ref=e25]
+        - paragraph [ref=e26]: Encrypted Local Key Storage for API Keys, Tokens, and Sensitive Developer Credentials. Confirm your Access Details here, then complete your Purchase securely.
+        - list "Checkout Details" [ref=e27]:
+          - listitem [ref=e28]: Secure Checkout powered by Square.
+          - listitem [ref=e29]: Unlock Full Vault Capacity with Unlimited Keys and Secure Notes.
+          - listitem [ref=e30]: Your Receipt and Access Confirmation are sent to your Verified Account Email.
+        - complementary [ref=e65]: One or more style selectors and/or CSS properties are invalid Invalid style property 'fontSize'. Invalid style value 'Inter, Arial, sans-serif' for property 'fontFamily'.
+      - complementary "Order Summary" [ref=e31]:
+        - generic [ref=e34]:
+          - heading "Skeleton Key" [level=2] [ref=e35]
+          - paragraph [ref=e36]: "Aegis: Skeleton Key desktop access"
+        - generic [ref=e37]:
+          - generic [ref=e38]: Skeleton Key Access
+          - strong [ref=e39]: $3.00
+        - generic [ref=e40]:
+          - generic [ref=e41]:
+            - generic [ref=e42]:
+              - text: First Name
+              - textbox "First Name" [ref=e43]:
+                - /placeholder: Jane
+                - text: Dev
+            - generic [ref=e44]:
+              - text: Last Name
+              - textbox "Last Name" [ref=e45]:
+                - /placeholder: Doe
+                - text: Google User
+          - generic [ref=e46]:
+            - text: Confirm Account Email
+            - textbox "Confirm Account Email" [ref=e47]:
+              - /placeholder: dev-google-user@neurofoundry.local
+              - text: dev-google-user@neurofoundry.local
+          - generic [ref=e48]:
+            - text: Secure Card Details
+            - generic [ref=e51]: Secure Square card fields load after checkout connects.
+            - generic [ref=e52]: Card number, expiration date, CVV, and ZIP/postal code are collected inside Square's secure card frame.
+          - button "Pay $3.00" [disabled] [ref=e53]:
+            - text: Pay
+            - generic [ref=e54]: $3.00
+          - generic "Accepted Card Types" [ref=e55]:
+            - generic [ref=e56]: Visa
+            - generic [ref=e57]: Mastercard
+            - generic [ref=e58]: Amex
+            - generic [ref=e59]: Discover
+        - paragraph [ref=e60]: Card fields are provided by Square. Neurofoundry receives a one-time payment token only.

@@ -204,6 +204,11 @@
       border-color: var(--accent-hi);
     }
 
+    .btn-primary.is-disabled {
+      pointer-events: none;
+      opacity: 0.62;
+    }
+
     .btn-ghost {
       min-height: 42px;
       gap: 8px;
@@ -481,7 +486,7 @@
         <h1>Downloads</h1>
         <p>Public utilities, release builds, and support links for Neurofoundry software. Skeleton Key is the first active package on the shelf.</p>
         <div class="hero-cta">
-          <a href="SkeletonKeySetup.exe" class="btn-primary">Download Skeleton Key</a>
+          <span class="btn-primary is-disabled">Download Skeleton Key</span>
           <a href="../checkout/skeleton-key/" class="btn-ghost">Unlock full usage</a>
         </div>
       </div>
@@ -515,7 +520,7 @@
           <div class="dl-footer">
             <span class="dl-platform">Windows / 0 downloads</span>
             <span class="dl-spacer"></span>
-            <a href="SkeletonKeySetup.exe" class="dl-btn">Download</a>
+            <span class="dl-btn is-disabled">Download</span>
             <a href="../checkout/skeleton-key/" class="dl-btn">Purchase</a>
           </div>
         </article>
