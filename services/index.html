@@ -115,6 +115,7 @@
       position: relative;
       display: grid;
       gap: 16px;
+      z-index: 2;
     }
 
     .hero-hex-grid {
@@ -513,6 +514,7 @@
           <a href="#services" class="btn-ghost">Remote</a>
         </div>
       </div>
+      <div data-site-carousel data-gallery="services" data-interval="8000"></div>
     </section>
 
     <section class="downloads-section" id="services" aria-labelledby="services-heading">
@@ -655,5 +657,6 @@
 
   <div data-site-footer></div>
   <script src="../common/site-footer.js" data-base="../"></script>
+  <script src="../common/site-carousel.js" data-base="../"></script>
 </body>
 </html>
