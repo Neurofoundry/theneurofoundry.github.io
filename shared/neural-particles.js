@@ -114,13 +114,15 @@
   }
   
   function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = Math.max(1, Math.floor(rect.width || window.innerWidth));
+    canvas.height = Math.max(1, Math.floor(rect.height || window.innerHeight));
   }
   
   function handleMouse(e) {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
+    const rect = canvas.getBoundingClientRect();
+    mouseX = e.clientX - rect.left;
+    mouseY = e.clientY - rect.top;
   }
   
   // Draw connections between nearby particles

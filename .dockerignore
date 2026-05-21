@@ -39,6 +39,20 @@ assets/videos/
 assets/neurofoundry-hero-bg.mp4
 assets/thalamaspreview.mp4
 
+# Large root gallery/Forge assets not needed by the auth API container
+3v_sbrain.gif
+Gemini_Generated_Image_knwgcfknwgcfknwg.png
+bg1.png
+brain3.png
+f.png
+furnacebg.png
+pillar_base.png
+pillar_bump.png
+pillar_color.png
+sauto.png
+sbrain.png
+sdrone.png
+
 # Nested dependency trees outside the auth app
 **/node_modules/
 

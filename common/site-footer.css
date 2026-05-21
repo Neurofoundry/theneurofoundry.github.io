@@ -6,6 +6,8 @@
 }
 
 .nf-site-footer {
+  position: relative;
+  z-index: 2;
   background: var(--nf-footer-bg);
   border-top: 2px solid var(--nf-footer-border);
   padding: 20px clamp(12px, 3vw, 20px);

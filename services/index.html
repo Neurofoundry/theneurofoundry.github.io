@@ -95,18 +95,30 @@
 
     main {
       position: relative;
-      z-index: 1;
+      z-index: 2;
     }
 
     .downloads-hero {
       position: relative;
       overflow: hidden;
       background: var(--bg-1);
-      border-bottom: 1px solid var(--line-1);
-      padding: clamp(34px, 6vw, 58px) clamp(14px, 3vw, 32px) clamp(38px, 6vw, 56px);
+      border-bottom: 0;
+      padding: clamp(34px, 6vw, 58px) clamp(14px, 3vw, 32px) clamp(88px, 8vw, 108px);
       min-height: 250px;
       display: flex;
       align-items: center;
+    }
+
+    .downloads-hero::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.15);
+      pointer-events: none;
+      z-index: 3;
     }
 
     .hero-inner {
@@ -119,6 +131,7 @@
     }
 
     .hero-hex-grid {
+      display: none;
       position: absolute;
       right: max(-24px, calc((100vw - var(--page-max)) / -2));
       top: 0;
@@ -229,10 +242,22 @@
       padding: 28px clamp(14px, 3vw, 32px) 60px;
     }
 
+    #neural-particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.46;
+    }
+
     .section-toolbar {
       display: flex;
       align-items: center;
-      gap: 12px;
+      justify-content: center;
+      gap: 10px;
       margin-bottom: 20px;
     }
 
@@ -266,6 +291,11 @@
       cursor: default;
     }
 
+    .section-toolbar .btn-primary,
+    .section-toolbar .btn-ghost {
+      min-width: 90px;
+    }
+
     .downloads-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -282,30 +312,34 @@
       flex-direction: column;
       gap: 10px;
       padding: 18px;
-      border: 1px solid var(--line-1);
+      border: 1px solid var(--accent);
       border-radius: 10px;
       background: var(--bg-1);
-      transition: border-color 180ms, background 180ms;
+      box-shadow: 8px 10px 12px rgba(0, 0, 0, 0.48);
+      transition: border-color 180ms, background 180ms, box-shadow 180ms;
     }
 
     .dl-card:hover {
-      border-color: var(--line-2);
+      border-color: var(--accent-hi);
       background: var(--bg-3);
+      box-shadow: 9px 11px 14px rgba(0, 0, 0, 0.54);
     }
 
     .full-span-card {
       grid-column: 1 / -1;
+      width: min(92%, 1120px);
+      margin: 28px auto 0;
       min-height: 140px;
       border-color: rgba(224, 71, 60, 0.34);
       background:
-        linear-gradient(180deg, rgba(224, 71, 60, 0.08), rgba(14, 15, 15, 0.96)),
+        linear-gradient(180deg, rgba(14, 15, 15, 0.96) 0%, rgba(14, 15, 15, 0.96) 46%, rgba(224, 71, 60, 0.07) 100%),
         var(--bg-1);
       box-shadow: 9px 11px 12px rgba(0, 0, 0, 0.62);
     }
 
     .full-span-card:hover {
       border-color: rgba(224, 71, 60, 0.48);
-      box-shadow: 0 12px 30px rgba(224, 71, 60, 0.22);
+      box-shadow: 0 8px 16px rgba(224, 71, 60, 0.14);
     }
 
     .full-span-card .dl-hex-icon {
@@ -412,25 +446,27 @@
       gap: 6px;
       min-height: 30px;
       padding: 6px 14px;
-      border: 1px solid var(--line-2);
+      border: 1px solid var(--accent);
       border-radius: 6px;
-      background: var(--bg-0);
-      color: var(--fg-1);
+      background: var(--accent);
+      color: #fff;
       font-size: 12px;
       font-weight: 700;
-      transition: border-color 120ms, color 120ms, background 120ms;
+      box-shadow: 4px 5px 7px rgba(0, 0, 0, 0.38);
+      transition: border-color 120ms, color 120ms, background 120ms, box-shadow 120ms;
     }
 
     .dl-btn:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-      background: var(--accent-tint);
+      border-color: var(--accent-hi);
+      color: #fff;
+      background: var(--accent-hi);
+      box-shadow: 5px 6px 8px rgba(0, 0, 0, 0.44);
     }
 
     .dl-btn.is-disabled {
       pointer-events: none;
-      color: var(--fg-4);
-      opacity: 0.72;
+      color: #fff;
+      opacity: 0.78;
     }
 
     .slot-card {
@@ -456,6 +492,7 @@
       .downloads-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
+
     }
 
     @media (max-width: 540px) {
@@ -482,6 +519,7 @@
 <body>
   <div data-site-header></div>
   <script src="../common/site-header.js?v=20260519b" data-base="../"></script>
+  <canvas id="neural-particles" aria-hidden="true"></canvas>
 
   <main>
     <section class="downloads-hero">
@@ -509,20 +547,14 @@
         <a class="eyebrow" href="../index.html"><span aria-hidden="true">&larr;</span>Back to Homepage</a>
         <h1>Services</h1>
         <p>Practical support and build work for home systems, office setups, business tools, web presence, automation, branding, and marketing.</p>
-        <div class="hero-cta">
-          <a href="#services" class="btn-primary">On-Site</a>
-          <a href="#services" class="btn-ghost">Remote</a>
-        </div>
       </div>
       <div data-site-carousel data-gallery="services" data-interval="8000"></div>
     </section>
 
     <section class="downloads-section" id="services" aria-labelledby="services-heading">
       <div class="section-toolbar">
-        <h2 id="services-heading" class="section-title">Services</h2>
-        <span class="section-count">6 available</span>
-        <span class="toolbar-spacer"></span>
-        <button class="filter-btn" type="button">Filter: All Services</button>
+        <a href="#services" class="btn-primary" id="services-heading">On-Site</a>
+        <a href="#services" class="btn-ghost">Remote</a>
       </div>
 
       <div class="downloads-grid">
@@ -657,6 +689,7 @@
 
   <div data-site-footer></div>
   <script src="../common/site-footer.js?v=20260519-footer" data-base="../"></script>
-  <script src="../common/site-carousel.js?v=20260519b" data-base="../"></script>
+  <script src="../common/site-carousel.js?v=20260520-services" data-base="../"></script>
+  <script src="../shared/neural-particles.js?v=20260519-services"></script>
 </body>
 </html>
