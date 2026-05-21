@@ -22,6 +22,7 @@ const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 const profileRoutes = require('./routes/profile');
 const paymentRoutes = require('./routes/payments');
+const forgeRoutes = require('./routes/forge');
 const { findUserById } = require('./services/userService');
 const { getProfileAvatar } = require('./services/r2AvatarClient');
 const { getLastSentEmail, getSentEmailLog } = require('./services/emailService');
@@ -63,8 +64,8 @@ app.use('/api/', limiter);
 
 // Body parsing middleware
 app.use('/api/payments/square/webhook', express.raw({ type: 'application/json' }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '8mb' }));
+app.use(express.urlencoded({ extended: true, limit: '8mb' }));
 app.use(cookieParser());
 
 // Serve static files from root directory
@@ -110,6 +111,7 @@ app.get('/api/profile/avatar/public/:userId', async (req, res, next) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/user', authMiddleware, userRoutes);
 app.use('/api/profile', authMiddleware, profileRoutes);
+app.use('/api/forge', forgeRoutes);
 app.use('/api/payments', paymentRoutes);
 
 // Health check endpoint

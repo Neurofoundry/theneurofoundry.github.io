@@ -232,6 +232,13 @@ CLOUDFLARE_IMAGES_ACCOUNT_ID=...       # Optional; falls back to CLOUDFLARE_ACCO
 CLOUDFLARE_IMAGES_API_TOKEN=...        # Token with Cloudflare Images Edit permission
 CLOUDFLARE_IMAGES_AVATAR_VARIANT=public
 CLOUDFLARE_IMAGES_REQUIRE_SIGNED_URLS=false
+
+# R2 image storage
+R2_ACCOUNT_ID=...                      # Optional; falls back to CLOUDFLARE_ACCOUNT_ID
+R2_BUCKET=profile-avatar
+R2_FORGE_BUCKET=forge-renders
+R2_ACCESS_KEY_ID=...
+R2_SECRET_ACCESS_KEY=...
 ```
 
 For Fly production, set the Images-specific token separately from the D1 token:
@@ -239,6 +246,12 @@ For Fly production, set the Images-specific token separately from the D1 token:
 ```bash
 fly secrets set CLOUDFLARE_IMAGES_ACCOUNT_ID=<cloudflare-account-id> CLOUDFLARE_IMAGES_API_TOKEN=<token-with-cloudflare-images-edit> -a nf-auth-clean-20260219
 npm run cf:images:check
+```
+
+For R2-backed avatars and Forge renders, set the R2 S3-compatible credentials as Fly secrets:
+
+```bash
+fly secrets set R2_ACCOUNT_ID=<cloudflare-account-id> R2_BUCKET=profile-avatar R2_FORGE_BUCKET=forge-renders R2_ACCESS_KEY_ID=<r2-access-key-id> R2_SECRET_ACCESS_KEY=<r2-secret-access-key> -a nf-auth-clean-20260219
 ```
 
 ## Database Configuration
