@@ -413,9 +413,19 @@ class NeurofoundryAuth {
     const token = urlParams.get('token');
     const error = urlParams.get('error');
     const rawRedirectPath = urlParams.get('redirect') || '/members/profile/';
-    const redirectPath = rawRedirectPath.startsWith('/') && !rawRedirectPath.startsWith('//')
-      ? rawRedirectPath
-      : '/members/profile/';
+    let redirectPath = '/members/profile/';
+    if (rawRedirectPath.startsWith('/') && !rawRedirectPath.startsWith('//')) {
+      redirectPath = rawRedirectPath;
+    } else {
+      try {
+        const redirectUrl = new URL(rawRedirectPath);
+        if (redirectUrl.protocol === 'https:' && redirectUrl.hostname.endsWith('theneurofoundry.com')) {
+          redirectPath = redirectUrl.href;
+        }
+      } catch (_) {
+        redirectPath = '/members/profile/';
+      }
+    }
 
     if (error) {
       if (window.opener) {

@@ -174,8 +174,9 @@
 
   const renderAuthLink = () => {
     const authState = getAuthState();
+    const loginHref = `${basePath}members/login/?redirect=${encodeURIComponent(window.location.href)}`;
     if (!authState) {
-      return `<a class="nf-login-link" href="${basePath}members/login/">Login</a>`;
+      return `<a class="nf-login-link" href="${loginHref}">Login</a>`;
     }
 
     const user = authState.user;

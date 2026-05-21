@@ -47,7 +47,17 @@ function isDevOAuthMockEnabled() {
 
 function sanitizeRedirectPath(redirect) {
   if (!redirect || typeof redirect !== 'string') return '/members/profile/';
-  if (!redirect.startsWith('/')) return '/members/profile/';
+  if (!redirect.startsWith('/')) {
+    try {
+      const redirectUrl = new URL(redirect);
+      if (redirectUrl.protocol === 'https:' && redirectUrl.hostname.endsWith('theneurofoundry.com')) {
+        return redirectUrl.href;
+      }
+    } catch (_) {
+      return '/members/profile/';
+    }
+    return '/members/profile/';
+  }
   if (redirect.startsWith('//')) return '/members/profile/';
   return redirect;
 }

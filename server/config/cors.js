@@ -11,6 +11,15 @@ const corsOptions = {
     // Allow requests with no origin (like mobile apps, curl requests, or local file:// protocol)
     if (!origin) return callback(null, true);
 
+    try {
+      const hostname = new URL(origin).hostname;
+      if (hostname === 'theneurofoundry.com' || hostname.endsWith('.theneurofoundry.com')) {
+        return callback(null, true);
+      }
+    } catch (_) {
+      // Fall through to the explicit allowlist.
+    }
+
     // Allow any localhost or 127.0.0.1 origin in development
     if (
       process.env.NODE_ENV !== 'production'

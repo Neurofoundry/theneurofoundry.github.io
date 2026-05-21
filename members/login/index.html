@@ -435,9 +435,29 @@
       apiUrl: window.NeurofoundryAuth.resolveDefaultApiUrl()
     });
 
+    function getSafeRedirect() {
+      const fallback = '/members/profile/';
+      const rawRedirect = new URLSearchParams(window.location.search).get('redirect');
+      if (!rawRedirect) return fallback;
+
+      try {
+        if (rawRedirect.startsWith('/') && !rawRedirect.startsWith('//')) {
+          return rawRedirect;
+        }
+
+        const redirectUrl = new URL(rawRedirect);
+        if (redirectUrl.protocol === 'https:' && redirectUrl.hostname.endsWith('theneurofoundry.com')) {
+          return redirectUrl.href;
+        }
+      } catch (_) {
+        return fallback;
+      }
+
+      return fallback;
+    }
+
     if (auth.isAuthenticated()) {
-      const redirect = new URLSearchParams(window.location.search).get('redirect') || '/members/profile/';
-      window.location.href = redirect;
+      window.location.href = getSafeRedirect();
     }
 
     async function handleLogin(event) {
@@ -452,8 +472,7 @@
 
       try {
         await auth.login(email, password);
-        const redirect = new URLSearchParams(window.location.search).get('redirect') || '/members/profile/';
-        window.location.href = redirect;
+        window.location.href = getSafeRedirect();
       } catch (error) {
         loginBtn.disabled = false;
         loginBtn.textContent = 'LOGIN';
@@ -463,8 +482,7 @@
 
     async function handleSocialLogin(provider) {
       try {
-        const redirect = new URLSearchParams(window.location.search).get('redirect') || '/members/profile/';
-        await auth.loginWithOAuth(provider, redirect);
+        await auth.loginWithOAuth(provider, getSafeRedirect());
       } catch (error) {
         alert('OAuth login failed: ' + (error.message || 'Could not connect to ' + provider));
       }
