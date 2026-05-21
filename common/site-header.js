@@ -62,7 +62,6 @@
 
   const links = [
     { href: 'index.html', label: 'Home' },
-    { href: 'https://forge.theneurofoundry.com/', label: 'Forge', key: 'forge' },
     { href: '/services/', label: 'Services' },
     { href: '/downloads/', label: 'Downloads' },
     { href: '/workshop/', label: 'Workshop' },
@@ -78,7 +77,7 @@
   };
   const navItems = links.map((link) => {
     const href = resolveHref(link.href);
-    const isCurrent = currentKey === link.key || currentPage === link.href || window.location.pathname === link.href || (link.href === 'index.html' && homePages.has(currentPage));
+    const isCurrent = currentKey ? currentKey === link.key : currentPage === link.href || window.location.pathname === link.href || (link.href === 'index.html' && homePages.has(currentPage));
     const currentAttr = isCurrent ? ' aria-current="page"' : '';
     return `<a href="${href}"${currentAttr}>${link.label}</a>`;
   }).join('');
