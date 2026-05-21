@@ -4,6 +4,7 @@
   const rootPath = script && script.dataset.root ? script.dataset.root.replace(/\/?$/, '/') : basePath;
   const currentKey = script && script.dataset.current ? script.dataset.current : '';
   const mount = document.querySelector('[data-site-header]');
+  let cookieAuthState = null;
 
   if (!mount) return;
 
@@ -94,12 +95,50 @@
   const getAuthState = () => {
     try {
       const stored = window.localStorage && window.localStorage.getItem('nf_auth');
-      if (!stored) return null;
-      const data = JSON.parse(stored);
-      if (!data || !data.token || !data.user) return null;
-      return data;
+      if (stored) {
+        const data = JSON.parse(stored);
+        if (data && data.token && data.user) return data;
+      }
     } catch (_) {
-      return null;
+      // Ignore malformed local auth and fall back to the shared API cookie.
+    }
+
+    return cookieAuthState;
+  };
+
+  const resolveApiBase = () => {
+    const hostname = window.location.hostname || '';
+    const protocol = window.location.protocol || '';
+
+    if (protocol === 'file:' || hostname === 'localhost' || hostname === '127.0.0.1') {
+      return 'http://localhost:3000/api';
+    }
+
+    if (hostname.endsWith('theneurofoundry.com')) {
+      return 'https://api.theneurofoundry.com/api';
+    }
+
+    return `${window.location.origin}/api`;
+  };
+
+  const hydrateAuthFromCookie = async () => {
+    if (getAuthState()) return;
+
+    try {
+      const response = await fetch(`${resolveApiBase()}/profile`, {
+        credentials: 'include'
+      });
+      if (!response.ok) return;
+      const data = await response.json();
+      const user = data && data.data && (data.data.profile || data.data.user);
+      if (!user) return;
+      cookieAuthState = {
+        user,
+        token: ''
+      };
+      updateAuthSlots();
+    } catch (_) {
+      // Logged-out visitors and blocked cookie checks should keep seeing Login.
     }
   };
 
@@ -197,6 +236,7 @@
   };
 
   updateAuthSlots();
+  hydrateAuthFromCookie();
   window.addEventListener('auth-state-changed', updateAuthSlots);
 
   const showBrandText = () => {
