@@ -1,6 +1,8 @@
 (function () {
   const script = document.currentScript;
   const basePath = script && script.dataset.base ? script.dataset.base : '';
+  const rootPath = script && script.dataset.root ? script.dataset.root.replace(/\/?$/, '/') : basePath;
+  const currentKey = script && script.dataset.current ? script.dataset.current : '';
   const mount = document.querySelector('[data-site-header]');
 
   if (!mount) return;
@@ -60,6 +62,7 @@
 
   const links = [
     { href: 'index.html', label: 'Home' },
+    { href: 'https://forge.theneurofoundry.com/', label: 'Forge', key: 'forge' },
     { href: '/services/', label: 'Services' },
     { href: '/downloads/', label: 'Downloads' },
     { href: '/workshop/', label: 'Workshop' },
@@ -68,9 +71,14 @@
 
   const currentPage = window.location.pathname.split('/').pop() || 'index.html';
   const homePages = new Set(['index.html', 'home.html', 'index_responsive.html', 'index_combined.html', 'index_mobile.html']);
+  const resolveHref = (href) => {
+    if (/^https?:\/\//i.test(href)) return href;
+    if (href.startsWith('/')) return `${rootPath.replace(/\/$/, '')}${href}`;
+    return `${basePath}${href}`;
+  };
   const navItems = links.map((link) => {
-    const href = link.href.startsWith('/') ? link.href : `${basePath}${link.href}`;
-    const isCurrent = currentPage === link.href || window.location.pathname === link.href || (link.href === 'index.html' && homePages.has(currentPage));
+    const href = resolveHref(link.href);
+    const isCurrent = currentKey === link.key || currentPage === link.href || window.location.pathname === link.href || (link.href === 'index.html' && homePages.has(currentPage));
     const currentAttr = isCurrent ? ' aria-current="page"' : '';
     return `<a href="${href}"${currentAttr}>${link.label}</a>`;
   }).join('');
