@@ -8,290 +8,474 @@
   <meta name="theme-color" content="#0f1113">
   <link rel="icon" type="image/png" href="../../anvil.png">
   <link rel="apple-touch-icon" href="../../anvil.png">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <script src="/auth-client.js?v=20260219b"></script>
+  <link rel="stylesheet" href="../../common/site-header.css?v=20260519b">
+  <link rel="stylesheet" href="../../common/site-footer.css">
+  <link rel="stylesheet" href="../../common/account-shell.css">
   <style>
     :root {
       --primary-color: #e0473c;
-      --primary-gradient-start: #ff7b6e;
-      --primary-gradient-mid: #e9584d;
-      --primary-gradient-end: #b8322b;
-      --primary-soft: #ffb5ad;
-      --primary-shadow: rgba(224, 71, 60, 0.18);
       --dark-bg: #090b0d;
-      --surface: #12161a;
-      --surface-strong: #0f1113;
-      --line: #2a2f35;
-      --line-soft: #20262c;
-      --module-line: #2c333a;
+      --surface: #0e0f0f;
+      --surface-strong: #111313;
+      --line: #202425;
+      --line-soft: #2b3032;
       --light-text: #e7ebef;
-      --muted-text: #9aa3ad;
-      --ok: #4ade80;
+      --muted-text: #858b90;
+      --ok: #6bd483;
+      --primary-soft: #ffb5ad;
+      --accent-soft: rgba(224, 71, 60, 0.14);
+      --accent-line: rgba(224, 71, 60, 0.42);
+      --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
     }
 
     *, *::before, *::after { box-sizing: border-box; }
 
-    .avatar-row {
-      display: grid;
-      gap: 10px;
-      margin-bottom: 28px;
-      padding-bottom: 24px;
-      border-bottom: 1px solid var(--line-soft);
+    body.nf-account-page.profile-settings-page {
+      background:
+        radial-gradient(circle at 18% 0%, rgba(224, 71, 60, 0.08), transparent 28%),
+        linear-gradient(180deg, #0a0b0b 0%, #080909 42%, #0a0b0b 100%);
     }
 
-    .avatar-picker {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-      width: 100%;
-      max-width: 100%;
-      min-height: 88px;
-    }
-
-    .avatar,
-    .avatar-choice {
-      width: 76px;
-      height: 76px;
-      position: relative;
-      border: 2px solid var(--primary-color);
-      border-radius: 50%;
-      background: #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      color: var(--primary-color);
-      font-size: 34px;
-      font-weight: 800;
-      flex: 0 0 auto;
-      cursor: pointer;
-    }
-
-    .avatar {
-      border-width: 3px;
-      box-shadow:
-        0 6px 16px rgba(0, 0, 0, 0.52),
-        0 0 0 2px rgba(255, 115, 104, 0.18),
-        inset 0 1px 2px rgba(255, 255, 255, 0.24),
-        inset 0 -5px 12px rgba(0, 0, 0, 0.5);
-    }
-
-    .avatar img,
-    .avatar-choice img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .avatar-choice-tray {
-      display: flex;
-      margin-left: auto;
-      flex: 0 0 auto;
-    }
-
-    .avatar-choice {
-      transition: border-color 180ms ease, box-shadow 180ms ease;
-      font-size: 17px;
-      color: var(--muted-text);
-      background: #050607;
-    }
-
-    .avatar-choice:hover,
-    .avatar-choice:focus {
-      border-color: var(--primary-soft);
-      box-shadow: 0 0 18px rgba(224, 71, 60, 0.16);
-      outline: none;
-    }
-
-    .avatar-choice.is-unavailable {
-      opacity: 0.42;
-      cursor: default;
-    }
-
-    .avatar-choice svg {
-      width: 28px;
-      height: 28px;
-      display: block;
-      stroke: currentColor;
-    }
-
-    .custom-avatar-choice {
-      display: grid;
-      place-items: center;
-    }
-
-    .avatar-picker input {
+    body.nf-account-page.profile-settings-page::before {
       display: none;
     }
 
-    .avatar-actions {
-      max-width: 100%;
+    .nf-account-main.profile-settings-main {
+      max-width: none;
+      padding: 0 0 56px;
     }
 
-    .avatar-actions p,
-    .field-note {
+    .profile-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: stretch;
+      gap: 24px;
+      min-height: 172px;
+      padding: clamp(26px, 4vw, 38px) clamp(18px, 5vw, 64px);
+      background: #0c0e0e;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .identity {
+      display: flex;
+      align-items: flex-start;
+      gap: 26px;
+      min-width: 0;
+    }
+
+    .hex-avatar {
+      position: relative;
+      width: 78px;
+      height: 78px;
+      flex: 0 0 auto;
+    }
+
+    .hex-avatar svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .hex-avatar-initials {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      color: var(--primary-color);
+      font: 600 17px/1 var(--mono);
+      letter-spacing: 0.08em;
+    }
+
+    .identity-copy {
+      min-width: 0;
+      padding-top: 1px;
+    }
+
+    .role {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--primary-color);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .name-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+      flex-wrap: wrap;
+    }
+
+    .profile-name {
+      margin: 0;
+      color: #fff;
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.05;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .status-badge,
+    .verification-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 26px;
+      padding: 0 10px;
+      border: 1px solid rgba(107, 212, 131, 0.32);
+      border-radius: 999px;
+      color: var(--ok);
+      background: rgba(107, 212, 131, 0.08);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .status-badge::before,
+    .verification-badge::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .verification-badge.unverified-badge {
+      border-color: rgba(242, 186, 85, 0.32);
+      background: rgba(242, 186, 85, 0.1);
+      color: #f2ba55;
+    }
+
+    .handle {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted-text);
+      font: 13px/1.5 var(--mono);
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 14px;
+    }
+
+    .tag {
+      min-height: 30px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 10px;
+      border: 1px solid var(--line-soft);
+      border-radius: 5px;
+      background: #0a0b0b;
+      color: #c7cbcf;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .hero-panel {
+      width: min(330px, 32vw);
+      min-width: 260px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--surface-strong);
+    }
+
+    .meta-cell {
+      padding: 16px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .meta-cell:nth-child(even) { border-right: 0; }
+    .meta-cell:nth-last-child(-n+2) { border-bottom: 0; }
+
+    .meta-label {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--muted-text);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    .meta-value {
+      color: var(--light-text);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .settings-wrap {
+      width: min(1120px, calc(100% - 36px));
+      margin: 0 auto;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--line);
+      overflow: hidden;
+    }
+
+    .tab {
+      position: relative;
+      flex: 0 1 auto;
+      min-height: 52px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 22px;
+      color: var(--muted-text);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .tab.active {
+      color: #fff;
+    }
+
+    .tab.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      height: 2px;
+      background: var(--primary-color);
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 330px;
+      gap: 24px;
+      padding-top: 28px;
+    }
+
+    .panel {
+      background: rgba(14, 15, 15, 0.94);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 20px 22px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .panel-title {
+      margin: 0 0 4px;
+      color: #fff;
+      font-size: 16px;
+      line-height: 1.25;
+      font-weight: 800;
+    }
+
+    .panel-subtitle {
       margin: 0;
       color: var(--muted-text);
-      font-size: 12px;
-      line-height: 1.45;
+      font-size: 13px;
     }
 
     .form-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px 16px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px 16px;
+      padding: 22px;
     }
 
     .form-group.full,
-    .preferences-field,
-    .toggle-row,
-    .profile-meta {
+    .avatar-row,
+    .setting-row,
+    .profile-actions {
       grid-column: 1 / -1;
     }
 
-    label.field-label,
-    .preferences-heading {
+    .field-label {
       display: block;
       margin-bottom: 8px;
-      color: #c9d0d8;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.5px;
+      color: #cbd0d4;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-    }
-
-    .preferences-heading {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
     }
 
     input[type="text"],
     input[type="email"] {
       width: 100%;
-      padding: 12px 14px;
-      border: 1px solid var(--module-line);
-      border-radius: 8px;
-      background: var(--surface-strong);
+      min-height: 44px;
+      border: 1px solid var(--line-soft);
+      border-radius: 6px;
+      background: #090a0a;
       color: var(--light-text);
-      font: 14px/1.3 Inter, sans-serif;
+      padding: 0 13px;
+      outline: none;
     }
 
     input[type="text"]:focus,
     input[type="email"]:focus {
-      outline: none;
-      border-color: var(--primary-color);
-      background: #0b0d10;
-      box-shadow: 0 0 0 2px rgba(224, 71, 60, 0.12);
+      border-color: var(--accent-line);
+      box-shadow: 0 0 0 3px var(--accent-soft);
     }
 
     input[readonly] {
       color: var(--muted-text);
       cursor: not-allowed;
+      background: #0d0f0f;
     }
 
-    input[readonly].muted-field {
-      background: rgba(18, 22, 26, 0.72);
-      color: #9ba3ad;
-    }
-
-    .toggle-row {
+    .avatar-control {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: center;
       padding: 16px;
-      border: 1px solid var(--line-soft);
+      border: 1px solid var(--line);
       border-radius: 8px;
       background: var(--surface-strong);
     }
 
-    .toggle-control {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      color: var(--light-text);
-      font-size: 14px;
-      line-height: 1.4;
+    .avatar {
+      width: 58px;
+      height: 58px;
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: hidden;
+      border: 2px solid var(--primary-color);
+      border-radius: 50%;
+      color: var(--primary-color);
+      background: #050606;
+      font-weight: 800;
       cursor: pointer;
     }
 
-    .toggle-control input {
-      width: 18px;
-      height: 18px;
-      accent-color: var(--primary-color);
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .avatar-row input[type="file"] {
+      display: none;
+    }
+
+    .avatar-actions strong,
+    .setting-row strong {
+      display: block;
+      color: var(--light-text);
+      font-size: 14px;
+    }
+
+    .avatar-actions p,
+    .setting-row > div > span {
+      margin: 2px 0 0;
+      color: var(--muted-text);
+      font-size: 12px;
+    }
+
+    .setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #0b0d0d;
+    }
+
+    .switch {
+      position: relative;
+      width: 46px;
+      height: 26px;
       flex: 0 0 auto;
     }
 
-    .profile-meta {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      color: var(--muted-text);
-      font-size: 13px;
+    .switch input {
+      position: absolute;
+      opacity: 0;
     }
 
-    .profile-meta span {
-      min-width: 0;
-    }
-
-    .profile-meta strong {
-      display: block;
-      margin-top: 4px;
-      color: var(--light-text);
-      font-size: 14px;
-      font-weight: 700;
-    }
-
-    .verification-badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 4px 10px;
-      border: 1px solid rgba(74, 222, 128, 0.3);
+    .switch-mark {
+      position: absolute;
+      inset: 0;
+      border: 1px solid var(--line-soft);
       border-radius: 999px;
-      background: rgba(74, 222, 128, 0.1);
-      color: var(--ok);
-      font-size: 12px;
-      white-space: nowrap;
+      background: #050606;
+      cursor: pointer;
     }
 
-    .verification-badge.unverified-badge {
-      border-color: rgba(255, 165, 0, 0.3);
-      background: rgba(255, 165, 0, 0.1);
-      color: #ffa500;
+    .switch-mark::after {
+      content: "";
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--muted-text);
+      transition: transform 160ms ease, background 160ms ease;
+    }
+
+    .switch input:checked + .switch-mark {
+      border-color: var(--accent-line);
+      background: var(--accent-soft);
+    }
+
+    .switch input:checked + .switch-mark::after {
+      transform: translateX(20px);
+      background: var(--primary-color);
     }
 
     .profile-actions {
       display: flex;
       justify-content: space-between;
       gap: 12px;
-      margin-top: 24px;
-      padding-top: 24px;
-      border-top: 1px solid var(--line-soft);
+      padding-top: 6px;
     }
 
     .btn {
-      min-height: 40px;
+      min-height: 42px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 10px 16px;
-      border: 2px solid transparent;
-      border-radius: 8px;
-      font: 700 13px/1 Inter, sans-serif;
+      gap: 8px;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      padding: 0 16px;
       cursor: pointer;
+      font-weight: 800;
+      font-size: 13px;
       text-decoration: none;
     }
 
     .btn.primary {
-      border-color: #a2362f;
-      background: linear-gradient(180deg, var(--primary-gradient-start), var(--primary-gradient-mid) 48%, var(--primary-gradient-end));
-      color: #fff;
-      box-shadow: 0 4px 12px var(--primary-shadow);
+      color: var(--light-text);
+      border-color: #9c371f;
+      background: linear-gradient(180deg, #f06b42, #d84d24);
+      box-shadow: 0 8px 18px rgba(224, 71, 60, 0.2);
     }
 
     .btn.secondary {
-      border-color: var(--module-line);
-      background: var(--surface-strong);
-      color: var(--light-text);
+      color: #c7cbcf;
+      border-color: var(--line-soft);
+      background: #0a0b0b;
     }
 
     .btn:disabled {
@@ -299,8 +483,60 @@
       opacity: 0.72;
     }
 
+    .side-stack {
+      display: grid;
+      gap: 16px;
+      align-content: start;
+    }
+
+    .side-card {
+      padding: 18px;
+    }
+
+    .side-card h3 {
+      margin: 0 0 12px;
+      color: #fff;
+      font-size: 14px;
+    }
+
+    .mini-list {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .mini-list li {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted-text);
+      font-size: 12px;
+    }
+
+    .mini-list strong {
+      color: #c7cbcf;
+      font-weight: 700;
+      text-align: right;
+    }
+
+    .notice {
+      border-color: var(--accent-line);
+      background:
+        linear-gradient(180deg, rgba(224, 71, 60, 0.12), rgba(224, 71, 60, 0.03)),
+        var(--surface);
+    }
+
+    .notice p {
+      margin: 0;
+      color: #c7cbcf;
+      font-size: 13px;
+    }
+
     #message {
       display: none;
+      margin-top: 18px;
       padding: 12px 14px;
       border-radius: 8px;
       font-size: 13px;
@@ -319,107 +555,224 @@
       color: var(--primary-soft);
     }
 
-    @media (max-width: 768px) {
-      .form-grid { grid-template-columns: 1fr; }
-      .avatar-picker,
-      .avatar-actions {
-        max-width: 100%;
+    @media (max-width: 900px) {
+      .profile-hero,
+      .content-grid {
+        grid-template-columns: 1fr;
       }
-      .avatar,
-      .avatar-choice {
-        width: 82px;
-        height: 82px;
+
+      .hero-panel {
+        width: 100%;
+        min-width: 0;
       }
+    }
+
+    @media (max-width: 640px) {
+      .identity { gap: 16px; }
+
+      .hex-avatar {
+        width: 64px;
+        height: 64px;
+      }
+
+      .profile-hero {
+        padding-inline: 18px;
+      }
+
+      .settings-wrap {
+        width: calc(100% - 28px);
+      }
+
+      .tabs {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .tab {
+        min-width: 0;
+        padding: 0 8px;
+        font-size: 12px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+        padding: 18px;
+      }
+
+      .avatar-control {
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 14px;
+      }
+
+      .avatar-control .btn {
+        grid-column: 1 / -1;
+      }
+
       .profile-actions {
         align-items: stretch;
         flex-direction: column;
       }
-      .profile-meta { grid-template-columns: 1fr; }
     }
   </style>
-  <link rel="stylesheet" href="../../common/site-header.css?v=20260519b">
-  <link rel="stylesheet" href="../../common/site-footer.css">
-  <link rel="stylesheet" href="../../common/account-shell.css">
 </head>
-<body class="nf-account-page">
+<body class="nf-account-page profile-settings-page">
   <div data-site-header></div>
-  <script src="../../common/site-header.js?v=20260519b" data-base="../../"></script>
+  <script src="../../common/site-header.js?v=20260522-avatar" data-base="../../"></script>
   <canvas id="neural-particles" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.46;"></canvas>
 
-  <main class="nf-account-main">
-    <div class="nf-account-shell">
-      <div class="nf-account-heading">
-        <h1>Profile</h1>
-        <p>Manage your account details</p>
+  <main class="nf-account-main profile-settings-main">
+    <section class="profile-hero" aria-label="Profile identity">
+      <div class="identity">
+        <div class="hex-avatar" aria-hidden="true">
+          <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="40,4 72,22 72,58 40,76 8,58 8,22" fill="#141717" stroke="#e0473c" stroke-width="2"></polygon>
+          </svg>
+          <span class="hex-avatar-initials" id="heroInitials">NF</span>
+        </div>
+        <div class="identity-copy">
+          <span class="role">Member Profile</span>
+          <div class="name-row">
+            <h1 class="profile-name" id="profileDisplayName">Loading...</h1>
+            <span id="heroVerificationBadge" class="status-badge">Checking</span>
+          </div>
+          <span class="handle" id="profileHandle">@member</span>
+          <div class="tag-list" aria-label="Profile tags">
+            <span class="tag">Skeleton Key</span>
+            <span class="tag">Automation</span>
+            <span class="tag">Secure Tools</span>
+            <span class="tag">AI Systems</span>
+          </div>
+        </div>
       </div>
 
-      <div id="message"></div>
-
-      <form id="profileForm" class="nf-account-card">
-        <div class="avatar-row">
-          <div class="avatar-picker" id="avatarPicker">
-            <button class="avatar" id="avatarToggle" type="button" aria-label="Current profile picture">
-              <span id="avatarInitial">U</span>
-              <img id="avatarImg" alt="" style="display: none;">
-            </button>
-            <div class="avatar-choice-tray" aria-label="Avatar choices">
-              <button class="avatar-choice custom-avatar-choice" id="customAvatarButton" type="button" aria-label="Upload custom avatar">
-                <img src="/assets/profile-avatars/av_upload.png" alt="" loading="lazy">
-              </button>
-            </div>
-            <input type="file" id="avatarInput" accept="image/*">
-          </div>
-          <div class="avatar-actions">
-            <p>PNG, JPG, GIF, or WEBP. Max 5MB.</p>
-          </div>
+      <div class="hero-panel" aria-label="Account summary">
+        <div class="meta-cell">
+          <span class="meta-label">Plan</span>
+          <span class="meta-value" id="heroPlanStatus">Loading...</span>
         </div>
+        <div class="meta-cell">
+          <span class="meta-label">Member Since</span>
+          <span class="meta-value" id="heroMemberSince">Loading...</span>
+        </div>
+        <div class="meta-cell">
+          <span class="meta-label">Last Login</span>
+          <span class="meta-value" id="heroLastLogin">Loading...</span>
+        </div>
+        <div class="meta-cell">
+          <span class="meta-label">Email</span>
+          <span class="meta-value" id="heroEmailStatus">Checking</span>
+        </div>
+      </div>
+    </section>
 
-        <div class="form-grid">
-          <div class="form-group">
-            <label class="field-label" for="firstName">First Name</label>
-            <input type="text" id="firstName" name="firstName" autocomplete="given-name">
-          </div>
+    <div class="settings-wrap">
+      <nav class="tabs" aria-label="Profile settings sections">
+        <a class="tab active" href="#">Account</a>
+        <a class="tab" href="#">Security</a>
+        <a class="tab" href="#">Billing</a>
+        <a class="tab" href="#">Email</a>
+      </nav>
 
-          <div class="form-group">
-            <label class="field-label" for="lastName">Last Name</label>
-            <input type="text" id="lastName" name="lastName" autocomplete="family-name">
-          </div>
-
-          <div class="form-group full">
-            <label class="field-label" for="email">Email Address</label>
-            <input type="email" id="email" name="email" class="muted-field" readonly>
-          </div>
-
-          <div class="form-group full">
-            <label class="field-label" for="location">Location</label>
-            <input type="text" id="location" name="location" class="muted-field" autocomplete="address-level2" placeholder="Unavailable" readonly>
-          </div>
-
-          <div class="preferences-field">
-            <div class="preferences-heading">
-              <span>Email Preferences</span>
-              <span id="verificationBadge"></span>
+      <div class="content-grid">
+        <section class="panel" aria-labelledby="account-title">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title" id="account-title">Account Details</h2>
+              <p class="panel-subtitle">Manage your profile and account preferences.</p>
             </div>
-            <div class="toggle-row">
-              <label class="toggle-control" for="marketingOptOut">
+            <span class="status-badge">Synced</span>
+          </div>
+
+          <form id="profileForm" class="form-grid">
+            <div class="avatar-row">
+              <span class="field-label">Profile Picture</span>
+              <div class="avatar-control">
+                <button class="avatar" id="avatarToggle" type="button" aria-label="Current profile picture">
+                  <span id="avatarInitial">U</span>
+                  <img id="avatarImg" alt="" style="display: none;">
+                </button>
+                <div class="avatar-actions">
+                  <strong>Upload avatar</strong>
+                  <p>PNG, JPG, GIF, or WEBP. Max 5MB.</p>
+                </div>
+                <button class="btn secondary custom-avatar-choice" id="customAvatarButton" type="button">Choose File</button>
+                <input type="file" id="avatarInput" accept="image/*">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="field-label" for="firstName">First Name</label>
+              <input type="text" id="firstName" name="firstName" autocomplete="given-name">
+            </div>
+
+            <div class="form-group">
+              <label class="field-label" for="lastName">Last Name</label>
+              <input type="text" id="lastName" name="lastName" autocomplete="family-name">
+            </div>
+
+            <div class="form-group full">
+              <label class="field-label" for="email">Email Address</label>
+              <input type="email" id="email" name="email" class="muted-field" readonly>
+            </div>
+
+            <div class="form-group full">
+              <label class="field-label" for="location">Location</label>
+              <input type="text" id="location" name="location" class="muted-field" autocomplete="address-level2" placeholder="Unavailable" readonly>
+            </div>
+
+            <div class="setting-row">
+              <div>
+                <strong>Email Preferences</strong>
+                <span>Opt out of marketing emails while keeping account notifications.</span>
+              </div>
+              <label class="switch" aria-label="Opt out of marketing emails">
                 <input type="checkbox" id="marketingOptOut" name="marketingOptOut">
-                Opt out of Marketing Emails
+                <span class="switch-mark"></span>
               </label>
             </div>
-          </div>
 
-          <div class="profile-meta">
-            <span>Member Since:<strong id="memberSince">Loading...</strong></span>
-            <span>Last Login:<strong id="lastLogin">Loading...</strong></span>
-            <span>Plan:<strong id="planStatus">Loading...</strong></span>
-          </div>
-        </div>
+            <div class="setting-row">
+              <div>
+                <strong>Account Status</strong>
+                <span>Verification and account access state.</span>
+              </div>
+              <span id="verificationBadge"></span>
+            </div>
 
-        <div class="profile-actions">
-          <button type="submit" class="btn primary" id="saveProfileButton">Save Profile</button>
-          <button type="button" class="btn secondary" onclick="handleLogout()">Logout</button>
-        </div>
-      </form>
+            <div class="profile-actions">
+              <button type="submit" class="btn primary" id="saveProfileButton">Save Profile</button>
+              <button type="button" class="btn secondary" onclick="handleLogout()">Logout</button>
+            </div>
+          </form>
+        </section>
+
+        <aside class="side-stack" aria-label="Profile summary">
+          <section class="panel side-card notice">
+            <h3>Profile Settings</h3>
+            <p>Your account identity, communication preferences, and membership details are managed here.</p>
+          </section>
+
+          <section class="panel side-card">
+            <h3>Account Snapshot</h3>
+            <ul class="mini-list">
+              <li><span>Member Since</span><strong id="memberSince">Loading...</strong></li>
+              <li><span>Last Login</span><strong id="lastLogin">Loading...</strong></li>
+              <li><span>Plan</span><strong id="planStatus">Loading...</strong></li>
+              <li><span>Marketing Email</span><strong id="marketingStatus">Loading...</strong></li>
+            </ul>
+          </section>
+
+          <section class="panel side-card">
+            <h3>Next Tabs</h3>
+            <ul class="mini-list">
+              <li><span>Security</span><strong>Password, sessions</strong></li>
+              <li><span>Billing</span><strong>Plan, invoices</strong></li>
+              <li><span>Email</span><strong>Preferences</strong></li>
+            </ul>
+          </section>
+        </aside>
+      </div>
+      <div id="message"></div>
     </div>
   </main>
 
@@ -437,17 +790,30 @@
     }
 
     let currentPreferences = {};
+    const productionApiOrigin = 'https://api.theneurofoundry.com';
+
+    function apiOriginForAvatar() {
+      if (window.location.protocol === 'file:') return productionApiOrigin;
+      return new URL(window.nfAuth.apiUrl).origin;
+    }
 
     function profileImageSrc(avatar) {
       if (!avatar) return '';
       if (/^https?:\/\//i.test(avatar)) return avatar;
       if (avatar.startsWith('/assets/')) return avatar;
       if (avatar.startsWith('/api/')) {
-        const apiOrigin = new URL(window.nfAuth.apiUrl).origin;
+        const apiOrigin = apiOriginForAvatar();
         return `${apiOrigin}${avatar}`;
       }
-      const apiOrigin = new URL(window.nfAuth.apiUrl).origin;
+      const apiOrigin = apiOriginForAvatar();
       return `${apiOrigin}${avatar}`;
+    }
+
+    function profileImageFallbackSrc(avatar, currentSrc) {
+      const value = String(avatar || '');
+      if (!value.startsWith('/api/')) return '';
+      const fallbackSrc = `${productionApiOrigin}${value}`;
+      return currentSrc === fallbackSrc ? '' : fallbackSrc;
     }
 
     function resizeAvatarFile(file) {
@@ -508,6 +874,47 @@
       return location;
     }
 
+    function formatHandle(user) {
+      const emailName = String(user.email || '').split('@')[0].trim();
+      const name = `${user.firstName || ''} ${user.lastName || ''}`.trim();
+      const source = emailName || name || 'member';
+      return `@${source.toLowerCase().replace(/[^a-z0-9]+/g, '.').replace(/^\.+|\.+$/g, '') || 'member'}`;
+    }
+
+    function formatInitials(user) {
+      const first = String(user.firstName || '').trim();
+      const last = String(user.lastName || '').trim();
+      const emailName = String(user.email || '').split('@')[0].trim();
+      const initials = `${first[0] || ''}${last[0] || ''}`.trim();
+      if (initials) return initials.toUpperCase();
+      return (emailName.slice(0, 2) || 'NF').toUpperCase();
+    }
+
+    function syncProfileSummary(user, preferences) {
+      const firstName = user.firstName || '';
+      const lastName = user.lastName || '';
+      const displayName = `${firstName} ${lastName}`.trim() || user.name || 'Neurofoundry Member';
+      const memberSince = formatMemberSince(user.createdAt);
+      const lastLogin = formatMemberSince(user.lastLoginAt);
+      const plan = formatPlan(user);
+      const emailStatus = user.emailVerified ? 'Verified' : 'Unverified';
+      const verificationClass = user.emailVerified ? 'status-badge' : 'status-badge verification-badge unverified-badge';
+
+      document.getElementById('profileDisplayName').textContent = displayName;
+      document.getElementById('profileHandle').textContent = formatHandle(user);
+      document.getElementById('heroInitials').textContent = formatInitials(user);
+      document.getElementById('heroPlanStatus').textContent = plan;
+      document.getElementById('heroMemberSince').textContent = memberSince;
+      document.getElementById('heroLastLogin').textContent = lastLogin;
+      document.getElementById('heroEmailStatus').textContent = emailStatus;
+      document.getElementById('heroVerificationBadge').textContent = emailStatus;
+      document.getElementById('heroVerificationBadge').className = verificationClass;
+      document.getElementById('memberSince').textContent = memberSince;
+      document.getElementById('planStatus').textContent = plan;
+      document.getElementById('lastLogin').textContent = lastLogin;
+      document.getElementById('marketingStatus').textContent = preferences.marketingOptOut ? 'Opted Out' : 'Subscribed';
+    }
+
     function isOAuthUser(user) {
       const authProvider = String(user.authProvider || 'local').toLowerCase();
       return authProvider && authProvider !== 'local';
@@ -542,13 +949,17 @@
         };
         const avatarImg = document.getElementById('avatarImg');
         const avatarInitial = document.getElementById('avatarInitial');
-        const firstName = user.firstName || '';
 
         if (user.avatar) {
           avatarImg.onerror = () => {
+            const fallbackSrc = profileImageFallbackSrc(user.avatar, avatarImg.src);
+            if (fallbackSrc) {
+              avatarImg.src = fallbackSrc;
+              return;
+            }
             avatarImg.style.display = 'none';
             avatarInitial.style.display = 'block';
-            avatarInitial.textContent = (firstName || 'N')[0].toUpperCase();
+            avatarInitial.textContent = formatInitials(user);
           };
           avatarImg.src = profileImageSrc(user.avatar);
           avatarImg.style.display = 'block';
@@ -556,12 +967,10 @@
         } else {
           avatarImg.style.display = 'none';
           avatarInitial.style.display = 'block';
-          avatarInitial.textContent = (firstName || 'N')[0].toUpperCase();
+          avatarInitial.textContent = formatInitials(user);
         }
 
-        document.getElementById('memberSince').textContent = formatMemberSince(user.createdAt);
-        document.getElementById('planStatus').textContent = formatPlan(user);
-        document.getElementById('lastLogin').textContent = formatMemberSince(user.lastLoginAt);
+        syncProfileSummary(user, preferences);
 
         document.getElementById('verificationBadge').innerHTML = user.emailVerified
           ? '<span class="verification-badge">Email Verified</span>'

@@ -4,6 +4,7 @@
   const rootPath = script && script.dataset.root ? script.dataset.root.replace(/\/?$/, '/') : basePath;
   const currentKey = script && script.dataset.current ? script.dataset.current : '';
   const mount = document.querySelector('[data-site-header]');
+  const productionApiOrigin = 'https://api.theneurofoundry.com';
   let cookieAuthState = null;
 
   if (!mount) return;
@@ -143,8 +144,12 @@
   };
 
   const getProfileInitial = (user) => {
-    const source = user.firstName || user.name || user.email || 'N';
-    return String(source).trim().charAt(0).toUpperCase() || 'N';
+    const first = String(user.firstName || '').trim();
+    const last = String(user.lastName || '').trim();
+    const emailName = String(user.email || '').split('@')[0].trim();
+    const initials = `${first[0] || ''}${last[0] || ''}`.trim();
+    if (initials) return initials.toUpperCase();
+    return (emailName.slice(0, 2) || 'N').toUpperCase();
   };
 
   const getProfileDisplayName = (user) => {
@@ -163,7 +168,10 @@
     if (/^https?:\/\//i.test(value)) return value;
     if (value.startsWith('/api/') && window.NeurofoundryAuth && window.NeurofoundryAuth.resolveDefaultApiUrl) {
       try {
-        return `${new URL(window.NeurofoundryAuth.resolveDefaultApiUrl()).origin}${value}`;
+        const apiOrigin = window.location.protocol === 'file:'
+          ? productionApiOrigin
+          : new URL(window.NeurofoundryAuth.resolveDefaultApiUrl()).origin;
+        return `${apiOrigin}${value}`;
       } catch (_) {
         return value;
       }
@@ -183,7 +191,8 @@
     const initial = escapeHtml(getProfileInitial(user));
     const displayName = escapeHtml(getProfileDisplayName(user));
     const avatarSrc = getAvatarSrc(user.avatar);
-    const avatarImg = avatarSrc ? `<img src="${escapeHtml(avatarSrc)}" alt="">` : '';
+    const avatarPath = String(user.avatar || '');
+    const avatarImg = avatarSrc ? `<img src="${escapeHtml(avatarSrc)}" alt="" data-avatar-path="${escapeHtml(avatarPath)}">` : '';
     return `
       <a class="nf-profile-link" href="${basePath}members/profile/" aria-label="${escapeHtml(getProfileLabel(user))}" title="Profile">
         <span class="nf-profile-avatar" aria-hidden="true">
@@ -231,8 +240,14 @@
     });
     mount.querySelectorAll('.nf-profile-avatar img').forEach((image) => {
       image.addEventListener('error', () => {
+        const avatarPath = image.dataset.avatarPath || '';
+        const fallbackSrc = avatarPath.startsWith('/api/') ? `${productionApiOrigin}${avatarPath}` : '';
+        if (fallbackSrc && image.src !== fallbackSrc) {
+          image.src = fallbackSrc;
+          return;
+        }
         image.remove();
-      }, { once: true });
+      });
     });
   };
 

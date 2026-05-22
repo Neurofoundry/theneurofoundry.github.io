@@ -100,6 +100,7 @@ app.get('/api/profile/avatar/public/:userId', async (req, res, next) => {
     const avatarResponse = await getProfileAvatar(avatarKey);
     res.set('Content-Type', avatarResponse.headers.get('content-type') || 'image/webp');
     res.set('Cache-Control', 'public, max-age=3600');
+    res.set('Cross-Origin-Resource-Policy', 'cross-origin');
     const arrayBuffer = await avatarResponse.arrayBuffer();
     return res.send(Buffer.from(arrayBuffer));
   } catch (error) {
