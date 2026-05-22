@@ -107,6 +107,31 @@
     return cookieAuthState;
   };
 
+  const saveAuthState = (authState, user) => {
+    const nextState = {
+      ...authState,
+      user: {
+        ...authState.user,
+        ...user
+      }
+    };
+
+    if (authState.token && window.localStorage) {
+      try {
+        window.localStorage.setItem('nf_auth', JSON.stringify({
+          ...nextState,
+          timestamp: Date.now()
+        }));
+      } catch (_) {
+        // Storage writes are best-effort; the current render can still use the hydrated profile.
+      }
+    } else {
+      cookieAuthState = nextState;
+    }
+
+    return nextState;
+  };
+
   const resolveApiBase = () => {
     const hostname = window.location.hostname || '';
     const protocol = window.location.protocol || '';
@@ -123,20 +148,23 @@
   };
 
   const hydrateAuthFromCookie = async () => {
-    if (getAuthState()) return;
+    const authState = getAuthState();
+    if (authState && authState.user && authState.user.avatar) return;
 
     try {
+      const headers = authState && authState.token
+        ? { Authorization: `Bearer ${authState.token}` }
+        : {};
       const response = await fetch(`${resolveApiBase()}/profile`, {
-        credentials: 'include'
+        credentials: 'include',
+        headers
       });
       if (!response.ok) return;
       const data = await response.json();
       const user = data && data.data && (data.data.profile || data.data.user);
       if (!user) return;
-      cookieAuthState = {
-        user,
-        token: ''
-      };
+      const hydratedState = saveAuthState(authState || { user: {}, token: '' }, user);
+      cookieAuthState = hydratedState.token ? cookieAuthState : hydratedState;
       updateAuthSlots();
     } catch (_) {
       // Logged-out visitors and blocked cookie checks should keep seeing Login.
