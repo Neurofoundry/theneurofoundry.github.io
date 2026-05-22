@@ -372,7 +372,15 @@
     }
 
     .avatar-row input[type="file"] {
-      display: none;
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      border: 0;
+      opacity: 0;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
     }
 
     .avatar-actions strong,
@@ -687,15 +695,15 @@
             <div class="avatar-row">
               <span class="field-label">Profile Picture</span>
               <div class="avatar-control">
-                <button class="avatar" id="avatarToggle" type="button" aria-label="Current profile picture">
+                <label class="avatar" id="avatarToggle" for="avatarInput" aria-label="Choose profile picture">
                   <span id="avatarInitial">U</span>
                   <img id="avatarImg" alt="" style="display: none;">
-                </button>
+                </label>
                 <div class="avatar-actions">
                   <strong>Upload avatar</strong>
                   <p>PNG, JPG, GIF, or WEBP. Max 5MB.</p>
                 </div>
-                <button class="btn secondary custom-avatar-choice" id="customAvatarButton" type="button">Choose File</button>
+                <label class="btn secondary custom-avatar-choice" id="customAvatarButton" for="avatarInput">Choose File</label>
                 <input type="file" id="avatarInput" accept="image/*">
               </div>
             </div>
@@ -1059,13 +1067,6 @@
         }
       });
     });
-
-    function openAvatarInput() {
-      document.getElementById('avatarInput').click();
-    }
-
-    document.getElementById('avatarToggle').addEventListener('click', openAvatarInput);
-    document.getElementById('customAvatarButton').addEventListener('click', openAvatarInput);
 
     document.getElementById('avatarInput').addEventListener('change', async (event) => {
       const file = event.target.files[0];
