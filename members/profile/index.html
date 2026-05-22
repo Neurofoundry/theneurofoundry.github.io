@@ -1060,9 +1060,12 @@
       });
     });
 
-    document.getElementById('customAvatarButton').addEventListener('click', () => {
+    function openAvatarInput() {
       document.getElementById('avatarInput').click();
-    });
+    }
+
+    document.getElementById('avatarToggle').addEventListener('click', openAvatarInput);
+    document.getElementById('customAvatarButton').addEventListener('click', openAvatarInput);
 
     document.getElementById('avatarInput').addEventListener('change', async (event) => {
       const file = event.target.files[0];
