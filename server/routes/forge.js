@@ -103,6 +103,7 @@ router.get('/renders/:encodedKey', async (req, res, next) => {
     const renderResponse = await getForgeRender(key);
     res.set('Content-Type', renderResponse.headers.get('content-type') || 'image/png');
     res.set('Cache-Control', 'private, max-age=3600');
+    res.set('Cross-Origin-Resource-Policy', 'cross-origin');
     const arrayBuffer = await renderResponse.arrayBuffer();
     res.send(Buffer.from(arrayBuffer));
   } catch (error) {
