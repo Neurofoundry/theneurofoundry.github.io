@@ -658,6 +658,10 @@
         margin-top: 4px;
       }
 
+      .recent-crafts.is-empty {
+        display: none;
+      }
+
       .recent-crafts-header {
         display: flex;
         align-items: baseline;
@@ -899,26 +903,18 @@
         </div>
       </div>
 
-      <section class="recent-crafts" aria-label="Recent crafts">
+      <section class="recent-crafts is-empty" id="recentCrafts" aria-label="Recent crafts">
         <div class="recent-crafts-header">
           <span class="recent-crafts-title">Recent Crafts</span>
           <a class="recent-crafts-link" href="/Forge/">View All &gt;</a>
         </div>
-        <div class="craft-strip">
-          <span class="craft-thumb"><img src="../../assets/indexgallery/2.png" alt=""></span>
-          <span class="craft-thumb"><img src="../../assets/indexgallery/3.png" alt=""></span>
-          <span class="craft-thumb"><img src="../../assets/indexgallery/4.png" alt=""></span>
-          <span class="craft-thumb"><img src="../../assets/indexgallery/5.png" alt=""></span>
-          <span class="craft-thumb"><img src="../../assets/indexgallery/6.png" alt=""></span>
-          <span class="craft-thumb"><img src="../../assets/indexgallery/7.png" alt=""></span>
-          <span class="craft-more" aria-hidden="true">...</span>
-        </div>
+        <div class="craft-strip" id="recentCraftsStrip"></div>
       </section>
 
       <div class="hero-panel" aria-label="Account summary">
         <div class="meta-cell">
           <span class="meta-label">Plan</span>
-          <span class="meta-value" id="heroPlanStatus">Loading...<span class="mobile-meta-extra mobile-plan-extra"><strong>upgrade</strong> · $9/mo</span></span>
+          <span class="meta-value" id="heroPlanStatus">Loading...<span class="mobile-meta-extra mobile-plan-extra"><strong>upgrade</strong> &middot; $9/mo</span></span>
         </div>
         <div class="meta-cell">
           <span class="meta-label">Member Since</span>
@@ -940,7 +936,7 @@
         <a class="tab active" href="#">Account</a>
         <a class="tab" href="#">Security</a>
         <a class="tab" href="#">Billing</a>
-        <span class="tab-dot" aria-hidden="true">·</span>
+        <span class="tab-dot" aria-hidden="true">&middot;</span>
         <a class="tab" href="#">Email</a>
       </nav>
 
@@ -1061,6 +1057,62 @@
       if (!value.startsWith('/api/')) return '';
       const fallbackSrc = `${productionApiOrigin}${value}`;
       return currentSrc === fallbackSrc ? '' : fallbackSrc;
+    }
+
+    function renderApiImageSrc(url) {
+      const value = String(url || '').trim();
+      if (!value) return '';
+      if (/^https?:\/\//i.test(value)) return value;
+      if (value.startsWith('/api/')) return `${apiOriginForAvatar()}${value}`;
+      return value;
+    }
+
+    function buildCraftThumb(render) {
+      const thumbSrc = renderApiImageSrc(render.thumbUrl);
+      if (!thumbSrc) return null;
+      const fullSrc = renderApiImageSrc(render.url) || thumbSrc;
+      const link = document.createElement('a');
+      link.className = 'craft-thumb';
+      link.href = fullSrc;
+      link.target = '_blank';
+      link.rel = 'noopener';
+      const image = document.createElement('img');
+      image.src = thumbSrc;
+      image.alt = '';
+      link.appendChild(image);
+      return link;
+    }
+
+    async function loadRecentCrafts() {
+      const section = document.getElementById('recentCrafts');
+      const strip = document.getElementById('recentCraftsStrip');
+      if (!section || !strip) return;
+
+      try {
+        const response = await window.nfAuth.apiRequest('/forge/renders');
+        const renders = Array.isArray(response?.data?.renders) ? response.data.renders : [];
+        const thumbs = renders.slice(0, 6).map(buildCraftThumb).filter(Boolean);
+        if (!thumbs.length) {
+          section.classList.add('is-empty');
+          strip.replaceChildren();
+          return;
+        }
+
+        const nodes = [...thumbs];
+        if (renders.length > 6) {
+          const more = document.createElement('span');
+          more.className = 'craft-more';
+          more.setAttribute('aria-hidden', 'true');
+          more.textContent = '...';
+          nodes.push(more);
+        }
+        strip.replaceChildren(...nodes);
+        section.classList.remove('is-empty');
+      } catch (error) {
+        console.warn('Recent crafts unavailable:', error.message || error);
+        section.classList.add('is-empty');
+        strip.replaceChildren();
+      }
     }
 
     function resizeAvatarFile(file) {
@@ -1363,6 +1415,7 @@
     }
 
     loadProfile();
+    loadRecentCrafts();
   </script>
 </body>
 </html>
