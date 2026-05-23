@@ -206,6 +206,14 @@
       font: 13px/1.5 var(--mono);
     }
 
+    .mobile-identity-status,
+    .recent-crafts,
+    .mobile-meta-extra,
+    .mobile-last-online-label,
+    .tab-dot {
+      display: none;
+    }
+
     .tag-list {
       display: flex;
       flex-wrap: wrap;
@@ -257,6 +265,7 @@
     }
 
     .meta-value {
+      display: block;
       color: var(--light-text);
       font-size: 14px;
       font-weight: 800;
@@ -577,40 +586,280 @@
     }
 
     @media (max-width: 640px) {
-      .identity { gap: 16px; }
-
-      .hex-avatar {
-        width: 64px;
-        height: 64px;
+      .nf-account-main.profile-settings-main {
+        padding-bottom: 34px;
       }
 
       .profile-hero {
-        padding-inline: 18px;
+        gap: 18px;
+        min-height: 0;
+        padding: 30px 20px 24px;
+        background: #080a0a;
+      }
+
+      .identity {
+        display: grid;
+        grid-template-columns: 54px minmax(0, 1fr);
+        gap: 14px;
+        align-items: start;
+      }
+
+      .hex-avatar {
+        width: 54px;
+        height: 54px;
+      }
+
+      .identity-copy {
+        padding-top: 0;
+      }
+
+      .role {
+        margin-bottom: 5px;
+        font-size: 11px;
+        letter-spacing: 0.2em;
+      }
+
+      .name-row {
+        display: block;
+      }
+
+      .profile-name {
+        font-size: clamp(24px, 7.4vw, 30px);
+        line-height: 1;
+      }
+
+      #heroStatusBadge,
+      .tag-list {
+        display: none;
+      }
+
+      .mobile-handle-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 9px;
+      }
+
+      .handle {
+        margin-top: 0;
+        font-size: 13px;
+      }
+
+      .mobile-identity-status {
+        display: inline-flex;
+        min-height: 25px;
+        padding: 0 10px;
+        font-size: 12px;
+      }
+
+      .recent-crafts {
+        display: block;
+        margin-top: 4px;
+      }
+
+      .recent-crafts-header {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 5px;
+      }
+
+      .recent-crafts-title {
+        color: #8d9397;
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+
+      .recent-crafts-link {
+        color: var(--primary-color);
+        font-size: 12px;
+        font-weight: 800;
+        text-decoration: none;
+        white-space: nowrap;
+      }
+
+      .craft-strip {
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr)) 42px;
+        gap: 6px;
+      }
+
+      .craft-thumb,
+      .craft-more {
+        height: 42px;
+        border: 1px solid rgba(224, 71, 60, 0.42);
+        border-radius: 4px;
+        background: #141717;
+        overflow: hidden;
+      }
+
+      .craft-thumb img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+      }
+
+      .craft-more {
+        display: grid;
+        place-items: center;
+        color: #020303;
+        background: #9b9b9b;
+        font-size: 24px;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+      }
+
+      .hero-panel {
+        display: grid;
+        grid-template-columns: 1fr;
+        border-radius: 6px;
+        overflow: hidden;
+        background: rgba(13, 15, 15, 0.86);
+      }
+
+      .meta-cell {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 16px;
+        min-height: 66px;
+        padding: 13px 18px;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .meta-cell:nth-last-child(-n+2) {
+        border-bottom: 1px solid var(--line);
+      }
+
+      .meta-cell.email-meta {
+        display: none;
+      }
+
+      .meta-label {
+        position: relative;
+        margin-bottom: 0;
+        padding-left: 16px;
+        font-size: 10px;
+        letter-spacing: 0.22em;
+      }
+
+      .meta-label::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 50%;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--primary-color);
+        transform: translateY(-50%);
+      }
+
+      .desktop-meta-label {
+        display: none;
+      }
+
+      .mobile-last-online-label {
+        display: inline;
+      }
+
+      .meta-value {
+        font-size: 15px;
+        text-align: right;
+      }
+
+      .mobile-meta-extra {
+        display: block;
+        margin-top: 3px;
+        color: #8d9397;
+        font: 11px/1.2 var(--mono);
+        letter-spacing: 0;
+      }
+
+      .mobile-plan-extra {
+        color: #9b9b9b;
+      }
+
+      .mobile-plan-extra strong {
+        color: var(--primary-color);
+        font: inherit;
       }
 
       .settings-wrap {
-        width: calc(100% - 28px);
+        width: 100%;
       }
 
       .tabs {
         display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
+        grid-template-columns: repeat(3, minmax(0, 1fr)) 16px minmax(0, 1fr);
+        padding: 0 10px;
+        background: #080a0a;
       }
 
       .tab {
         min-width: 0;
+        min-height: 50px;
         padding: 0 8px;
         font-size: 12px;
       }
 
+      .tab-dot {
+        display: grid;
+        place-items: center;
+        min-height: 50px;
+        color: var(--primary-color);
+        font-size: 12px;
+        font-weight: 900;
+      }
+
+      .content-grid {
+        gap: 0;
+        padding: 8px 10px 0;
+      }
+
+      .panel {
+        border-radius: 6px;
+      }
+
+      .panel-header {
+        display: block;
+        padding: 18px 20px;
+      }
+
+      .panel-title {
+        margin-bottom: 0;
+        font-size: 18px;
+      }
+
+      .panel-subtitle,
+      #verificationBadge {
+        display: none;
+      }
+
       .form-grid {
         grid-template-columns: 1fr;
-        padding: 18px;
+        gap: 17px;
+        padding: 17px 18px 20px;
+      }
+
+      input[type="text"],
+      input[type="email"] {
+        min-height: 42px;
+        border-radius: 5px;
       }
 
       .profile-actions {
         align-items: stretch;
         flex-direction: column;
+      }
+
+      .side-stack {
+        display: none;
       }
     }
   </style>
@@ -637,7 +886,10 @@
             <h1 class="profile-name" id="profileDisplayName">Loading...</h1>
             <span id="heroStatusBadge" class="status-badge">Online</span>
           </div>
-          <span class="handle" id="profileHandle">@member</span>
+          <div class="mobile-handle-row">
+            <span class="handle" id="profileHandle">@member</span>
+            <span id="heroMobileVerificationBadge" class="verification-badge mobile-identity-status">Checking</span>
+          </div>
           <div class="tag-list" aria-label="Profile tags">
             <span class="tag">Skeleton Key</span>
             <span class="tag">Automation</span>
@@ -647,20 +899,36 @@
         </div>
       </div>
 
+      <section class="recent-crafts" aria-label="Recent crafts">
+        <div class="recent-crafts-header">
+          <span class="recent-crafts-title">Recent Crafts</span>
+          <a class="recent-crafts-link" href="/Forge/">View All &gt;</a>
+        </div>
+        <div class="craft-strip">
+          <span class="craft-thumb"><img src="../../assets/indexgallery/2.png" alt=""></span>
+          <span class="craft-thumb"><img src="../../assets/indexgallery/3.png" alt=""></span>
+          <span class="craft-thumb"><img src="../../assets/indexgallery/4.png" alt=""></span>
+          <span class="craft-thumb"><img src="../../assets/indexgallery/5.png" alt=""></span>
+          <span class="craft-thumb"><img src="../../assets/indexgallery/6.png" alt=""></span>
+          <span class="craft-thumb"><img src="../../assets/indexgallery/7.png" alt=""></span>
+          <span class="craft-more" aria-hidden="true">...</span>
+        </div>
+      </section>
+
       <div class="hero-panel" aria-label="Account summary">
         <div class="meta-cell">
           <span class="meta-label">Plan</span>
-          <span class="meta-value" id="heroPlanStatus">Loading...</span>
+          <span class="meta-value" id="heroPlanStatus">Loading...<span class="mobile-meta-extra mobile-plan-extra"><strong>upgrade</strong> · $9/mo</span></span>
         </div>
         <div class="meta-cell">
           <span class="meta-label">Member Since</span>
-          <span class="meta-value" id="heroMemberSince">Loading...</span>
+          <span class="meta-value" id="heroMemberSince">Loading...<span class="mobile-meta-extra" id="heroMemberSinceRelative"></span></span>
         </div>
         <div class="meta-cell">
-          <span class="meta-label">Last Login</span>
+          <span class="meta-label"><span class="desktop-meta-label">Last Login</span><span class="mobile-last-online-label">Last Online</span></span>
           <span class="meta-value" id="heroLastLogin">Loading...</span>
         </div>
-        <div class="meta-cell">
+        <div class="meta-cell email-meta">
           <span class="meta-label">Email</span>
           <span class="meta-value" id="heroEmailStatus">Checking</span>
         </div>
@@ -672,6 +940,7 @@
         <a class="tab active" href="#">Account</a>
         <a class="tab" href="#">Security</a>
         <a class="tab" href="#">Billing</a>
+        <span class="tab-dot" aria-hidden="true">·</span>
         <a class="tab" href="#">Email</a>
       </nav>
 
@@ -845,6 +1114,23 @@
       return `${month} ${day}${suffix}, ${date.getFullYear()}`;
     }
 
+    function formatRelativeDays(value) {
+      const date = value ? new Date(value) : null;
+      if (!date || Number.isNaN(date.valueOf())) return '';
+      const diffDays = Math.max(0, Math.floor((Date.now() - date.getTime()) / 86400000));
+      return `${diffDays} ${diffDays === 1 ? 'day' : 'days'} ago`;
+    }
+
+    function setLeadingText(elementId, text) {
+      const element = document.getElementById(elementId);
+      if (!element) return;
+      if (element.firstChild && element.firstChild.nodeType === Node.TEXT_NODE) {
+        element.firstChild.nodeValue = text;
+        return;
+      }
+      element.insertBefore(document.createTextNode(text), element.firstChild);
+    }
+
     function formatLocation(value) {
       const location = String(value || '').trim();
       if (!location) return 'Unavailable';
@@ -880,14 +1166,17 @@
 
       document.getElementById('profileDisplayName').textContent = displayName;
       document.getElementById('profileHandle').textContent = formatHandle(user);
-      document.getElementById('heroPlanStatus').textContent = plan;
-      document.getElementById('heroMemberSince').textContent = memberSince;
+      setLeadingText('heroPlanStatus', plan);
+      setLeadingText('heroMemberSince', memberSince);
       document.getElementById('heroLastLogin').textContent = lastLogin;
       document.getElementById('heroEmailStatus').textContent = emailStatus;
       document.getElementById('heroStatusBadge').textContent = 'Online';
       document.getElementById('heroStatusBadge').className = 'status-badge';
       document.getElementById('verificationBadge').textContent = emailStatus;
       document.getElementById('verificationBadge').className = verificationClass;
+      document.getElementById('heroMobileVerificationBadge').textContent = user.emailVerified ? 'Verified' : 'Unverified';
+      document.getElementById('heroMobileVerificationBadge').className = `${verificationClass} mobile-identity-status`;
+      document.getElementById('heroMemberSinceRelative').textContent = formatRelativeDays(user.createdAt);
       document.getElementById('memberSince').textContent = memberSince;
       document.getElementById('planStatus').textContent = plan;
       document.getElementById('lastLogin').textContent = lastLogin;
