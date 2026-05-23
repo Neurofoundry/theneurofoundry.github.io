@@ -75,6 +75,15 @@
       cursor: pointer;
     }
 
+    .hex-avatar::before {
+      content: "";
+      position: absolute;
+      inset: 3px;
+      background: #141717;
+      clip-path: polygon(50% 2%, 91% 25%, 91% 75%, 50% 98%, 9% 75%, 9% 25%);
+      z-index: 0;
+    }
+
     .hex-avatar svg {
       position: absolute;
       inset: 0;
@@ -109,6 +118,10 @@
     .hex-avatar:focus-visible {
       outline: 2px solid var(--primary-soft);
       outline-offset: 5px;
+    }
+
+    .hex-avatar polygon {
+      fill: transparent;
     }
 
     .avatar-input {
