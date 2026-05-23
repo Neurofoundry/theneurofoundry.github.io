@@ -70,12 +70,29 @@
       width: 78px;
       height: 78px;
       flex: 0 0 auto;
+      display: block;
+      color: var(--primary-color);
+      cursor: pointer;
     }
 
     .hex-avatar svg {
+      position: absolute;
+      inset: 0;
       display: block;
       width: 100%;
       height: 100%;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .hex-avatar img {
+      position: absolute;
+      inset: 3px;
+      width: calc(100% - 6px);
+      height: calc(100% - 6px);
+      object-fit: cover;
+      clip-path: polygon(50% 2%, 91% 25%, 91% 75%, 50% 98%, 9% 75%, 9% 25%);
+      z-index: 1;
     }
 
     .hex-avatar-initials {
@@ -86,6 +103,24 @@
       color: var(--primary-color);
       font: 600 17px/1 var(--mono);
       letter-spacing: 0.08em;
+      z-index: 1;
+    }
+
+    .hex-avatar:focus-visible {
+      outline: 2px solid var(--primary-soft);
+      outline-offset: 5px;
+    }
+
+    .avatar-input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      border: 0;
+      opacity: 0;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
     }
 
     .identity-copy {
@@ -299,7 +334,6 @@
     }
 
     .form-group.full,
-    .avatar-row,
     .setting-row,
     .profile-actions {
       grid-column: 1 / -1;
@@ -339,58 +373,12 @@
       background: #0d0f0f;
     }
 
-    .avatar-control {
-      display: grid;
-      grid-template-columns: auto minmax(0, 1fr) auto;
-      gap: 16px;
-      align-items: center;
-      padding: 16px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--surface-strong);
-    }
-
-    .avatar {
-      width: 58px;
-      height: 58px;
-      display: grid;
-      place-items: center;
-      position: relative;
-      overflow: hidden;
-      border: 2px solid var(--primary-color);
-      border-radius: 50%;
-      color: var(--primary-color);
-      background: #050606;
-      font-weight: 800;
-      cursor: pointer;
-    }
-
-    .avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .avatar-row input[type="file"] {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      margin: -1px;
-      padding: 0;
-      border: 0;
-      opacity: 0;
-      overflow: hidden;
-      clip: rect(0 0 0 0);
-    }
-
-    .avatar-actions strong,
     .setting-row strong {
       display: block;
       color: var(--light-text);
       font-size: 14px;
     }
 
-    .avatar-actions p,
     .setting-row > div > span {
       margin: 2px 0 0;
       color: var(--muted-text);
@@ -607,15 +595,6 @@
         padding: 18px;
       }
 
-      .avatar-control {
-        grid-template-columns: auto minmax(0, 1fr);
-        gap: 14px;
-      }
-
-      .avatar-control .btn {
-        grid-column: 1 / -1;
-      }
-
       .profile-actions {
         align-items: stretch;
         flex-direction: column;
@@ -631,17 +610,19 @@
   <main class="nf-account-main profile-settings-main">
     <section class="profile-hero" aria-label="Profile identity">
       <div class="identity">
-        <div class="hex-avatar" aria-hidden="true">
+        <label class="hex-avatar" id="avatarToggle" for="avatarInput" aria-label="Choose profile picture">
           <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
             <polygon points="40,4 72,22 72,58 40,76 8,58 8,22" fill="#141717" stroke="#e0473c" stroke-width="2"></polygon>
           </svg>
-          <span class="hex-avatar-initials" id="heroInitials">NF</span>
-        </div>
+          <img id="avatarImg" alt="" style="display: none;">
+          <span class="hex-avatar-initials" id="avatarInitial">NF</span>
+        </label>
+        <input class="avatar-input" type="file" id="avatarInput" accept="image/*">
         <div class="identity-copy">
           <span class="role">Member Profile</span>
           <div class="name-row">
             <h1 class="profile-name" id="profileDisplayName">Loading...</h1>
-            <span id="heroVerificationBadge" class="status-badge">Checking</span>
+            <span id="heroStatusBadge" class="status-badge">Online</span>
           </div>
           <span class="handle" id="profileHandle">@member</span>
           <div class="tag-list" aria-label="Profile tags">
@@ -688,26 +669,10 @@
               <h2 class="panel-title" id="account-title">Account Details</h2>
               <p class="panel-subtitle">Manage your profile and account preferences.</p>
             </div>
-            <span class="status-badge">Synced</span>
+            <span id="verificationBadge" class="verification-badge">Checking</span>
           </div>
 
           <form id="profileForm" class="form-grid">
-            <div class="avatar-row">
-              <span class="field-label">Profile Picture</span>
-              <div class="avatar-control">
-                <label class="avatar" id="avatarToggle" for="avatarInput" aria-label="Choose profile picture">
-                  <span id="avatarInitial">U</span>
-                  <img id="avatarImg" alt="" style="display: none;">
-                </label>
-                <div class="avatar-actions">
-                  <strong>Upload avatar</strong>
-                  <p>PNG, JPG, GIF, or WEBP. Max 5MB.</p>
-                </div>
-                <label class="btn secondary custom-avatar-choice" id="customAvatarButton" for="avatarInput">Choose File</label>
-                <input type="file" id="avatarInput" accept="image/*">
-              </div>
-            </div>
-
             <div class="form-group">
               <label class="field-label" for="firstName">First Name</label>
               <input type="text" id="firstName" name="firstName" autocomplete="given-name">
@@ -737,14 +702,6 @@
                 <input type="checkbox" id="marketingOptOut" name="marketingOptOut">
                 <span class="switch-mark"></span>
               </label>
-            </div>
-
-            <div class="setting-row">
-              <div>
-                <strong>Account Status</strong>
-                <span>Verification and account access state.</span>
-              </div>
-              <span id="verificationBadge"></span>
             </div>
 
             <div class="profile-actions">
@@ -905,18 +862,19 @@
       const memberSince = formatMemberSince(user.createdAt);
       const lastLogin = formatMemberSince(user.lastLoginAt);
       const plan = formatPlan(user);
-      const emailStatus = user.emailVerified ? 'Verified' : 'Unverified';
-      const verificationClass = user.emailVerified ? 'status-badge' : 'status-badge verification-badge unverified-badge';
+      const emailStatus = user.emailVerified ? 'Email Verified' : 'Email Not Verified';
+      const verificationClass = user.emailVerified ? 'verification-badge' : 'verification-badge unverified-badge';
 
       document.getElementById('profileDisplayName').textContent = displayName;
       document.getElementById('profileHandle').textContent = formatHandle(user);
-      document.getElementById('heroInitials').textContent = formatInitials(user);
       document.getElementById('heroPlanStatus').textContent = plan;
       document.getElementById('heroMemberSince').textContent = memberSince;
       document.getElementById('heroLastLogin').textContent = lastLogin;
       document.getElementById('heroEmailStatus').textContent = emailStatus;
-      document.getElementById('heroVerificationBadge').textContent = emailStatus;
-      document.getElementById('heroVerificationBadge').className = verificationClass;
+      document.getElementById('heroStatusBadge').textContent = 'Online';
+      document.getElementById('heroStatusBadge').className = 'status-badge';
+      document.getElementById('verificationBadge').textContent = emailStatus;
+      document.getElementById('verificationBadge').className = verificationClass;
       document.getElementById('memberSince').textContent = memberSince;
       document.getElementById('planStatus').textContent = plan;
       document.getElementById('lastLogin').textContent = lastLogin;
@@ -979,10 +937,6 @@
         }
 
         syncProfileSummary(user, preferences);
-
-        document.getElementById('verificationBadge').innerHTML = user.emailVerified
-          ? '<span class="verification-badge">Email Verified</span>'
-          : '<span class="verification-badge unverified-badge">Email Not Verified</span>';
 
         document.getElementById('firstName').value = user.firstName || '';
         document.getElementById('lastName').value = user.lastName || '';
