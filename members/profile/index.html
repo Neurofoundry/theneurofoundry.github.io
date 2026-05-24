@@ -207,7 +207,6 @@
     }
 
     .mobile-identity-status,
-    .recent-crafts,
     .mobile-meta-extra,
     .mobile-last-online-label,
     .tab-dot {
@@ -234,7 +233,81 @@
       font-weight: 700;
     }
 
+    .identity {
+      order: 1;
+    }
+
+    .recent-crafts {
+      order: 3;
+      grid-column: 1 / -1;
+      display: block;
+      min-width: 0;
+    }
+
+    .recent-crafts.is-empty {
+      display: none;
+    }
+
+    .recent-crafts-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 8px;
+    }
+
+    .recent-crafts-title {
+      color: #8d9397;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .recent-crafts-link {
+      color: var(--primary-color);
+      font-size: 12px;
+      font-weight: 800;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .craft-strip {
+      display: flex;
+      gap: 8px;
+      overflow: hidden;
+    }
+
+    .craft-thumb,
+    .craft-more {
+      width: 76px;
+      height: 54px;
+      flex: 0 0 auto;
+      border: 1px solid rgba(224, 71, 60, 0.42);
+      border-radius: 4px;
+      background: #141717;
+      overflow: hidden;
+    }
+
+    .craft-thumb img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+
+    .craft-more {
+      display: grid;
+      place-items: center;
+      width: 54px;
+      color: #020303;
+      background: #9b9b9b;
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+    }
+
     .hero-panel {
+      order: 2;
       width: min(330px, 32vw);
       min-width: 260px;
       display: grid;
@@ -654,6 +727,7 @@
       }
 
       .recent-crafts {
+        order: 2;
         display: block;
         margin-top: 4px;
       }
@@ -718,6 +792,7 @@
       }
 
       .hero-panel {
+        order: 3;
         display: grid;
         grid-template-columns: 1fr;
         border-radius: 6px;
