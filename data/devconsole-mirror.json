@@ -1,0 +1,20 @@
+{
+  "updatedAt": "2026-05-25T00:00:00Z",
+  "whatsNew": [
+    {
+      "id": "site-update-001",
+      "title": "Latest Neurofoundry update",
+      "body": "Short update text here.",
+      "href": "/updates/",
+      "date": "2026-05-25"
+    }
+  ],
+  "skeletonKey": {
+    "status": "active",
+    "version": "1.0.0",
+    "title": "Skeleton Key",
+    "eyebrow": "Access Layer",
+    "body": "Private runtime and licensing layer.",
+    "href": "/skeleton-key/"
+  }
+}
