@@ -1,275 +1,1766 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>About | Neurofoundry</title>
-  <meta name="description" content="Learn about Neurofoundry, an independent software and AI systems studio building practical automation, secure tools, and launch-ready digital experiences.">
-  <meta name="keywords" content="about Neurofoundry, AI studio, automation studio, software tools, secure local software, independent software development">
+  <meta name="description" content="Learn about Neurofoundry and get in touch for residential technology help, commercial systems, and custom development.">
+  <meta name="keywords" content="about Neurofoundry, Tampa tech support, residential technology help, commercial systems, custom development">
   <meta name="author" content="Neurofoundry">
   <meta name="robots" content="index, follow">
-  <meta name="theme-color" content="#0f1113">
   <link rel="canonical" href="https://www.theneurofoundry.com/about/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Neurofoundry">
   <meta property="og:url" content="https://www.theneurofoundry.com/about/">
   <meta property="og:title" content="About | Neurofoundry">
-  <meta property="og:description" content="Independent software, AI systems, automation workflows, and secure local tools.">
+  <meta property="og:description" content="Residential technology help, commercial systems, and custom development from Neurofoundry.">
   <meta property="og:image" content="https://www.theneurofoundry.com/banner.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="About | Neurofoundry">
-  <meta name="twitter:description" content="Learn about Neurofoundry's practical software, automation, and secure tooling work.">
+  <meta name="twitter:description" content="Learn about Neurofoundry and get in touch for practical technology help and custom development.">
   <meta name="twitter:image" content="https://www.theneurofoundry.com/banner.png">
+  <meta name="theme-color" content="#0f1113">
   <link rel="icon" type="image/png" href="../anvil.png">
   <link rel="apple-touch-icon" href="../anvil.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Michroma&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../common/site-header.css?v=20260519b">
   <link rel="stylesheet" href="../common/site-footer.css">
   <style>
     :root {
-      --primary-color: #e0473c;
-      --primary-soft: #ff9b93;
-      --gold: #d8a85e;
-      --dark-bg: #0f1113;
-      --surface: #12161a;
-      --surface-deep: #0b0d10;
-      --surface-card: #0f1113;
-      --line: #2c333a;
-      --light-text: #e6e9ee;
-      --muted-text: #9aa3ad;
-      --quiet-text: #6f7782;
-      --page-max: 1120px;
+      --bg-0: #080909;
+      --bg-1: #0e0f0f;
+      --bg-2: #101111;
+      --bg-3: #161919;
+      --fg-0: #ffffff;
+      --fg-1: #e6e7e7;
+      --fg-2: #bcbbbc;
+      --fg-3: #8a8a8b;
+      --fg-4: #5a5c5c;
+      --line-1: #1f2222;
+      --line-2: #2a2e2e;
+      --accent: #e0473c;
+      --accent-hi: #ff9b93;
+      --accent-tint: rgba(224, 71, 60, 0.12);
+      --accent-border: rgba(224, 71, 60, 0.34);
+      --ok: #6fb178;
+      --warn: #e2a23a;
+      --font-display: "Michroma", "Eurostile", "Bahnschrift", system-ui, sans-serif;
+      --font-sans: "Inter", ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      --page-max: 1264px;
     }
 
     *,
     *::before,
     *::after {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     html {
       scrollbar-gutter: stable;
     }
 
+    html,
     body {
-      margin: 0;
-      min-height: 100vh;
-      overflow-x: hidden;
-      padding-top: 58px;
-      background:
-        radial-gradient(ellipse at 8% 18%, rgba(224, 71, 60, 0.12), transparent 32%),
-        radial-gradient(ellipse at 88% 72%, rgba(216, 168, 94, 0.08), transparent 30%),
-        linear-gradient(180deg, #101316 0%, #0f1113 44%, #090b0d 100%);
-      color: var(--light-text);
-      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      min-height: 100%;
+      background: var(--bg-2);
+      color: var(--fg-1);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      line-height: 20px;
+      -webkit-font-smoothing: antialiased;
     }
 
-    main {
-      position: relative;
-      z-index: 1;
+    body {
+      overflow-x: hidden;
+      padding-top: 58px;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+      background-size: 54px 54px;
+      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), transparent 72%);
+      z-index: 0;
     }
 
     a {
       color: inherit;
     }
 
-    .about-shell {
-      width: min(var(--page-max), 100%);
-      margin: 0 auto;
-      padding: clamp(46px, 7vw, 82px) clamp(14px, 3vw, 24px) clamp(64px, 8vw, 104px);
-      display: grid;
-      gap: clamp(24px, 4vw, 42px);
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    main {
+      position: relative;
+      z-index: 2;
     }
 
     .about-hero {
-      display: grid;
-      grid-template-columns: minmax(0, 0.95fr) minmax(300px, 0.72fr);
-      gap: clamp(24px, 5vw, 68px);
-      align-items: end;
+      position: relative;
+      overflow: hidden;
+      background: var(--bg-1);
+      padding: clamp(24px, 4vw, 40px) clamp(14px, 3vw, 32px) clamp(32px, 5vw, 52px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
     }
 
-    .eyebrow {
-      margin: 0 0 12px;
-      color: var(--primary-soft);
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 1.8px;
+    .about-hero-inner {
+      width: min(var(--page-max), 100%);
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-copy-block {
+      display: grid;
+      grid-template-columns: minmax(0, 0.86fr) minmax(340px, 0.62fr);
+      gap: clamp(20px, 4vw, 46px);
+      align-items: center;
+    }
+
+    .hero-copy-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .eyebrow,
+    .nf-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
     }
 
-    h1 {
-      margin: 0;
-      max-width: 720px;
-      color: #fff;
-      font-size: clamp(42px, 7vw, 78px);
-      font-weight: 900;
-      line-height: 0.95;
+    .eyebrow {
+      color: var(--accent-hi);
+    }
+
+    .nf-label {
+      color: var(--fg-3);
+    }
+
+    .eyebrow::before,
+    .nf-label::before,
+    .field label::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      flex: 0 0 auto;
+      background: var(--accent);
+      clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+    }
+
+    .hero-title {
+      max-width: 650px;
+      margin-top: 14px;
+      color: var(--fg-0);
+      font-size: clamp(30px, 5vw, 52px);
+      font-weight: 800;
+      letter-spacing: 0;
+      line-height: 1.02;
     }
 
     .hero-copy {
-      max-width: 680px;
-      margin: 22px 0 0;
-      color: var(--muted-text);
-      font-size: clamp(15px, 2vw, 18px);
-      line-height: 1.68;
+      max-width: 580px;
+      margin-top: 16px;
+      color: var(--fg-3);
+      font-size: 15px;
+      line-height: 24px;
     }
 
-    .contact-card,
-    .work-card,
-    .note-card {
-      background: rgba(18, 22, 26, 0.88);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      box-shadow: 9px 11px 12px rgba(0, 0, 0, 0.62);
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
     }
 
-    .contact-card {
-      padding: clamp(22px, 4vw, 32px);
-    }
-
-    .contact-card h2,
-    .work-card h2,
-    .note-card h2 {
-      margin: 0;
-      color: #fff;
-      font-size: 20px;
-      line-height: 1.2;
-    }
-
-    .contact-card p,
-    .work-card p,
-    .note-card p {
-      margin: 12px 0 0;
-      color: var(--muted-text);
-      font-size: 14px;
-      line-height: 1.65;
-    }
-
-    .contact-link {
+    .btn-primary,
+    .btn-secondary {
+      min-height: 42px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 44px;
-      margin-top: 20px;
-      padding: 0 16px;
-      border: 1px solid #a2362f;
-      border-radius: 8px;
-      background: linear-gradient(180deg, #ff7b6e 0%, var(--primary-color) 52%, #d23d33 100%);
-      color: #fff;
+      gap: 8px;
+      padding: 10px 20px;
+      border: 1px solid;
+      border-radius: 7px;
       font-size: 13px;
-      font-weight: 800;
+      font-weight: 700;
       text-decoration: none;
-      box-shadow: 0 4px 12px rgba(224, 71, 60, 0.18);
+      transition: background 120ms, border-color 120ms, color 120ms, transform 120ms, box-shadow 120ms;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+      box-shadow: 4px 5px 7px rgba(0, 0, 0, 0.38);
+    }
+
+    .btn-primary::after {
+      content: ">";
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hi);
+      border-color: var(--accent-hi);
+      transform: translateY(-1px);
+      box-shadow: 5px 6px 8px rgba(0, 0, 0, 0.44);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border-color: var(--line-2);
+      color: var(--fg-1);
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-3);
+      border-color: var(--accent);
+      color: var(--fg-0);
+    }
+
+    .hero-network {
+      position: relative;
+      width: min(520px, 100%);
+      aspect-ratio: 1 / 0.86;
+      margin-left: auto;
+      isolation: isolate;
+    }
+
+    .hero-network::before {
+      content: "";
+      position: absolute;
+      inset: 3% 4%;
+      z-index: 0;
+      background:
+        radial-gradient(circle at 28% 24%, rgba(224, 71, 60, 0.12), transparent 18%),
+        radial-gradient(circle at 70% 20%, rgba(255, 155, 147, 0.1), transparent 20%),
+        radial-gradient(circle at 48% 55%, rgba(224, 71, 60, 0.14), transparent 24%),
+        radial-gradient(circle at 25% 78%, rgba(224, 71, 60, 0.1), transparent 18%);
+      filter: blur(8px);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .node-lines {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .node-lines {
+      display: block;
+    }
+
+    .node-lines path {
+      fill: none;
+      stroke: rgba(224, 71, 60, 0.34);
+      stroke-width: 0.72;
+      stroke-linecap: round;
+      opacity: 0.64;
+      filter:
+        drop-shadow(0 0 2px rgba(255, 155, 147, 0.16))
+        drop-shadow(0 0 6px rgba(224, 71, 60, 0.16));
+      transition: opacity 180ms, stroke 180ms, stroke-width 180ms, filter 180ms;
+    }
+
+    .node-lines path.latent {
+      opacity: 0.18;
+      stroke: rgba(255, 155, 147, 0.32);
+      stroke-width: 0.44;
+    }
+
+    .hero-network:hover .node-lines path {
+      stroke: rgba(255, 155, 147, 0.58);
+      stroke-width: 0.94;
+      opacity: 0.82;
+      filter:
+        drop-shadow(0 0 3px rgba(255, 155, 147, 0.22))
+        drop-shadow(0 0 8px rgba(224, 71, 60, 0.28));
+    }
+
+    .hero-network:hover .node-lines path.latent {
+      opacity: 0.32;
+    }
+
+    .node-spark {
+      fill: #ffe4df;
+      filter: drop-shadow(0 0 3px rgba(255, 155, 147, 0.95));
+    }
+
+    .neuro-node {
+      position: absolute;
+      z-index: 2;
+      width: calc(22.5% * var(--node-scale, 1));
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      border: 0;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 52% 48%, rgba(255, 155, 147, 0.36), rgba(224, 71, 60, 0.2) 22%, rgba(224, 71, 60, 0.08) 48%, rgba(8, 9, 9, 0.98) 76%),
+        conic-gradient(from 28deg, rgba(224, 71, 60, 0.08), rgba(255, 155, 147, 0.38), rgba(224, 71, 60, 0.08), rgba(224, 71, 60, 0.34), rgba(224, 71, 60, 0.08)),
+        var(--bg-2);
+      box-shadow:
+        0 0 22px rgba(224, 71, 60, 0.46),
+        0 0 54px rgba(224, 71, 60, 0.16),
+        0 12px 20px rgba(0, 0, 0, 0.44),
+        inset 0 0 20px rgba(255, 155, 147, 0.32),
+        inset 0 -18px 26px rgba(0, 0, 0, 0.46);
+      color: transparent;
+      transition: transform 160ms, border-color 160ms, box-shadow 160ms;
+      animation:
+        node-idle-pulse var(--pulse-duration, 4.8s) ease-in-out infinite,
+        node-drift var(--drift-duration, 9s) ease-in-out infinite;
+      animation-delay: var(--pulse-delay, 0s), var(--drift-delay, 0s);
+    }
+
+    .neuro-node::before {
+      content: "";
+      position: absolute;
+      inset: -4%;
+      border: 0;
+      border-radius: inherit;
+      background:
+        var(--node-image),
+        linear-gradient(38deg, transparent 0 38%, rgba(255, 155, 147, 0.42) 39% 41%, transparent 42%),
+        linear-gradient(116deg, transparent 0 43%, rgba(224, 71, 60, 0.36) 44% 46%, transparent 47%);
+      background-size: cover, 58% 58%, 58% 58%;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: 0.68;
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+
+    .neuro-node::after {
+      content: "";
+      position: absolute;
+      inset: -8px;
+      border: 1px solid rgba(255, 155, 147, 0.18);
+      border-radius: 50%;
+      opacity: 0;
+      transform: scale(0.88);
+      pointer-events: none;
+    }
+
+    .neuro-node:hover {
+      z-index: 4;
+      box-shadow:
+        0 0 34px rgba(224, 71, 60, 0.58),
+        0 0 70px rgba(224, 71, 60, 0.16),
+        inset 0 0 26px rgba(255, 155, 147, 0.34),
+        inset 0 -18px 26px rgba(0, 0, 0, 0.36);
+    }
+
+    .neuro-node:hover::after {
+      opacity: 1;
+      animation: node-ring 1.1s ease-out infinite;
+    }
+
+    .node-repair {
+      top: 0;
+      left: 9.5%;
+      --node-image: url("../assets/ui/neuronode_1.png");
+      --drift-x: 5px;
+      --drift-y: -3px;
+      --node-rotation: 7deg;
+      --drift-duration: 9.4s;
+      --pulse-delay: -0.4s;
+    }
+
+    .node-web {
+      top: 0;
+      left: 60.5%;
+      --node-image: url("../assets/ui/neuronode_2.png");
+      --node-scale: 0.9;
+      --drift-x: -5px;
+      --drift-y: 4px;
+      --node-rotation: -9deg;
+      --drift-duration: 10.8s;
+      --pulse-delay: -1.7s;
+      --drift-delay: -1.3s;
+    }
+
+    .node-tools {
+      top: 30%;
+      left: 35%;
+      --node-image: url("../assets/ui/neuronode_1.png");
+      --drift-x: 4px;
+      --drift-y: 5px;
+      --node-rotation: 12deg;
+      --drift-duration: 8.7s;
+      --pulse-delay: -0.8s;
+      --drift-delay: -2.1s;
+    }
+
+    .node-local {
+      top: 60%;
+      left: 9.5%;
+      --node-image: url("../assets/ui/neuronode_2.png");
+      --node-scale: 0.9;
+      --drift-x: -4px;
+      --drift-y: -5px;
+      --node-rotation: -11deg;
+      --drift-duration: 11.6s;
+      --pulse-delay: -2.6s;
+      --drift-delay: -4.4s;
+    }
+
+    .node-remote {
+      top: 60%;
+      left: 60.5%;
+      --node-image: url("../assets/ui/neuronode_1.png");
+      --node-scale: 0.8;
+      --drift-x: 5px;
+      --drift-y: 3px;
+      --node-rotation: 8deg;
+      --drift-duration: 12.2s;
+      --pulse-delay: -3.5s;
+      --drift-delay: -5.2s;
+    }
+
+    .node-setup {
+      top: 30%;
+      left: -16%;
+      opacity: 0.68;
+      --node-image: url("../assets/ui/neuronode_2.png");
+      --drift-x: -5px;
+      --drift-y: 2px;
+      --node-rotation: -7deg;
+      --drift-duration: 9.9s;
+      --pulse-delay: -4.2s;
+      --drift-delay: -3.1s;
+    }
+
+    .neuro-node.active,
+    .neuro-node.influenced {
+      border-color: rgba(255, 155, 147, 0.9);
+      box-shadow:
+        0 0 34px rgba(224, 71, 60, 0.62),
+        0 0 76px rgba(224, 71, 60, 0.24),
+        inset 0 0 28px rgba(255, 155, 147, 0.36),
+        inset 0 -18px 26px rgba(0, 0, 0, 0.38);
+    }
+
+    @keyframes node-ring {
+      0% {
+        opacity: 0.72;
+        transform: scale(0.9);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(1.2);
+      }
+    }
+
+    @keyframes node-pulse {
+      0%,
+      100% {
+        filter: brightness(1);
+      }
+      50% {
+        filter: brightness(1.22);
+      }
+    }
+
+    @keyframes node-drift {
+      0%,
+      100% {
+        transform: translate3d(0, 0, 0) rotate(0deg) scale(0.96);
+      }
+      31% {
+        transform: translate3d(var(--drift-x), var(--drift-y), 0) rotate(var(--node-rotation)) scale(1.08);
+      }
+      67% {
+        transform: translate3d(calc(var(--drift-x) * -0.72), calc(var(--drift-y) * -0.58), 0) rotate(calc(var(--node-rotation) * -0.65)) scale(1);
+      }
+    }
+
+    @keyframes node-idle-pulse {
+      0%,
+      100% {
+        box-shadow:
+          0 0 16px rgba(224, 71, 60, 0.24),
+          0 12px 20px rgba(0, 0, 0, 0.44),
+          inset 0 0 14px rgba(255, 155, 147, 0.18),
+          inset 0 -18px 26px rgba(0, 0, 0, 0.46);
+      }
+      48% {
+        box-shadow:
+          0 0 24px rgba(224, 71, 60, 0.34),
+          0 12px 20px rgba(0, 0, 0, 0.44),
+          inset 0 0 18px rgba(255, 155, 147, 0.25),
+          inset 0 -18px 26px rgba(0, 0, 0, 0.44);
+      }
+    }
+
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      display: inline-block;
+      margin-right: 6px;
+      border-radius: 50%;
+      background: var(--ok);
+      box-shadow: 0 0 0 2px rgba(111, 177, 120, 0.18);
+    }
+
+    .about-section,
+    .contact-section,
+    .faq-section {
+      width: min(var(--page-max), 100%);
+      margin: 0 auto;
+      padding-inline: clamp(14px, 3vw, 32px);
+    }
+
+    .about-section {
+      padding-top: 24px;
+      padding-bottom: 10px;
     }
 
     .about-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      gap: clamp(16px, 3vw, 24px);
-    }
-
-    .work-card,
-    .note-card {
-      padding: clamp(20px, 3vw, 28px);
-    }
-
-    .work-list {
-      display: grid;
+      grid-template-columns: 1.1fr 0.95fr 0.95fr;
       gap: 14px;
-      margin: 18px 0 0;
-      padding: 0;
-      list-style: none;
     }
 
-    .work-list li {
-      padding-top: 14px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    .info-card,
+    .contact-form,
+    .channel,
+    .details,
+    .faq-item {
+      border: 1px solid var(--line-1);
+      border-radius: 8px;
+      background: var(--bg-1);
+      box-shadow: 8px 10px 12px rgba(0, 0, 0, 0.48);
     }
 
-    .work-list strong {
-      display: block;
-      color: var(--light-text);
-      font-size: 14px;
-      line-height: 1.3;
+    .info-card {
+      min-height: 158px;
+      padding: 18px;
+      border-color: rgba(224, 71, 60, 0.3);
     }
 
-    .work-list span {
-      display: block;
-      margin-top: 5px;
-      color: var(--muted-text);
+    .info-card {
+      background:
+        linear-gradient(180deg, rgba(224, 71, 60, 0.08), rgba(14, 15, 15, 0.96) 42%),
+        var(--bg-1);
+    }
+
+    .info-card h2 {
+      margin-top: 12px;
+      color: var(--fg-0);
+      font-size: 18px;
+      line-height: 24px;
+    }
+
+    .info-card p {
+      margin-top: 10px;
+      color: var(--fg-3);
       font-size: 13px;
-      line-height: 1.55;
+      line-height: 20px;
     }
 
-    .sample-text {
-      color: var(--quiet-text);
-      font-family: "Courier New", monospace;
-      font-size: 12px;
+    .info-card .nf-label {
+      color: var(--fg-0);
+    }
+
+    .contact-section {
+      padding-top: 18px;
+      padding-bottom: 60px;
+    }
+
+    .contact-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(292px, 0.82fr);
+      gap: 28px;
+      align-items: start;
+    }
+
+    .contact-form {
+      padding: clamp(20px, 3vw, 34px);
+      border-color: var(--accent-border);
+    }
+
+    .form-head {
+      display: flex;
+      align-items: flex-end;
+      gap: 16px;
+      padding-bottom: 24px;
+      margin-bottom: 26px;
+      border-bottom: 1px solid var(--line-1);
+    }
+
+    .form-head > div:first-child {
+      flex: 1;
+    }
+
+    .form-head h2 {
+      margin-top: 8px;
+      color: var(--fg-0);
+      font-size: 24px;
+      line-height: 30px;
+    }
+
+    .form-head p {
+      margin-top: 6px;
+      color: var(--fg-3);
+      font-size: 13px;
+      line-height: 19px;
+    }
+
+    .form-meta {
+      color: var(--fg-3);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-align: right;
+      text-transform: uppercase;
+    }
+
+    .form-meta .status {
+      margin-top: 6px;
+      color: var(--ok);
+    }
+
+    .form-row {
+      display: grid;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .form-row.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .field label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      color: var(--fg-3);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .field label .req {
+      margin-left: auto;
+      color: var(--accent);
+    }
+
+    .input,
+    .select,
+    .textarea {
+      width: 100%;
+      min-height: 43px;
+      padding: 11px 14px;
+      border: 1px solid var(--line-1);
+      border-radius: 6px;
+      outline: none;
+      background: var(--bg-2);
+      color: var(--fg-1);
+      transition: border-color 120ms, background 120ms;
+    }
+
+    .input::placeholder,
+    .textarea::placeholder {
+      color: var(--fg-4);
+    }
+
+    .input:focus,
+    .select:focus,
+    .textarea:focus {
+      border-color: var(--accent);
+      background: var(--bg-1);
+    }
+
+    .select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238A8A8B' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-position: right 14px center;
+      background-repeat: no-repeat;
+      padding-right: 36px;
+    }
+
+    .textarea {
+      min-height: 138px;
+      resize: vertical;
+      line-height: 20px;
+    }
+
+    .radio-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .radio-card {
+      min-height: 122px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px;
+      border: 1px solid var(--accent-border);
+      border-radius: 6px;
+      background: var(--bg-2);
+      cursor: pointer;
+    }
+
+    .radio-card input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .radio-card:has(input:checked) {
+      border-color: var(--accent);
+      background: var(--bg-3);
+    }
+
+    .radio-code {
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .radio-name {
+      color: var(--fg-0);
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 18px;
+      text-transform: uppercase;
+    }
+
+    .radio-meta {
+      color: var(--fg-3);
+      font-family: var(--font-mono);
+      font-size: 10px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }
 
-    @media (max-width: 860px) {
-      .about-hero,
-      .about-grid {
+    .check {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 14px;
+      border: 1px solid var(--line-1);
+      border-radius: 6px;
+      background: var(--bg-2);
+      color: var(--fg-2);
+      font-size: 12px;
+      line-height: 18px;
+      cursor: pointer;
+    }
+
+    .check input {
+      margin-top: 3px;
+      accent-color: var(--accent);
+    }
+
+    .submit-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid var(--line-1);
+    }
+
+    .submit {
+      min-height: 42px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border: 1px solid var(--accent);
+      border-radius: 7px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 120ms, border-color 120ms;
+    }
+
+    .submit:hover {
+      border-color: var(--accent-hi);
+      background: var(--accent-hi);
+    }
+
+    .submit-note {
+      color: var(--fg-3);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      line-height: 16px;
+    }
+
+    .side {
+      display: grid;
+      gap: 16px;
+    }
+
+    .mobile-more-info,
+    .mobile-side-close {
+      display: none;
+    }
+
+    .side-group {
+      display: grid;
+      gap: 10px;
+    }
+
+    .side-group > .nf-label {
+      margin-bottom: 4px;
+    }
+
+    .channel {
+      display: flex;
+      gap: 14px;
+      min-height: 104px;
+      padding: 19px;
+      color: inherit;
+      text-decoration: none;
+      transition: border-color 120ms, background 120ms;
+    }
+
+    .side-group .channel,
+    .side-group .details {
+      border-color: var(--accent-border);
+    }
+
+    .channel:hover {
+      border-color: var(--line-2);
+      background: var(--bg-3);
+    }
+
+    .channel:nth-of-type(2) {
+      background:
+        linear-gradient(90deg, rgba(224, 71, 60, 0.08), transparent 44%),
+        var(--bg-1);
+    }
+
+    .channel-icon {
+      width: 36px;
+      height: 36px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      color: var(--accent);
+      border: 1px solid var(--line-2);
+      border-radius: 6px;
+      background: var(--bg-2);
+    }
+
+    .channel-icon svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .channel > span:last-child {
+      display: block;
+      min-width: 0;
+    }
+
+    .channel-label {
+      display: block;
+      color: var(--fg-3);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .channel-value {
+      display: block;
+      margin-top: 5px;
+      color: var(--fg-0);
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 19px;
+    }
+
+    .channel-meta {
+      display: block;
+      margin-top: 4px;
+      color: var(--fg-3);
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    .details {
+      position: relative;
+      padding: 18px 20px;
+    }
+
+    .location-map {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      overflow: hidden;
+      width: 102px;
+      min-height: 82px;
+      height: 82px;
+      border: 1px solid var(--line-1);
+      border-radius: 8px;
+      background: var(--bg-1);
+      box-shadow: none;
+    }
+
+    .location-map iframe {
+      display: block;
+      width: 100%;
+      height: 82px;
+      border: 0;
+      filter: grayscale(1) invert(0.92) contrast(0.88);
+      opacity: 0.82;
+    }
+
+    .details-row {
+      display: grid;
+      grid-template-columns: 94px 1fr;
+      gap: 12px;
+      align-items: baseline;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line-1);
+    }
+
+    .details-row:last-child {
+      border-bottom: 0;
+    }
+
+    .details-row .k {
+      color: var(--fg-3);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .details-row .v {
+      color: var(--fg-1);
+      font-size: 13px;
+      line-height: 18px;
+    }
+
+    .location-lead {
+      display: flex;
+      gap: 9px;
+      align-items: baseline;
+      padding: 4px 0 12px;
+      border-bottom: 1px solid var(--line-1);
+      color: var(--fg-0);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .location-lead,
+    .availability {
+      padding-right: 112px;
+    }
+
+    .location-lead::before,
+    .availability-label::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 7px rgba(224, 71, 60, 0.72);
+    }
+
+    .availability {
+      padding: 10px 0 8px;
+      border-bottom: 1px solid var(--line-1);
+    }
+
+    .availability-label,
+    .location-network-note {
+      color: var(--fg-3);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      line-height: 15px;
+      text-transform: uppercase;
+    }
+
+    .availability-label {
+      display: flex;
+      gap: 9px;
+      align-items: center;
+      color: var(--fg-0);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0;
+      line-height: 18px;
+      text-transform: none;
+    }
+
+    .availability-line {
+      display: flex;
+      align-items: center;
+      padding-left: 16px;
+      color: var(--fg-1);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      line-height: 17px;
+      text-transform: uppercase;
+    }
+
+    .availability-label + .availability-line {
+      margin-top: 5px;
+    }
+
+    .availability-line.is-secondary {
+      margin-top: 6px;
+      color: var(--fg-3);
+      text-transform: none;
+    }
+
+    .availability-full {
+      display: none;
+    }
+
+    .location-status {
+      text-align: center;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--line-1);
+      color: var(--ok);
+      font-size: 13px;
+      line-height: 18px;
+    }
+
+    .location-network-note {
+      padding: 9px 0 0;
+      text-align: center;
+    }
+
+    .faq-section {
+      padding-top: 0;
+      padding-bottom: 70px;
+    }
+
+    .faq-head {
+      display: flex;
+      align-items: flex-end;
+      gap: 24px;
+      margin-bottom: 18px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--line-1);
+    }
+
+    .faq-head > div {
+      flex: 1;
+    }
+
+    .faq-head h2 {
+      margin-top: 8px;
+      color: var(--fg-0);
+      font-size: 24px;
+      line-height: 30px;
+    }
+
+    .faq-head .meta {
+      color: var(--fg-3);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .faq-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .faq-item {
+      overflow: hidden;
+    }
+
+    .faq-item summary {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 18px 20px;
+      color: var(--fg-0);
+      font-weight: 700;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .faq-item summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .faq-num {
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+    }
+
+    .faq-a {
+      padding: 0 20px 18px 20px;
+      color: var(--fg-2);
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .faq-a::before {
+      content: "";
+      display: block;
+      margin-bottom: 14px;
+      border-top: 1px solid var(--line-1);
+    }
+
+    @media (max-width: 960px) {
+      .hero-copy-block,
+      .contact-layout {
         grid-template-columns: 1fr;
       }
+
+      .about-grid,
+      .faq-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-network {
+        min-height: 280px;
+      }
+    }
+
+    @media (min-width: 721px) {
+      .availability {
+        min-height: 128px;
+      }
+
+      .availability-compact {
+        display: none;
+      }
+
+      .availability-full {
+        display: grid;
+        grid-template-columns: auto auto;
+        gap: 2px 14px;
+        margin-top: 6px;
+        padding-left: 16px;
+        color: var(--fg-1);
+        font-family: var(--font-mono);
+        font-size: 10px;
+        line-height: 15px;
+        text-transform: uppercase;
+      }
+
+      .availability-full .time {
+        color: var(--fg-2);
+      }
+    }
+
+    @media (max-width: 720px) {
+      body {
+        padding-top: 50px;
+      }
+
+      .form-head,
+      .submit-row,
+      .faq-head {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .form-meta {
+        text-align: left;
+      }
+
+      .submit,
+      .submit-row {
+        width: 100%;
+      }
+
+      .about-hero {
+        padding-top: 18px;
+      }
+
+      .hero-title {
+        font-size: 28px;
+      }
+
+      .hero-copy {
+        font-size: 13px;
+        line-height: 20px;
+      }
+
+      .hero-actions {
+        width: 100%;
+        margin-bottom: 18px;
+      }
+
+      .hero-actions a {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .info-card,
+      .contact-form,
+      .channel,
+      .details,
+      .faq-item {
+        box-shadow: 4px 6px 8px rgba(0, 0, 0, 0.34);
+      }
+
+      .info-card {
+        min-height: auto;
+      }
+
+      .hero-network {
+        position: absolute;
+        top: 68px;
+        right: -42px;
+        z-index: 1;
+        width: 190px;
+        aspect-ratio: 1 / 0.86;
+        min-height: 0;
+        margin: 0;
+        opacity: 0.34;
+        transform: rotate(-7deg);
+      }
+
+      .neuro-node {
+        width: calc(22.5% * var(--node-scale, 1));
+      }
+
+      .about-section {
+        padding-top: 16px;
+      }
+
+      .about-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 7px;
+      }
+
+      .info-card {
+        display: grid;
+        place-items: center;
+        height: 32px;
+        min-height: 32px;
+        padding: 0 8px;
+        text-align: center;
+      }
+
+      .info-card h2 {
+        display: none;
+      }
+
+      .info-card .nf-label {
+        justify-content: center;
+        color: var(--fg-0);
+        font-family: var(--font-sans);
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0;
+        line-height: 18px;
+        text-transform: none;
+      }
+
+      .info-card .nf-label::before {
+        display: none;
+      }
+
+      .info-card > p:not(.nf-label) {
+        display: none;
+      }
+
+      .info-card p {
+        margin-top: 0;
+      }
+
+      .contact-section {
+        padding-top: 14px;
+        padding-bottom: 42px;
+      }
+
+      .contact-layout {
+        gap: 20px;
+      }
+
+      .contact-form {
+        position: relative;
+        padding: 17px 15px;
+      }
+
+      .mobile-more-info {
+        position: absolute;
+        top: 12px;
+        right: 14px;
+        display: inline-flex;
+        border: 0;
+        background: transparent;
+        color: var(--accent-hi);
+        font-family: var(--font-mono);
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        cursor: pointer;
+      }
+
+      .form-head {
+        gap: 9px;
+        padding-bottom: 18px;
+        margin-bottom: 20px;
+      }
+
+      .form-row {
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+
+      .field,
+      .radio-grid {
+        min-width: 0;
+        max-width: 100%;
+      }
+
+      .form-row.two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .radio-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 6px;
+      }
+
+      .radio-card {
+        min-height: 76px;
+        gap: 4px;
+        padding: 8px 5px;
+        text-align: center;
+      }
+
+      .radio-code,
+      .radio-meta {
+        font-size: 7px;
+        letter-spacing: 0.04em;
+      }
+
+      .radio-name {
+        font-size: 10px;
+        line-height: 13px;
+      }
+
+      .side {
+        position: fixed;
+        inset: 50px 0 0 auto;
+        z-index: 20;
+        width: min(350px, calc(100vw - 24px));
+        display: grid;
+        gap: 20px;
+        align-content: start;
+        overflow-y: auto;
+        padding: 16px 14px 24px;
+        border-left: 1px solid var(--accent-border);
+        background: rgba(8, 9, 9, 0.98);
+        box-shadow: -14px 0 26px rgba(0, 0, 0, 0.62);
+        transform: translateX(104%);
+        transition: transform 180ms ease;
+      }
+
+      body.mobile-side-open {
+        overflow: hidden;
+      }
+
+      body.mobile-side-open .side {
+        transform: translateX(0);
+      }
+
+      .mobile-side-close {
+        display: inline-flex;
+        justify-self: start;
+        border: 0;
+        background: transparent;
+        color: var(--accent-hi);
+        font-family: var(--font-mono);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        cursor: pointer;
+      }
+
+      .channel {
+        min-height: auto;
+        padding: 12px;
+      }
+
+      .channel-icon {
+        width: 30px;
+        height: 30px;
+      }
+
+      .channel-value {
+        margin-top: 3px;
+        font-size: 12px;
+        line-height: 16px;
+      }
+
+      .channel-meta {
+        margin-top: 2px;
+        font-size: 10px;
+        line-height: 15px;
+      }
+
+      .details {
+        padding: 12px 15px;
+      }
+
+      .faq-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .faq-item summary {
+        padding: 13px 14px;
+        font-size: 12px;
+      }
+
+      .faq-a {
+        padding: 0 14px 14px;
+        font-size: 11px;
+        line-height: 17px;
+      }
+
     }
   </style>
 </head>
 <body>
   <div data-site-header></div>
   <script src="../common/site-header.js?v=20260522-header-avatar" data-base="../"></script>
-
   <main>
-    <div class="about-shell">
-      <section class="about-hero" aria-labelledby="about-heading">
-        <div>
-          <p class="eyebrow">About Neurofoundry</p>
-          <h1 id="about-heading">Independent Systems. Practical Tools.</h1>
-          <p class="hero-copy">Neurofoundry is where I build software systems, automation workflows, and local-first tools for people who need their setup to do real work instead of just looking impressive in a demo.</p>
+    <section class="about-hero">
+      <div class="about-hero-inner">
+        <div class="hero-copy-block">
+          <div class="hero-copy-content">
+            <p class="eyebrow"><a href="../">&lt;&lt; Back to Homepage</a><span aria-hidden="true"> / </span><span>About Neurofoundry</span></p>
+            <h1 class="hero-title">Practical tech help, from repairs to custom systems.</h1>
+            <p class="hero-copy">Neurofoundry is where I help people get technology working again. That can mean driving across Tampa to fix a slow computer, setting up a printer, cleaning up a small business workflow, or building a custom tool when the off-the-shelf options do not fit.</p>
+            <div class="hero-actions">
+              <a class="btn-primary" href="#prototype-contact-form">Start a request</a>
+              <a class="btn-secondary" href="../services/">View services</a>
+            </div>
+          </div>
+
+          <div class="hero-network" aria-label="Neurofoundry service network">
+            <svg class="node-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+              <path id="node-path-top" data-nodes="repair web" d="M24.5 17.5 Q50 12.5 75.5 17.5" />
+              <path data-nodes="repair tools" d="M24.5 17.5 Q38 29 50 47.5" />
+              <path data-nodes="web tools" d="M75.5 17.5 Q64 32 50 47.5" />
+              <path data-nodes="tools local" d="M50 47.5 Q35 61 24.5 77.5" />
+              <path data-nodes="tools remote" d="M50 47.5 Q64 62 75.5 77.5" />
+              <path data-nodes="local remote" d="M24.5 77.5 Q50 74 75.5 77.5" />
+              <path class="latent" data-nodes="setup repair" d="M-1 47.5 Q12 29 24.5 17.5" />
+              <path class="latent" data-nodes="setup local" d="M-1 47.5 Q12 66 24.5 77.5" />
+              <path class="latent" data-nodes="setup tools" d="M-1 47.5 Q24 43 50 47.5" />
+              <path class="latent" data-nodes="repair remote" d="M24.5 17.5 Q52 42 75.5 77.5" />
+              <path class="latent" data-nodes="web local" d="M75.5 17.5 Q49 46 24.5 77.5" />
+              <circle class="node-spark" r="0.9">
+                <animateMotion dur="4.8s" repeatCount="indefinite">
+                  <mpath href="#node-path-top" />
+                </animateMotion>
+              </circle>
+            </svg>
+
+            <span class="neuro-node node-repair" data-node="repair" aria-label="Repair"></span>
+            <span class="neuro-node node-web" data-node="web" aria-label="Websites"></span>
+            <span class="neuro-node node-tools" data-node="tools" aria-label="Custom tools"></span>
+            <span class="neuro-node node-local" data-node="local" aria-label="Tampa local service"></span>
+            <span class="neuro-node node-remote" data-node="remote" aria-label="Remote support"></span>
+            <span class="neuro-node node-setup" data-node="setup" aria-label="Setup help"></span>
+          </div>
         </div>
+      </div>
+    </section>
 
-        <aside class="contact-card" aria-label="Contact Neurofoundry">
-          <h2>Contact</h2>
-          <p>For project questions, support, or direct inquiries, use the email below. Keep it specific and I will know where to route it.</p>
-          <a class="contact-link" href="mailto:info@theneurofoundry.com">info@theneurofoundry.com</a>
+    <section class="about-section" aria-label="What Neurofoundry does">
+      <div class="about-grid">
+        <article class="info-card">
+          <p class="nf-label">Design</p>
+          <p>Start with the real problem, shape the right solution, and make the path forward clear.</p>
+        </article>
+
+        <article class="info-card">
+          <p class="nf-label">Deliver</p>
+          <p>Build the practical thing, fix what is broken, and get it into your hands without unnecessary friction.</p>
+        </article>
+
+        <article class="info-card">
+          <p class="nf-label">Deploy</p>
+          <p>Put the finished work where it belongs, make sure it runs, and leave you with something useful.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="contact-section" aria-label="Contact Neurofoundry">
+      <div class="contact-layout">
+        <form class="contact-form" id="prototype-contact-form" autocomplete="off">
+          <button class="mobile-more-info" type="button" aria-controls="mobile-contact-details" aria-expanded="false">More Info &gt;&gt;</button>
+          <div class="form-head">
+            <div>
+              <span class="nf-label">Start The Conversation</span>
+              <h2>How can we help?</h2>
+              <p>This helps us assess the best way to approach your specific needs.</p>
+            </div>
+          </div>
+
+          <div class="form-row two">
+            <div class="field">
+              <label for="name">Your name <span class="req">*</span></label>
+              <input class="input" id="name" type="text" placeholder="Your name" required>
+            </div>
+            <div class="field">
+              <label for="email">Email <span class="req">*</span></label>
+              <input class="input" id="email" type="email" placeholder="you@domain.com" required>
+            </div>
+          </div>
+
+          <div class="form-row two">
+            <div class="field">
+              <label for="organization">Organization</label>
+              <input class="input" id="organization" type="text" placeholder="Optional">
+            </div>
+            <div class="field">
+              <label for="timezone">Time zone</label>
+              <select class="select" id="timezone">
+                <option>Select your time zone...</option>
+                <option>Pacific</option>
+                <option>Mountain</option>
+                <option>Central</option>
+                <option>Eastern</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="field">
+              <label>Type of work <span class="req">*</span></label>
+              <div class="radio-grid">
+                <label class="radio-card">
+                  <input type="radio" name="engagement" value="residential" checked>
+                  <span class="radio-code">01 - Residential</span>
+                  <span class="radio-name">Personal</span>
+                  <span class="radio-meta">Repair - setup - support</span>
+                </label>
+                <label class="radio-card">
+                  <input type="radio" name="engagement" value="business">
+                  <span class="radio-code">02 - Business</span>
+                  <span class="radio-name">Commercial</span>
+                  <span class="radio-meta">Branding - marketing - systems</span>
+                </label>
+                <label class="radio-card">
+                  <input type="radio" name="engagement" value="developer">
+                  <span class="radio-code">03 - Developer</span>
+                  <span class="radio-name">Engineer</span>
+                  <span class="radio-meta">Tools - automation - integration</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row two">
+            <div class="field">
+              <label for="timeline">When do you need it?</label>
+              <select class="select" id="timeline">
+                <option>Flexible</option>
+                <option>This week</option>
+                <option>This month</option>
+                <option>This quarter</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="budget">Budget range</label>
+              <select class="select" id="budget">
+                <option>Not sure yet</option>
+                <option>Quick local visit</option>
+                <option>Small fix or consultation</option>
+                <option>Single website, tool, or setup</option>
+                <option>Full build or ongoing support</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="field">
+              <label for="message">Tell me about the work <span class="req">*</span></label>
+              <textarea class="textarea" id="message" placeholder="Describe the situation as best as you can. Is it a slow computer, or broken hardware? Does your current setup leave a lot to be desired? We can come up with a solution." required></textarea>
+            </div>
+          </div>
+
+          <label class="check">
+            <input type="checkbox" id="privacy">
+            <span>I need to share private details and would prefer a direct email thread first.</span>
+          </label>
+
+          <div class="submit-row">
+            <button class="submit" type="submit">Submit request</button>
+          </div>
+        </form>
+
+        <aside class="side" id="mobile-contact-details" aria-label="Other contact details">
+          <button class="mobile-side-close" type="button">&lt;&lt; Back</button>
+          <div class="side-group">
+            <span class="nf-label">Explore Neurofoundry</span>
+
+            <a class="channel" href="mailto:info@theneurofoundry.com">
+              <span class="channel-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="1"/><polyline points="3 7 12 13 21 7"/></svg>
+              </span>
+              <span>
+                <span class="channel-label">Email</span>
+                <span class="channel-value">info@theneurofoundry.com</span>
+                <span class="channel-meta"><span class="live-dot" aria-hidden="true"></span>Typical reply within a business day</span>
+              </span>
+            </a>
+
+            <a class="channel" href="../downloads/">
+              <span class="channel-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M5 21V7l7-4 7 4v14"/></svg>
+              </span>
+              <span>
+                <span class="channel-label">Downloads</span>
+                <span class="channel-value">Tools, releases, and useful builds</span>
+                <span class="channel-meta">Browse Neurofoundry downloads and see what is ready to use.</span>
+              </span>
+            </a>
+
+            <a class="channel" href="../services/">
+              <span class="channel-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3l8 4v6c0 5-3.5 7.5-8 8-4.5-.5-8-3-8-8V7l8-4z"/></svg>
+              </span>
+              <span>
+                <span class="channel-label">Services</span>
+                <span class="channel-value">Not sure what I offer?</span>
+                <span class="channel-meta">Explore services for residential help, business support, and custom development.</span>
+              </span>
+            </a>
+          </div>
+
+          <div class="side-group">
+            <span class="nf-label">Location</span>
+            <div class="details">
+              <div class="location-lead"><span>Tampa, Florida</span></div>
+              <div class="availability">
+                <div class="availability-label">Availability</div>
+                <div class="availability-compact">
+                  <div class="availability-line">Monday - Friday</div>
+                  <div class="availability-line">7AM - 7PM</div>
+                </div>
+                <div class="availability-full">
+                  <span>Monday</span><span class="time">7AM - 7PM</span>
+                  <span>Tuesday</span><span class="time">7AM - 7PM</span>
+                  <span>Wednesday</span><span class="time">7AM - 7PM</span>
+                  <span>Thursday</span><span class="time">7AM - 7PM</span>
+                  <span>Friday</span><span class="time">7AM - 7PM</span>
+                </div>
+                <div class="availability-line is-secondary">Or via appointment</div>
+              </div>
+              <div class="location-status"><span class="live-dot" aria-hidden="true"></span>Open for local calls and remote work</div>
+              <div class="location-network-note">Neurofoundry not in your area?<br>No problem. I can refer you<br>to a local professional in our network.</div>
+              <div class="location-map">
+                <iframe title="Map of the Tampa Bay area" src="https://www.google.com/maps?q=Tampa%20Bay%2C%20Florida&z=9&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+              </div>
+            </div>
+          </div>
         </aside>
-      </section>
+      </div>
+    </section>
 
-      <section class="about-grid" aria-label="Neurofoundry Work">
-        <article class="work-card">
-          <p class="eyebrow">What I Build</p>
-          <h2>Software that respects the machine it runs on.</h2>
-          <ul class="work-list">
-            <li>
-              <strong>Local-first utilities</strong>
-              <span>Desktop tools, private workflows, and account-backed access where cloud services support the product without owning the whole experience.</span>
-            </li>
-            <li>
-              <strong>Automation and operational systems</strong>
-              <span>Practical process automation, browser workflows, data handoffs, and small systems that remove repeated manual work.</span>
-            </li>
-            <li>
-              <strong>Applied AI interfaces</strong>
-              <span>Interfaces and agent workflows designed around evidence, context, and real task completion.</span>
-            </li>
-          </ul>
-        </article>
+    <section class="faq-section" aria-label="Common questions">
+      <div class="faq-head">
+        <div>
+          <span class="nf-label">Common Questions</span>
+          <h2>Before you send it.</h2>
+        </div>
+      </div>
 
-        <article class="note-card">
-          <p class="eyebrow">How I Work</p>
-          <h2>Build the working path first.</h2>
-          <p>The focus is on clear behavior, controlled scope, and tools that are understandable enough to maintain. When something should stay local, it stays local. When an account system is needed, it has a job and a boundary.</p>
-          <p class="sample-text">SAMPLE SAMPLE SAMPLE SAMPLE SAMPLE SAMPLE SAMPLE SAMPLE SAMPLE SAMPLE SAMPLE SAMPLE SAMPLE SAMPLE SAMPLE.</p>
-        </article>
-      </section>
-    </div>
+      <div class="faq-grid">
+        <details class="faq-item" open>
+          <summary><span class="faq-num">01</span><span>What kinds of work fit?</span></summary>
+          <div class="faq-a">Computer repair, cleanup, device setup, printer help, account issues, websites, business workflows, automation, local utilities, and custom tools.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span class="faq-num">02</span><span>Do you make house calls?</span></summary>
+          <div class="faq-a">Yes, for the Tampa area when the job makes sense in person. Some problems are faster to fix sitting in front of the actual machine.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span class="faq-num">03</span><span>Can you help remotely?</span></summary>
+          <div class="faq-a">Yes. If the problem can be handled safely over a call, remote session, or email thread, that is often the fastest path.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span class="faq-num">04</span><span>What should I include?</span></summary>
+          <div class="faq-a">Say what is happening, what device or service is involved, where you are located if it is a local visit, and what you want working when we are done.</div>
+        </details>
+      </div>
+    </section>
   </main>
 
   <div data-site-footer></div>
   <script src="../common/site-footer.js?v=20260519-footer" data-base="../"></script>
+  <script>
+    const mobileMoreInfo = document.querySelector('.mobile-more-info');
+    const mobileSideClose = document.querySelector('.mobile-side-close');
+
+    function setMobileSideOpen(isOpen) {
+      document.body.classList.toggle('mobile-side-open', isOpen);
+      mobileMoreInfo.setAttribute('aria-expanded', String(isOpen));
+    }
+
+    mobileMoreInfo.addEventListener('click', () => setMobileSideOpen(true));
+    mobileSideClose.addEventListener('click', () => setMobileSideOpen(false));
+
+    document.getElementById('prototype-contact-form').addEventListener('submit', (event) => {
+      event.preventDefault();
+      const button = event.currentTarget.querySelector('.submit');
+      button.textContent = 'Request queued';
+      button.style.background = 'var(--ok)';
+      button.style.borderColor = 'var(--ok)';
+      button.disabled = true;
+    });
+  </script>
 </body>
 </html>
