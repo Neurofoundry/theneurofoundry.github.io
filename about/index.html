@@ -604,9 +604,82 @@
     }
 
     .contact-form {
+      position: relative;
       min-width: 0;
       padding: clamp(20px, 3vw, 34px);
       border-color: var(--accent-border);
+    }
+
+    .contact-form-content {
+      transition: filter 220ms ease, opacity 220ms ease;
+    }
+
+    .contact-form.is-cooldown .contact-form-content {
+      filter: blur(7px);
+      opacity: 0.28;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .contact-cooldown {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      display: none;
+      place-items: center;
+      padding: 24px;
+      border-radius: inherit;
+      background: rgba(8, 9, 9, 0.38);
+    }
+
+    .contact-form.is-cooldown .contact-cooldown {
+      display: grid;
+    }
+
+    .contact-cooldown-panel {
+      width: min(470px, 100%);
+      padding: 28px;
+      border: 1px solid rgba(224, 71, 60, 0.38);
+      border-radius: 9px;
+      background:
+        linear-gradient(150deg, rgba(224, 71, 60, 0.12), transparent 48%),
+        rgba(14, 15, 15, 0.94);
+      box-shadow:
+        0 18px 44px rgba(0, 0, 0, 0.48),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      text-align: center;
+    }
+
+    .contact-cooldown-kicker {
+      justify-content: center;
+      color: var(--accent-hi);
+    }
+
+    .contact-cooldown h3 {
+      margin-top: 12px;
+      color: var(--fg-0);
+      font-size: 24px;
+      line-height: 30px;
+    }
+
+    .contact-cooldown p {
+      margin-top: 10px;
+      color: var(--fg-2);
+      font-size: 14px;
+      line-height: 21px;
+    }
+
+    .contact-cooldown-meta {
+      display: block;
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line-2);
+      color: var(--fg-3);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      line-height: 16px;
+      text-transform: uppercase;
     }
 
     .form-head {
@@ -1554,6 +1627,19 @@
       .radio-name {
         font-size: 11px;
       }
+
+      .contact-cooldown {
+        padding: 14px;
+      }
+
+      .contact-cooldown-panel {
+        padding: 20px 16px;
+      }
+
+      .contact-cooldown h3 {
+        font-size: 20px;
+        line-height: 25px;
+      }
     }
 
     @media (max-width: 360px) {
@@ -1640,6 +1726,15 @@
     <section class="contact-section" aria-label="Contact Neurofoundry">
       <div class="contact-layout">
         <form class="contact-form" id="prototype-contact-form" autocomplete="off">
+          <div class="contact-cooldown" role="status" aria-live="polite" aria-hidden="true">
+            <div class="contact-cooldown-panel">
+              <span class="nf-label contact-cooldown-kicker">Request Received</span>
+              <h3>Your message is already in the queue.</h3>
+              <p>We have your inquiry and will follow up directly. To keep the line clear while we review it, this form will be available again in about one hour.</p>
+              <span class="contact-cooldown-meta">No additional action is needed right now.</span>
+            </div>
+          </div>
+          <div class="contact-form-content">
           <button class="mobile-more-info" type="button" aria-controls="mobile-contact-details" aria-expanded="false">More Info &gt;&gt;</button>
           <div class="form-head">
             <div>
@@ -1744,6 +1839,7 @@
 
           <div class="submit-row">
             <button class="submit" type="submit">Submit request</button>
+          </div>
           </div>
         </form>
 
@@ -1861,6 +1957,11 @@
     mobileMoreInfo.addEventListener('click', () => setMobileSideOpen(true));
     mobileSideClose.addEventListener('click', () => setMobileSideOpen(false));
 
+    function showContactCooldown(form) {
+      form.classList.add('is-cooldown');
+      form.querySelector('.contact-cooldown').setAttribute('aria-hidden', 'false');
+    }
+
     document.getElementById('prototype-contact-form').addEventListener('submit', async (event) => {
       event.preventDefault();
       const form = event.currentTarget;
@@ -1895,6 +1996,10 @@
         }
 
         if (!response.ok) {
+          if (response.status === 429) {
+            showContactCooldown(form);
+            return;
+          }
           throw new Error(result.message || 'Request could not be sent.');
         }
 
