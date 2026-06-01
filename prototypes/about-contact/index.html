@@ -756,6 +756,10 @@
       text-transform: uppercase;
     }
 
+    .radio-meta span {
+      display: block;
+    }
+
     .check {
       display: flex;
       gap: 10px;
@@ -1363,6 +1367,14 @@
         letter-spacing: 0.04em;
       }
 
+      .radio-meta span {
+        display: inline;
+      }
+
+      .radio-meta span + span::before {
+        content: " - ";
+      }
+
       .radio-name {
         font-size: 10px;
         line-height: 13px;
@@ -1568,19 +1580,19 @@
                   <input type="radio" name="engagement" value="residential" checked>
                   <span class="radio-code">01 - Residential</span>
                   <span class="radio-name">Personal</span>
-                  <span class="radio-meta">Repair - setup - support</span>
+                  <span class="radio-meta"><span>Repair</span><span>Setup - support</span></span>
                 </label>
                 <label class="radio-card">
                   <input type="radio" name="engagement" value="business">
                   <span class="radio-code">02 - Business</span>
                   <span class="radio-name">Commercial</span>
-                  <span class="radio-meta">Branding - marketing - systems</span>
+                  <span class="radio-meta"><span>Branding</span><span>Marketing - systems</span></span>
                 </label>
                 <label class="radio-card">
                   <input type="radio" name="engagement" value="developer">
                   <span class="radio-code">03 - Developer</span>
                   <span class="radio-name">Engineer</span>
-                  <span class="radio-meta">Tools - automation - integration</span>
+                  <span class="radio-meta"><span>Tools</span><span>Automation - integration</span></span>
                 </label>
               </div>
             </div>
