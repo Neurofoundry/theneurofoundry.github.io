@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact · Neurofoundry</title>
+<meta name="theme-color" content="#080909">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Michroma&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+
+:root {
+  --bg-0:#080909; --bg-1:#0E0F0F; --bg-2:#101111; --bg-3:#161919; --bg-4:#1B1F1F;
+  --fg-0:#FFFFFF; --fg-1:#E6E7E7; --fg-2:#BCBBBC; --fg-3:#8A8A8B; --fg-4:#5A5C5C;
+  --line-1:#1F2222; --line-2:#2A2E2E;
+  --accent:#D14B20; --accent-hi:#E25C30; --accent-lo:#B43F1A;
+  --accent-tint:rgba(209,75,32,0.12); --accent-soft:#ff9b93;
+  --ok:#6FB178; --warn:#E2A23A; --fail:#D85C5C; --info:#4FA3D1; --live:#4ED27C;
+  --font-display:"Michroma","Eurostile","Bahnschrift",system-ui,sans-serif;
+  --font-sans:"Inter",ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --t-fast:120ms; --t-base:180ms;
+  --ease-out:cubic-bezier(.2,.7,.2,1);
+  --pad-x:clamp(16px,3vw,32px);
+  --page-max:1400px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg-2); color:var(--fg-1);
+  font-family:var(--font-sans); font-size:14px; line-height:1.5;
+  -webkit-font-smoothing:antialiased; letter-spacing:0;
+  overflow-x:hidden; padding-top:64px;
+}
+img,svg,video{display:block; max-width:100%}
+a{color:inherit; text-decoration:none}
+*:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:4px}
+*::-webkit-scrollbar{width:10px; height:10px}
+*::-webkit-scrollbar-track{background:transparent}
+*::-webkit-scrollbar-thumb{background:var(--line-2); border-radius:999px; border:2px solid var(--bg-2)}
+
+/* ── label/tag/live ── */
+.nf-label{
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:var(--font-mono); font-size:11px; font-weight:500;
+  letter-spacing:0.14em; color:var(--accent); text-transform:uppercase;
+}
+.nf-label::before{
+  content:""; width:8px; height:8px;
+  clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
+  background:var(--accent);
+}
+.nf-tag{
+  display:inline-flex; align-items:center; gap:6px;
+  padding:4px 9px;
+  font-family:var(--font-mono); font-size:10.5px; font-weight:500;
+  letter-spacing:0.08em; color:var(--accent-hi);
+  background:var(--accent-tint);
+  border:1px solid rgba(209,75,32,0.35); border-radius:3px;
+  text-transform:uppercase;
+}
+.nf-tag--neutral{ color:var(--fg-2); background:var(--bg-3); border-color:var(--line-1) }
+.nf-mono{font-family:var(--font-mono)}
+.nf-live{
+  width:7px; height:7px; border-radius:50%;
+  background:var(--live); display:inline-block;
+  box-shadow:0 0 0 2px rgba(78,210,124,.18);
+  animation:nf-pulse 1.6s linear infinite;
+}
+@keyframes nf-pulse{
+  0%,100%{opacity:1; transform:scale(1)}
+  50%{opacity:.55; transform:scale(.92)}
+}
+
+/* ── top header ── */
+.site-header{
+  position:fixed; top:0; left:0; right:0; z-index:50;
+  background:rgba(8,9,9,0.92); backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line-1);
+}
+.site-header-inner{
+  height:64px; max-width:var(--page-max); margin:0 auto;
+  padding:0 var(--pad-x);
+  display:flex; align-items:center; gap:28px;
+}
+.brand{display:flex; align-items:center; gap:12px}
+.brand-mark{
+  position:relative; width:28px; height:28px; flex-shrink:0;
+}
+.brand-mark::before, .brand-mark::after{
+  content:""; position:absolute; inset:0;
+  clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
+}
+.brand-mark::before{background:var(--accent)}
+.brand-mark::after{inset:1.5px; background:var(--bg-0)}
+.brand-mark span{
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-display); font-size:11px;
+  color:var(--accent); z-index:1;
+}
+.brand-wordmark{
+  font-family:var(--font-display); font-weight:400;
+  font-size:13px; letter-spacing:0.22em; color:var(--fg-0);
+}
+
+/* ── page nav pill ── */
+.page-nav{
+  display:flex; gap:4px; padding:4px; margin-left:auto;
+  background:var(--bg-1); border:1px solid var(--line-1);
+  border-radius:999px;
+}
+.page-nav a{
+  padding:7px 14px; font-size:12px; font-weight:500;
+  color:var(--fg-3); border-radius:999px;
+  transition:all var(--t-fast);
+}
+.page-nav a:hover{ color:var(--fg-0) }
+.page-nav a[aria-current="page"]{ background:var(--accent); color:#fff; font-weight:600 }
+
+/* ── breadcrumb / page header strip ── */
+.page-hero{
+  position:relative; overflow:hidden;
+  background:var(--bg-0);
+  border-bottom:1px solid var(--line-1);
+  padding:64px var(--pad-x) 56px;
+}
+.page-hero::before{
+  content:""; position:absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px,transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px,transparent 1px);
+  background-size:32px 32px;
+  pointer-events:none;
+}
+.page-hero-inner{
+  position:relative; max-width:var(--page-max); margin:0 auto;
+}
+.page-hero h1{
+  font-family:var(--font-display); font-weight:400;
+  font-size:clamp(1.8rem, 4.2vw, 3.2rem); line-height:1.08;
+  letter-spacing:-0.005em; color:var(--fg-0);
+  margin:14px 0 14px; max-width:880px;
+}
+.page-hero h1 .accent{ color:var(--accent) }
+.page-hero .lead{
+  font-size:clamp(0.95rem, 1.3vw, 1.05rem); line-height:1.55;
+  color:var(--fg-2); max-width:620px; margin:0;
+  font-weight:300;
+}
+.page-hero-meta{
+  display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+}
+.page-hero-meta .nf-mono{ font-size:11.5px; color:var(--fg-3) }
+.page-hero-sep{ color:var(--fg-4); font-size:12px }
+
+/* ── footer ── */
+.site-footer{
+  padding:20px var(--pad-x);
+  background:var(--bg-0);
+  border-top:1px solid var(--line-1);
+}
+.site-footer-inner{
+  max-width:var(--page-max); margin:0 auto;
+  display:flex; justify-content:space-between; align-items:center;
+  gap:24px; flex-wrap:wrap;
+  font-family:var(--font-mono); font-size:11px; color:var(--fg-3);
+  letter-spacing:0.04em;
+}
+.site-footer a{
+  color:var(--fg-3); padding:4px 10px;
+  transition:color var(--t-fast);
+}
+.site-footer a:hover{ color:var(--accent) }
+.site-footer-meta{display:flex; align-items:center; gap:10px}
+.site-footer-links{display:flex; align-items:center; gap:4px; flex-wrap:wrap}
+
+@media (max-width:768px){
+  body{ padding-top:56px }
+  .site-header-inner{ height:56px; gap:14px }
+  .page-nav a{ padding:6px 10px; font-size:11px }
+  .page-hero{ padding:48px 20px 40px }
+}
+
+
+/* CONTACT */
+.page-hero-meta .nf-mono .ticket-id{
+  color:var(--accent); font-weight:500;
+}
+
+/* hex constellation in hero, top-right */
+.cn-constellation{
+  position:absolute; right:-60px; top:40px;
+  width:340px; height:340px;
+  z-index:1; opacity:0.55; pointer-events:none;
+}
+
+/* main split */
+.cn-main{
+  padding:64px var(--pad-x) 80px;
+  background:var(--bg-2);
+  border-bottom:1px solid var(--line-1);
+}
+.cn-main-inner{
+  max-width:var(--page-max); margin:0 auto;
+  display:grid; grid-template-columns:1.5fr 1fr; gap:48px;
+  align-items:start;
+}
+
+/* FORM */
+.cn-form{
+  background:var(--bg-1); border:1px solid var(--line-1);
+  border-radius:10px; padding:36px;
+}
+.cn-form-head{
+  display:flex; align-items:flex-end; gap:16px;
+  padding-bottom:24px; margin-bottom:28px;
+  border-bottom:1px solid var(--line-1);
+}
+.cn-form-head > div:first-child{ flex:1 }
+.cn-form-head h2{
+  font-family:var(--font-sans); font-weight:600;
+  font-size:22px; color:var(--fg-0); margin:8px 0 4px;
+  letter-spacing:-0.01em;
+}
+.cn-form-head p{
+  font-size:13px; color:var(--fg-3); margin:0;
+}
+.cn-form-head .meta{
+  font-family:var(--font-mono); font-size:10.5px;
+  color:var(--fg-3); letter-spacing:0.1em;
+  text-align:right;
+}
+.cn-form-head .meta .status-row{
+  display:flex; align-items:center; gap:6px;
+  justify-content:flex-end; margin-top:4px;
+  color:var(--ok);
+}
+
+/* form rows */
+.cn-row{
+  display:grid; gap:16px;
+  margin-bottom:18px;
+}
+.cn-row.two{ grid-template-columns:1fr 1fr }
+.cn-field label{
+  display:flex; align-items:center; gap:8px;
+  font-family:var(--font-mono); font-size:10.5px;
+  letter-spacing:0.12em; text-transform:uppercase;
+  color:var(--fg-3); margin-bottom:8px;
+}
+.cn-field label::before{
+  content:""; width:6px; height:6px;
+  clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
+  background:var(--accent);
+}
+.cn-field label .req{ color:var(--accent); margin-left:auto }
+
+.cn-input, .cn-textarea, .cn-select{
+  width:100%; padding:12px 14px;
+  background:var(--bg-2); border:1px solid var(--line-1);
+  border-radius:6px; color:var(--fg-1);
+  font-family:inherit; font-size:14px;
+  transition:border-color var(--t-fast), background var(--t-fast);
+  outline:none;
+}
+.cn-input::placeholder, .cn-textarea::placeholder{ color:var(--fg-4) }
+.cn-input:focus, .cn-textarea:focus, .cn-select:focus{
+  border-color:var(--accent); background:var(--bg-1);
+}
+.cn-textarea{ min-height:140px; resize:vertical; font-family:inherit; line-height:1.5 }
+.cn-select{
+  appearance:none; -webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238A8A8B' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 14px center;
+  padding-right:36px;
+}
+
+/* type-of-engagement radio cards */
+.cn-radio-grid{
+  display:grid; grid-template-columns:repeat(3, 1fr); gap:8px;
+}
+.cn-radio{
+  padding:14px 16px;
+  background:var(--bg-2); border:1px solid var(--line-1);
+  border-radius:6px; cursor:pointer;
+  transition:all var(--t-fast);
+  display:flex; flex-direction:column; gap:4px;
+}
+.cn-radio input{ display:none }
+.cn-radio:has(input:checked){
+  border-color:var(--accent); background:var(--bg-3);
+}
+.cn-radio:has(input:checked)::after{
+  content:"●"; color:var(--accent); font-size:14px;
+}
+.cn-radio-label{
+  font-family:var(--font-mono); font-size:10.5px;
+  letter-spacing:0.1em; color:var(--accent);
+  text-transform:uppercase;
+}
+.cn-radio-name{
+  font-family:var(--font-sans); font-size:13px; font-weight:500;
+  color:var(--fg-0);
+}
+.cn-radio-meta{ font-size:11px; color:var(--fg-3) }
+.cn-radio:hover{ border-color:var(--line-2) }
+
+/* checkbox */
+.cn-check{
+  display:flex; gap:10px; align-items:flex-start;
+  padding:14px;
+  background:var(--bg-2); border:1px solid var(--line-1);
+  border-radius:6px;
+  cursor:pointer;
+}
+.cn-check input{
+  margin-top:2px;
+  accent-color:var(--accent);
+}
+.cn-check span{
+  font-size:12.5px; color:var(--fg-2); line-height:1.5;
+}
+
+/* submit row */
+.cn-submit-row{
+  display:flex; align-items:center; gap:16px;
+  margin-top:24px; padding-top:24px;
+  border-top:1px solid var(--line-1);
+}
+.cn-submit{
+  padding:14px 28px;
+  background:var(--accent); color:#fff;
+  border:1px solid var(--accent); border-radius:6px;
+  font-family:inherit; font-size:13px; font-weight:600;
+  cursor:pointer; transition:all var(--t-fast);
+  display:inline-flex; align-items:center; gap:10px;
+}
+.cn-submit::after{ content:"→" }
+.cn-submit:hover{ background:var(--accent-hi); transform:translateY(-1px) }
+.cn-submit-meta{
+  font-family:var(--font-mono); font-size:11px; color:var(--fg-3);
+  letter-spacing:0.04em;
+}
+
+/* RIGHT COLUMN — channels */
+.cn-side{ display:flex; flex-direction:column; gap:16px }
+
+.cn-channel{
+  padding:20px;
+  background:var(--bg-1); border:1px solid var(--line-1);
+  border-radius:10px;
+  display:flex; align-items:flex-start; gap:14px;
+  text-decoration:none; color:inherit;
+  position:relative; overflow:hidden;
+  transition:border-color var(--t-fast), background var(--t-fast);
+}
+.cn-channel::before{
+  content:""; position:absolute; left:0; top:0; bottom:0; width:2px;
+  background:transparent; transition:background var(--t-fast);
+}
+.cn-channel:hover{ border-color:var(--line-2); background:var(--bg-3) }
+.cn-channel:hover::before{ background:var(--accent) }
+.cn-channel-hex{
+  width:36px; height:36px; flex-shrink:0;
+  position:relative;
+}
+.cn-channel-hex::before, .cn-channel-hex::after{
+  content:""; position:absolute; inset:0;
+  clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
+}
+.cn-channel-hex::before{ background:var(--line-2) }
+.cn-channel-hex::after{ inset:1.5px; background:var(--bg-1) }
+.cn-channel-hex svg{
+  position:absolute; inset:0; width:100%; height:100%;
+  z-index:1; padding:9px; color:var(--accent);
+}
+.cn-channel-body{ flex:1; min-width:0 }
+.cn-channel-label{
+  font-family:var(--font-mono); font-size:10.5px;
+  color:var(--fg-3); letter-spacing:0.12em;
+  text-transform:uppercase; margin-bottom:4px;
+}
+.cn-channel-value{
+  font-family:var(--font-sans); font-size:14px; font-weight:500;
+  color:var(--fg-0); margin:0 0 4px;
+}
+.cn-channel-meta{
+  font-size:12px; color:var(--fg-3); margin:0;
+}
+.cn-channel-meta .nf-live{ vertical-align:middle; margin-right:4px }
+
+/* details strip — like the foot ledger */
+.cn-details{
+  padding:18px 20px;
+  background:var(--bg-1); border:1px solid var(--line-1);
+  border-radius:10px;
+  display:flex; flex-direction:column; gap:8px;
+}
+.cn-details-row{
+  display:grid; grid-template-columns:90px 1fr; gap:14px;
+  align-items:baseline;
+  padding:6px 0;
+  border-bottom:1px solid var(--line-1);
+}
+.cn-details-row:last-child{ border-bottom:none }
+.cn-details-row .k{
+  font-family:var(--font-mono); font-size:10.5px;
+  color:var(--fg-3); letter-spacing:0.1em; text-transform:uppercase;
+}
+.cn-details-row .v{
+  font-family:var(--font-sans); font-size:13px; color:var(--fg-1);
+}
+
+/* FAQ */
+.cn-faq{
+  padding:80px var(--pad-x);
+  background:var(--bg-1);
+}
+.cn-faq-inner{
+  max-width:var(--page-max); margin:0 auto;
+}
+.cn-section-head{
+  display:flex; align-items:flex-end; gap:24px;
+  margin-bottom:32px; padding-bottom:20px;
+  border-bottom:1px solid var(--line-1);
+}
+.cn-section-head > div:first-child{ flex:1 }
+.cn-section-head h3{
+  font-family:var(--font-sans); font-weight:600;
+  font-size:clamp(1.4rem, 2.4vw, 2rem); line-height:1.1;
+  color:var(--fg-0); margin:8px 0 0; letter-spacing:-0.01em;
+}
+.cn-section-head h3 .accent{ color:var(--fg-3) }
+.cn-section-head .meta{
+  margin-left:auto; font-family:var(--font-mono); font-size:11px; color:var(--fg-3);
+}
+
+.cn-faq-grid{
+  display:grid; grid-template-columns:repeat(2, 1fr); gap:16px;
+}
+.cn-faq-item{
+  background:var(--bg-2); border:1px solid var(--line-1);
+  border-radius:10px; padding:0;
+  overflow:hidden;
+}
+.cn-faq-q{
+  padding:20px 24px;
+  display:flex; align-items:center; gap:14px;
+  cursor:pointer;
+  background:transparent; border:none;
+  color:var(--fg-0); width:100%; text-align:left;
+  font-family:var(--font-sans); font-size:15px; font-weight:600;
+  letter-spacing:-0.005em;
+}
+.cn-faq-q-num{
+  font-family:var(--font-mono); font-size:11px;
+  color:var(--accent); letter-spacing:0.1em;
+  flex-shrink:0;
+}
+.cn-faq-q-text{ flex:1 }
+.cn-faq-q-toggle{
+  width:20px; height:20px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  color:var(--fg-3); font-family:var(--font-mono);
+  transition:transform var(--t-fast), color var(--t-fast);
+}
+.cn-faq-item[open] .cn-faq-q-toggle{
+  transform:rotate(45deg); color:var(--accent);
+}
+.cn-faq-a{
+  padding:0 24px 20px 24px;
+  font-size:13.5px; line-height:1.65; color:var(--fg-2);
+}
+.cn-faq-a::before{
+  content:""; display:block;
+  border-top:1px solid var(--line-1);
+  margin-bottom:14px;
+}
+
+@media (max-width:1100px){
+  .cn-main-inner{ grid-template-columns:1fr; gap:32px }
+  .cn-faq-grid{ grid-template-columns:1fr }
+  .cn-constellation{ display:none }
+}
+@media (max-width:768px){
+  .cn-main{ padding:48px 20px 56px }
+  .cn-form{ padding:24px 20px }
+  .cn-faq{ padding:48px 20px }
+  .cn-row.two{ grid-template-columns:1fr }
+  .cn-radio-grid{ grid-template-columns:1fr }
+  .cn-submit-row{ flex-direction:column; align-items:stretch; gap:12px }
+  .cn-submit{ justify-content:center }
+  .cn-section-head{ flex-direction:column; align-items:flex-start; gap:8px }
+  .cn-section-head .meta{ margin-left:0 }
+  .cn-form-head{ flex-direction:column; align-items:flex-start; gap:8px }
+  .cn-form-head .meta{ text-align:left }
+  .cn-form-head .meta .status-row{ justify-content:flex-start }
+}
+
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="brand" href="index.html" aria-label="Neurofoundry home">
+      <div class="brand-mark" aria-hidden="true"><span>N</span></div>
+      <span class="brand-wordmark">NEUROFOUNDRY</span>
+    </a>
+    <nav class="page-nav" aria-label="Page navigation">
+      <a href="Workshop.html">Workshop</a>
+      <a href="About.html">About</a>
+      <a href="Contact.html" aria-current="page">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="page-hero">
+  <!-- Hex constellation -->
+  <svg class="cn-constellation" viewBox="0 0 340 340" aria-hidden="true">
+    <g stroke="rgba(209,75,32,0.5)" stroke-width="1.2" fill="none">
+      <polygon points="170,64 218,92 218,148 170,176 122,148 122,92"/>
+      <polygon points="242,128 286,154 286,206 242,232 198,206 198,154" opacity="0.55"/>
+      <polygon points="242,212 286,238 286,290 242,316 198,290 198,238" opacity="0.4"/>
+      <polygon points="98,128 142,154 142,206 98,232 54,206 54,154" opacity="0.55"/>
+      <polygon points="98,212 142,238 142,290 98,316 54,290 54,238" opacity="0.4"/>
+      <polygon points="170,260 218,288 218,340 170,368 122,340 122,288" opacity="0.4"/>
+    </g>
+    <g stroke="rgba(209,75,32,0.45)" stroke-width="1">
+      <line x1="170" y1="120" x2="242" y2="180"/>
+      <line x1="170" y1="120" x2="98" y2="180"/>
+      <line x1="170" y1="120" x2="170" y2="304"/>
+    </g>
+    <polygon points="170,108 188,118 188,138 170,148 152,138 152,118" fill="rgba(209,75,32,0.95)"/>
+  </svg>
+
+  <div class="page-hero-inner">
+    <div class="page-hero-meta">
+      <span class="nf-tag">§ 01 · CONTACT</span>
+      <span class="page-hero-sep">·</span>
+      <span class="nf-mono"><span class="nf-live"></span> Foundry online · typical reply 2–4h</span>
+      <span class="page-hero-sep">·</span>
+      <span class="nf-mono">ticket id: <span class="ticket-id">#NF-8738</span></span>
+    </div>
+    <h1>Open the channel.<br><span class="accent">We're listening.</span></h1>
+    <p class="lead">Custom commissions, security disclosures, partnerships, or just questions about something we shipped — pick the right channel below or fill the form. Everything gets a real human reply.</p>
+  </div>
+</section>
+
+<!-- MAIN: form + channels -->
+<section class="cn-main">
+  <div class="cn-main-inner">
+    <!-- FORM -->
+    <form class="cn-form" id="cn-form" autocomplete="off">
+      <div class="cn-form-head">
+        <div>
+          <span class="nf-label">§ 02 · SUBMIT WORK ORDER</span>
+          <h2>Tell us what you need.</h2>
+          <p>All fields with a hex marker are required.</p>
+        </div>
+        <div class="meta">
+          <div>FORM-NF-2026</div>
+          <div class="status-row"><span class="nf-live"></span> ENCRYPTED</div>
+        </div>
+      </div>
+
+      <div class="cn-row two">
+        <div class="cn-field">
+          <label for="cn-name">Your name <span class="req">*</span></label>
+          <input type="text" id="cn-name" class="cn-input" placeholder="Operator name" required>
+        </div>
+        <div class="cn-field">
+          <label for="cn-email">Email <span class="req">*</span></label>
+          <input type="email" id="cn-email" class="cn-input" placeholder="you@domain.com" required>
+        </div>
+      </div>
+
+      <div class="cn-row two">
+        <div class="cn-field">
+          <label for="cn-org">Organization</label>
+          <input type="text" id="cn-org" class="cn-input" placeholder="Optional — solo is fine">
+        </div>
+        <div class="cn-field">
+          <label for="cn-timezone">Time zone</label>
+          <select id="cn-timezone" class="cn-select">
+            <option>Select your time zone…</option>
+            <option>UTC-8 · Pacific</option>
+            <option>UTC-5 · Eastern</option>
+            <option>UTC+0 · UK / Lisbon</option>
+            <option>UTC+1 · Central Europe</option>
+            <option>UTC+9 · Japan / Korea</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="cn-row">
+        <div class="cn-field">
+          <label>Type of engagement <span class="req">*</span></label>
+          <div class="cn-radio-grid">
+            <label class="cn-radio">
+              <input type="radio" name="engagement" value="commission" checked>
+              <span class="cn-radio-label">01 · COMMISSION</span>
+              <span class="cn-radio-name">Custom build</span>
+              <span class="cn-radio-meta">3–24 weeks · fixed scope</span>
+            </label>
+            <label class="cn-radio">
+              <input type="radio" name="engagement" value="support">
+              <span class="cn-radio-label">02 · SUPPORT</span>
+              <span class="cn-radio-name">Existing tool</span>
+              <span class="cn-radio-meta">licensing · integration</span>
+            </label>
+            <label class="cn-radio">
+              <input type="radio" name="engagement" value="other">
+              <span class="cn-radio-label">03 · OTHER</span>
+              <span class="cn-radio-name">Conversation</span>
+              <span class="cn-radio-meta">press · speaking · etc</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="cn-row two">
+        <div class="cn-field">
+          <label for="cn-budget">Budget range</label>
+          <select id="cn-budget" class="cn-select">
+            <option>Not sure yet</option>
+            <option>&lt; $15k · single tool</option>
+            <option>$15k – $60k · standard build</option>
+            <option>$60k – $200k · multi-quarter</option>
+            <option>$200k+ · platform engagement</option>
+          </select>
+        </div>
+        <div class="cn-field">
+          <label for="cn-timeline">When do you need it?</label>
+          <select id="cn-timeline" class="cn-select">
+            <option>Flexible</option>
+            <option>Next month</option>
+            <option>This quarter</option>
+            <option>Within 6 months</option>
+            <option>Yesterday</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="cn-row">
+        <div class="cn-field">
+          <label for="cn-msg">Tell us about the work <span class="req">*</span></label>
+          <textarea id="cn-msg" class="cn-textarea" placeholder="What are you trying to do, and what have you tried so far? Specifics help — names of tools, scales, constraints. We don't grade on grammar." required></textarea>
+        </div>
+      </div>
+
+      <label class="cn-check">
+        <input type="checkbox" id="cn-nda">
+        <span>Send me an NDA first. I want to share specifics that need to stay private. (Optional — we sign yours or send ours.)</span>
+      </label>
+
+      <div class="cn-submit-row">
+        <button type="submit" class="cn-submit">Submit work order</button>
+        <span class="cn-submit-meta">No marketing. No tracking. We reply directly.</span>
+      </div>
+    </form>
+
+    <!-- SIDE: channels -->
+    <aside class="cn-side" aria-label="Other ways to reach us">
+      <div>
+        <span class="nf-label" style="display:block;margin-bottom:14px">§ 03 · OTHER CHANNELS</span>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          
+        <a class="cn-channel" href="#">
+          <div class="cn-channel-hex" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="1"/><polyline points="3 7 12 13 21 7"/></svg></div>
+          <div class="cn-channel-body">
+            <div class="cn-channel-label">Direct line</div>
+            <p class="cn-channel-value"><span class="__cf_email__" data-cfemail="3e565b5252517e4a565b505b4b4c5158514b505a4c47105d5153">[email&#160;protected]</span></p>
+            <p class="cn-channel-meta"><span class="nf-live"></span> typical reply · 2–4h</p>
+          </div>
+        </a>
+        <a class="cn-channel" href="#">
+          <div class="cn-channel-hex" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M5 21V7l7-4 7 4v14"/></svg></div>
+          <div class="cn-channel-body">
+            <div class="cn-channel-label">Commissions</div>
+            <p class="cn-channel-value"><span class="__cf_email__" data-cfemail="5c3f333131352f2f3533322f1c2834393239292e333a332932382e25723f3331">[email&#160;protected]</span></p>
+            <p class="cn-channel-meta">for custom builds and engagements</p>
+          </div>
+        </a>
+        <a class="cn-channel" href="#">
+          <div class="cn-channel-hex" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3l8 4v6c0 5-3.5 7.5-8 8-4.5-.5-8-3-8-8V7l8-4z"/></svg></div>
+          <div class="cn-channel-body">
+            <div class="cn-channel-label">Security · PGP</div>
+            <p class="cn-channel-value"><span class="__cf_email__" data-cfemail="e794828492958e939ea7938f8289829295888188928983959ec984888a">[email&#160;protected]</span></p>
+            <p class="cn-channel-meta">key · 0xA3F9C12B · use full disclosure</p>
+          </div>
+        </a>
+        <a class="cn-channel" href="#">
+          <div class="cn-channel-hex" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3M15 22v-4a3 3 0 0 0-1-2.3c3-.3 6-1.5 6-6.5a5 5 0 0 0-1.4-3.5c.1-.4.7-2-.2-4 0 0-1.4-.5-4.4 1.7a14 14 0 0 0-7.4 0c-3-2.2-4.4-1.7-4.4-1.7-.9 2-.3 3.6-.2 4A5 5 0 0 0 5 9.2c0 5 3 6.2 6 6.5a3 3 0 0 0-1 2.3v4"/></svg></div>
+          <div class="cn-channel-body">
+            <div class="cn-channel-label">GitHub</div>
+            <p class="cn-channel-value">@Neurofoundry</p>
+            <p class="cn-channel-meta">12 public repos · open issues welcome</p>
+          </div>
+        </a>
+        </div>
+      </div>
+
+      <div>
+        <span class="nf-label" style="display:block;margin-bottom:14px">§ 04 · LOCATION</span>
+        <div class="cn-details">
+          <div class="cn-details-row"><span class="k">Workshop</span><span class="v">Oakland, California</span></div>
+          <div class="cn-details-row"><span class="k">Region</span><span class="v">US-West · UTC-8</span></div>
+          <div class="cn-details-row"><span class="k">Hours</span><span class="v">Mon–Fri · 09:00–18:00</span></div>
+          <div class="cn-details-row"><span class="k">In person</span><span class="v">By appointment</span></div>
+          <div class="cn-details-row"><span class="k">Currently</span><span class="v" style="display:flex;align-items:center;gap:6px;color:var(--ok)"><span class="nf-live"></span>Open for new commissions</span></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="cn-faq">
+  <div class="cn-faq-inner">
+    <div class="cn-section-head">
+      <div>
+        <span class="nf-label">§ 05 · COMMON QUESTIONS</span>
+        <h3>Before you write, <span class="accent">maybe we already answered.</span></h3>
+      </div>
+      <span class="meta">6 entries · last revised feb 2026</span>
+    </div>
+    <div class="cn-faq-grid">
+      
+        <details class="cn-faq-item" open>
+          <summary class="cn-faq-q">
+            <span class="cn-faq-q-num">01</span>
+            <span class="cn-faq-q-text">How fast do you respond?</span>
+            <span class="cn-faq-q-toggle" aria-hidden="true">+</span>
+          </summary>
+          <div class="cn-faq-a">Most inquiries get a reply within 2–4 hours during business days (Pacific time). Commissions and security reports are triaged within 24h.</div>
+        </details>
+        <details class="cn-faq-item">
+          <summary class="cn-faq-q">
+            <span class="cn-faq-q-num">02</span>
+            <span class="cn-faq-q-text">Do you take small projects?</span>
+            <span class="cn-faq-q-toggle" aria-hidden="true">+</span>
+          </summary>
+          <div class="cn-faq-a">Yes. We have a "single tool" engagement track — fixed scope, fixed price, 3–6 weeks. Mention "small commission" in your message and we'll send the brief.</div>
+        </details>
+        <details class="cn-faq-item">
+          <summary class="cn-faq-q">
+            <span class="cn-faq-q-num">03</span>
+            <span class="cn-faq-q-text">What stacks do you work in?</span>
+            <span class="cn-faq-q-toggle" aria-hidden="true">+</span>
+          </summary>
+          <div class="cn-faq-a">Python, TypeScript, Rust, Go. We avoid hosted services where local execution is feasible. We will tell you upfront when something needs a cloud component.</div>
+        </details>
+        <details class="cn-faq-item">
+          <summary class="cn-faq-q">
+            <span class="cn-faq-q-num">04</span>
+            <span class="cn-faq-q-text">Is everything you ship open-source?</span>
+            <span class="cn-faq-q-toggle" aria-hidden="true">+</span>
+          </summary>
+          <div class="cn-faq-a">Most utilities are MIT. Custom client work belongs to the client. The flagship engines (Thalamus, Aegis) are source-available with a commercial license.</div>
+        </details>
+        <details class="cn-faq-item">
+          <summary class="cn-faq-q">
+            <span class="cn-faq-q-num">05</span>
+            <span class="cn-faq-q-text">Can we meet in person?</span>
+            <span class="cn-faq-q-toggle" aria-hidden="true">+</span>
+          </summary>
+          <div class="cn-faq-a">We have a small workshop in Oakland. Visits by appointment for active or prospective clients. Coffee provided, hex motifs on the wall.</div>
+        </details>
+        <details class="cn-faq-item">
+          <summary class="cn-faq-q">
+            <span class="cn-faq-q-num">06</span>
+            <span class="cn-faq-q-text">Do you sponsor or speak?</span>
+            <span class="cn-faq-q-toggle" aria-hidden="true">+</span>
+          </summary>
+          <div class="cn-faq-a">Occasionally. Send the brief — venue, date, audience, topic — to <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="68000d040407281c000d060d1d1a070e071d060c1a11460b0705">[email&#160;protected]</a>. We say yes about a quarter of the time.</div>
+        </details>
+    </div>
+  </div>
+</section>
+
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="site-footer-meta">
+      <span class="nf-live" aria-hidden="true"></span>
+      <span>© 2026 NEUROFOUNDRY · FORGED WITH INTENT · ALL SYSTEMS GO</span>
+    </div>
+    <nav class="site-footer-links">
+      <a href="Workshop.html">WORKSHOP</a>
+      <a href="About.html">ABOUT</a>
+      <a href="Contact.html">CONTACT</a>
+      <a href="#" style="opacity:.6">PRIVACY</a>
+    </nav>
+  </div>
+</footer>
+
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // Form: just demo behavior, no real submit
+  document.getElementById('cn-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const btn = e.target.querySelector('.cn-submit');
+    btn.textContent = '✓ Received · ticket queued';
+    btn.style.background = 'var(--ok)';
+    btn.style.borderColor = 'var(--ok)';
+    btn.disabled = true;
+  });
+</script>
+
+</body>
+</html>

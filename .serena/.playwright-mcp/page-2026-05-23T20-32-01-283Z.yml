@@ -1,0 +1,214 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Neurofoundry home" [ref=e4] [cursor=pointer]:
+        - /url: ../../index.html
+        - generic [ref=e6]: NEUROFOUNDRY
+      - navigation "Main navigation" [ref=e7]:
+        - link "Home" [ref=e8] [cursor=pointer]:
+          - /url: ../../index.html
+        - link "Services" [ref=e9] [cursor=pointer]:
+          - /url: ../../services/
+        - link "Downloads" [ref=e10] [cursor=pointer]:
+          - /url: ../../downloads/
+        - link "Workshop" [ref=e11] [cursor=pointer]:
+          - /url: ../../workshop/
+        - link "About" [ref=e12] [cursor=pointer]:
+          - /url: ../../about/
+        - link "Login" [ref=e14] [cursor=pointer]:
+          - /url: ../../members/login/?redirect=http%3A%2F%2F127.0.0.1%3A4193%2Fprototypes%2Fabout-contact%2Findex.html
+  - main [ref=e15]:
+    - generic [ref=e17]:
+      - generic [ref=e18]:
+        - paragraph [ref=e19]: About Neurofoundry
+        - heading "Practical tech help, from repairs to custom systems." [level=1] [ref=e20]
+        - paragraph [ref=e21]: Neurofoundry is where I help people get technology working again. That can mean driving across Tampa to fix a slow computer, setting up a printer, cleaning up a small business workflow, or building a custom tool when the off-the-shelf options do not fit.
+        - generic [ref=e22]:
+          - link "Start a request >" [ref=e23] [cursor=pointer]:
+            - /url: "#prototype-contact-form"
+          - link "View services" [ref=e24] [cursor=pointer]:
+            - /url: ../../services/
+      - generic "Neurofoundry service network" [ref=e25]:
+        - generic "Repair" [ref=e26]
+        - generic "Websites" [ref=e27]
+        - generic "Custom tools" [ref=e28]
+        - generic "Tampa local service" [ref=e29]
+        - generic "Remote support" [ref=e30]
+        - generic "Setup help" [ref=e31]
+    - region "What Neurofoundry does" [ref=e32]:
+      - generic [ref=e33]:
+        - article [ref=e34]:
+          - paragraph [ref=e35]: 01 - What I Do
+          - heading "Fix the thing in front of us." [level=2] [ref=e36]
+          - paragraph [ref=e37]: Slow laptops, broken setups, printer headaches, email problems, websites, small business systems, and custom tools all belong here if they make the day easier.
+        - article [ref=e38]:
+          - paragraph [ref=e39]: 02 - Why
+          - heading "It should feel safe to ask." [level=2] [ref=e40]
+          - paragraph [ref=e41]: You should not need to know the right technical words before getting help. The point is to understand the problem, explain the options plainly, and leave things better than they were.
+        - article [ref=e42]:
+          - paragraph [ref=e43]: 03 - How
+          - heading "Local help, practical builds." [level=2] [ref=e44]
+          - paragraph [ref=e45]: Some jobs need a house call. Some need a remote session. Some need a custom system. The shape of the work follows the actual problem.
+    - region "Contact Neurofoundry" [ref=e46]:
+      - generic [ref=e47]:
+        - generic [ref=e48]:
+          - generic [ref=e49]:
+            - generic [ref=e50]:
+              - generic [ref=e51]: 04 - Start The Conversation
+              - heading "Tell me what you need." [level=2] [ref=e52]
+              - paragraph [ref=e53]: Tell me what is broken, confusing, slow, missing, or annoying. Plain language is fine.
+            - generic [ref=e54]:
+              - generic [ref=e55]: Form-NF-2026
+              - generic [ref=e56]: Prototype
+          - generic [ref=e58]:
+            - generic [ref=e59]:
+              - generic [ref=e60]:
+                - text: Your name
+                - generic [ref=e61]: "*"
+              - textbox "Your name *" [ref=e62]:
+                - /placeholder: Your name
+            - generic [ref=e63]:
+              - generic [ref=e64]:
+                - text: Email
+                - generic [ref=e65]: "*"
+              - textbox "Email *" [ref=e66]:
+                - /placeholder: you@domain.com
+          - generic [ref=e67]:
+            - generic [ref=e68]:
+              - generic [ref=e69]: Organization
+              - textbox "Organization" [ref=e70]:
+                - /placeholder: Optional
+            - generic [ref=e71]:
+              - generic [ref=e72]: Time zone
+              - combobox "Time zone" [ref=e73]:
+                - option "Select your time zone..." [selected]
+                - option "Pacific"
+                - option "Mountain"
+                - option "Central"
+                - option "Eastern"
+                - option "Other"
+          - generic [ref=e75]:
+            - generic [ref=e76]:
+              - text: Type of work
+              - generic [ref=e77]: "*"
+            - generic [ref=e78]:
+              - generic [ref=e79] [cursor=pointer]:
+                - radio "01 - Local Help Repair / Setup Computer - printer - account" [checked]
+                - generic [ref=e80]: 01 - Local Help
+                - generic [ref=e81]: Repair / Setup
+                - generic [ref=e82]: Computer - printer - account
+              - generic [ref=e83] [cursor=pointer]:
+                - radio "02 - Build Custom Tool Website - workflow - automation"
+                - generic [ref=e84]: 02 - Build
+                - generic [ref=e85]: Custom Tool
+                - generic [ref=e86]: Website - workflow - automation
+              - generic [ref=e87] [cursor=pointer]:
+                - radio "03 - Other Conversation Questions - planning - not sure"
+                - generic [ref=e88]: 03 - Other
+                - generic [ref=e89]: Conversation
+                - generic [ref=e90]: Questions - planning - not sure
+          - generic [ref=e91]:
+            - generic [ref=e92]:
+              - generic [ref=e93]: Budget range
+              - combobox "Budget range" [ref=e94]:
+                - option "Not sure yet" [selected]
+                - option "Quick local visit"
+                - option "Small fix or consultation"
+                - option "Single website, tool, or setup"
+                - option "Full build or ongoing support"
+            - generic [ref=e95]:
+              - generic [ref=e96]: When do you need it?
+              - combobox "When do you need it?" [ref=e97]:
+                - option "Flexible" [selected]
+                - option "This week"
+                - option "This month"
+                - option "This quarter"
+          - generic [ref=e99]:
+            - generic [ref=e100]:
+              - text: Tell me about the work
+              - generic [ref=e101]: "*"
+            - textbox "Tell me about the work *" [ref=e102]:
+              - /placeholder: What is going on? A slow computer, broken printer, account issue, website idea, business workflow, or anything else that needs fixing.
+          - generic [ref=e103] [cursor=pointer]:
+            - checkbox "I need to share private details and would prefer a direct email thread first." [ref=e104]
+            - generic [ref=e105]: I need to share private details and would prefer a direct email thread first.
+          - generic [ref=e106]:
+            - button "Submit request" [ref=e107] [cursor=pointer]
+            - generic [ref=e108]: Prototype only. No backend wiring yet.
+        - complementary "Other contact details" [ref=e109]:
+          - generic [ref=e110]:
+            - generic [ref=e111]: 05 - Other Channels
+            - link "Direct Line info@theneurofoundry.com Typical reply within a business day" [ref=e112] [cursor=pointer]:
+              - /url: mailto:info@theneurofoundry.com
+              - img [ref=e114]
+              - generic [ref=e117]:
+                - generic [ref=e118]: Direct Line
+                - generic [ref=e119]: info@theneurofoundry.com
+                - generic [ref=e120]: Typical reply within a business day
+            - link "Local Service Tampa repair and setup calls Computers, printers, networks, accounts, and general tech cleanup." [ref=e122] [cursor=pointer]:
+              - /url: mailto:info@theneurofoundry.com?subject=Commission%20Inquiry
+              - img [ref=e124]
+              - generic [ref=e126]:
+                - generic [ref=e127]: Local Service
+                - generic [ref=e128]: Tampa repair and setup calls
+                - generic [ref=e129]: Computers, printers, networks, accounts, and general tech cleanup.
+            - link "Custom Work Websites, tools, and automation For business systems, internal workflows, and practical software builds." [ref=e130] [cursor=pointer]:
+              - /url: mailto:info@theneurofoundry.com?subject=Support%20Request
+              - img [ref=e132]
+              - generic [ref=e134]:
+                - generic [ref=e135]: Custom Work
+                - generic [ref=e136]: Websites, tools, and automation
+                - generic [ref=e137]: For business systems, internal workflows, and practical software builds.
+          - generic [ref=e138]:
+            - generic [ref=e139]: 06 - Location
+            - generic [ref=e140]:
+              - generic [ref=e141]:
+                - generic [ref=e142]: Base
+                - generic [ref=e143]: Tampa, Florida
+              - generic [ref=e144]:
+                - generic [ref=e145]: Region
+                - generic [ref=e146]: Tampa Bay and remote support
+              - generic [ref=e147]:
+                - generic [ref=e148]: Hours
+                - generic [ref=e149]: By appointment
+              - generic [ref=e150]:
+                - generic [ref=e151]: Currently
+                - generic [ref=e152]: Open for local calls and remote work
+    - region "Common questions" [ref=e154]:
+      - generic [ref=e155]:
+        - generic [ref=e156]:
+          - generic [ref=e157]: 07 - Common Questions
+          - heading "Before you send it." [level=2] [ref=e158]
+        - generic [ref=e159]: Prototype content
+      - generic [ref=e160]:
+        - group [ref=e161]:
+          - generic "01 What kinds of work fit?" [ref=e162] [cursor=pointer]:
+            - generic [ref=e163]: "01"
+            - generic [ref=e164]: What kinds of work fit?
+          - generic [ref=e165]: Computer repair, cleanup, device setup, printer help, account issues, websites, business workflows, automation, local utilities, and custom tools.
+        - group [ref=e166]:
+          - generic "02 Do you make house calls?" [ref=e167] [cursor=pointer]:
+            - generic [ref=e168]: "02"
+            - generic [ref=e169]: Do you make house calls?
+        - group [ref=e170]:
+          - generic "03 Can you help remotely?" [ref=e171] [cursor=pointer]:
+            - generic [ref=e172]: "03"
+            - generic [ref=e173]: Can you help remotely?
+        - group [ref=e174]:
+          - generic "04 What should I include?" [ref=e175] [cursor=pointer]:
+            - generic [ref=e176]: "04"
+            - generic [ref=e177]: What should I include?
+  - contentinfo [ref=e179]:
+    - generic [ref=e180]:
+      - paragraph [ref=e181]: © 2025 The Neurofoundry.
+      - navigation "Footer navigation" [ref=e182]:
+        - link "Home" [ref=e183] [cursor=pointer]:
+          - /url: ../../index.html
+        - link "Services" [ref=e184] [cursor=pointer]:
+          - /url: ../../services/
+        - link "About" [ref=e185] [cursor=pointer]:
+          - /url: ../../about/
+        - link "Privacy Policy" [ref=e186] [cursor=pointer]:
+          - /url: ../../docs/privacy-policy/
+        - link "Terms of Service" [ref=e187] [cursor=pointer]:
+          - /url: ../../docs/terms-of-service/

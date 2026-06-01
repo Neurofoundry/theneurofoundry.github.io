@@ -1,0 +1,1727 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Prototype | Neurofoundry</title>
+  <meta name="description" content="Prototype about and contact page for Neurofoundry.">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#0f1113">
+  <link rel="icon" type="image/png" href="../../anvil.png">
+  <link rel="apple-touch-icon" href="../../anvil.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Michroma&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../common/site-header.css?v=20260519b">
+  <link rel="stylesheet" href="../../common/site-footer.css">
+  <style>
+    :root {
+      --bg-0: #080909;
+      --bg-1: #0e0f0f;
+      --bg-2: #101111;
+      --bg-3: #161919;
+      --fg-0: #ffffff;
+      --fg-1: #e6e7e7;
+      --fg-2: #bcbbbc;
+      --fg-3: #8a8a8b;
+      --fg-4: #5a5c5c;
+      --line-1: #1f2222;
+      --line-2: #2a2e2e;
+      --accent: #e0473c;
+      --accent-hi: #ff9b93;
+      --accent-tint: rgba(224, 71, 60, 0.12);
+      --accent-border: rgba(224, 71, 60, 0.34);
+      --ok: #6fb178;
+      --warn: #e2a23a;
+      --font-display: "Michroma", "Eurostile", "Bahnschrift", system-ui, sans-serif;
+      --font-sans: "Inter", ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      --page-max: 1264px;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scrollbar-gutter: stable;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+      background: var(--bg-2);
+      color: var(--fg-1);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      line-height: 20px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      overflow-x: hidden;
+      padding-top: 58px;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+      background-size: 54px 54px;
+      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), transparent 72%);
+      z-index: 0;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    main {
+      position: relative;
+      z-index: 2;
+    }
+
+    #neural-particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.42;
+    }
+
+    .about-hero {
+      position: relative;
+      overflow: hidden;
+      background: var(--bg-1);
+      padding: clamp(24px, 4vw, 40px) clamp(14px, 3vw, 32px) clamp(32px, 5vw, 52px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .about-hero-inner {
+      width: min(var(--page-max), 100%);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 0.86fr) minmax(340px, 0.62fr);
+      gap: clamp(20px, 4vw, 46px);
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .eyebrow,
+    .nf-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--accent-hi);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before,
+    .nf-label::before,
+    .field label::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      flex: 0 0 auto;
+      background: var(--accent);
+      clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+    }
+
+    .hero-title {
+      max-width: 650px;
+      margin-top: 14px;
+      color: var(--fg-0);
+      font-size: clamp(30px, 5vw, 52px);
+      font-weight: 800;
+      letter-spacing: 0;
+      line-height: 1.02;
+    }
+
+    .hero-copy {
+      max-width: 580px;
+      margin-top: 16px;
+      color: var(--fg-3);
+      font-size: 15px;
+      line-height: 24px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+      min-height: 42px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border: 1px solid;
+      border-radius: 7px;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: background 120ms, border-color 120ms, color 120ms, transform 120ms, box-shadow 120ms;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+      box-shadow: 4px 5px 7px rgba(0, 0, 0, 0.38);
+    }
+
+    .btn-primary::after {
+      content: ">";
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hi);
+      border-color: var(--accent-hi);
+      transform: translateY(-1px);
+      box-shadow: 5px 6px 8px rgba(0, 0, 0, 0.44);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border-color: var(--line-2);
+      color: var(--fg-1);
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-3);
+      border-color: var(--accent);
+      color: var(--fg-0);
+    }
+
+    .hero-network {
+      position: relative;
+      width: min(520px, 100%);
+      aspect-ratio: 1 / 0.86;
+      margin-left: auto;
+      isolation: isolate;
+    }
+
+    .hero-network::before {
+      content: "";
+      position: absolute;
+      inset: 3% 4%;
+      z-index: 0;
+      background:
+        radial-gradient(circle at 28% 24%, rgba(224, 71, 60, 0.12), transparent 18%),
+        radial-gradient(circle at 70% 20%, rgba(255, 155, 147, 0.1), transparent 20%),
+        radial-gradient(circle at 48% 55%, rgba(224, 71, 60, 0.14), transparent 24%),
+        radial-gradient(circle at 25% 78%, rgba(224, 71, 60, 0.1), transparent 18%);
+      filter: blur(8px);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .node-lines,
+    .hero-network-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .node-lines {
+      display: none;
+    }
+
+    .hero-network-canvas {
+      opacity: 0.95;
+    }
+
+    .node-lines path {
+      fill: none;
+      stroke: rgba(224, 71, 60, 0.46);
+      stroke-width: 2.3;
+      stroke-linecap: round;
+      opacity: 0.78;
+      filter:
+        drop-shadow(0 0 3px rgba(255, 155, 147, 0.16))
+        drop-shadow(0 0 9px rgba(224, 71, 60, 0.2));
+      transition: opacity 180ms, stroke 180ms, stroke-width 180ms, filter 180ms;
+    }
+
+    .node-lines path.latent {
+      opacity: 0;
+      stroke: rgba(255, 155, 147, 0.44);
+      stroke-width: 1.55;
+    }
+
+    .hero-network:hover .node-lines path {
+      stroke: rgba(255, 155, 147, 0.72);
+      stroke-width: 2.8;
+      opacity: 0.92;
+      filter:
+        drop-shadow(0 0 5px rgba(255, 155, 147, 0.26))
+        drop-shadow(0 0 12px rgba(224, 71, 60, 0.38));
+    }
+
+    .hero-network:hover .node-lines path.latent {
+      opacity: 0.2;
+    }
+
+    .neuro-node {
+      position: absolute;
+      z-index: 2;
+      width: calc(22.5% * var(--node-scale, 1));
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      border: 0;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 52% 48%, rgba(255, 155, 147, 0.36), rgba(224, 71, 60, 0.2) 22%, rgba(224, 71, 60, 0.08) 48%, rgba(8, 9, 9, 0.98) 76%),
+        conic-gradient(from 28deg, rgba(224, 71, 60, 0.08), rgba(255, 155, 147, 0.38), rgba(224, 71, 60, 0.08), rgba(224, 71, 60, 0.34), rgba(224, 71, 60, 0.08)),
+        var(--bg-2);
+      box-shadow:
+        0 0 22px rgba(224, 71, 60, 0.46),
+        0 0 54px rgba(224, 71, 60, 0.16),
+        0 12px 20px rgba(0, 0, 0, 0.44),
+        inset 0 0 20px rgba(255, 155, 147, 0.32),
+        inset 0 -18px 26px rgba(0, 0, 0, 0.46);
+      color: transparent;
+      transition: transform 160ms, border-color 160ms, box-shadow 160ms;
+      animation:
+        node-idle-pulse var(--pulse-duration, 4.8s) ease-in-out infinite,
+        node-drift var(--drift-duration, 9s) ease-in-out infinite;
+      animation-delay: var(--pulse-delay, 0s), var(--drift-delay, 0s);
+    }
+
+    .neuro-node::before {
+      content: "";
+      position: absolute;
+      inset: -4%;
+      border: 0;
+      border-radius: inherit;
+      background:
+        var(--node-image),
+        linear-gradient(38deg, transparent 0 38%, rgba(255, 155, 147, 0.42) 39% 41%, transparent 42%),
+        linear-gradient(116deg, transparent 0 43%, rgba(224, 71, 60, 0.36) 44% 46%, transparent 47%);
+      background-size: cover, 58% 58%, 58% 58%;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: 0.68;
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+
+    .neuro-node::after {
+      content: "";
+      position: absolute;
+      inset: -8px;
+      border: 1px solid rgba(255, 155, 147, 0.18);
+      border-radius: 50%;
+      opacity: 0;
+      transform: scale(0.88);
+      pointer-events: none;
+    }
+
+    .neuro-node:hover {
+      z-index: 4;
+      box-shadow:
+        0 0 34px rgba(224, 71, 60, 0.58),
+        0 0 70px rgba(224, 71, 60, 0.16),
+        inset 0 0 26px rgba(255, 155, 147, 0.34),
+        inset 0 -18px 26px rgba(0, 0, 0, 0.36);
+    }
+
+    .neuro-node:hover::after {
+      opacity: 1;
+      animation: node-ring 1.1s ease-out infinite;
+    }
+
+    .node-repair {
+      top: 0;
+      left: 9.5%;
+      --node-image: url("../../assets/ui/neuronode_1.png");
+      --drift-x: 5px;
+      --drift-y: -3px;
+      --node-rotation: 7deg;
+      --drift-duration: 9.4s;
+      --pulse-delay: -0.4s;
+    }
+
+    .node-web {
+      top: 0;
+      left: 60.5%;
+      --node-image: url("../../assets/ui/neuronode_2.png");
+      --node-scale: 0.9;
+      --drift-x: -5px;
+      --drift-y: 4px;
+      --node-rotation: -9deg;
+      --drift-duration: 10.8s;
+      --pulse-delay: -1.7s;
+      --drift-delay: -1.3s;
+    }
+
+    .node-tools {
+      top: 30%;
+      left: 35%;
+      --node-image: url("../../assets/ui/neuronode_1.png");
+      --drift-x: 4px;
+      --drift-y: 5px;
+      --node-rotation: 12deg;
+      --drift-duration: 8.7s;
+      --pulse-delay: -0.8s;
+      --drift-delay: -2.1s;
+    }
+
+    .node-local {
+      top: 60%;
+      left: 9.5%;
+      --node-image: url("../../assets/ui/neuronode_2.png");
+      --node-scale: 0.9;
+      --drift-x: -4px;
+      --drift-y: -5px;
+      --node-rotation: -11deg;
+      --drift-duration: 11.6s;
+      --pulse-delay: -2.6s;
+      --drift-delay: -4.4s;
+    }
+
+    .node-remote {
+      top: 60%;
+      left: 60.5%;
+      --node-image: url("../../assets/ui/neuronode_1.png");
+      --node-scale: 0.8;
+      --drift-x: 5px;
+      --drift-y: 3px;
+      --node-rotation: 8deg;
+      --drift-duration: 12.2s;
+      --pulse-delay: -3.5s;
+      --drift-delay: -5.2s;
+    }
+
+    .node-setup {
+      top: 30%;
+      left: -16%;
+      opacity: 0.68;
+      --node-image: url("../../assets/ui/neuronode_2.png");
+      --drift-x: -5px;
+      --drift-y: 2px;
+      --node-rotation: -7deg;
+      --drift-duration: 9.9s;
+      --pulse-delay: -4.2s;
+      --drift-delay: -3.1s;
+    }
+
+    .neuro-node.active,
+    .neuro-node.influenced {
+      border-color: rgba(255, 155, 147, 0.9);
+      box-shadow:
+        0 0 34px rgba(224, 71, 60, 0.62),
+        0 0 76px rgba(224, 71, 60, 0.24),
+        inset 0 0 28px rgba(255, 155, 147, 0.36),
+        inset 0 -18px 26px rgba(0, 0, 0, 0.38);
+    }
+
+    @keyframes node-ring {
+      0% {
+        opacity: 0.72;
+        transform: scale(0.9);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(1.2);
+      }
+    }
+
+    @keyframes node-pulse {
+      0%,
+      100% {
+        filter: brightness(1);
+      }
+      50% {
+        filter: brightness(1.22);
+      }
+    }
+
+    @keyframes node-drift {
+      0%,
+      100% {
+        transform: translate3d(0, 0, 0) rotate(0deg) scale(0.96);
+      }
+      31% {
+        transform: translate3d(var(--drift-x), var(--drift-y), 0) rotate(var(--node-rotation)) scale(1.08);
+      }
+      67% {
+        transform: translate3d(calc(var(--drift-x) * -0.72), calc(var(--drift-y) * -0.58), 0) rotate(calc(var(--node-rotation) * -0.65)) scale(1);
+      }
+    }
+
+    @keyframes node-idle-pulse {
+      0%,
+      100% {
+        box-shadow:
+          0 0 16px rgba(224, 71, 60, 0.24),
+          0 12px 20px rgba(0, 0, 0, 0.44),
+          inset 0 0 14px rgba(255, 155, 147, 0.18),
+          inset 0 -18px 26px rgba(0, 0, 0, 0.46);
+      }
+      48% {
+        box-shadow:
+          0 0 24px rgba(224, 71, 60, 0.34),
+          0 12px 20px rgba(0, 0, 0, 0.44),
+          inset 0 0 18px rgba(255, 155, 147, 0.25),
+          inset 0 -18px 26px rgba(0, 0, 0, 0.44);
+      }
+    }
+
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      display: inline-block;
+      margin-right: 6px;
+      border-radius: 50%;
+      background: var(--ok);
+      box-shadow: 0 0 0 2px rgba(111, 177, 120, 0.18);
+    }
+
+    .about-section,
+    .contact-section,
+    .faq-section {
+      width: min(var(--page-max), 100%);
+      margin: 0 auto;
+      padding-inline: clamp(14px, 3vw, 32px);
+    }
+
+    .about-section {
+      padding-top: 24px;
+      padding-bottom: 10px;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.95fr 0.95fr;
+      gap: 14px;
+    }
+
+    .info-card,
+    .contact-form,
+    .channel,
+    .details,
+    .faq-item {
+      border: 1px solid var(--line-1);
+      border-radius: 8px;
+      background: var(--bg-1);
+      box-shadow: 8px 10px 12px rgba(0, 0, 0, 0.48);
+    }
+
+    .info-card {
+      min-height: 158px;
+      padding: 18px;
+      border-color: rgba(224, 71, 60, 0.3);
+    }
+
+    .info-card:nth-child(1) {
+      background:
+        linear-gradient(180deg, rgba(224, 71, 60, 0.08), rgba(14, 15, 15, 0.96) 42%),
+        var(--bg-1);
+    }
+
+    .info-card:nth-child(2),
+    .info-card:nth-child(3) {
+      border-color: var(--line-1);
+      box-shadow: none;
+    }
+
+    .info-card h2 {
+      margin-top: 12px;
+      color: var(--fg-0);
+      font-size: 18px;
+      line-height: 24px;
+    }
+
+    .info-card p {
+      margin-top: 10px;
+      color: var(--fg-3);
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .contact-section {
+      padding-top: 18px;
+      padding-bottom: 60px;
+    }
+
+    .contact-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.95fr);
+      gap: 28px;
+      align-items: start;
+    }
+
+    .contact-form {
+      padding: clamp(20px, 3vw, 34px);
+      border-color: var(--accent-border);
+    }
+
+    .form-head {
+      display: flex;
+      align-items: flex-end;
+      gap: 16px;
+      padding-bottom: 24px;
+      margin-bottom: 26px;
+      border-bottom: 1px solid var(--line-1);
+    }
+
+    .form-head > div:first-child {
+      flex: 1;
+    }
+
+    .form-head h2 {
+      margin-top: 8px;
+      color: var(--fg-0);
+      font-size: 24px;
+      line-height: 30px;
+    }
+
+    .form-head p {
+      margin-top: 6px;
+      color: var(--fg-3);
+      font-size: 13px;
+      line-height: 19px;
+    }
+
+    .form-meta {
+      color: var(--fg-3);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-align: right;
+      text-transform: uppercase;
+    }
+
+    .form-meta .status {
+      margin-top: 6px;
+      color: var(--ok);
+    }
+
+    .form-row {
+      display: grid;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .form-row.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .field label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      color: var(--fg-3);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .field label .req {
+      margin-left: auto;
+      color: var(--accent);
+    }
+
+    .input,
+    .select,
+    .textarea {
+      width: 100%;
+      min-height: 43px;
+      padding: 11px 14px;
+      border: 1px solid var(--line-1);
+      border-radius: 6px;
+      outline: none;
+      background: var(--bg-2);
+      color: var(--fg-1);
+      transition: border-color 120ms, background 120ms;
+    }
+
+    .input::placeholder,
+    .textarea::placeholder {
+      color: var(--fg-4);
+    }
+
+    .input:focus,
+    .select:focus,
+    .textarea:focus {
+      border-color: var(--accent);
+      background: var(--bg-1);
+    }
+
+    .select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238A8A8B' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-position: right 14px center;
+      background-repeat: no-repeat;
+      padding-right: 36px;
+    }
+
+    .textarea {
+      min-height: 138px;
+      resize: vertical;
+      line-height: 20px;
+    }
+
+    .radio-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .radio-card {
+      min-height: 122px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px;
+      border: 1px solid var(--line-1);
+      border-radius: 6px;
+      background: var(--bg-2);
+      cursor: pointer;
+    }
+
+    .radio-card input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .radio-card:has(input:checked) {
+      border-color: var(--accent);
+      background: var(--bg-3);
+    }
+
+    .radio-code {
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .radio-name {
+      color: var(--fg-0);
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 18px;
+      text-transform: uppercase;
+    }
+
+    .radio-meta {
+      color: var(--fg-3);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .check {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 14px;
+      border: 1px solid var(--line-1);
+      border-radius: 6px;
+      background: var(--bg-2);
+      color: var(--fg-2);
+      font-size: 12px;
+      line-height: 18px;
+      cursor: pointer;
+    }
+
+    .check input {
+      margin-top: 3px;
+      accent-color: var(--accent);
+    }
+
+    .submit-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid var(--line-1);
+    }
+
+    .submit {
+      min-height: 42px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border: 1px solid var(--accent);
+      border-radius: 7px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 120ms, border-color 120ms;
+    }
+
+    .submit:hover {
+      border-color: var(--accent-hi);
+      background: var(--accent-hi);
+    }
+
+    .submit-note {
+      color: var(--fg-3);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      line-height: 16px;
+    }
+
+    .side {
+      display: grid;
+      gap: 16px;
+    }
+
+    .side-group {
+      display: grid;
+      gap: 10px;
+    }
+
+    .side-group > .nf-label {
+      margin-bottom: 4px;
+    }
+
+    .channel {
+      display: flex;
+      gap: 14px;
+      min-height: 104px;
+      padding: 19px;
+      color: inherit;
+      text-decoration: none;
+      transition: border-color 120ms, background 120ms;
+    }
+
+    .channel:hover {
+      border-color: var(--line-2);
+      background: var(--bg-3);
+    }
+
+    .channel:nth-of-type(2) {
+      background:
+        linear-gradient(90deg, rgba(224, 71, 60, 0.08), transparent 44%),
+        var(--bg-1);
+    }
+
+    .channel-icon {
+      width: 36px;
+      height: 36px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      color: var(--accent);
+      border: 1px solid var(--line-2);
+      border-radius: 6px;
+      background: var(--bg-2);
+    }
+
+    .channel-icon svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .channel > span:last-child {
+      display: block;
+      min-width: 0;
+    }
+
+    .channel-label {
+      display: block;
+      color: var(--fg-3);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .channel-value {
+      display: block;
+      margin-top: 5px;
+      color: var(--fg-0);
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 19px;
+    }
+
+    .channel-meta {
+      display: block;
+      margin-top: 4px;
+      color: var(--fg-3);
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    .details {
+      padding: 18px 20px;
+    }
+
+    .details-row {
+      display: grid;
+      grid-template-columns: 94px 1fr;
+      gap: 12px;
+      align-items: baseline;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line-1);
+    }
+
+    .details-row:last-child {
+      border-bottom: 0;
+    }
+
+    .details-row .k {
+      color: var(--fg-3);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .details-row .v {
+      color: var(--fg-1);
+      font-size: 13px;
+      line-height: 18px;
+    }
+
+    .faq-section {
+      padding-top: 0;
+      padding-bottom: 70px;
+    }
+
+    .faq-head {
+      display: flex;
+      align-items: flex-end;
+      gap: 24px;
+      margin-bottom: 18px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--line-1);
+    }
+
+    .faq-head > div {
+      flex: 1;
+    }
+
+    .faq-head h2 {
+      margin-top: 8px;
+      color: var(--fg-0);
+      font-size: 24px;
+      line-height: 30px;
+    }
+
+    .faq-head .meta {
+      color: var(--fg-3);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .faq-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .faq-item {
+      overflow: hidden;
+    }
+
+    .faq-item summary {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 18px 20px;
+      color: var(--fg-0);
+      font-weight: 700;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .faq-item summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .faq-num {
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+    }
+
+    .faq-a {
+      padding: 0 20px 18px 20px;
+      color: var(--fg-2);
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .faq-a::before {
+      content: "";
+      display: block;
+      margin-bottom: 14px;
+      border-top: 1px solid var(--line-1);
+    }
+
+    @media (max-width: 960px) {
+      .about-hero-inner,
+      .contact-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .about-grid,
+      .faq-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-network {
+        min-height: 280px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      body {
+        padding-top: 50px;
+      }
+
+      .form-head,
+      .submit-row,
+      .faq-head {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .form-meta {
+        text-align: left;
+      }
+
+      .form-row.two,
+      .radio-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .submit,
+      .submit-row {
+        width: 100%;
+      }
+
+      .about-hero {
+        padding-top: 18px;
+      }
+
+      .hero-title {
+        font-size: 28px;
+      }
+
+      .hero-copy {
+        font-size: 13px;
+        line-height: 20px;
+      }
+
+      .hero-actions {
+        width: 100%;
+        margin-bottom: 18px;
+      }
+
+      .hero-actions a {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .info-card,
+      .contact-form,
+      .channel,
+      .details,
+      .faq-item {
+        box-shadow: 4px 6px 8px rgba(0, 0, 0, 0.34);
+      }
+
+      .info-card {
+        min-height: auto;
+      }
+
+      .hero-network {
+        width: min(330px, 100%);
+        aspect-ratio: 1 / 0.62;
+        min-height: 0;
+        margin: 0 auto;
+        transform: translateY(0);
+      }
+
+      .neuro-node {
+        width: calc(18% * var(--node-scale, 1));
+      }
+
+      .node-repair {
+        top: 2%;
+        left: 15%;
+      }
+
+      .node-web {
+        top: 2%;
+        left: 64%;
+      }
+
+      .node-tools {
+        top: 32%;
+        left: 42%;
+      }
+
+      .node-local {
+        top: 61%;
+        left: 17%;
+      }
+
+      .node-remote {
+        top: 61%;
+        left: 66%;
+      }
+
+      .node-setup {
+        top: 34%;
+        left: 1%;
+      }
+
+    }
+  </style>
+</head>
+<body>
+  <div data-site-header></div>
+  <script src="../../common/site-header.js?v=20260522-header-avatar" data-base="../../"></script>
+  <canvas id="neural-particles" aria-hidden="true"></canvas>
+
+  <main>
+    <section class="about-hero">
+      <div class="about-hero-inner">
+        <div>
+          <p class="eyebrow">About Neurofoundry</p>
+          <h1 class="hero-title">Practical tech help, from repairs to custom systems.</h1>
+          <p class="hero-copy">Neurofoundry is where I help people get technology working again. That can mean driving across Tampa to fix a slow computer, setting up a printer, cleaning up a small business workflow, or building a custom tool when the off-the-shelf options do not fit.</p>
+          <div class="hero-actions">
+            <a class="btn-primary" href="#prototype-contact-form">Start a request</a>
+            <a class="btn-secondary" href="../../services/">View services</a>
+          </div>
+        </div>
+
+        <div class="hero-network" aria-label="Neurofoundry service network">
+          <canvas class="hero-network-canvas" aria-hidden="true"></canvas>
+          <svg class="node-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+            <path data-nodes="repair web" d="M24.5 17.5 L75.5 17.5" />
+            <path data-nodes="repair tools" d="M24.5 17.5 L50 47.5" />
+            <path data-nodes="web tools" d="M75.5 17.5 L50 47.5" />
+            <path data-nodes="tools local" d="M50 47.5 L24.5 77.5" />
+            <path data-nodes="tools remote" d="M50 47.5 L75.5 77.5" />
+            <path data-nodes="local remote" d="M24.5 77.5 L75.5 77.5" />
+            <path class="latent" data-nodes="setup repair" d="M-1 47.5 L24.5 17.5" />
+            <path class="latent" data-nodes="setup local" d="M-1 47.5 L24.5 77.5" />
+            <path class="latent" data-nodes="setup tools" d="M-1 47.5 L50 47.5" />
+            <path class="latent" data-nodes="repair remote" d="M24.5 17.5 L75.5 77.5" />
+            <path class="latent" data-nodes="web local" d="M75.5 17.5 L24.5 77.5" />
+          </svg>
+
+          <span class="neuro-node node-repair" data-node="repair" aria-label="Repair"></span>
+          <span class="neuro-node node-web" data-node="web" aria-label="Websites"></span>
+          <span class="neuro-node node-tools" data-node="tools" aria-label="Custom tools"></span>
+          <span class="neuro-node node-local" data-node="local" aria-label="Tampa local service"></span>
+          <span class="neuro-node node-remote" data-node="remote" aria-label="Remote support"></span>
+          <span class="neuro-node node-setup" data-node="setup" aria-label="Setup help"></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-section" aria-label="What Neurofoundry does">
+      <div class="about-grid">
+        <article class="info-card">
+          <p class="nf-label">01 - What I Do</p>
+          <h2>Fix the thing in front of us.</h2>
+          <p>Slow laptops, broken setups, printer headaches, email problems, websites, small business systems, and custom tools all belong here if they make the day easier.</p>
+        </article>
+
+        <article class="info-card">
+          <p class="nf-label">02 - Why</p>
+          <h2>It should feel safe to ask.</h2>
+          <p>You should not need to know the right technical words before getting help. The point is to understand the problem, explain the options plainly, and leave things better than they were.</p>
+        </article>
+
+        <article class="info-card">
+          <p class="nf-label">03 - How</p>
+          <h2>Local help, practical builds.</h2>
+          <p>Some jobs need a house call. Some need a remote session. Some need a custom system. The shape of the work follows the actual problem.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="contact-section" aria-label="Contact Neurofoundry">
+      <div class="contact-layout">
+        <form class="contact-form" id="prototype-contact-form" autocomplete="off">
+          <div class="form-head">
+            <div>
+              <span class="nf-label">04 - Start The Conversation</span>
+              <h2>Tell me what you need.</h2>
+              <p>Tell me what is broken, confusing, slow, missing, or annoying. Plain language is fine.</p>
+            </div>
+            <div class="form-meta">
+              <div>Form-NF-2026</div>
+              <div class="status"><span class="live-dot" aria-hidden="true"></span>Prototype</div>
+            </div>
+          </div>
+
+          <div class="form-row two">
+            <div class="field">
+              <label for="name">Your name <span class="req">*</span></label>
+              <input class="input" id="name" type="text" placeholder="Your name" required>
+            </div>
+            <div class="field">
+              <label for="email">Email <span class="req">*</span></label>
+              <input class="input" id="email" type="email" placeholder="you@domain.com" required>
+            </div>
+          </div>
+
+          <div class="form-row two">
+            <div class="field">
+              <label for="organization">Organization</label>
+              <input class="input" id="organization" type="text" placeholder="Optional">
+            </div>
+            <div class="field">
+              <label for="timezone">Time zone</label>
+              <select class="select" id="timezone">
+                <option>Select your time zone...</option>
+                <option>Pacific</option>
+                <option>Mountain</option>
+                <option>Central</option>
+                <option>Eastern</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="field">
+              <label>Type of work <span class="req">*</span></label>
+              <div class="radio-grid">
+                <label class="radio-card">
+                  <input type="radio" name="engagement" value="custom-build" checked>
+                  <span class="radio-code">01 - Local Help</span>
+                  <span class="radio-name">Repair / Setup</span>
+                  <span class="radio-meta">Computer - printer - account</span>
+                </label>
+                <label class="radio-card">
+                  <input type="radio" name="engagement" value="support">
+                  <span class="radio-code">02 - Build</span>
+                  <span class="radio-name">Custom Tool</span>
+                  <span class="radio-meta">Website - workflow - automation</span>
+                </label>
+                <label class="radio-card">
+                  <input type="radio" name="engagement" value="conversation">
+                  <span class="radio-code">03 - Other</span>
+                  <span class="radio-name">Conversation</span>
+                  <span class="radio-meta">Questions - planning - not sure</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row two">
+            <div class="field">
+              <label for="budget">Budget range</label>
+              <select class="select" id="budget">
+                <option>Not sure yet</option>
+                <option>Quick local visit</option>
+                <option>Small fix or consultation</option>
+                <option>Single website, tool, or setup</option>
+                <option>Full build or ongoing support</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="timeline">When do you need it?</label>
+              <select class="select" id="timeline">
+                <option>Flexible</option>
+                <option>This week</option>
+                <option>This month</option>
+                <option>This quarter</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="field">
+              <label for="message">Tell me about the work <span class="req">*</span></label>
+              <textarea class="textarea" id="message" placeholder="What is going on? A slow computer, broken printer, account issue, website idea, business workflow, or anything else that needs fixing." required></textarea>
+            </div>
+          </div>
+
+          <label class="check">
+            <input type="checkbox" id="privacy">
+            <span>I need to share private details and would prefer a direct email thread first.</span>
+          </label>
+
+          <div class="submit-row">
+            <button class="submit" type="submit">Submit request</button>
+            <span class="submit-note">Prototype only. No backend wiring yet.</span>
+          </div>
+        </form>
+
+        <aside class="side" aria-label="Other contact details">
+          <div class="side-group">
+            <span class="nf-label">05 - Other Channels</span>
+
+            <a class="channel" href="mailto:info@theneurofoundry.com">
+              <span class="channel-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="1"/><polyline points="3 7 12 13 21 7"/></svg>
+              </span>
+              <span>
+                <span class="channel-label">Direct Line</span>
+                <span class="channel-value">info@theneurofoundry.com</span>
+                <span class="channel-meta"><span class="live-dot" aria-hidden="true"></span>Typical reply within a business day</span>
+              </span>
+            </a>
+
+            <a class="channel" href="mailto:info@theneurofoundry.com?subject=Commission%20Inquiry">
+              <span class="channel-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M5 21V7l7-4 7 4v14"/></svg>
+              </span>
+              <span>
+                <span class="channel-label">Local Service</span>
+                <span class="channel-value">Tampa repair and setup calls</span>
+                <span class="channel-meta">Computers, printers, networks, accounts, and general tech cleanup.</span>
+              </span>
+            </a>
+
+            <a class="channel" href="mailto:info@theneurofoundry.com?subject=Support%20Request">
+              <span class="channel-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3l8 4v6c0 5-3.5 7.5-8 8-4.5-.5-8-3-8-8V7l8-4z"/></svg>
+              </span>
+              <span>
+                <span class="channel-label">Custom Work</span>
+                <span class="channel-value">Websites, tools, and automation</span>
+                <span class="channel-meta">For business systems, internal workflows, and practical software builds.</span>
+              </span>
+            </a>
+          </div>
+
+          <div class="side-group">
+            <span class="nf-label">06 - Location</span>
+            <div class="details">
+              <div class="details-row"><span class="k">Base</span><span class="v">Tampa, Florida</span></div>
+              <div class="details-row"><span class="k">Region</span><span class="v">Tampa Bay and remote support</span></div>
+              <div class="details-row"><span class="k">Hours</span><span class="v">By appointment</span></div>
+              <div class="details-row"><span class="k">Currently</span><span class="v" style="color: var(--ok);"><span class="live-dot" aria-hidden="true"></span>Open for local calls and remote work</span></div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="faq-section" aria-label="Common questions">
+      <div class="faq-head">
+        <div>
+          <span class="nf-label">07 - Common Questions</span>
+          <h2>Before you send it.</h2>
+        </div>
+        <span class="meta">Prototype content</span>
+      </div>
+
+      <div class="faq-grid">
+        <details class="faq-item" open>
+          <summary><span class="faq-num">01</span><span>What kinds of work fit?</span></summary>
+          <div class="faq-a">Computer repair, cleanup, device setup, printer help, account issues, websites, business workflows, automation, local utilities, and custom tools.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span class="faq-num">02</span><span>Do you make house calls?</span></summary>
+          <div class="faq-a">Yes, for the Tampa area when the job makes sense in person. Some problems are faster to fix sitting in front of the actual machine.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span class="faq-num">03</span><span>Can you help remotely?</span></summary>
+          <div class="faq-a">Yes. If the problem can be handled safely over a call, remote session, or email thread, that is often the fastest path.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary><span class="faq-num">04</span><span>What should I include?</span></summary>
+          <div class="faq-a">Say what is happening, what device or service is involved, where you are located if it is a local visit, and what you want working when we are done.</div>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <div data-site-footer></div>
+  <script src="../../common/site-footer.js?v=20260519-footer" data-base="../../"></script>
+  <script src="../../shared/neural-particles.js?v=20260519-services"></script>
+  <script>
+    (function initHeroNetwork() {
+      const network = document.querySelector('.hero-network');
+      if (!network) return;
+
+      const canvas = network.querySelector('.hero-network-canvas');
+      const ctx = canvas.getContext('2d');
+      const nodes = new Map(Array.from(network.querySelectorAll('.neuro-node')).map((node) => [node.dataset.node, node]));
+      const nodeKeys = Array.from(nodes.keys());
+      const pairs = [
+        ['repair', 'web'],
+        ['repair', 'tools'],
+        ['web', 'tools'],
+        ['tools', 'local'],
+        ['tools', 'remote'],
+        ['local', 'remote'],
+        ['setup', 'repair'],
+        ['setup', 'local'],
+        ['setup', 'tools'],
+        ['repair', 'remote'],
+        ['web', 'local']
+      ];
+      const active = new Map(pairs.map((pair) => [pair.join(':'), 0]));
+      const sparks = [];
+      let points = new Map();
+      let animationId = null;
+      let mouse = { x: -9999, y: -9999, active: false };
+      let simulatedMouse = { x: 0, y: 0 };
+      let lastBurst = 0;
+      let lastFrame = 0;
+      let isVisible = true;
+      const frameInterval = 1000 / 30;
+
+      function resize() {
+        const rect = network.getBoundingClientRect();
+        const ratio = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = Math.max(1, Math.floor(rect.width * ratio));
+        canvas.height = Math.max(1, Math.floor(rect.height * ratio));
+        canvas.style.width = `${rect.width}px`;
+        canvas.style.height = `${rect.height}px`;
+        ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+        readPoints();
+      }
+
+      function readPoints() {
+        const networkRect = network.getBoundingClientRect();
+        points = new Map(nodeKeys.map((key) => {
+          const rect = nodes.get(key).getBoundingClientRect();
+          return [key, {
+            x: rect.left - networkRect.left + rect.width / 2,
+            y: rect.top - networkRect.top + rect.height / 2,
+            r: rect.width / 2
+          }];
+        }));
+      }
+
+      function setPairActive(pair, strength) {
+        const key = pair.join(':');
+        active.set(key, Math.max(active.get(key) || 0, strength));
+      }
+
+      function burst(now, forcedCount) {
+        const count = forcedCount || (Math.random() > 0.55 ? 2 : 1);
+        pairs.slice().sort(() => Math.random() - 0.5).slice(0, count).forEach((pair, index) => {
+          setPairActive(pair, 0.8 + Math.random() * 0.35);
+          if (index === 0 || Math.random() > 0.45) {
+            sparks.push({
+              pair,
+              progress: 0,
+              speed: 0.018 + Math.random() * 0.014,
+              life: 1
+            });
+          }
+        });
+        lastBurst = now;
+      }
+
+      function distanceToSegment(px, py, ax, ay, bx, by) {
+        const dx = bx - ax;
+        const dy = by - ay;
+        const lengthSq = dx * dx + dy * dy || 1;
+        const t = Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / lengthSq));
+        const x = ax + t * dx;
+        const y = ay + t * dy;
+        return Math.hypot(px - x, py - y);
+      }
+
+      function drawConnection(a, b, strength, highlighted) {
+        const lineWidth = highlighted ? 1.65 : 0.75 + strength * 1;
+        const opacity = Math.min(0.95, 0.2 + strength * 0.72);
+        const dx = b.x - a.x;
+        const dy = b.y - a.y;
+        const distance = Math.hypot(dx, dy) || 1;
+        const normalX = -dy / distance;
+        const normalY = dx / distance;
+        const wave = Math.sin((performance.now() * 0.0024) + distance * 0.035) * (highlighted ? 18 : 13);
+        const wave2 = Math.cos((performance.now() * 0.0019) + distance * 0.028) * (highlighted ? 9 : 7);
+        const controlX = (a.x + b.x) / 2 + normalX * wave;
+        const controlY = (a.y + b.y) / 2 + normalY * wave;
+        const gradient = ctx.createLinearGradient(a.x, a.y, b.x, b.y);
+        gradient.addColorStop(0, `rgba(224, 71, 60, ${opacity * 0.86})`);
+        gradient.addColorStop(0.5, `rgba(255, 198, 192, ${opacity})`);
+        gradient.addColorStop(1, `rgba(224, 71, 60, ${opacity * 0.86})`);
+
+        ctx.save();
+        ctx.globalCompositeOperation = 'lighter';
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = lineWidth;
+        ctx.lineCap = 'round';
+        ctx.shadowBlur = highlighted ? 16 : 9;
+        ctx.shadowColor = highlighted ? 'rgba(255, 155, 147, 0.55)' : 'rgba(224, 71, 60, 0.34)';
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.quadraticCurveTo(controlX, controlY, b.x, b.y);
+        ctx.stroke();
+
+        if (strength > 0.12) {
+          ctx.strokeStyle = `rgba(255, 155, 147, ${opacity * 0.42})`;
+          ctx.lineWidth = Math.max(0.55, lineWidth * 0.58);
+          ctx.shadowBlur = highlighted ? 12 : 6;
+          ctx.beginPath();
+          ctx.moveTo(a.x + normalX * 5, a.y + normalY * 5);
+          ctx.quadraticCurveTo(
+            controlX - normalX * (8 + wave2),
+            controlY - normalY * (8 + wave2),
+            b.x + normalX * 5,
+            b.y + normalY * 5
+          );
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+
+      function drawMembrane(a, b, strength, phase) {
+        const dx = b.x - a.x;
+        const dy = b.y - a.y;
+        const distance = Math.hypot(dx, dy) || 1;
+        const normalX = -dy / distance;
+        const normalY = dx / distance;
+        const cx = (a.x + b.x) / 2;
+        const cy = (a.y + b.y) / 2;
+        const waveA = Math.sin(phase * 0.0011 + distance * 0.031) * 14;
+        const waveB = Math.cos(phase * 0.0016 + distance * 0.024) * 9;
+        const membraneWidth = 7 + strength * 8;
+        const edgeOpacity = Math.min(0.22, 0.045 + strength * 0.13);
+
+        const c1 = {
+          x: cx + normalX * waveA,
+          y: cy + normalY * waveA
+        };
+        const c2 = {
+          x: cx - normalX * (waveB + membraneWidth * 0.28),
+          y: cy - normalY * (waveB + membraneWidth * 0.28)
+        };
+
+        ctx.save();
+        ctx.globalCompositeOperation = 'lighter';
+        ctx.strokeStyle = `rgba(255, 155, 147, ${edgeOpacity})`;
+        ctx.lineWidth = 0.7;
+        ctx.shadowBlur = 6;
+        ctx.shadowColor = `rgba(224, 71, 60, ${edgeOpacity})`;
+        ctx.beginPath();
+        ctx.moveTo(a.x + normalX * (membraneWidth * 0.72), a.y + normalY * (membraneWidth * 0.72));
+        ctx.quadraticCurveTo(c1.x, c1.y, b.x + normalX * (membraneWidth * 0.72), b.y + normalY * (membraneWidth * 0.72));
+        ctx.stroke();
+
+        ctx.strokeStyle = `rgba(255, 94, 82, ${edgeOpacity * 0.72})`;
+        ctx.lineWidth = 0.55;
+        ctx.beginPath();
+        ctx.moveTo(a.x - normalX * (membraneWidth * 0.52), a.y - normalY * (membraneWidth * 0.52));
+        ctx.quadraticCurveTo(c2.x, c2.y, b.x - normalX * (membraneWidth * 0.52), b.y - normalY * (membraneWidth * 0.52));
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      function bezierPoint(a, c, b, t) {
+        const inv = 1 - t;
+        return {
+          x: inv * inv * a.x + 2 * inv * t * c.x + t * t * b.x,
+          y: inv * inv * a.y + 2 * inv * t * c.y + t * t * b.y
+        };
+      }
+
+      function drawSpark(a, b, spark) {
+        const dx = b.x - a.x;
+        const dy = b.y - a.y;
+        const distance = Math.hypot(dx, dy) || 1;
+        const normalX = -dy / distance;
+        const normalY = dx / distance;
+        const wave = Math.sin((performance.now() * 0.003) + distance * 0.04) * 9;
+        const control = {
+          x: (a.x + b.x) / 2 + normalX * wave,
+          y: (a.y + b.y) / 2 + normalY * wave
+        };
+        const p2 = bezierPoint(a, control, b, spark.progress);
+
+        ctx.save();
+        ctx.globalCompositeOperation = 'lighter';
+        ctx.shadowBlur = 16;
+        ctx.shadowColor = 'rgba(255, 155, 147, 0.78)';
+
+        const glow = ctx.createRadialGradient(p2.x, p2.y, 0, p2.x, p2.y, 8);
+        glow.addColorStop(0, `rgba(255, 238, 232, ${0.95 * spark.life})`);
+        glow.addColorStop(0.38, `rgba(255, 155, 147, ${0.62 * spark.life})`);
+        glow.addColorStop(1, `rgba(224, 71, 60, 0)`);
+        ctx.fillStyle = glow;
+        ctx.beginPath();
+        ctx.arc(p2.x, p2.y, 8, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = `rgba(255, 238, 232, ${0.86 * spark.life})`;
+        ctx.beginPath();
+        ctx.arc(p2.x, p2.y, 2.1, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      function drawNodesInfluence(influencedKeys) {
+        nodes.forEach((node, key) => {
+          node.classList.toggle('influenced', influencedKeys.has(key));
+        });
+      }
+
+      function animate(now) {
+        if (!isVisible) {
+          animationId = null;
+          return;
+        }
+
+        if (now - lastFrame < frameInterval) {
+          animationId = window.requestAnimationFrame(animate);
+          return;
+        }
+        lastFrame = now;
+
+        const rect = network.getBoundingClientRect();
+        ctx.clearRect(0, 0, rect.width, rect.height);
+
+        simulatedMouse.x = rect.width * (0.5 + Math.cos(now * 0.00022) * 0.44);
+        simulatedMouse.y = rect.height * (0.5 + Math.sin(now * 0.00031) * 0.34);
+
+        if (now - lastBurst > 1500 + Math.random() * 900) {
+          burst(now);
+        }
+
+        const influence = mouse.active ? mouse : simulatedMouse;
+        const influenceRadius = mouse.active ? 165 : 95;
+        const influencedKeys = new Set();
+
+        pairs.forEach((pair) => {
+          const key = pair.join(':');
+          const a = points.get(pair[0]);
+          const b = points.get(pair[1]);
+          if (!a || !b) return;
+
+          const pairDist = Math.hypot(a.x - b.x, a.y - b.y);
+          const segmentDist = distanceToSegment(influence.x, influence.y, a.x, a.y, b.x, b.y);
+          const proximity = Math.max(0, 1 - segmentDist / influenceRadius);
+          const base = Math.max(0, 1 - pairDist / (mouse.active ? 410 : 360)) * 0.42;
+          const pulse = active.get(key) || 0;
+          const strength = Math.max(base, proximity * (mouse.active ? 1 : 0.62), pulse);
+
+          active.set(key, Math.max(0, pulse - 0.012));
+
+          if (strength > 0.035) {
+            drawMembrane(a, b, strength, now);
+          }
+          if (strength > 0.08) {
+            drawConnection(a, b, strength, proximity > 0.35 || pulse > 0.62);
+          }
+          if (strength > 0.42) {
+            influencedKeys.add(pair[0]);
+            influencedKeys.add(pair[1]);
+          }
+        });
+
+        for (let i = sparks.length - 1; i >= 0; i -= 1) {
+          const spark = sparks[i];
+          const a = points.get(spark.pair[0]);
+          const b = points.get(spark.pair[1]);
+          if (a && b) drawSpark(a, b, spark);
+          spark.progress += spark.speed;
+          spark.life = Math.max(0, 1 - Math.max(0, spark.progress - 0.72) / 0.28);
+          if (spark.progress >= 1.05 || spark.life <= 0) sparks.splice(i, 1);
+        }
+
+        drawNodesInfluence(influencedKeys);
+        animationId = window.requestAnimationFrame(animate);
+      }
+
+      network.addEventListener('mousemove', (event) => {
+        const rect = network.getBoundingClientRect();
+        mouse.x = event.clientX - rect.left;
+        mouse.y = event.clientY - rect.top;
+        mouse.active = true;
+      });
+
+      network.addEventListener('mouseenter', () => {
+        burst(performance.now(), 4);
+      });
+
+      network.addEventListener('mouseleave', () => {
+        mouse.active = false;
+      });
+
+      window.addEventListener('resize', resize);
+      resize();
+      animationId = window.requestAnimationFrame(animate);
+
+      const visibilityObserver = new IntersectionObserver((entries) => {
+        isVisible = entries.some((entry) => entry.isIntersecting);
+        if (isVisible && !animationId) {
+          lastFrame = 0;
+          readPoints();
+          animationId = window.requestAnimationFrame(animate);
+        }
+      }, { threshold: 0.01 });
+
+      visibilityObserver.observe(network);
+
+      window.addEventListener('beforeunload', () => {
+        if (animationId) window.cancelAnimationFrame(animationId);
+        visibilityObserver.disconnect();
+      });
+    })();
+
+    document.getElementById('prototype-contact-form').addEventListener('submit', (event) => {
+      event.preventDefault();
+      const button = event.currentTarget.querySelector('.submit');
+      button.textContent = 'Request queued';
+      button.style.background = 'var(--ok)';
+      button.style.borderColor = 'var(--ok)';
+      button.disabled = true;
+    });
+  </script>
+</body>
+</html>

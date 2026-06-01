@@ -38,6 +38,22 @@ function recordSentEmail(entry) {
   }
 }
 
+function escapeHtml(value) {
+  return String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function textToHtml(value) {
+  return escapeHtml(value)
+    .split(/\r?\n/)
+    .map(line => line.trim() ? line : '&nbsp;')
+    .join('<br>');
+}
+
 async function getTransporter() {
   if (transporterPromise) {
     return transporterPromise;
@@ -87,6 +103,75 @@ async function getTransporter() {
   })();
 
   return transporterPromise;
+}
+
+async function sendDevConsoleEmail(message = {}) {
+  const transporter = await getTransporter();
+  if (!transporter || transporterMode !== 'smtp') {
+    console.log('Email service not configured - skipping DevConsole email');
+    return {
+      sent: false,
+      mode: transporterMode,
+      reason: 'real_smtp_not_configured'
+    };
+  }
+
+  const to = String(message.to || '').trim();
+  const subject = String(message.subject || '').trim();
+  const text = String(message.text || message.body || '').trim();
+  const html = String(message.html || '').trim();
+  const requestedFrom = String(message.from || '').trim();
+  const fromAddress = requestedFrom || process.env.EMAIL_FROM || process.env.SMTP_USER || 'noreply@neurofoundry.local';
+  const type = String(message.type || 'devconsole').trim() || 'devconsole';
+
+  if (!to || !to.includes('@')) {
+    throw new Error('Recipient email is required');
+  }
+  if (!subject) {
+    throw new Error('Subject is required');
+  }
+  if (!text && !html) {
+    throw new Error('Message body is required');
+  }
+
+  const info = await transporter.sendMail({
+    from: fromAddress,
+    to,
+    subject,
+    text: text || undefined,
+    html: html || textToHtml(text)
+  });
+  const previewUrl = nodemailer.getTestMessageUrl(info) || null;
+  recordSentEmail({
+    type,
+    from: fromAddress,
+    to,
+    subject,
+    messageId: info.messageId,
+    previewUrl,
+    mode: transporterMode
+  });
+
+  console.log(`DevConsole email sent to ${to}`);
+  if (previewUrl) {
+    console.log(`Ethereal preview URL: ${previewUrl}`);
+  }
+
+  return {
+    sent: true,
+    type,
+    source: 'devconsole',
+    from: fromAddress,
+    to,
+    subject,
+    messageId: info.messageId,
+    previewUrl,
+    mode: transporterMode
+  };
+}
+
+async function sendCrmEmail(message = {}) {
+  return sendDevConsoleEmail({ ...message, type: message.type || 'crm' });
 }
 
 /**
@@ -375,6 +460,8 @@ async function sendSkeletonKeyAccessCodeEmail(user, code) {
 }
 
 module.exports = {
+  sendDevConsoleEmail,
+  sendCrmEmail,
   sendVerificationEmail,
   sendWelcomeEmail,
   sendPasswordResetEmail,

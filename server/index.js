@@ -25,7 +25,7 @@ const paymentRoutes = require('./routes/payments');
 const forgeRoutes = require('./routes/forge');
 const { findUserById } = require('./services/userService');
 const { getProfileAvatar } = require('./services/r2AvatarClient');
-const { getLastSentEmail, getSentEmailLog } = require('./services/emailService');
+const { getLastSentEmail, getSentEmailLog, sendDevConsoleEmail } = require('./services/emailService');
 const { getEmailDeliveryLog, getEmailQueueSnapshot } = require('./services/emailOrchestrator');
 const skeletonKeyChangelog = require('./data/skeleton-key-changelog.json');
 
@@ -137,6 +137,93 @@ app.get('/api/skeleton-key/changelog', (req, res) => {
     messageId: changelog.messageId || key,
     ...changelog
   });
+});
+
+function getDevConsoleSendKey(req) {
+  const auth = String(req.headers.authorization || '').trim();
+  if (auth.toLowerCase().startsWith('bearer ')) {
+    return auth.slice(7).trim();
+  }
+  return String(
+    req.headers['x-devconsole-send-key']
+    || req.headers['x-neuroforge-console-key']
+    || ''
+  ).trim();
+}
+
+app.post('/api/dev/send', async (req, res, next) => {
+  try {
+    const expectedKey = String(process.env.DEVCONSOLE_SEND_API_KEY || '').trim();
+    if (!expectedKey) {
+      return res.status(503).json({
+        success: false,
+        message: 'DevConsole send endpoint is not configured.'
+      });
+    }
+
+    const providedKey = getDevConsoleSendKey(req);
+    if (!providedKey || providedKey !== expectedKey) {
+      return res.status(401).json({
+        success: false,
+        message: 'Unauthorized'
+      });
+    }
+
+    const fromAddress = String(req.body.from || '').trim();
+    if (fromAddress && !/(^|<)[^<>\s@]+@theneurofoundry\.com(>|$)/i.test(fromAddress)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Sender must be a theneurofoundry.com address.'
+      });
+    }
+
+    const toAddress = String(req.body.to || '').trim();
+    const subject = String(req.body.subject || '').trim();
+    const text = String(req.body.text || req.body.body || '').trim();
+    const html = String(req.body.html || '').trim();
+    if (!toAddress || !toAddress.includes('@')) {
+      return res.status(400).json({
+        success: false,
+        message: 'Recipient email is required.'
+      });
+    }
+    if (!subject) {
+      return res.status(400).json({
+        success: false,
+        message: 'Subject is required.'
+      });
+    }
+    if (!text && !html) {
+      return res.status(400).json({
+        success: false,
+        message: 'Message body is required.'
+      });
+    }
+
+    const result = await sendDevConsoleEmail({
+      to: toAddress,
+      from: fromAddress,
+      subject,
+      text,
+      html,
+      type: req.body.type || 'devconsole'
+    });
+
+    if (!result?.sent) {
+      return res.status(503).json({
+        success: false,
+        message: result?.reason || 'Email was not sent',
+        data: result || null
+      });
+    }
+
+    return res.json({
+      success: true,
+      data: result
+    });
+  } catch (error) {
+    return next(error);
+  }
 });
 
 // Dev-only server controls

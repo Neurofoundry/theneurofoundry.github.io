@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About · Neurofoundry</title>
+<meta name="theme-color" content="#080909">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Michroma&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+
+:root {
+  --bg-0:#080909; --bg-1:#0E0F0F; --bg-2:#101111; --bg-3:#161919; --bg-4:#1B1F1F;
+  --fg-0:#FFFFFF; --fg-1:#E6E7E7; --fg-2:#BCBBBC; --fg-3:#8A8A8B; --fg-4:#5A5C5C;
+  --line-1:#1F2222; --line-2:#2A2E2E;
+  --accent:#D14B20; --accent-hi:#E25C30; --accent-lo:#B43F1A;
+  --accent-tint:rgba(209,75,32,0.12); --accent-soft:#ff9b93;
+  --ok:#6FB178; --warn:#E2A23A; --fail:#D85C5C; --info:#4FA3D1; --live:#4ED27C;
+  --font-display:"Michroma","Eurostile","Bahnschrift",system-ui,sans-serif;
+  --font-sans:"Inter",ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --t-fast:120ms; --t-base:180ms;
+  --ease-out:cubic-bezier(.2,.7,.2,1);
+  --pad-x:clamp(16px,3vw,32px);
+  --page-max:1400px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg-2); color:var(--fg-1);
+  font-family:var(--font-sans); font-size:14px; line-height:1.5;
+  -webkit-font-smoothing:antialiased; letter-spacing:0;
+  overflow-x:hidden; padding-top:64px;
+}
+img,svg,video{display:block; max-width:100%}
+a{color:inherit; text-decoration:none}
+*:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:4px}
+*::-webkit-scrollbar{width:10px; height:10px}
+*::-webkit-scrollbar-track{background:transparent}
+*::-webkit-scrollbar-thumb{background:var(--line-2); border-radius:999px; border:2px solid var(--bg-2)}
+
+/* ── label/tag/live ── */
+.nf-label{
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:var(--font-mono); font-size:11px; font-weight:500;
+  letter-spacing:0.14em; color:var(--accent); text-transform:uppercase;
+}
+.nf-label::before{
+  content:""; width:8px; height:8px;
+  clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
+  background:var(--accent);
+}
+.nf-tag{
+  display:inline-flex; align-items:center; gap:6px;
+  padding:4px 9px;
+  font-family:var(--font-mono); font-size:10.5px; font-weight:500;
+  letter-spacing:0.08em; color:var(--accent-hi);
+  background:var(--accent-tint);
+  border:1px solid rgba(209,75,32,0.35); border-radius:3px;
+  text-transform:uppercase;
+}
+.nf-tag--neutral{ color:var(--fg-2); background:var(--bg-3); border-color:var(--line-1) }
+.nf-mono{font-family:var(--font-mono)}
+.nf-live{
+  width:7px; height:7px; border-radius:50%;
+  background:var(--live); display:inline-block;
+  box-shadow:0 0 0 2px rgba(78,210,124,.18);
+  animation:nf-pulse 1.6s linear infinite;
+}
+@keyframes nf-pulse{
+  0%,100%{opacity:1; transform:scale(1)}
+  50%{opacity:.55; transform:scale(.92)}
+}
+
+/* ── top header ── */
+.site-header{
+  position:fixed; top:0; left:0; right:0; z-index:50;
+  background:rgba(8,9,9,0.92); backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line-1);
+}
+.site-header-inner{
+  height:64px; max-width:var(--page-max); margin:0 auto;
+  padding:0 var(--pad-x);
+  display:flex; align-items:center; gap:28px;
+}
+.brand{display:flex; align-items:center; gap:12px}
+.brand-mark{
+  position:relative; width:28px; height:28px; flex-shrink:0;
+}
+.brand-mark::before, .brand-mark::after{
+  content:""; position:absolute; inset:0;
+  clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
+}
+.brand-mark::before{background:var(--accent)}
+.brand-mark::after{inset:1.5px; background:var(--bg-0)}
+.brand-mark span{
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-display); font-size:11px;
+  color:var(--accent); z-index:1;
+}
+.brand-wordmark{
+  font-family:var(--font-display); font-weight:400;
+  font-size:13px; letter-spacing:0.22em; color:var(--fg-0);
+}
+
+/* ── page nav pill ── */
+.page-nav{
+  display:flex; gap:4px; padding:4px; margin-left:auto;
+  background:var(--bg-1); border:1px solid var(--line-1);
+  border-radius:999px;
+}
+.page-nav a{
+  padding:7px 14px; font-size:12px; font-weight:500;
+  color:var(--fg-3); border-radius:999px;
+  transition:all var(--t-fast);
+}
+.page-nav a:hover{ color:var(--fg-0) }
+.page-nav a[aria-current="page"]{ background:var(--accent); color:#fff; font-weight:600 }
+
+/* ── breadcrumb / page header strip ── */
+.page-hero{
+  position:relative; overflow:hidden;
+  background:var(--bg-0);
+  border-bottom:1px solid var(--line-1);
+  padding:64px var(--pad-x) 56px;
+}
+.page-hero::before{
+  content:""; position:absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px,transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px,transparent 1px);
+  background-size:32px 32px;
+  pointer-events:none;
+}
+.page-hero-inner{
+  position:relative; max-width:var(--page-max); margin:0 auto;
+}
+.page-hero h1{
+  font-family:var(--font-display); font-weight:400;
+  font-size:clamp(1.8rem, 4.2vw, 3.2rem); line-height:1.08;
+  letter-spacing:-0.005em; color:var(--fg-0);
+  margin:14px 0 14px; max-width:880px;
+}
+.page-hero h1 .accent{ color:var(--accent) }
+.page-hero .lead{
+  font-size:clamp(0.95rem, 1.3vw, 1.05rem); line-height:1.55;
+  color:var(--fg-2); max-width:620px; margin:0;
+  font-weight:300;
+}
+.page-hero-meta{
+  display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+}
+.page-hero-meta .nf-mono{ font-size:11.5px; color:var(--fg-3) }
+.page-hero-sep{ color:var(--fg-4); font-size:12px }
+
+/* ── footer ── */
+.site-footer{
+  padding:20px var(--pad-x);
+  background:var(--bg-0);
+  border-top:1px solid var(--line-1);
+}
+.site-footer-inner{
+  max-width:var(--page-max); margin:0 auto;
+  display:flex; justify-content:space-between; align-items:center;
+  gap:24px; flex-wrap:wrap;
+  font-family:var(--font-mono); font-size:11px; color:var(--fg-3);
+  letter-spacing:0.04em;
+}
+.site-footer a{
+  color:var(--fg-3); padding:4px 10px;
+  transition:color var(--t-fast);
+}
+.site-footer a:hover{ color:var(--accent) }
+.site-footer-meta{display:flex; align-items:center; gap:10px}
+.site-footer-links{display:flex; align-items:center; gap:4px; flex-wrap:wrap}
+
+@media (max-width:768px){
+  body{ padding-top:56px }
+  .site-header-inner{ height:56px; gap:14px }
+  .page-nav a{ padding:6px 10px; font-size:11px }
+  .page-hero{ padding:48px 20px 40px }
+}
+
+
+/* ABOUT */
+.ab-hero-grid{
+  display:grid; grid-template-columns:1.3fr 1fr; gap:48px;
+  align-items:flex-start; margin-top:18px;
+}
+.ab-hero-left{ display:flex; flex-direction:column; gap:24px }
+.ab-hero-stats{
+  border:1px solid var(--line-1); border-radius:10px;
+  display:grid; grid-template-columns:1fr 1fr;
+  background:var(--bg-1);
+}
+.ab-hero-stat{
+  padding:24px;
+  display:flex; flex-direction:column; gap:6px;
+}
+.ab-hero-stat:nth-child(odd){ border-right:1px solid var(--line-1) }
+.ab-hero-stat:nth-child(1), .ab-hero-stat:nth-child(2){ border-bottom:1px solid var(--line-1) }
+.ab-hero-stat .v{
+  font-family:var(--font-display); font-size:28px; color:var(--fg-0);
+  letter-spacing:0.02em;
+}
+.ab-hero-stat .k{
+  font-family:var(--font-mono); font-size:10.5px;
+  letter-spacing:0.1em; color:var(--fg-3); text-transform:uppercase;
+}
+.ab-hero-stat .d{ font-size:12px; color:var(--fg-3); margin-top:4px }
+
+/* Manifesto block */
+.ab-manifesto{
+  padding:80px var(--pad-x);
+  background:var(--bg-2); border-bottom:1px solid var(--line-1);
+}
+.ab-manifesto-inner{
+  max-width:840px; margin:0 auto;
+  display:flex; flex-direction:column; gap:24px;
+}
+.ab-manifesto h2{
+  font-family:var(--font-sans); font-weight:600;
+  font-size:clamp(1.5rem, 2.6vw, 2.25rem); line-height:1.15;
+  color:var(--fg-0); margin:8px 0 0; letter-spacing:-0.01em;
+}
+.ab-manifesto h2 .accent{ color:var(--fg-3) }
+.ab-manifesto p{
+  font-size:16px; line-height:1.65; color:var(--fg-1); margin:0;
+}
+.ab-manifesto p.lead{
+  font-size:18px; color:var(--fg-0); font-weight:300;
+  line-height:1.55;
+}
+.ab-manifesto blockquote{
+  margin:8px 0; padding:20px 28px;
+  border-left:2px solid var(--accent);
+  background:var(--bg-1);
+  font-family:var(--font-display); font-weight:400;
+  font-size:18px; line-height:1.4; color:var(--fg-0);
+}
+.ab-manifesto blockquote cite{
+  display:block; margin-top:14px;
+  font-family:var(--font-mono); font-size:11px; font-style:normal;
+  letter-spacing:0.1em; color:var(--fg-3);
+  text-transform:uppercase;
+}
+
+/* Principles grid */
+.ab-principles{
+  padding:80px var(--pad-x);
+  background:var(--bg-1); border-bottom:1px solid var(--line-1);
+}
+.ab-principles-inner{
+  max-width:var(--page-max); margin:0 auto;
+}
+.ab-section-head{
+  display:flex; align-items:flex-end; gap:24px;
+  margin-bottom:40px; padding-bottom:20px;
+  border-bottom:1px solid var(--line-1);
+}
+.ab-section-head > div:first-child{ flex:1; min-width:0 }
+.ab-section-head h3{
+  font-family:var(--font-sans); font-weight:600;
+  font-size:clamp(1.4rem, 2.6vw, 2.125rem); line-height:1.1;
+  color:var(--fg-0); margin:8px 0 0; letter-spacing:-0.01em;
+}
+.ab-section-head h3 .accent{ color:var(--fg-3) }
+.ab-section-head .meta{
+  margin-left:auto; font-family:var(--font-mono); font-size:11px;
+  color:var(--fg-3); flex-shrink:0;
+}
+
+.ab-principles-grid{
+  display:grid; grid-template-columns:repeat(2, 1fr);
+  border:1px solid var(--line-1); border-radius:10px;
+  overflow:hidden; background:var(--bg-2);
+}
+.ab-principle{
+  padding:32px;
+  border-right:1px solid var(--line-1);
+  border-bottom:1px solid var(--line-1);
+  position:relative; transition:background var(--t-fast);
+}
+.ab-principle:nth-child(even){ border-right:none }
+.ab-principle:nth-last-child(-n+2){ border-bottom:none }
+.ab-principle:hover{ background:var(--bg-3) }
+.ab-principle-num{
+  font-family:var(--font-mono); font-size:11px;
+  color:var(--fg-4); letter-spacing:0.14em; margin-bottom:14px;
+}
+.ab-principle h4{
+  font-family:var(--font-sans); font-weight:600;
+  font-size:18px; line-height:1.3; color:var(--fg-0);
+  margin:0 0 10px 0; letter-spacing:-0.005em;
+}
+.ab-principle p{
+  font-size:13.5px; line-height:1.6; color:var(--fg-2); margin:0;
+}
+
+/* Timeline */
+.ab-timeline-sec{
+  padding:80px var(--pad-x);
+  background:var(--bg-2); border-bottom:1px solid var(--line-1);
+}
+.ab-timeline-sec-inner{ max-width:var(--page-max); margin:0 auto }
+
+.ab-timeline{
+  position:relative; padding-left:32px;
+  border-left:1px solid var(--line-1);
+  margin-left:8px;
+}
+.ab-timeline-entry{
+  position:relative; padding-bottom:36px;
+}
+.ab-timeline-entry:last-child{ padding-bottom:0 }
+.ab-timeline-marker{
+  position:absolute; left:-40px; top:6px;
+  width:14px; height:14px;
+  background:var(--accent);
+  clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
+  box-shadow:0 0 0 4px var(--bg-2);
+}
+.ab-timeline-entry:not(:first-child) .ab-timeline-marker{
+  background:var(--bg-2); border:1px solid var(--line-2);
+  clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
+}
+.ab-timeline-date{
+  font-family:var(--font-mono); font-size:11px;
+  color:var(--accent); letter-spacing:0.1em; margin-bottom:6px;
+  text-transform:uppercase;
+}
+.ab-timeline-entry h4{
+  font-family:var(--font-sans); font-weight:600;
+  font-size:17px; color:var(--fg-0); margin:0 0 6px;
+  letter-spacing:-0.005em;
+}
+.ab-timeline-entry p{
+  font-size:13.5px; line-height:1.6; color:var(--fg-2);
+  margin:0 0 12px; max-width:680px;
+}
+.ab-timeline-detail{
+  display:inline-flex; align-items:center; gap:10px;
+  padding:8px 14px;
+  background:var(--bg-1); border:1px solid var(--line-1);
+  border-radius:6px;
+  font-family:var(--font-mono); font-size:11px;
+  color:var(--fg-3);
+}
+.ab-timeline-detail span{ color:var(--fg-1) }
+
+/* Team */
+.ab-team-sec{
+  padding:80px var(--pad-x);
+  background:var(--bg-1);
+}
+.ab-team-sec-inner{ max-width:var(--page-max); margin:0 auto }
+.ab-team-grid{
+  display:grid; grid-template-columns:repeat(3, 1fr); gap:16px;
+}
+.ab-member{
+  padding:24px;
+  background:var(--bg-2); border:1px solid var(--line-1);
+  border-radius:10px;
+  display:flex; flex-direction:column; gap:14px;
+  transition:border-color var(--t-fast), transform var(--t-fast);
+}
+.ab-member:hover{ border-color:var(--line-2); transform:translateY(-2px) }
+.ab-member-head{ display:flex; align-items:center; gap:16px }
+.ab-member-hex{
+  width:56px; height:56px; flex-shrink:0;
+  position:relative;
+}
+.ab-member-hex::before, .ab-member-hex::after{
+  content:""; position:absolute; inset:0;
+  clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
+}
+.ab-member-hex::before{ background:var(--accent) }
+.ab-member-hex::after{
+  inset:2px; background:var(--bg-3);
+  display:flex; align-items:center; justify-content:center;
+}
+.ab-member-hex span{
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-display); font-size:14px;
+  color:var(--fg-0); z-index:1; letter-spacing:0.06em;
+}
+.ab-member-meta .name{
+  font-family:var(--font-sans); font-size:15px; font-weight:600;
+  color:var(--fg-0); margin:0;
+}
+.ab-member-meta .role{
+  font-family:var(--font-mono); font-size:11px;
+  color:var(--accent); letter-spacing:0.06em;
+  text-transform:uppercase; margin-top:4px;
+}
+.ab-member-bio{
+  font-size:13px; line-height:1.55; color:var(--fg-2); margin:0;
+  flex:1;
+}
+.ab-member-foot{
+  display:flex; align-items:center; gap:10px;
+  padding-top:14px; border-top:1px solid var(--line-1);
+  font-family:var(--font-mono); font-size:11px; color:var(--fg-3);
+}
+.ab-member-foot .handle{ color:var(--fg-1) }
+
+/* CTA */
+.ab-cta{
+  padding:64px var(--pad-x) 80px;
+  background:var(--bg-1);
+  text-align:center;
+}
+.ab-cta-inner{
+  max-width:680px; margin:0 auto;
+  padding:48px 40px;
+  background:var(--bg-2); border:1px solid var(--line-1);
+  border-radius:12px;
+  position:relative; overflow:hidden;
+}
+.ab-cta-inner::before{
+  content:""; position:absolute; right:-80px; top:-80px;
+  width:240px; height:240px;
+  background:radial-gradient(circle, var(--accent-tint) 0%, transparent 70%);
+}
+.ab-cta-inner > *{ position:relative }
+.ab-cta h3{
+  font-family:var(--font-display); font-weight:400;
+  font-size:clamp(1.4rem, 2.4vw, 2rem); line-height:1.1;
+  color:var(--fg-0); margin:16px 0 12px;
+}
+.ab-cta p{
+  font-size:14.5px; line-height:1.6; color:var(--fg-2);
+  margin:0 auto 24px; max-width:480px;
+}
+.ab-cta-actions{
+  display:flex; gap:10px; justify-content:center; flex-wrap:wrap;
+}
+.btn-primary, .btn-secondary{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:12px 22px; font-size:13px; font-weight:600;
+  border-radius:6px; cursor:pointer; transition:all var(--t-fast);
+  text-decoration:none; border:1px solid; font-family:inherit;
+}
+.btn-primary{ background:var(--accent); color:#fff; border-color:var(--accent) }
+.btn-primary::after{ content:"→" }
+.btn-primary:hover{ background:var(--accent-hi); transform:translateY(-1px) }
+.btn-secondary{ background:transparent; color:var(--fg-1); border-color:var(--line-2) }
+.btn-secondary:hover{ background:var(--bg-3); border-color:var(--accent) }
+
+@media (max-width:1100px){
+  .ab-hero-grid{ grid-template-columns:1fr; gap:32px }
+  .ab-team-grid{ grid-template-columns:repeat(2, 1fr) }
+}
+@media (max-width:768px){
+  .ab-manifesto, .ab-principles, .ab-timeline-sec, .ab-team-sec, .ab-cta{ padding:48px 20px }
+  .ab-principles-grid{ grid-template-columns:1fr }
+  .ab-principle{ border-right:none !important }
+  .ab-principle:not(:last-child){ border-bottom:1px solid var(--line-1) !important }
+  .ab-principle:last-child{ border-bottom:none !important }
+  .ab-section-head{ flex-direction:column; align-items:flex-start; gap:8px }
+  .ab-section-head .meta{ margin-left:0 }
+  .ab-team-grid{ grid-template-columns:1fr }
+  .ab-cta-inner{ padding:32px 24px }
+}
+
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="brand" href="index.html" aria-label="Neurofoundry home">
+      <div class="brand-mark" aria-hidden="true"><span>N</span></div>
+      <span class="brand-wordmark">NEUROFOUNDRY</span>
+    </a>
+    <nav class="page-nav" aria-label="Page navigation">
+      <a href="Workshop.html">Workshop</a>
+      <a href="About.html" aria-current="page">About</a>
+      <a href="Contact.html">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-hero-meta">
+      <span class="nf-tag">§ 01 · ABOUT</span>
+      <span class="page-hero-sep">·</span>
+      <span class="nf-mono"><span class="nf-live"></span> Operating since aug 2023</span>
+    </div>
+    <h1>We build the tools we<br><span class="accent">wish existed.</span></h1>
+    <p class="lead">Neurofoundry is a small team of engineers and researchers building practical AI systems for people doing real work. We ship local-first software, custom assistants, and free utilities.</p>
+
+    <div class="ab-hero-grid">
+      <div class="ab-hero-left">
+        <p style="font-size:16px;line-height:1.7;color:var(--fg-1);margin:0;max-width:560px">
+          We started because the tools we wanted didn't exist — at least not in the form we needed. So we built them. Then someone asked if they could use one. So we shipped it. Now we do that for a living.
+        </p>
+        <p style="font-size:14.5px;line-height:1.7;color:var(--fg-2);margin:0;max-width:560px">
+          Today we work with industrial design teams, security-conscious individuals, and the rare client who wants AI that actually understands their workflow instead of replacing it.
+        </p>
+      </div>
+      <div class="ab-hero-stats">
+        <div class="ab-hero-stat">
+          <div class="k">Founded</div>
+          <div class="v">2023</div>
+          <div class="d">oakland, ca</div>
+        </div>
+        <div class="ab-hero-stat">
+          <div class="k">Team</div>
+          <div class="v">6</div>
+          <div class="d">4 timezones</div>
+        </div>
+        <div class="ab-hero-stat">
+          <div class="k">Tools shipped</div>
+          <div class="v">12</div>
+          <div class="d">9 free · 3 commercial</div>
+        </div>
+        <div class="ab-hero-stat">
+          <div class="k">Engagements</div>
+          <div class="v">47</div>
+          <div class="d">since inception</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MANIFESTO -->
+<section class="ab-manifesto">
+  <div class="ab-manifesto-inner">
+    <span class="nf-label">§ 02 · MANIFESTO</span>
+    <h2>What we believe, <span class="accent">in writing.</span></h2>
+    <p class="lead">AI tooling has a discipline problem. Everything ships as a chatbot wrapped around a black box, sold to people who don't know what they're buying, and abandoned when the next funding round happens.</p>
+    <p>We think there's a better way. Smaller, sharper tools. Local execution. Transparent state. Support windows measured in years, not press cycles. AI that integrates into work people already do, instead of asking them to do their work differently.</p>
+    <blockquote>
+      The engine is a mind for the network you design.
+      <cite>— from the inscription on our anvil</cite>
+    </blockquote>
+    <p>That's the line we put on the wall, and the question we ask before every commit: does this tool make the person using it more capable, or does it make them more dependent? We only ship the first kind.</p>
+  </div>
+</section>
+
+<!-- PRINCIPLES -->
+<section class="ab-principles">
+  <div class="ab-principles-inner">
+    <div class="ab-section-head">
+      <div>
+        <span class="nf-label">§ 03 · PRINCIPLES</span>
+        <h3>Four rules <span class="accent">we don't break.</span></h3>
+      </div>
+      <span class="meta">last revised feb 2026</span>
+    </div>
+    <div class="ab-principles-grid">
+      
+        <div class="ab-principle">
+          <div class="ab-principle-num">PRINCIPLE 01</div>
+          <h4>Tools first, products second.</h4>
+          <p>Every system we ship started as an internal tool. If we wouldn't reach for it at our own bench, we don't release it.</p>
+        </div>
+        <div class="ab-principle">
+          <div class="ab-principle-num">PRINCIPLE 02</div>
+          <h4>Local by default.</h4>
+          <p>Your data, your machine, your keys. The cloud is a feature, not a foundation. Sovereignty over convenience.</p>
+        </div>
+        <div class="ab-principle">
+          <div class="ab-principle-num">PRINCIPLE 03</div>
+          <h4>Show the seams.</h4>
+          <p>No magic. Every system exposes its inputs, its state, and its reasoning. Black boxes are accidents waiting to ship.</p>
+        </div>
+        <div class="ab-principle">
+          <div class="ab-principle-num">PRINCIPLE 04</div>
+          <h4>Ship slow, support forever.</h4>
+          <p>Fewer releases, longer support windows. We patch tools five years old because someone still depends on them.</p>
+        </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section class="ab-timeline-sec">
+  <div class="ab-timeline-sec-inner">
+    <div class="ab-section-head">
+      <div>
+        <span class="nf-label">§ 04 · LINEAGE</span>
+        <h3>How we got here, <span class="accent">in chronological order.</span></h3>
+      </div>
+      <span class="meta">2.8 years · 12 milestones</span>
+    </div>
+    <div class="ab-timeline">
+      
+        <div class="ab-timeline-entry">
+          <span class="ab-timeline-marker" aria-hidden="true"></span>
+          <div class="ab-timeline-date">apr 2026 · v2.4</div>
+          <h4>Constraint solver rewrite.</h4>
+          <p>3.4× faster pathfinding on assemblies over 10k parts. Spatial diff view for revisions ships to Thalamus.</p>
+          <div class="ab-timeline-detail">shipped <span>42 commits · 6 weeks</span></div>
+        </div>
+        <div class="ab-timeline-entry">
+          <span class="ab-timeline-marker" aria-hidden="true"></span>
+          <div class="ab-timeline-date">feb 2026</div>
+          <h4>Aegis · Skeleton Key public release.</h4>
+          <p>Local-first secrets vault, AES-256, no telemetry, no cloud. Free. 12,000 downloads in the first month.</p>
+          <div class="ab-timeline-detail">license <span>MIT</span></div>
+        </div>
+        <div class="ab-timeline-entry">
+          <span class="ab-timeline-marker" aria-hidden="true"></span>
+          <div class="ab-timeline-date">sep 2025</div>
+          <h4>Foundry workbench reaches stability.</h4>
+          <p>Continuously-running development surface for AI agents. Used internally for 18 months. v1.0 stamped.</p>
+          
+        </div>
+        <div class="ab-timeline-entry">
+          <span class="ab-timeline-marker" aria-hidden="true"></span>
+          <div class="ab-timeline-date">mar 2024</div>
+          <h4>First client engagement.</h4>
+          <p>Custom AI assistant deployed for an industrial design team. The contract bought us six months of headroom.</p>
+          
+        </div>
+        <div class="ab-timeline-entry">
+          <span class="ab-timeline-marker" aria-hidden="true"></span>
+          <div class="ab-timeline-date">aug 2023 · genesis</div>
+          <h4>Neurofoundry founded.</h4>
+          <p>Two engineers, one anvil graphic, and a question: what would AI tooling look like if you built it for the people doing real work?</p>
+          <div class="ab-timeline-detail">founded <span>oakland, ca</span></div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section class="ab-team-sec">
+  <div class="ab-team-sec-inner">
+    <div class="ab-section-head">
+      <div>
+        <span class="nf-label">§ 05 · OPERATORS</span>
+        <h3>The people who <span class="accent">do the work.</span></h3>
+      </div>
+      <span class="meta">6 humans · 0 mascots</span>
+    </div>
+    <div class="ab-team-grid">
+      
+        <article class="ab-member">
+          <div class="ab-member-head">
+            <div class="ab-member-hex" aria-hidden="true"><span>RN</span></div>
+            <div class="ab-member-meta">
+              <p class="name">Ravi Nair</p>
+              <div class="role">Founder · Systems</div>
+            </div>
+          </div>
+          <p class="ab-member-bio">14 years on bridges, terminals, and data-center shells. Convinced AI should serve people who build physical things.</p>
+          <div class="ab-member-foot">
+            <span class="handle">@ravi.nair</span>
+            <span>·</span>
+            <span>OAKLAND · UTC-8</span>
+          </div>
+        </article>
+        <article class="ab-member">
+          <div class="ab-member-head">
+            <div class="ab-member-hex" aria-hidden="true"><span>MT</span></div>
+            <div class="ab-member-meta">
+              <p class="name">Mira Tanaka</p>
+              <div class="role">Co-founder · AI Research</div>
+            </div>
+          </div>
+          <p class="ab-member-bio">Spent a decade making models that don't lie. Now making models that don't lie quickly. Authored 7 patents.</p>
+          <div class="ab-member-foot">
+            <span class="handle">@mira.t</span>
+            <span>·</span>
+            <span>KYOTO · UTC+9</span>
+          </div>
+        </article>
+        <article class="ab-member">
+          <div class="ab-member-head">
+            <div class="ab-member-hex" aria-hidden="true"><span>JC</span></div>
+            <div class="ab-member-meta">
+              <p class="name">Jonas Chen</p>
+              <div class="role">Principal Engineer</div>
+            </div>
+          </div>
+          <p class="ab-member-bio">Tool-builder by religion. Wrote the Forge CLI in a weekend, refactored it for a year. Believes in 3am deploys.</p>
+          <div class="ab-member-foot">
+            <span class="handle">@jonas</span>
+            <span>·</span>
+            <span>BERLIN · UTC+1</span>
+          </div>
+        </article>
+        <article class="ab-member">
+          <div class="ab-member-head">
+            <div class="ab-member-hex" aria-hidden="true"><span>AB</span></div>
+            <div class="ab-member-meta">
+              <p class="name">Alex Bauer</p>
+              <div class="role">Design · Brand</div>
+            </div>
+          </div>
+          <p class="ab-member-bio">Spent five years drawing nothing but hexagons. Now drawing hexagons for us. The look is intentional.</p>
+          <div class="ab-member-foot">
+            <span class="handle">@alex.b</span>
+            <span>·</span>
+            <span>PORTLAND · UTC-8</span>
+          </div>
+        </article>
+        <article class="ab-member">
+          <div class="ab-member-head">
+            <div class="ab-member-hex" aria-hidden="true"><span>PK</span></div>
+            <div class="ab-member-meta">
+              <p class="name">Priya Krishnan</p>
+              <div class="role">Operations · Trust</div>
+            </div>
+          </div>
+          <p class="ab-member-bio">Made an enterprise SOC 2 audit feel like a Tuesday. Keeps the lights on, the books clean, and the team caffeinated.</p>
+          <div class="ab-member-foot">
+            <span class="handle">@priya.k</span>
+            <span>·</span>
+            <span>TORONTO · UTC-5</span>
+          </div>
+        </article>
+        <article class="ab-member">
+          <div class="ab-member-head">
+            <div class="ab-member-hex" aria-hidden="true"><span>DM</span></div>
+            <div class="ab-member-meta">
+              <p class="name">Diego Marquez</p>
+              <div class="role">Lead AI Engineer</div>
+            </div>
+          </div>
+          <p class="ab-member-bio">Builds memory layers for agents that actually remember things. Believes context is a feature, not a buffer.</p>
+          <div class="ab-member-foot">
+            <span class="handle">@diego</span>
+            <span>·</span>
+            <span>BUENOS AIRES · UTC-3</span>
+          </div>
+        </article>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="ab-cta">
+  <div class="ab-cta-inner">
+    <span class="nf-label">§ 06 · BEGIN</span>
+    <h3>Want to commission something?</h3>
+    <p>We take on a small number of custom engagements each quarter. If you have a workflow that needs AI built around it, we'd like to hear about it.</p>
+    <div class="ab-cta-actions">
+      <a href="Contact.html" class="btn-primary">Start a conversation</a>
+      <a href="Workshop.html" class="btn-secondary">Browse the workshop</a>
+    </div>
+  </div>
+</section>
+
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="site-footer-meta">
+      <span class="nf-live" aria-hidden="true"></span>
+      <span>© 2026 NEUROFOUNDRY · FORGED WITH INTENT · ALL SYSTEMS GO</span>
+    </div>
+    <nav class="site-footer-links">
+      <a href="Workshop.html">WORKSHOP</a>
+      <a href="About.html">ABOUT</a>
+      <a href="Contact.html">CONTACT</a>
+      <a href="#" style="opacity:.6">PRIVACY</a>
+    </nav>
+  </div>
+</footer>
+
+
+</body>
+</html>

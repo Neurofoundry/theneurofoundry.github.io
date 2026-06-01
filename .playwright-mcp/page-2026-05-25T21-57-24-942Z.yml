@@ -1,0 +1,201 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - link "Skip to content" [ref=e4] [cursor=pointer]:
+      - /url: "#start-of-content"
+    - banner [ref=e6]:
+      - heading "Navigation Menu" [level=2] [ref=e7]
+      - generic [ref=e9]:
+        - button "Toggle navigation" [ref=e11] [cursor=pointer]
+        - link "Homepage" [ref=e17] [cursor=pointer]:
+          - /url: /
+          - img [ref=e18]
+        - generic [ref=e20]:
+          - link "Sign in" [ref=e21] [cursor=pointer]:
+            - /url: /login?return_to=https%3A%2F%2Fgithub.com%2FNeurofoundry%2Ftheneurofoundry.github.io%2Fissues
+          - button "Appearance settings" [ref=e24] [cursor=pointer]:
+            - img
+  - main [ref=e28]:
+    - generic [ref=e29]:
+      - generic [ref=e30]:
+        - generic [ref=e32]:
+          - img [ref=e33]
+          - link "Neurofoundry" [ref=e36] [cursor=pointer]:
+            - /url: /Neurofoundry
+          - generic [ref=e37]: /
+          - strong [ref=e38]:
+            - link "theneurofoundry.github.io" [ref=e39] [cursor=pointer]:
+              - /url: /Neurofoundry/theneurofoundry.github.io
+          - generic [ref=e40]: Public
+        - generic [ref=e41]:
+          - list:
+            - listitem [ref=e42]:
+              - link "You must be signed in to change notification settings" [ref=e43] [cursor=pointer]:
+                - /url: /login?return_to=%2FNeurofoundry%2Ftheneurofoundry.github.io
+                - img [ref=e44]
+                - text: Notifications
+            - listitem [ref=e46]:
+              - link "Fork 1" [ref=e47] [cursor=pointer]:
+                - /url: /login?return_to=%2FNeurofoundry%2Ftheneurofoundry.github.io
+                - img [ref=e48]
+                - text: Fork
+                - generic "1" [ref=e50]
+            - listitem [ref=e51]:
+              - link "You must be signed in to star a repository" [ref=e53] [cursor=pointer]:
+                - /url: /login?return_to=%2FNeurofoundry%2Ftheneurofoundry.github.io
+                - img [ref=e54]
+                - text: Star
+                - generic "0 users starred this repository" [ref=e56]: "0"
+      - navigation "Repository" [ref=e57]:
+        - list [ref=e58]:
+          - listitem [ref=e59]:
+            - link "Code" [ref=e60] [cursor=pointer]:
+              - /url: /Neurofoundry/theneurofoundry.github.io
+              - img [ref=e61]
+              - generic [ref=e63]: Code
+          - listitem [ref=e64]:
+            - link "Issues" [ref=e65] [cursor=pointer]:
+              - /url: /Neurofoundry/theneurofoundry.github.io/issues
+              - img [ref=e66]
+              - generic [ref=e69]: Issues
+          - listitem [ref=e70]:
+            - link "Pull requests 3" [ref=e71] [cursor=pointer]:
+              - /url: /Neurofoundry/theneurofoundry.github.io/pulls
+              - img [ref=e72]
+              - generic [ref=e74]: Pull requests
+              - generic "3" [ref=e75]
+          - listitem [ref=e76]:
+            - link "Actions" [ref=e77] [cursor=pointer]:
+              - /url: /Neurofoundry/theneurofoundry.github.io/actions
+              - img [ref=e78]
+              - generic [ref=e80]: Actions
+          - listitem [ref=e81]:
+            - link "Projects" [ref=e82] [cursor=pointer]:
+              - /url: /Neurofoundry/theneurofoundry.github.io/projects
+              - img [ref=e83]
+              - generic [ref=e85]: Projects
+          - listitem [ref=e86]:
+            - link "Models" [ref=e87] [cursor=pointer]:
+              - /url: /Neurofoundry/theneurofoundry.github.io/models
+              - img [ref=e88]
+              - generic [ref=e90]: Models
+          - listitem [ref=e91]:
+            - link "Security and quality" [ref=e92] [cursor=pointer]:
+              - /url: /Neurofoundry/theneurofoundry.github.io/security
+              - img [ref=e93]
+              - generic [ref=e95]: Security and quality
+          - listitem [ref=e96]
+        - button "Additional navigation options" [ref=e100] [cursor=pointer]:
+          - img
+    - generic [ref=e113]:
+      - heading "Issues" [level=1] [ref=e114]
+      - generic [ref=e115]:
+        - generic [ref=e117]:
+          - form "Search Issues" [ref=e119]:
+            - generic [ref=e120]: Search Issues
+            - generic [ref=e122]:
+              - generic [ref=e124]:
+                - generic [ref=e125]:
+                  - generic [ref=e126]:
+                    - text: "is:"
+                    - generic [ref=e127]: issue
+                  - generic [ref=e129]:
+                    - text: "state:"
+                    - generic [ref=e130]: open
+                - combobox "Search Issues" [ref=e133]: is:issue state:open
+              - button "Search" [ref=e134] [cursor=pointer]:
+                - img [ref=e135]
+          - generic [ref=e137]:
+            - link "Labels" [ref=e138] [cursor=pointer]:
+              - /url: /Neurofoundry/theneurofoundry.github.io/labels
+              - generic [ref=e139]:
+                - generic:
+                  - img
+                - generic [ref=e140]: Labels
+            - link "Milestones" [ref=e141] [cursor=pointer]:
+              - /url: /Neurofoundry/theneurofoundry.github.io/milestones
+              - generic [ref=e142]:
+                - generic:
+                  - img
+                - generic [ref=e143]: Milestones
+            - link "New issue" [ref=e144] [cursor=pointer]:
+              - /url: /login?return_to=https://github.com/Neurofoundry/theneurofoundry.github.io/issues
+              - generic [ref=e146]: New issue
+        - generic [ref=e150]:
+          - heading "Search results" [level=2] [ref=e151]
+          - generic [ref=e152]:
+            - generic [ref=e153]:
+              - link "Open" [ref=e154] [cursor=pointer]:
+                - /url: ""
+                - generic [ref=e155]: Open
+              - link "Closed" [ref=e157] [cursor=pointer]:
+                - /url: ""
+                - generic [ref=e158]: Closed
+            - toolbar "Actions" [ref=e160]:
+              - generic [ref=e161]:
+                - button "Filter by author" [ref=e163] [cursor=pointer]:
+                  - generic [ref=e164]:
+                    - generic [ref=e165]: Author
+                    - generic:
+                      - img
+                - button "Filter by label" [ref=e167] [cursor=pointer]:
+                  - generic [ref=e168]:
+                    - generic [ref=e169]: Labels
+                    - generic:
+                      - img
+                - button "Filter by project" [ref=e171] [cursor=pointer]:
+                  - generic [ref=e172]:
+                    - generic [ref=e173]: Projects
+                    - generic:
+                      - img
+                - button "Filter by milestone" [ref=e175] [cursor=pointer]:
+                  - generic [ref=e176]:
+                    - generic [ref=e177]: Milestones
+                    - generic:
+                      - img
+                - button "Filter by assignees" [ref=e179] [cursor=pointer]:
+                  - generic [ref=e180]:
+                    - generic [ref=e181]: Assignees
+                    - generic:
+                      - img
+              - button "More Actions" [ref=e182] [cursor=pointer]:
+                - img [ref=e183]
+          - list "Search results" [ref=e185]:
+            - region [ref=e186]:
+              - heading "No results" [level=3] [ref=e187]
+              - paragraph [ref=e188]: Try adjusting your search filters.
+  - contentinfo [ref=e189]:
+    - heading "Footer" [level=2] [ref=e190]
+    - generic [ref=e191]:
+      - generic [ref=e192]:
+        - link "GitHub Homepage" [ref=e193] [cursor=pointer]:
+          - /url: https://github.com
+          - img [ref=e194]
+        - generic [ref=e196]: © 2026 GitHub, Inc.
+      - navigation "Footer" [ref=e197]:
+        - heading "Footer navigation" [level=3] [ref=e198]
+        - list "Footer navigation" [ref=e199]:
+          - listitem [ref=e200]:
+            - link "Terms" [ref=e201] [cursor=pointer]:
+              - /url: https://docs.github.com/site-policy/github-terms/github-terms-of-service
+          - listitem [ref=e202]:
+            - link "Privacy" [ref=e203] [cursor=pointer]:
+              - /url: https://docs.github.com/site-policy/privacy-policies/github-privacy-statement
+          - listitem [ref=e204]:
+            - link "Security" [ref=e205] [cursor=pointer]:
+              - /url: https://github.com/security
+          - listitem [ref=e206]:
+            - link "Status" [ref=e207] [cursor=pointer]:
+              - /url: https://www.githubstatus.com/
+          - listitem [ref=e208]:
+            - link "Community" [ref=e209] [cursor=pointer]:
+              - /url: https://github.community/
+          - listitem [ref=e210]:
+            - link "Docs" [ref=e211] [cursor=pointer]:
+              - /url: https://docs.github.com/
+          - listitem [ref=e212]:
+            - link "Contact" [ref=e213] [cursor=pointer]:
+              - /url: https://support.github.com?tags=dotcom-footer
+          - listitem [ref=e214]:
+            - button "Manage cookies" [ref=e216] [cursor=pointer]
+          - listitem [ref=e217]:
+            - button "Do not share my personal information" [ref=e219] [cursor=pointer]

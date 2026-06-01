@@ -1,0 +1,233 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - link "Skip to content" [ref=e4] [cursor=pointer]:
+      - /url: "#start-of-content"
+    - banner [ref=e6]:
+      - heading "Navigation Menu" [level=2] [ref=e7]
+      - generic [ref=e9]:
+        - button "Toggle navigation" [ref=e11] [cursor=pointer]
+        - link "Homepage" [ref=e17] [cursor=pointer]:
+          - /url: /
+          - img [ref=e18]
+        - generic [ref=e20]:
+          - link "Sign in" [ref=e21] [cursor=pointer]:
+            - /url: /login?return_to=https%3A%2F%2Fgithub.com%2FNeurofoundry%2Ftheneurofoundry.github.io%2Fpulls
+          - button "Appearance settings" [ref=e24] [cursor=pointer]:
+            - img
+  - main [ref=e28]:
+    - generic [ref=e29]:
+      - generic [ref=e30]:
+        - generic [ref=e32]:
+          - img [ref=e33]
+          - link "Neurofoundry" [ref=e36] [cursor=pointer]:
+            - /url: /Neurofoundry
+          - generic [ref=e37]: /
+          - strong [ref=e38]:
+            - link "theneurofoundry.github.io" [ref=e39] [cursor=pointer]:
+              - /url: /Neurofoundry/theneurofoundry.github.io
+          - generic [ref=e40]: Public
+        - generic [ref=e41]:
+          - list:
+            - listitem [ref=e42]:
+              - link "You must be signed in to change notification settings" [ref=e43] [cursor=pointer]:
+                - /url: /login?return_to=%2FNeurofoundry%2Ftheneurofoundry.github.io
+                - img [ref=e44]
+                - text: Notifications
+            - listitem [ref=e46]:
+              - link "Fork 1" [ref=e47] [cursor=pointer]:
+                - /url: /login?return_to=%2FNeurofoundry%2Ftheneurofoundry.github.io
+                - img [ref=e48]
+                - text: Fork
+                - generic "1" [ref=e50]
+            - listitem [ref=e51]:
+              - link "You must be signed in to star a repository" [ref=e53] [cursor=pointer]:
+                - /url: /login?return_to=%2FNeurofoundry%2Ftheneurofoundry.github.io
+                - img [ref=e54]
+                - text: Star
+                - generic "0 users starred this repository" [ref=e56]: "0"
+      - navigation "Repository" [ref=e57]:
+        - list [ref=e58]:
+          - listitem [ref=e59]:
+            - link "Code" [ref=e60] [cursor=pointer]:
+              - /url: /Neurofoundry/theneurofoundry.github.io
+              - img [ref=e61]
+              - generic [ref=e63]: Code
+          - listitem [ref=e64]:
+            - link "Issues" [ref=e65] [cursor=pointer]:
+              - /url: /Neurofoundry/theneurofoundry.github.io/issues
+              - img [ref=e66]
+              - generic [ref=e69]: Issues
+          - listitem [ref=e70]:
+            - link "Pull requests 3" [ref=e71] [cursor=pointer]:
+              - /url: /Neurofoundry/theneurofoundry.github.io/pulls
+              - img [ref=e72]
+              - generic [ref=e74]: Pull requests
+              - generic "3" [ref=e75]
+          - listitem [ref=e76]:
+            - link "Actions" [ref=e77] [cursor=pointer]:
+              - /url: /Neurofoundry/theneurofoundry.github.io/actions
+              - img [ref=e78]
+              - generic [ref=e80]: Actions
+          - listitem [ref=e81]:
+            - link "Projects" [ref=e82] [cursor=pointer]:
+              - /url: /Neurofoundry/theneurofoundry.github.io/projects
+              - img [ref=e83]
+              - generic [ref=e85]: Projects
+          - listitem [ref=e86]:
+            - link "Models" [ref=e87] [cursor=pointer]:
+              - /url: /Neurofoundry/theneurofoundry.github.io/models
+              - img [ref=e88]
+              - generic [ref=e90]: Models
+          - listitem [ref=e91]:
+            - link "Security and quality" [ref=e92] [cursor=pointer]:
+              - /url: /Neurofoundry/theneurofoundry.github.io/security
+              - img [ref=e93]
+              - generic [ref=e95]: Security and quality
+          - listitem [ref=e96]
+        - button "Additional navigation options" [ref=e100] [cursor=pointer]:
+          - img
+    - generic [ref=e103]:
+      - 'heading "Pull requests: Neurofoundry/theneurofoundry.github.io" [level=1] [ref=e104]'
+      - generic [ref=e105]:
+        - search [ref=e106]:
+          - search "Issues" [ref=e107]:
+            - textbox "Search all issues" [ref=e108]: is:pr is:open
+            - img
+          - navigation "Issue" [ref=e110]:
+            - link "Labels 2" [ref=e111] [cursor=pointer]:
+              - /url: /Neurofoundry/theneurofoundry.github.io/labels
+              - img [ref=e112]
+              - text: Labels 2
+            - link "Milestones 0" [ref=e114] [cursor=pointer]:
+              - /url: /Neurofoundry/theneurofoundry.github.io/milestones
+              - img [ref=e115]
+              - text: Milestones 0
+        - link "New pull request" [ref=e119] [cursor=pointer]:
+          - /url: /Neurofoundry/theneurofoundry.github.io/compare
+          - generic [ref=e122]: New pull request
+      - generic [ref=e124]:
+        - link "3 Open" [ref=e125] [cursor=pointer]:
+          - /url: /Neurofoundry/theneurofoundry.github.io/pulls?q=is%3Aopen+is%3Apr
+          - img [ref=e126]
+          - text: 3 Open
+        - link "9 Closed" [ref=e128] [cursor=pointer]:
+          - /url: /Neurofoundry/theneurofoundry.github.io/pulls?q=is%3Apr+is%3Aclosed
+          - img [ref=e129]
+          - text: 9 Closed
+      - generic [ref=e131]:
+        - generic [ref=e134]:
+          - group [ref=e135]:
+            - button "Author" [ref=e136] [cursor=pointer]: Author
+          - group [ref=e138]:
+            - button "Label" [ref=e139] [cursor=pointer]: Label
+          - generic [ref=e141]:
+            - group [ref=e142]:
+              - button "Projects" [ref=e143] [cursor=pointer]: Projects
+            - group [ref=e145]:
+              - button "Milestones" [ref=e146] [cursor=pointer]: Milestones
+            - group [ref=e148]:
+              - button "Reviews" [ref=e149] [cursor=pointer]: Reviews
+          - group [ref=e151]:
+            - button "Assignee" [ref=e152] [cursor=pointer]: Assignee
+          - group [ref=e154]:
+            - button "Sort" [ref=e155] [cursor=pointer]: Sort
+        - heading "Pull requests list" [level=2] [ref=e157]
+        - group "Issues" [ref=e158]:
+          - generic [ref=e159]:
+            - generic [ref=e161]:
+              - generic "Open Pull Request" [ref=e163]:
+                - img [ref=e164]
+              - generic [ref=e166]:
+                - link "Bump fast-xml-parser from 5.3.6 to 5.5.6" [ref=e167] [cursor=pointer]:
+                  - /url: /Neurofoundry/theneurofoundry.github.io/pull/11
+                - generic [ref=e168]:
+                  - link "dependencies" [ref=e169] [cursor=pointer]:
+                    - /url: /Neurofoundry/theneurofoundry.github.io/pulls?q=is%3Apr+is%3Aopen+label%3Adependencies
+                  - link "javascript" [ref=e170] [cursor=pointer]:
+                    - /url: /Neurofoundry/theneurofoundry.github.io/pulls?q=is%3Apr+is%3Aopen+label%3Ajavascript
+                - generic [ref=e172]:
+                  - text: "#11 opened Mar 18, 2026on Mar 18 by"
+                  - link "dependabot" [ref=e173] [cursor=pointer]:
+                    - /url: /Neurofoundry/theneurofoundry.github.io/issues?q=is%3Apr+is%3Aopen+author%3Aapp%2Fdependabot
+                  - generic [ref=e174]: Bot
+              - generic [ref=e178]:
+                - generic "Assigned to"
+            - generic [ref=e181]:
+              - generic "Open Pull Request" [ref=e183]:
+                - img [ref=e184]
+              - generic [ref=e186]:
+                - link "Bump multer from 2.0.2 to 2.1.1" [ref=e187] [cursor=pointer]:
+                  - /url: /Neurofoundry/theneurofoundry.github.io/pull/10
+                - generic [ref=e188]:
+                  - link "dependencies" [ref=e189] [cursor=pointer]:
+                    - /url: /Neurofoundry/theneurofoundry.github.io/pulls?q=is%3Apr+is%3Aopen+label%3Adependencies
+                  - link "javascript" [ref=e190] [cursor=pointer]:
+                    - /url: /Neurofoundry/theneurofoundry.github.io/pulls?q=is%3Apr+is%3Aopen+label%3Ajavascript
+                - generic [ref=e192]:
+                  - text: "#10 opened Mar 5, 2026on Mar 5 by"
+                  - link "dependabot" [ref=e193] [cursor=pointer]:
+                    - /url: /Neurofoundry/theneurofoundry.github.io/issues?q=is%3Apr+is%3Aopen+author%3Aapp%2Fdependabot
+                  - generic [ref=e194]: Bot
+              - generic [ref=e198]:
+                - generic "Assigned to"
+            - generic [ref=e201]:
+              - generic "Open Pull Request" [ref=e203]:
+                - img [ref=e204]
+              - generic [ref=e206]:
+                - 'link "Vast overhaul: mobile margins, social media meta tags, visual effects, and conversion-focused copy" [ref=e207] [cursor=pointer]':
+                  - /url: /Neurofoundry/theneurofoundry.github.io/pull/9
+                - generic [ref=e209]:
+                  - text: "#9 opened Feb 23, 2026on Feb 23 by"
+                  - link "Claude" [ref=e210] [cursor=pointer]:
+                    - /url: /Neurofoundry/theneurofoundry.github.io/issues?q=is%3Apr+is%3Aopen+author%3A%40claude%5Bagent%5D
+                  - generic [ref=e211]: AI
+              - generic "Assigned to Claude and Neurofoundry" [ref=e216]:
+                - link "Neurofoundry’s assigned issues" [ref=e217] [cursor=pointer]:
+                  - /url: /Neurofoundry/theneurofoundry.github.io/pulls?q=assignee%3ANeurofoundry+is%3Aopen
+                  - img "@Neurofoundry" [ref=e218]
+                - link "Claude’s assigned issues" [ref=e219] [cursor=pointer]:
+                  - /url: /Neurofoundry/theneurofoundry.github.io/pulls?q=assignee%3AClaude+is%3Aopen
+                  - img "@Claude" [ref=e220]
+      - generic [ref=e222]:
+        - img [ref=e223]
+        - strong [ref=e225]: ProTip!
+        - text: Type
+        - generic [ref=e226]: g
+        - generic [ref=e227]: p
+        - text: on any issue or pull request to go back to the pull request listing page.
+  - contentinfo [ref=e228]:
+    - heading "Footer" [level=2] [ref=e229]
+    - generic [ref=e230]:
+      - generic [ref=e231]:
+        - link "GitHub Homepage" [ref=e232] [cursor=pointer]:
+          - /url: https://github.com
+          - img [ref=e233]
+        - generic [ref=e235]: © 2026 GitHub, Inc.
+      - navigation "Footer" [ref=e236]:
+        - heading "Footer navigation" [level=3] [ref=e237]
+        - list "Footer navigation" [ref=e238]:
+          - listitem [ref=e239]:
+            - link "Terms" [ref=e240] [cursor=pointer]:
+              - /url: https://docs.github.com/site-policy/github-terms/github-terms-of-service
+          - listitem [ref=e241]:
+            - link "Privacy" [ref=e242] [cursor=pointer]:
+              - /url: https://docs.github.com/site-policy/privacy-policies/github-privacy-statement
+          - listitem [ref=e243]:
+            - link "Security" [ref=e244] [cursor=pointer]:
+              - /url: https://github.com/security
+          - listitem [ref=e245]:
+            - link "Status" [ref=e246] [cursor=pointer]:
+              - /url: https://www.githubstatus.com/
+          - listitem [ref=e247]:
+            - link "Community" [ref=e248] [cursor=pointer]:
+              - /url: https://github.community/
+          - listitem [ref=e249]:
+            - link "Docs" [ref=e250] [cursor=pointer]:
+              - /url: https://docs.github.com/
+          - listitem [ref=e251]:
+            - link "Contact" [ref=e252] [cursor=pointer]:
+              - /url: https://support.github.com?tags=dotcom-footer
+          - listitem [ref=e253]:
+            - button "Manage cookies" [ref=e255] [cursor=pointer]
+          - listitem [ref=e256]:
+            - button "Do not share my personal information" [ref=e258] [cursor=pointer]

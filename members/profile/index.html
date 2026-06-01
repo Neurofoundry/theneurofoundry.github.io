@@ -49,11 +49,11 @@
 
     .profile-hero {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-columns: minmax(0, 1fr) 330px;
       align-items: stretch;
       gap: 24px;
       min-height: 172px;
-      padding: clamp(26px, 4vw, 38px) clamp(18px, 5vw, 64px);
+      padding: clamp(26px, 4vw, 38px) max(18px, calc((100vw - 1120px) / 2));
       background: #0c0e0e;
       border-bottom: 1px solid var(--line);
     }
@@ -277,8 +277,7 @@
       overflow: hidden;
     }
 
-    .craft-thumb,
-    .craft-more {
+    .craft-thumb {
       width: 76px;
       height: 54px;
       flex: 0 0 auto;
@@ -295,21 +294,10 @@
       object-fit: cover;
     }
 
-    .craft-more {
-      display: grid;
-      place-items: center;
-      width: 54px;
-      color: #020303;
-      background: #9b9b9b;
-      font-size: 24px;
-      font-weight: 900;
-      letter-spacing: 0.08em;
-    }
-
     .hero-panel {
       order: 2;
-      width: min(330px, 32vw);
-      min-width: 260px;
+      width: 330px;
+      min-width: 0;
       display: grid;
       grid-template-columns: 1fr 1fr;
       border: 1px solid var(--line);
@@ -761,12 +749,11 @@
 
       .craft-strip {
         display: grid;
-        grid-template-columns: repeat(6, minmax(0, 1fr)) 42px;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
         gap: 6px;
       }
 
-      .craft-thumb,
-      .craft-more {
+      .craft-thumb {
         height: 42px;
         border: 1px solid rgba(224, 71, 60, 0.42);
         border-radius: 4px;
@@ -779,16 +766,6 @@
         height: 100%;
         display: block;
         object-fit: cover;
-      }
-
-      .craft-more {
-        display: grid;
-        place-items: center;
-        color: #020303;
-        background: #9b9b9b;
-        font-size: 24px;
-        font-weight: 900;
-        letter-spacing: 0.08em;
       }
 
       .hero-panel {
@@ -1173,15 +1150,7 @@
           return;
         }
 
-        const nodes = [...thumbs];
-        if (renders.length > 6) {
-          const more = document.createElement('span');
-          more.className = 'craft-more';
-          more.setAttribute('aria-hidden', 'true');
-          more.textContent = '...';
-          nodes.push(more);
-        }
-        strip.replaceChildren(...nodes);
+        strip.replaceChildren(...thumbs);
         section.classList.remove('is-empty');
       } catch (error) {
         console.warn('Recent crafts unavailable:', error.message || error);
