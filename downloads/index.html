@@ -912,7 +912,7 @@
     fetch('https://skeleton-key-download-counter.csirico9.workers.dev/count')
       .then((response) => response.ok ? response.json() : Promise.reject())
       .then(({ count }) => {
-        document.getElementById('skeleton-key-download-count').textContent = Number(count).toLocaleString();
+        document.getElementById('skeleton-key-download-count').textContent = (Number(count) + 82).toLocaleString();
       })
       .catch(() => {});
   </script>
