@@ -1223,6 +1223,7 @@
     }
 
     function formatPlan(user) {
+      if (String(user.planTier || '').toLowerCase() === 'developer') return 'Developer Tier';
       return String(user.planTier || 'free').toLowerCase() === 'free' ? 'Free Tier' : 'Paid Tier';
     }
 
@@ -1287,8 +1288,11 @@
       const plan = formatPlan(user);
       const emailStatus = user.emailVerified ? 'Email Verified' : 'Email Not Verified';
       const verificationClass = user.emailVerified ? 'verification-badge' : 'verification-badge unverified-badge';
+      const isDeveloperAdmin = String(user.role || '').toLowerCase() === 'admin'
+        && !!preferences.profileAccess?.developer;
 
       document.getElementById('profileDisplayName').textContent = displayName;
+      document.querySelector('.identity-copy .role').textContent = isDeveloperAdmin ? 'Admin Developer Profile' : 'Member Profile';
       document.getElementById('profileHandle').textContent = formatHandle(user);
       setLeadingText('heroPlanStatus', plan);
       setLeadingText('heroMemberSince', memberSince);

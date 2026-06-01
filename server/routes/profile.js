@@ -90,6 +90,7 @@ router.get('/', async (req, res, next) => {
           username: req.user.username,
           avatar: req.user.avatar,
           authProvider: req.user.authProvider || 'local',
+          role: req.user.role || 'user',
           location: getProfileLocation(req, profilePreferences),
           planTier: req.user.planTier || 'free',
           accountStatus: req.user.accountStatus || 'pending_verification',

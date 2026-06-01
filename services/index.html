@@ -325,6 +325,33 @@
       box-shadow: 9px 11px 14px rgba(0, 0, 0, 0.54);
     }
 
+    .dl-card[data-service-details] {
+      cursor: pointer;
+    }
+
+    .dl-card[data-service-details]:focus-visible {
+      outline: 2px solid var(--accent-hi);
+      outline-offset: 3px;
+    }
+
+    .dl-card.is-expanded {
+      background: var(--bg-3);
+      border-color: var(--accent-hi);
+    }
+
+    .service-card-details {
+      display: none;
+      padding-top: 10px;
+      border-top: 1px solid var(--line-1);
+      color: var(--fg-2);
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    .dl-card.is-expanded .service-card-details {
+      display: block;
+    }
+
     .full-span-card {
       grid-column: 1 / -1;
       width: min(92%, 1120px);
@@ -558,7 +585,7 @@
       </div>
 
       <div class="downloads-grid">
-        <article class="dl-card">
+        <article class="dl-card" role="button" tabindex="0" aria-expanded="false" data-service-details="Diagnostics, cleanup, repairs, upgrades, and practical troubleshooting for computers and everyday devices.">
           <div class="dl-card-header">
             <img class="dl-hex-icon" src="../assets/buttons/1.png" alt="" aria-hidden="true">
             <div class="dl-card-meta">
@@ -576,7 +603,7 @@
           </div>
         </article>
 
-        <article class="dl-card" aria-label="Home and office device setup">
+        <article class="dl-card" role="button" tabindex="0" aria-expanded="false" aria-label="Home and office device setup" data-service-details="Setup help for connected devices, home offices, printers, Wi-Fi, backups, and workstation basics.">
           <div class="dl-card-header">
             <img class="dl-hex-icon" src="../assets/buttons/2.png" alt="" aria-hidden="true">
             <div class="dl-card-meta">
@@ -594,7 +621,7 @@
           </div>
         </article>
 
-        <article class="dl-card" aria-label="Business technology setup">
+        <article class="dl-card" role="button" tabindex="0" aria-expanded="false" aria-label="Business technology setup" data-service-details="Business account, domain, email, hosting, and workspace setup with a clean handoff when the work is complete.">
           <div class="dl-card-header">
             <img class="dl-hex-icon" src="../assets/buttons/3.png" alt="" aria-hidden="true">
             <div class="dl-card-meta">
@@ -612,7 +639,7 @@
           </div>
         </article>
 
-        <article class="dl-card" aria-label="Website and digital presence">
+        <article class="dl-card" role="button" tabindex="0" aria-expanded="false" aria-label="Website and digital presence" data-service-details="Focused web builds and improvements for landing pages, business sites, contact forms, and customer-facing flows.">
           <div class="dl-card-header">
             <img class="dl-hex-icon" src="../assets/buttons/4.png" alt="" aria-hidden="true">
             <div class="dl-card-meta">
@@ -629,7 +656,7 @@
           </div>
         </article>
 
-        <article class="dl-card" aria-label="Custom systems and automation">
+        <article class="dl-card" role="button" tabindex="0" aria-expanded="false" aria-label="Custom systems and automation" data-service-details="Purpose-built dashboards, workflow tools, integrations, and AI-assisted automation for repetitive business work.">
           <div class="dl-card-header">
             <img class="dl-hex-icon" src="../assets/buttons/5.png" alt="" aria-hidden="true">
             <div class="dl-card-meta">
@@ -647,7 +674,7 @@
           </div>
         </article>
 
-        <article class="dl-card" aria-label="Company branding and marketing">
+        <article class="dl-card" role="button" tabindex="0" aria-expanded="false" aria-label="Company branding and marketing" data-service-details="Practical support for company presentation, branded materials, campaign assets, and a more consistent public presence.">
           <div class="dl-card-header">
             <img class="dl-hex-icon" src="../assets/buttons/6.png" alt="" aria-hidden="true">
             <div class="dl-card-meta">
@@ -665,7 +692,7 @@
           </div>
         </article>
 
-        <article class="dl-card full-span-card" aria-label="Full-width service placeholder">
+        <article class="dl-card full-span-card" role="button" tabindex="0" aria-expanded="false" aria-label="Full-width service placeholder" data-service-details="Start with the kind of help you need. The work can be scoped for remote support, local support, or a mixed handoff.">
           <div class="dl-card-header">
             <img class="dl-hex-icon" src="../assets/buttons/7.png" alt="" aria-hidden="true">
             <div class="dl-card-meta">
@@ -691,5 +718,26 @@
   <script src="../common/site-footer.js?v=20260519-footer" data-base="../"></script>
   <script src="../common/site-carousel.js?v=20260520-services" data-base="../"></script>
   <script src="../shared/neural-particles.js?v=20260519-services"></script>
+  <script>
+    document.querySelectorAll('.dl-card[data-service-details]').forEach((card) => {
+      const details = document.createElement('p');
+      details.className = 'service-card-details';
+      details.textContent = card.dataset.serviceDetails;
+      card.appendChild(details);
+
+      const toggleCard = () => {
+        const expanded = card.getAttribute('aria-expanded') === 'true';
+        card.setAttribute('aria-expanded', String(!expanded));
+        card.classList.toggle('is-expanded', !expanded);
+      };
+
+      card.addEventListener('click', toggleCard);
+      card.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        event.preventDefault();
+        toggleCard();
+      });
+    });
+  </script>
 </body>
 </html>
