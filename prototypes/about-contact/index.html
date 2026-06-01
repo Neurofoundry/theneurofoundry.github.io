@@ -96,17 +96,6 @@
       z-index: 2;
     }
 
-    #neural-particles {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      pointer-events: none;
-      opacity: 0.42;
-    }
-
     .about-hero {
       position: relative;
       overflow: hidden;
@@ -118,10 +107,18 @@
     .about-hero-inner {
       width: min(var(--page-max), 100%);
       margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-copy-block {
       display: grid;
       grid-template-columns: minmax(0, 0.86fr) minmax(340px, 0.62fr);
       gap: clamp(20px, 4vw, 46px);
       align-items: center;
+    }
+
+    .hero-copy-content {
       position: relative;
       z-index: 2;
     }
@@ -131,12 +128,19 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      color: var(--accent-hi);
       font-family: var(--font-mono);
       font-size: 11px;
       font-weight: 600;
       letter-spacing: 0.1em;
       text-transform: uppercase;
+    }
+
+    .eyebrow {
+      color: var(--accent-hi);
+    }
+
+    .nf-label {
+      color: var(--fg-3);
     }
 
     .eyebrow::before,
@@ -246,8 +250,7 @@
       pointer-events: none;
     }
 
-    .node-lines,
-    .hero-network-canvas {
+    .node-lines {
       position: absolute;
       inset: 0;
       width: 100%;
@@ -257,42 +260,43 @@
     }
 
     .node-lines {
-      display: none;
-    }
-
-    .hero-network-canvas {
-      opacity: 0.95;
+      display: block;
     }
 
     .node-lines path {
       fill: none;
-      stroke: rgba(224, 71, 60, 0.46);
-      stroke-width: 2.3;
+      stroke: rgba(224, 71, 60, 0.34);
+      stroke-width: 0.72;
       stroke-linecap: round;
-      opacity: 0.78;
+      opacity: 0.64;
       filter:
-        drop-shadow(0 0 3px rgba(255, 155, 147, 0.16))
-        drop-shadow(0 0 9px rgba(224, 71, 60, 0.2));
+        drop-shadow(0 0 2px rgba(255, 155, 147, 0.16))
+        drop-shadow(0 0 6px rgba(224, 71, 60, 0.16));
       transition: opacity 180ms, stroke 180ms, stroke-width 180ms, filter 180ms;
     }
 
     .node-lines path.latent {
-      opacity: 0;
-      stroke: rgba(255, 155, 147, 0.44);
-      stroke-width: 1.55;
+      opacity: 0.18;
+      stroke: rgba(255, 155, 147, 0.32);
+      stroke-width: 0.44;
     }
 
     .hero-network:hover .node-lines path {
-      stroke: rgba(255, 155, 147, 0.72);
-      stroke-width: 2.8;
-      opacity: 0.92;
+      stroke: rgba(255, 155, 147, 0.58);
+      stroke-width: 0.94;
+      opacity: 0.82;
       filter:
-        drop-shadow(0 0 5px rgba(255, 155, 147, 0.26))
-        drop-shadow(0 0 12px rgba(224, 71, 60, 0.38));
+        drop-shadow(0 0 3px rgba(255, 155, 147, 0.22))
+        drop-shadow(0 0 8px rgba(224, 71, 60, 0.28));
     }
 
     .hero-network:hover .node-lines path.latent {
-      opacity: 0.2;
+      opacity: 0.32;
+    }
+
+    .node-spark {
+      fill: #ffe4df;
+      filter: drop-shadow(0 0 3px rgba(255, 155, 147, 0.95));
     }
 
     .neuro-node {
@@ -549,16 +553,10 @@
       border-color: rgba(224, 71, 60, 0.3);
     }
 
-    .info-card:nth-child(1) {
+    .info-card {
       background:
         linear-gradient(180deg, rgba(224, 71, 60, 0.08), rgba(14, 15, 15, 0.96) 42%),
         var(--bg-1);
-    }
-
-    .info-card:nth-child(2),
-    .info-card:nth-child(3) {
-      border-color: var(--line-1);
-      box-shadow: none;
     }
 
     .info-card h2 {
@@ -575,6 +573,10 @@
       line-height: 20px;
     }
 
+    .info-card .nf-label {
+      color: var(--fg-0);
+    }
+
     .contact-section {
       padding-top: 18px;
       padding-bottom: 60px;
@@ -582,7 +584,7 @@
 
     .contact-layout {
       display: grid;
-      grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.95fr);
+      grid-template-columns: minmax(0, 1.55fr) minmax(292px, 0.82fr);
       gap: 28px;
       align-items: start;
     }
@@ -713,7 +715,7 @@
       justify-content: center;
       gap: 8px;
       padding: 14px;
-      border: 1px solid var(--line-1);
+      border: 1px solid var(--accent-border);
       border-radius: 6px;
       background: var(--bg-2);
       cursor: pointer;
@@ -816,6 +818,11 @@
       gap: 16px;
     }
 
+    .mobile-more-info,
+    .mobile-side-close {
+      display: none;
+    }
+
     .side-group {
       display: grid;
       gap: 10px;
@@ -833,6 +840,11 @@
       color: inherit;
       text-decoration: none;
       transition: border-color 120ms, background 120ms;
+    }
+
+    .side-group .channel,
+    .side-group .details {
+      border-color: var(--accent-border);
     }
 
     .channel:hover {
@@ -895,7 +907,31 @@
     }
 
     .details {
+      position: relative;
       padding: 18px 20px;
+    }
+
+    .location-map {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      overflow: hidden;
+      width: 102px;
+      min-height: 82px;
+      height: 82px;
+      border: 1px solid var(--line-1);
+      border-radius: 8px;
+      background: var(--bg-1);
+      box-shadow: none;
+    }
+
+    .location-map iframe {
+      display: block;
+      width: 100%;
+      height: 82px;
+      border: 0;
+      filter: grayscale(1) invert(0.92) contrast(0.88);
+      opacity: 0.82;
     }
 
     .details-row {
@@ -923,6 +959,100 @@
       color: var(--fg-1);
       font-size: 13px;
       line-height: 18px;
+    }
+
+    .location-lead {
+      display: flex;
+      gap: 9px;
+      align-items: baseline;
+      padding: 4px 0 12px;
+      border-bottom: 1px solid var(--line-1);
+      color: var(--fg-0);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .location-lead,
+    .availability {
+      padding-right: 112px;
+    }
+
+    .location-lead::before,
+    .availability-label::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 7px rgba(224, 71, 60, 0.72);
+    }
+
+    .availability {
+      padding: 10px 0 8px;
+      border-bottom: 1px solid var(--line-1);
+    }
+
+    .availability-label,
+    .location-network-note {
+      color: var(--fg-3);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      line-height: 15px;
+      text-transform: uppercase;
+    }
+
+    .availability-label {
+      display: flex;
+      gap: 9px;
+      align-items: center;
+      color: var(--fg-0);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0;
+      line-height: 18px;
+      text-transform: none;
+    }
+
+    .availability-line {
+      display: flex;
+      align-items: center;
+      padding-left: 16px;
+      color: var(--fg-1);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      line-height: 17px;
+      text-transform: uppercase;
+    }
+
+    .availability-label + .availability-line {
+      margin-top: 5px;
+    }
+
+    .availability-line.is-secondary {
+      margin-top: 6px;
+      color: var(--fg-3);
+      text-transform: none;
+    }
+
+    .availability-full {
+      display: none;
+    }
+
+    .location-status {
+      text-align: center;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--line-1);
+      color: var(--ok);
+      font-size: 13px;
+      line-height: 18px;
+    }
+
+    .location-network-note {
+      padding: 9px 0 0;
+      text-align: center;
     }
 
     .faq-section {
@@ -1004,7 +1134,7 @@
     }
 
     @media (max-width: 960px) {
-      .about-hero-inner,
+      .hero-copy-block,
       .contact-layout {
         grid-template-columns: 1fr;
       }
@@ -1016,6 +1146,33 @@
 
       .hero-network {
         min-height: 280px;
+      }
+    }
+
+    @media (min-width: 721px) {
+      .availability {
+        min-height: 128px;
+      }
+
+      .availability-compact {
+        display: none;
+      }
+
+      .availability-full {
+        display: grid;
+        grid-template-columns: auto auto;
+        gap: 2px 14px;
+        margin-top: 6px;
+        padding-left: 16px;
+        color: var(--fg-1);
+        font-family: var(--font-mono);
+        font-size: 10px;
+        line-height: 15px;
+        text-transform: uppercase;
+      }
+
+      .availability-full .time {
+        color: var(--fg-2);
       }
     }
 
@@ -1033,11 +1190,6 @@
 
       .form-meta {
         text-align: left;
-      }
-
-      .form-row.two,
-      .radio-grid {
-        grid-template-columns: 1fr;
       }
 
       .submit,
@@ -1081,45 +1233,220 @@
       }
 
       .hero-network {
-        width: min(330px, 100%);
-        aspect-ratio: 1 / 0.62;
+        position: absolute;
+        top: 68px;
+        right: -42px;
+        z-index: 1;
+        width: 190px;
+        aspect-ratio: 1 / 0.86;
         min-height: 0;
-        margin: 0 auto;
-        transform: translateY(0);
+        margin: 0;
+        opacity: 0.34;
+        transform: rotate(-7deg);
       }
 
       .neuro-node {
-        width: calc(18% * var(--node-scale, 1));
+        width: calc(22.5% * var(--node-scale, 1));
       }
 
-      .node-repair {
-        top: 2%;
-        left: 15%;
+      .about-section {
+        padding-top: 16px;
       }
 
-      .node-web {
-        top: 2%;
-        left: 64%;
+      .about-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 7px;
       }
 
-      .node-tools {
-        top: 32%;
-        left: 42%;
+      .info-card {
+        display: grid;
+        place-items: center;
+        height: 32px;
+        min-height: 32px;
+        padding: 0 8px;
+        text-align: center;
       }
 
-      .node-local {
-        top: 61%;
-        left: 17%;
+      .info-card h2 {
+        display: none;
       }
 
-      .node-remote {
-        top: 61%;
-        left: 66%;
+      .info-card .nf-label {
+        justify-content: center;
+        color: var(--fg-0);
+        font-family: var(--font-sans);
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0;
+        line-height: 18px;
+        text-transform: none;
       }
 
-      .node-setup {
-        top: 34%;
-        left: 1%;
+      .info-card .nf-label::before {
+        display: none;
+      }
+
+      .info-card > p:not(.nf-label) {
+        display: none;
+      }
+
+      .info-card p {
+        margin-top: 0;
+      }
+
+      .contact-section {
+        padding-top: 14px;
+        padding-bottom: 42px;
+      }
+
+      .contact-layout {
+        gap: 20px;
+      }
+
+      .contact-form {
+        position: relative;
+        padding: 17px 15px;
+      }
+
+      .mobile-more-info {
+        position: absolute;
+        top: 12px;
+        right: 14px;
+        display: inline-flex;
+        border: 0;
+        background: transparent;
+        color: var(--accent-hi);
+        font-family: var(--font-mono);
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        cursor: pointer;
+      }
+
+      .form-head {
+        gap: 9px;
+        padding-bottom: 18px;
+        margin-bottom: 20px;
+      }
+
+      .form-row {
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+
+      .field,
+      .radio-grid {
+        min-width: 0;
+        max-width: 100%;
+      }
+
+      .form-row.two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .radio-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 6px;
+      }
+
+      .radio-card {
+        min-height: 76px;
+        gap: 4px;
+        padding: 8px 5px;
+        text-align: center;
+      }
+
+      .radio-code,
+      .radio-meta {
+        font-size: 7px;
+        letter-spacing: 0.04em;
+      }
+
+      .radio-name {
+        font-size: 10px;
+        line-height: 13px;
+      }
+
+      .side {
+        position: fixed;
+        inset: 50px 0 0 auto;
+        z-index: 20;
+        width: min(350px, calc(100vw - 24px));
+        display: grid;
+        gap: 20px;
+        align-content: start;
+        overflow-y: auto;
+        padding: 16px 14px 24px;
+        border-left: 1px solid var(--accent-border);
+        background: rgba(8, 9, 9, 0.98);
+        box-shadow: -14px 0 26px rgba(0, 0, 0, 0.62);
+        transform: translateX(104%);
+        transition: transform 180ms ease;
+      }
+
+      body.mobile-side-open {
+        overflow: hidden;
+      }
+
+      body.mobile-side-open .side {
+        transform: translateX(0);
+      }
+
+      .mobile-side-close {
+        display: inline-flex;
+        justify-self: start;
+        border: 0;
+        background: transparent;
+        color: var(--accent-hi);
+        font-family: var(--font-mono);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        cursor: pointer;
+      }
+
+      .channel {
+        min-height: auto;
+        padding: 12px;
+      }
+
+      .channel-icon {
+        width: 30px;
+        height: 30px;
+      }
+
+      .channel-value {
+        margin-top: 3px;
+        font-size: 12px;
+        line-height: 16px;
+      }
+
+      .channel-meta {
+        margin-top: 2px;
+        font-size: 10px;
+        line-height: 15px;
+      }
+
+      .details {
+        padding: 12px 15px;
+      }
+
+      .faq-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .faq-item summary {
+        padding: 13px 14px;
+        font-size: 12px;
+      }
+
+      .faq-a {
+        padding: 0 14px 14px;
+        font-size: 11px;
+        line-height: 17px;
       }
 
     }
@@ -1128,43 +1455,47 @@
 <body>
   <div data-site-header></div>
   <script src="../../common/site-header.js?v=20260522-header-avatar" data-base="../../"></script>
-  <canvas id="neural-particles" aria-hidden="true"></canvas>
-
   <main>
     <section class="about-hero">
       <div class="about-hero-inner">
-        <div>
-          <p class="eyebrow">About Neurofoundry</p>
-          <h1 class="hero-title">Practical tech help, from repairs to custom systems.</h1>
-          <p class="hero-copy">Neurofoundry is where I help people get technology working again. That can mean driving across Tampa to fix a slow computer, setting up a printer, cleaning up a small business workflow, or building a custom tool when the off-the-shelf options do not fit.</p>
-          <div class="hero-actions">
-            <a class="btn-primary" href="#prototype-contact-form">Start a request</a>
-            <a class="btn-secondary" href="../../services/">View services</a>
+        <div class="hero-copy-block">
+          <div class="hero-copy-content">
+            <p class="eyebrow"><a href="../../">&lt;&lt; Back to Homepage</a><span aria-hidden="true"> / </span><span>About Neurofoundry</span></p>
+            <h1 class="hero-title">Practical tech help, from repairs to custom systems.</h1>
+            <p class="hero-copy">Neurofoundry is where I help people get technology working again. That can mean driving across Tampa to fix a slow computer, setting up a printer, cleaning up a small business workflow, or building a custom tool when the off-the-shelf options do not fit.</p>
+            <div class="hero-actions">
+              <a class="btn-primary" href="#prototype-contact-form">Start a request</a>
+              <a class="btn-secondary" href="../../services/">View services</a>
+            </div>
           </div>
-        </div>
 
-        <div class="hero-network" aria-label="Neurofoundry service network">
-          <canvas class="hero-network-canvas" aria-hidden="true"></canvas>
-          <svg class="node-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-            <path data-nodes="repair web" d="M24.5 17.5 L75.5 17.5" />
-            <path data-nodes="repair tools" d="M24.5 17.5 L50 47.5" />
-            <path data-nodes="web tools" d="M75.5 17.5 L50 47.5" />
-            <path data-nodes="tools local" d="M50 47.5 L24.5 77.5" />
-            <path data-nodes="tools remote" d="M50 47.5 L75.5 77.5" />
-            <path data-nodes="local remote" d="M24.5 77.5 L75.5 77.5" />
-            <path class="latent" data-nodes="setup repair" d="M-1 47.5 L24.5 17.5" />
-            <path class="latent" data-nodes="setup local" d="M-1 47.5 L24.5 77.5" />
-            <path class="latent" data-nodes="setup tools" d="M-1 47.5 L50 47.5" />
-            <path class="latent" data-nodes="repair remote" d="M24.5 17.5 L75.5 77.5" />
-            <path class="latent" data-nodes="web local" d="M75.5 17.5 L24.5 77.5" />
-          </svg>
+          <div class="hero-network" aria-label="Neurofoundry service network">
+            <svg class="node-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+              <path id="node-path-top" data-nodes="repair web" d="M24.5 17.5 Q50 12.5 75.5 17.5" />
+              <path data-nodes="repair tools" d="M24.5 17.5 Q38 29 50 47.5" />
+              <path data-nodes="web tools" d="M75.5 17.5 Q64 32 50 47.5" />
+              <path data-nodes="tools local" d="M50 47.5 Q35 61 24.5 77.5" />
+              <path data-nodes="tools remote" d="M50 47.5 Q64 62 75.5 77.5" />
+              <path data-nodes="local remote" d="M24.5 77.5 Q50 74 75.5 77.5" />
+              <path class="latent" data-nodes="setup repair" d="M-1 47.5 Q12 29 24.5 17.5" />
+              <path class="latent" data-nodes="setup local" d="M-1 47.5 Q12 66 24.5 77.5" />
+              <path class="latent" data-nodes="setup tools" d="M-1 47.5 Q24 43 50 47.5" />
+              <path class="latent" data-nodes="repair remote" d="M24.5 17.5 Q52 42 75.5 77.5" />
+              <path class="latent" data-nodes="web local" d="M75.5 17.5 Q49 46 24.5 77.5" />
+              <circle class="node-spark" r="0.9">
+                <animateMotion dur="4.8s" repeatCount="indefinite">
+                  <mpath href="#node-path-top" />
+                </animateMotion>
+              </circle>
+            </svg>
 
-          <span class="neuro-node node-repair" data-node="repair" aria-label="Repair"></span>
-          <span class="neuro-node node-web" data-node="web" aria-label="Websites"></span>
-          <span class="neuro-node node-tools" data-node="tools" aria-label="Custom tools"></span>
-          <span class="neuro-node node-local" data-node="local" aria-label="Tampa local service"></span>
-          <span class="neuro-node node-remote" data-node="remote" aria-label="Remote support"></span>
-          <span class="neuro-node node-setup" data-node="setup" aria-label="Setup help"></span>
+            <span class="neuro-node node-repair" data-node="repair" aria-label="Repair"></span>
+            <span class="neuro-node node-web" data-node="web" aria-label="Websites"></span>
+            <span class="neuro-node node-tools" data-node="tools" aria-label="Custom tools"></span>
+            <span class="neuro-node node-local" data-node="local" aria-label="Tampa local service"></span>
+            <span class="neuro-node node-remote" data-node="remote" aria-label="Remote support"></span>
+            <span class="neuro-node node-setup" data-node="setup" aria-label="Setup help"></span>
+          </div>
         </div>
       </div>
     </section>
@@ -1172,21 +1503,18 @@
     <section class="about-section" aria-label="What Neurofoundry does">
       <div class="about-grid">
         <article class="info-card">
-          <p class="nf-label">01 - What I Do</p>
-          <h2>Fix the thing in front of us.</h2>
-          <p>Slow laptops, broken setups, printer headaches, email problems, websites, small business systems, and custom tools all belong here if they make the day easier.</p>
+          <p class="nf-label">Design</p>
+          <p>Start with the real problem, shape the right solution, and make the path forward clear.</p>
         </article>
 
         <article class="info-card">
-          <p class="nf-label">02 - Why</p>
-          <h2>It should feel safe to ask.</h2>
-          <p>You should not need to know the right technical words before getting help. The point is to understand the problem, explain the options plainly, and leave things better than they were.</p>
+          <p class="nf-label">Deliver</p>
+          <p>Build the practical thing, fix what is broken, and get it into your hands without unnecessary friction.</p>
         </article>
 
         <article class="info-card">
-          <p class="nf-label">03 - How</p>
-          <h2>Local help, practical builds.</h2>
-          <p>Some jobs need a house call. Some need a remote session. Some need a custom system. The shape of the work follows the actual problem.</p>
+          <p class="nf-label">Deploy</p>
+          <p>Put the finished work where it belongs, make sure it runs, and leave you with something useful.</p>
         </article>
       </div>
     </section>
@@ -1194,15 +1522,12 @@
     <section class="contact-section" aria-label="Contact Neurofoundry">
       <div class="contact-layout">
         <form class="contact-form" id="prototype-contact-form" autocomplete="off">
+          <button class="mobile-more-info" type="button" aria-controls="mobile-contact-details" aria-expanded="false">More Info &gt;&gt;</button>
           <div class="form-head">
             <div>
-              <span class="nf-label">04 - Start The Conversation</span>
-              <h2>Tell me what you need.</h2>
-              <p>Tell me what is broken, confusing, slow, missing, or annoying. Plain language is fine.</p>
-            </div>
-            <div class="form-meta">
-              <div>Form-NF-2026</div>
-              <div class="status"><span class="live-dot" aria-hidden="true"></span>Prototype</div>
+              <span class="nf-label">Start The Conversation</span>
+              <h2>How can we help?</h2>
+              <p>This helps us assess the best way to approach your specific needs.</p>
             </div>
           </div>
 
@@ -1240,28 +1565,37 @@
               <label>Type of work <span class="req">*</span></label>
               <div class="radio-grid">
                 <label class="radio-card">
-                  <input type="radio" name="engagement" value="custom-build" checked>
-                  <span class="radio-code">01 - Local Help</span>
-                  <span class="radio-name">Repair / Setup</span>
-                  <span class="radio-meta">Computer - printer - account</span>
+                  <input type="radio" name="engagement" value="residential" checked>
+                  <span class="radio-code">01 - Residential</span>
+                  <span class="radio-name">Personal</span>
+                  <span class="radio-meta">Repair - setup - support</span>
                 </label>
                 <label class="radio-card">
-                  <input type="radio" name="engagement" value="support">
-                  <span class="radio-code">02 - Build</span>
-                  <span class="radio-name">Custom Tool</span>
-                  <span class="radio-meta">Website - workflow - automation</span>
+                  <input type="radio" name="engagement" value="business">
+                  <span class="radio-code">02 - Business</span>
+                  <span class="radio-name">Commercial</span>
+                  <span class="radio-meta">Branding - marketing - systems</span>
                 </label>
                 <label class="radio-card">
-                  <input type="radio" name="engagement" value="conversation">
-                  <span class="radio-code">03 - Other</span>
-                  <span class="radio-name">Conversation</span>
-                  <span class="radio-meta">Questions - planning - not sure</span>
+                  <input type="radio" name="engagement" value="developer">
+                  <span class="radio-code">03 - Developer</span>
+                  <span class="radio-name">Engineer</span>
+                  <span class="radio-meta">Tools - automation - integration</span>
                 </label>
               </div>
             </div>
           </div>
 
           <div class="form-row two">
+            <div class="field">
+              <label for="timeline">When do you need it?</label>
+              <select class="select" id="timeline">
+                <option>Flexible</option>
+                <option>This week</option>
+                <option>This month</option>
+                <option>This quarter</option>
+              </select>
+            </div>
             <div class="field">
               <label for="budget">Budget range</label>
               <select class="select" id="budget">
@@ -1272,21 +1606,12 @@
                 <option>Full build or ongoing support</option>
               </select>
             </div>
-            <div class="field">
-              <label for="timeline">When do you need it?</label>
-              <select class="select" id="timeline">
-                <option>Flexible</option>
-                <option>This week</option>
-                <option>This month</option>
-                <option>This quarter</option>
-              </select>
-            </div>
           </div>
 
           <div class="form-row">
             <div class="field">
               <label for="message">Tell me about the work <span class="req">*</span></label>
-              <textarea class="textarea" id="message" placeholder="What is going on? A slow computer, broken printer, account issue, website idea, business workflow, or anything else that needs fixing." required></textarea>
+              <textarea class="textarea" id="message" placeholder="Describe the situation as best as you can. Is it a slow computer, or broken hardware? Does your current setup leave a lot to be desired? We can come up with a solution." required></textarea>
             </div>
           </div>
 
@@ -1297,55 +1622,72 @@
 
           <div class="submit-row">
             <button class="submit" type="submit">Submit request</button>
-            <span class="submit-note">Prototype only. No backend wiring yet.</span>
           </div>
         </form>
 
-        <aside class="side" aria-label="Other contact details">
+        <aside class="side" id="mobile-contact-details" aria-label="Other contact details">
+          <button class="mobile-side-close" type="button">&lt;&lt; Back</button>
           <div class="side-group">
-            <span class="nf-label">05 - Other Channels</span>
+            <span class="nf-label">Explore Neurofoundry</span>
 
             <a class="channel" href="mailto:info@theneurofoundry.com">
               <span class="channel-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="1"/><polyline points="3 7 12 13 21 7"/></svg>
               </span>
               <span>
-                <span class="channel-label">Direct Line</span>
+                <span class="channel-label">Email</span>
                 <span class="channel-value">info@theneurofoundry.com</span>
                 <span class="channel-meta"><span class="live-dot" aria-hidden="true"></span>Typical reply within a business day</span>
               </span>
             </a>
 
-            <a class="channel" href="mailto:info@theneurofoundry.com?subject=Commission%20Inquiry">
+            <a class="channel" href="../../downloads/">
               <span class="channel-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M5 21V7l7-4 7 4v14"/></svg>
               </span>
               <span>
-                <span class="channel-label">Local Service</span>
-                <span class="channel-value">Tampa repair and setup calls</span>
-                <span class="channel-meta">Computers, printers, networks, accounts, and general tech cleanup.</span>
+                <span class="channel-label">Downloads</span>
+                <span class="channel-value">Tools, releases, and useful builds</span>
+                <span class="channel-meta">Browse Neurofoundry downloads and see what is ready to use.</span>
               </span>
             </a>
 
-            <a class="channel" href="mailto:info@theneurofoundry.com?subject=Support%20Request">
+            <a class="channel" href="../../services/">
               <span class="channel-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3l8 4v6c0 5-3.5 7.5-8 8-4.5-.5-8-3-8-8V7l8-4z"/></svg>
               </span>
               <span>
-                <span class="channel-label">Custom Work</span>
-                <span class="channel-value">Websites, tools, and automation</span>
-                <span class="channel-meta">For business systems, internal workflows, and practical software builds.</span>
+                <span class="channel-label">Services</span>
+                <span class="channel-value">Not sure what I offer?</span>
+                <span class="channel-meta">Explore services for residential help, business support, and custom development.</span>
               </span>
             </a>
           </div>
 
           <div class="side-group">
-            <span class="nf-label">06 - Location</span>
+            <span class="nf-label">Location</span>
             <div class="details">
-              <div class="details-row"><span class="k">Base</span><span class="v">Tampa, Florida</span></div>
-              <div class="details-row"><span class="k">Region</span><span class="v">Tampa Bay and remote support</span></div>
-              <div class="details-row"><span class="k">Hours</span><span class="v">By appointment</span></div>
-              <div class="details-row"><span class="k">Currently</span><span class="v" style="color: var(--ok);"><span class="live-dot" aria-hidden="true"></span>Open for local calls and remote work</span></div>
+              <div class="location-lead"><span>Tampa, Florida</span></div>
+              <div class="availability">
+                <div class="availability-label">Availability</div>
+                <div class="availability-compact">
+                  <div class="availability-line">Monday - Friday</div>
+                  <div class="availability-line">7AM - 7PM</div>
+                </div>
+                <div class="availability-full">
+                  <span>Monday</span><span class="time">7AM - 7PM</span>
+                  <span>Tuesday</span><span class="time">7AM - 7PM</span>
+                  <span>Wednesday</span><span class="time">7AM - 7PM</span>
+                  <span>Thursday</span><span class="time">7AM - 7PM</span>
+                  <span>Friday</span><span class="time">7AM - 7PM</span>
+                </div>
+                <div class="availability-line is-secondary">Or via appointment</div>
+              </div>
+              <div class="location-status"><span class="live-dot" aria-hidden="true"></span>Open for local calls and remote work</div>
+              <div class="location-network-note">Neurofoundry not in your area?<br>No problem. I can refer you<br>to a local professional in our network.</div>
+              <div class="location-map">
+                <iframe title="Map of the Tampa Bay area" src="https://www.google.com/maps?q=Tampa%20Bay%2C%20Florida&z=9&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+              </div>
             </div>
           </div>
         </aside>
@@ -1355,10 +1697,9 @@
     <section class="faq-section" aria-label="Common questions">
       <div class="faq-head">
         <div>
-          <span class="nf-label">07 - Common Questions</span>
+          <span class="nf-label">Common Questions</span>
           <h2>Before you send it.</h2>
         </div>
-        <span class="meta">Prototype content</span>
       </div>
 
       <div class="faq-grid">
@@ -1387,332 +1728,17 @@
 
   <div data-site-footer></div>
   <script src="../../common/site-footer.js?v=20260519-footer" data-base="../../"></script>
-  <script src="../../shared/neural-particles.js?v=20260519-services"></script>
   <script>
-    (function initHeroNetwork() {
-      const network = document.querySelector('.hero-network');
-      if (!network) return;
+    const mobileMoreInfo = document.querySelector('.mobile-more-info');
+    const mobileSideClose = document.querySelector('.mobile-side-close');
 
-      const canvas = network.querySelector('.hero-network-canvas');
-      const ctx = canvas.getContext('2d');
-      const nodes = new Map(Array.from(network.querySelectorAll('.neuro-node')).map((node) => [node.dataset.node, node]));
-      const nodeKeys = Array.from(nodes.keys());
-      const pairs = [
-        ['repair', 'web'],
-        ['repair', 'tools'],
-        ['web', 'tools'],
-        ['tools', 'local'],
-        ['tools', 'remote'],
-        ['local', 'remote'],
-        ['setup', 'repair'],
-        ['setup', 'local'],
-        ['setup', 'tools'],
-        ['repair', 'remote'],
-        ['web', 'local']
-      ];
-      const active = new Map(pairs.map((pair) => [pair.join(':'), 0]));
-      const sparks = [];
-      let points = new Map();
-      let animationId = null;
-      let mouse = { x: -9999, y: -9999, active: false };
-      let simulatedMouse = { x: 0, y: 0 };
-      let lastBurst = 0;
-      let lastFrame = 0;
-      let isVisible = true;
-      const frameInterval = 1000 / 30;
+    function setMobileSideOpen(isOpen) {
+      document.body.classList.toggle('mobile-side-open', isOpen);
+      mobileMoreInfo.setAttribute('aria-expanded', String(isOpen));
+    }
 
-      function resize() {
-        const rect = network.getBoundingClientRect();
-        const ratio = Math.min(window.devicePixelRatio || 1, 2);
-        canvas.width = Math.max(1, Math.floor(rect.width * ratio));
-        canvas.height = Math.max(1, Math.floor(rect.height * ratio));
-        canvas.style.width = `${rect.width}px`;
-        canvas.style.height = `${rect.height}px`;
-        ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-        readPoints();
-      }
-
-      function readPoints() {
-        const networkRect = network.getBoundingClientRect();
-        points = new Map(nodeKeys.map((key) => {
-          const rect = nodes.get(key).getBoundingClientRect();
-          return [key, {
-            x: rect.left - networkRect.left + rect.width / 2,
-            y: rect.top - networkRect.top + rect.height / 2,
-            r: rect.width / 2
-          }];
-        }));
-      }
-
-      function setPairActive(pair, strength) {
-        const key = pair.join(':');
-        active.set(key, Math.max(active.get(key) || 0, strength));
-      }
-
-      function burst(now, forcedCount) {
-        const count = forcedCount || (Math.random() > 0.55 ? 2 : 1);
-        pairs.slice().sort(() => Math.random() - 0.5).slice(0, count).forEach((pair, index) => {
-          setPairActive(pair, 0.8 + Math.random() * 0.35);
-          if (index === 0 || Math.random() > 0.45) {
-            sparks.push({
-              pair,
-              progress: 0,
-              speed: 0.018 + Math.random() * 0.014,
-              life: 1
-            });
-          }
-        });
-        lastBurst = now;
-      }
-
-      function distanceToSegment(px, py, ax, ay, bx, by) {
-        const dx = bx - ax;
-        const dy = by - ay;
-        const lengthSq = dx * dx + dy * dy || 1;
-        const t = Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / lengthSq));
-        const x = ax + t * dx;
-        const y = ay + t * dy;
-        return Math.hypot(px - x, py - y);
-      }
-
-      function drawConnection(a, b, strength, highlighted) {
-        const lineWidth = highlighted ? 1.65 : 0.75 + strength * 1;
-        const opacity = Math.min(0.95, 0.2 + strength * 0.72);
-        const dx = b.x - a.x;
-        const dy = b.y - a.y;
-        const distance = Math.hypot(dx, dy) || 1;
-        const normalX = -dy / distance;
-        const normalY = dx / distance;
-        const wave = Math.sin((performance.now() * 0.0024) + distance * 0.035) * (highlighted ? 18 : 13);
-        const wave2 = Math.cos((performance.now() * 0.0019) + distance * 0.028) * (highlighted ? 9 : 7);
-        const controlX = (a.x + b.x) / 2 + normalX * wave;
-        const controlY = (a.y + b.y) / 2 + normalY * wave;
-        const gradient = ctx.createLinearGradient(a.x, a.y, b.x, b.y);
-        gradient.addColorStop(0, `rgba(224, 71, 60, ${opacity * 0.86})`);
-        gradient.addColorStop(0.5, `rgba(255, 198, 192, ${opacity})`);
-        gradient.addColorStop(1, `rgba(224, 71, 60, ${opacity * 0.86})`);
-
-        ctx.save();
-        ctx.globalCompositeOperation = 'lighter';
-        ctx.strokeStyle = gradient;
-        ctx.lineWidth = lineWidth;
-        ctx.lineCap = 'round';
-        ctx.shadowBlur = highlighted ? 16 : 9;
-        ctx.shadowColor = highlighted ? 'rgba(255, 155, 147, 0.55)' : 'rgba(224, 71, 60, 0.34)';
-        ctx.beginPath();
-        ctx.moveTo(a.x, a.y);
-        ctx.quadraticCurveTo(controlX, controlY, b.x, b.y);
-        ctx.stroke();
-
-        if (strength > 0.12) {
-          ctx.strokeStyle = `rgba(255, 155, 147, ${opacity * 0.42})`;
-          ctx.lineWidth = Math.max(0.55, lineWidth * 0.58);
-          ctx.shadowBlur = highlighted ? 12 : 6;
-          ctx.beginPath();
-          ctx.moveTo(a.x + normalX * 5, a.y + normalY * 5);
-          ctx.quadraticCurveTo(
-            controlX - normalX * (8 + wave2),
-            controlY - normalY * (8 + wave2),
-            b.x + normalX * 5,
-            b.y + normalY * 5
-          );
-          ctx.stroke();
-        }
-        ctx.restore();
-      }
-
-      function drawMembrane(a, b, strength, phase) {
-        const dx = b.x - a.x;
-        const dy = b.y - a.y;
-        const distance = Math.hypot(dx, dy) || 1;
-        const normalX = -dy / distance;
-        const normalY = dx / distance;
-        const cx = (a.x + b.x) / 2;
-        const cy = (a.y + b.y) / 2;
-        const waveA = Math.sin(phase * 0.0011 + distance * 0.031) * 14;
-        const waveB = Math.cos(phase * 0.0016 + distance * 0.024) * 9;
-        const membraneWidth = 7 + strength * 8;
-        const edgeOpacity = Math.min(0.22, 0.045 + strength * 0.13);
-
-        const c1 = {
-          x: cx + normalX * waveA,
-          y: cy + normalY * waveA
-        };
-        const c2 = {
-          x: cx - normalX * (waveB + membraneWidth * 0.28),
-          y: cy - normalY * (waveB + membraneWidth * 0.28)
-        };
-
-        ctx.save();
-        ctx.globalCompositeOperation = 'lighter';
-        ctx.strokeStyle = `rgba(255, 155, 147, ${edgeOpacity})`;
-        ctx.lineWidth = 0.7;
-        ctx.shadowBlur = 6;
-        ctx.shadowColor = `rgba(224, 71, 60, ${edgeOpacity})`;
-        ctx.beginPath();
-        ctx.moveTo(a.x + normalX * (membraneWidth * 0.72), a.y + normalY * (membraneWidth * 0.72));
-        ctx.quadraticCurveTo(c1.x, c1.y, b.x + normalX * (membraneWidth * 0.72), b.y + normalY * (membraneWidth * 0.72));
-        ctx.stroke();
-
-        ctx.strokeStyle = `rgba(255, 94, 82, ${edgeOpacity * 0.72})`;
-        ctx.lineWidth = 0.55;
-        ctx.beginPath();
-        ctx.moveTo(a.x - normalX * (membraneWidth * 0.52), a.y - normalY * (membraneWidth * 0.52));
-        ctx.quadraticCurveTo(c2.x, c2.y, b.x - normalX * (membraneWidth * 0.52), b.y - normalY * (membraneWidth * 0.52));
-        ctx.stroke();
-        ctx.restore();
-      }
-
-      function bezierPoint(a, c, b, t) {
-        const inv = 1 - t;
-        return {
-          x: inv * inv * a.x + 2 * inv * t * c.x + t * t * b.x,
-          y: inv * inv * a.y + 2 * inv * t * c.y + t * t * b.y
-        };
-      }
-
-      function drawSpark(a, b, spark) {
-        const dx = b.x - a.x;
-        const dy = b.y - a.y;
-        const distance = Math.hypot(dx, dy) || 1;
-        const normalX = -dy / distance;
-        const normalY = dx / distance;
-        const wave = Math.sin((performance.now() * 0.003) + distance * 0.04) * 9;
-        const control = {
-          x: (a.x + b.x) / 2 + normalX * wave,
-          y: (a.y + b.y) / 2 + normalY * wave
-        };
-        const p2 = bezierPoint(a, control, b, spark.progress);
-
-        ctx.save();
-        ctx.globalCompositeOperation = 'lighter';
-        ctx.shadowBlur = 16;
-        ctx.shadowColor = 'rgba(255, 155, 147, 0.78)';
-
-        const glow = ctx.createRadialGradient(p2.x, p2.y, 0, p2.x, p2.y, 8);
-        glow.addColorStop(0, `rgba(255, 238, 232, ${0.95 * spark.life})`);
-        glow.addColorStop(0.38, `rgba(255, 155, 147, ${0.62 * spark.life})`);
-        glow.addColorStop(1, `rgba(224, 71, 60, 0)`);
-        ctx.fillStyle = glow;
-        ctx.beginPath();
-        ctx.arc(p2.x, p2.y, 8, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.fillStyle = `rgba(255, 238, 232, ${0.86 * spark.life})`;
-        ctx.beginPath();
-        ctx.arc(p2.x, p2.y, 2.1, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-      }
-
-      function drawNodesInfluence(influencedKeys) {
-        nodes.forEach((node, key) => {
-          node.classList.toggle('influenced', influencedKeys.has(key));
-        });
-      }
-
-      function animate(now) {
-        if (!isVisible) {
-          animationId = null;
-          return;
-        }
-
-        if (now - lastFrame < frameInterval) {
-          animationId = window.requestAnimationFrame(animate);
-          return;
-        }
-        lastFrame = now;
-
-        const rect = network.getBoundingClientRect();
-        ctx.clearRect(0, 0, rect.width, rect.height);
-
-        simulatedMouse.x = rect.width * (0.5 + Math.cos(now * 0.00022) * 0.44);
-        simulatedMouse.y = rect.height * (0.5 + Math.sin(now * 0.00031) * 0.34);
-
-        if (now - lastBurst > 1500 + Math.random() * 900) {
-          burst(now);
-        }
-
-        const influence = mouse.active ? mouse : simulatedMouse;
-        const influenceRadius = mouse.active ? 165 : 95;
-        const influencedKeys = new Set();
-
-        pairs.forEach((pair) => {
-          const key = pair.join(':');
-          const a = points.get(pair[0]);
-          const b = points.get(pair[1]);
-          if (!a || !b) return;
-
-          const pairDist = Math.hypot(a.x - b.x, a.y - b.y);
-          const segmentDist = distanceToSegment(influence.x, influence.y, a.x, a.y, b.x, b.y);
-          const proximity = Math.max(0, 1 - segmentDist / influenceRadius);
-          const base = Math.max(0, 1 - pairDist / (mouse.active ? 410 : 360)) * 0.42;
-          const pulse = active.get(key) || 0;
-          const strength = Math.max(base, proximity * (mouse.active ? 1 : 0.62), pulse);
-
-          active.set(key, Math.max(0, pulse - 0.012));
-
-          if (strength > 0.035) {
-            drawMembrane(a, b, strength, now);
-          }
-          if (strength > 0.08) {
-            drawConnection(a, b, strength, proximity > 0.35 || pulse > 0.62);
-          }
-          if (strength > 0.42) {
-            influencedKeys.add(pair[0]);
-            influencedKeys.add(pair[1]);
-          }
-        });
-
-        for (let i = sparks.length - 1; i >= 0; i -= 1) {
-          const spark = sparks[i];
-          const a = points.get(spark.pair[0]);
-          const b = points.get(spark.pair[1]);
-          if (a && b) drawSpark(a, b, spark);
-          spark.progress += spark.speed;
-          spark.life = Math.max(0, 1 - Math.max(0, spark.progress - 0.72) / 0.28);
-          if (spark.progress >= 1.05 || spark.life <= 0) sparks.splice(i, 1);
-        }
-
-        drawNodesInfluence(influencedKeys);
-        animationId = window.requestAnimationFrame(animate);
-      }
-
-      network.addEventListener('mousemove', (event) => {
-        const rect = network.getBoundingClientRect();
-        mouse.x = event.clientX - rect.left;
-        mouse.y = event.clientY - rect.top;
-        mouse.active = true;
-      });
-
-      network.addEventListener('mouseenter', () => {
-        burst(performance.now(), 4);
-      });
-
-      network.addEventListener('mouseleave', () => {
-        mouse.active = false;
-      });
-
-      window.addEventListener('resize', resize);
-      resize();
-      animationId = window.requestAnimationFrame(animate);
-
-      const visibilityObserver = new IntersectionObserver((entries) => {
-        isVisible = entries.some((entry) => entry.isIntersecting);
-        if (isVisible && !animationId) {
-          lastFrame = 0;
-          readPoints();
-          animationId = window.requestAnimationFrame(animate);
-        }
-      }, { threshold: 0.01 });
-
-      visibilityObserver.observe(network);
-
-      window.addEventListener('beforeunload', () => {
-        if (animationId) window.cancelAnimationFrame(animationId);
-        visibilityObserver.disconnect();
-      });
-    })();
+    mobileMoreInfo.addEventListener('click', () => setMobileSideOpen(true));
+    mobileSideClose.addEventListener('click', () => setMobileSideOpen(false));
 
     document.getElementById('prototype-contact-form').addEventListener('submit', (event) => {
       event.preventDefault();

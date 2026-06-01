@@ -264,6 +264,7 @@
     }
 
     .recent-crafts-link {
+      display: none;
       color: var(--primary-color);
       font-size: 12px;
       font-weight: 800;
@@ -285,6 +286,24 @@
       border-radius: 4px;
       background: #141717;
       overflow: hidden;
+    }
+
+    .craft-strip-link {
+      min-width: 68px;
+      height: 54px;
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 10px;
+      border: 1px solid rgba(224, 71, 60, 0.42);
+      border-radius: 4px;
+      color: var(--primary-color);
+      background: rgba(224, 71, 60, 0.08);
+      font-size: 11px;
+      font-weight: 800;
+      text-decoration: none;
+      white-space: nowrap;
     }
 
     .craft-thumb img {
@@ -740,6 +759,7 @@
       }
 
       .recent-crafts-link {
+        display: inline;
         color: var(--primary-color);
         font-size: 12px;
         font-weight: 800;
@@ -759,6 +779,10 @@
         border-radius: 4px;
         background: #141717;
         overflow: hidden;
+      }
+
+      .craft-strip-link {
+        display: none;
       }
 
       .craft-thumb img {
@@ -1150,7 +1174,11 @@
           return;
         }
 
-        strip.replaceChildren(...thumbs);
+        const viewAll = document.createElement('a');
+        viewAll.className = 'craft-strip-link';
+        viewAll.href = '/Forge/';
+        viewAll.textContent = 'View All >';
+        strip.replaceChildren(...thumbs, viewAll);
         section.classList.remove('is-empty');
       } catch (error) {
         console.warn('Recent crafts unavailable:', error.message || error);
