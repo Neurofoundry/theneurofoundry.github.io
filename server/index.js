@@ -25,7 +25,7 @@ const paymentRoutes = require('./routes/payments');
 const forgeRoutes = require('./routes/forge');
 const { findUserById } = require('./services/userService');
 const { getProfileAvatar } = require('./services/r2AvatarClient');
-const { getLastSentEmail, getSentEmailLog, sendDevConsoleEmail } = require('./services/emailService');
+const { getLastSentEmail, getSentEmailLog, sendCrmEmail, sendDevConsoleEmail } = require('./services/emailService');
 const { getEmailDeliveryLog, getEmailQueueSnapshot } = require('./services/emailOrchestrator');
 const skeletonKeyChangelog = require('./data/skeleton-key-changelog.json');
 
@@ -46,7 +46,8 @@ app.use(helmet({
     ? {
         directives: {
           ...helmet.contentSecurityPolicy.getDefaultDirectives(),
-          'script-src': ["'self'", "'unsafe-inline'"],
+          'script-src': ["'self'", "'unsafe-inline'", 'https://challenges.cloudflare.com'],
+          'frame-src': ["'self'", 'https://challenges.cloudflare.com'],
           'img-src': ["'self'", 'data:', 'https:']
         }
       }
@@ -137,6 +138,130 @@ app.get('/api/skeleton-key/changelog', (req, res) => {
     messageId: changelog.messageId || key,
     ...changelog
   });
+});
+
+function cleanContactField(value, maxLength) {
+  return String(value || '').trim().slice(0, maxLength);
+}
+
+async function verifyTurnstileToken(token, remoteIp) {
+  const secret = String(process.env.TURNSTILE_SECRET_KEY || process.env.TURNSTILE_SECRET || '').trim();
+  if (!secret) {
+    return { success: false, reason: 'turnstile_not_configured' };
+  }
+  if (!token || token.length > 2048) {
+    return { success: false, reason: 'turnstile_token_missing' };
+  }
+
+  try {
+    const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        secret,
+        response: token,
+        remoteip: remoteIp || undefined
+      })
+    });
+    const result = await response.json();
+    return {
+      success: response.ok && result.success === true && result.action === 'about_contact',
+      reason: result.action !== 'about_contact' ? 'turnstile_action_mismatch' : null,
+      errors: result['error-codes'] || []
+    };
+  } catch (error) {
+    console.error('Turnstile verification failed:', error.message);
+    return { success: false, reason: 'turnstile_verification_failed' };
+  }
+}
+
+const contactLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: 'Too many requests. Please wait a few minutes before trying again.'
+  }
+});
+
+app.post('/api/contact', contactLimiter, async (req, res, next) => {
+  try {
+    const name = cleanContactField(req.body.name, 120);
+    const email = cleanContactField(req.body.email, 254).toLowerCase();
+    const organization = cleanContactField(req.body.organization, 160);
+    const timezone = cleanContactField(req.body.timezone, 80);
+    const engagement = cleanContactField(req.body.engagement, 80);
+    const timeline = cleanContactField(req.body.timeline, 80);
+    const budget = cleanContactField(req.body.budget, 120);
+    const message = cleanContactField(req.body.message, 5000);
+    const privateDetails = req.body.privateDetails === true;
+    const turnstileToken = cleanContactField(req.body.turnstileToken, 2048);
+
+    if (!name || !email || !message) {
+      return res.status(400).json({
+        success: false,
+        message: 'Name, email, and a description of the work are required.'
+      });
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please enter a valid email address.'
+      });
+    }
+
+    const remoteIp = String(req.headers['cf-connecting-ip'] || req.ip || '').trim();
+    const turnstile = await verifyTurnstileToken(turnstileToken, remoteIp);
+    if (!turnstile.success) {
+      return res.status(turnstile.reason === 'turnstile_not_configured' ? 503 : 400).json({
+        success: false,
+        message: turnstile.reason === 'turnstile_not_configured'
+          ? 'Contact verification is not configured yet. Please email info@theneurofoundry.com directly.'
+          : 'Please complete the verification check and try again.'
+      });
+    }
+
+    const recipient = String(process.env.CONTACT_FORM_TO || 'info@theneurofoundry.com').trim();
+    const text = [
+      'New request from the Neurofoundry About page',
+      '',
+      `Name: ${name}`,
+      `Email: ${email}`,
+      `Organization: ${organization || 'Not provided'}`,
+      `Time zone: ${timezone || 'Not provided'}`,
+      `Type of work: ${engagement || 'Not provided'}`,
+      `Timeline: ${timeline || 'Not provided'}`,
+      `Budget: ${budget || 'Not provided'}`,
+      `Private-details email thread requested: ${privateDetails ? 'Yes' : 'No'}`,
+      '',
+      'Work description:',
+      message
+    ].join('\n');
+
+    const result = await sendCrmEmail({
+      to: recipient,
+      replyTo: email,
+      subject: `New Neurofoundry request from ${name}`,
+      text,
+      type: 'about_contact'
+    });
+
+    if (!result?.sent) {
+      return res.status(503).json({
+        success: false,
+        message: 'The request could not be sent right now. Please email info@theneurofoundry.com directly.'
+      });
+    }
+
+    return res.json({
+      success: true,
+      message: 'Request sent. We will reply directly by email.'
+    });
+  } catch (error) {
+    return next(error);
+  }
 });
 
 function getDevConsoleSendKey(req) {

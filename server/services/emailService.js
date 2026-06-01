@@ -122,6 +122,7 @@ async function sendDevConsoleEmail(message = {}) {
   const html = String(message.html || '').trim();
   const requestedFrom = String(message.from || '').trim();
   const fromAddress = requestedFrom || process.env.EMAIL_FROM || process.env.SMTP_USER || 'noreply@neurofoundry.local';
+  const replyTo = String(message.replyTo || '').trim();
   const type = String(message.type || 'devconsole').trim() || 'devconsole';
 
   if (!to || !to.includes('@')) {
@@ -136,6 +137,7 @@ async function sendDevConsoleEmail(message = {}) {
 
   const info = await transporter.sendMail({
     from: fromAddress,
+    replyTo: replyTo || undefined,
     to,
     subject,
     text: text || undefined,
@@ -145,6 +147,7 @@ async function sendDevConsoleEmail(message = {}) {
   recordSentEmail({
     type,
     from: fromAddress,
+    replyTo: replyTo || null,
     to,
     subject,
     messageId: info.messageId,
@@ -162,6 +165,7 @@ async function sendDevConsoleEmail(message = {}) {
     type,
     source: 'devconsole',
     from: fromAddress,
+    replyTo: replyTo || null,
     to,
     subject,
     messageId: info.messageId,

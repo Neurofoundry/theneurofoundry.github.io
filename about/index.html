@@ -27,6 +27,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Michroma&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../common/site-header.css?v=20260519b">
   <link rel="stylesheet" href="../common/site-footer.css">
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <style>
     :root {
       --bg-0: #080909;
@@ -603,6 +604,7 @@
     }
 
     .contact-form {
+      min-width: 0;
       padding: clamp(20px, 3vw, 34px);
       border-color: var(--accent-border);
     }
@@ -731,6 +733,7 @@
       border: 1px solid var(--accent-border);
       border-radius: 6px;
       background: var(--bg-2);
+      text-align: center;
       cursor: pointer;
     }
 
@@ -799,6 +802,14 @@
       margin-top: 24px;
       padding-top: 24px;
       border-top: 1px solid var(--line-1);
+    }
+
+    .turnstile-row {
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      margin-top: 18px;
+      overflow: hidden;
     }
 
     .submit {
@@ -1081,8 +1092,8 @@
       display: flex;
       align-items: flex-end;
       gap: 24px;
-      margin-bottom: 18px;
-      padding-bottom: 18px;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
       border-bottom: 1px solid var(--line-1);
     }
 
@@ -1118,7 +1129,7 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 18px 20px;
+      padding: 13px 18px;
       color: var(--fg-0);
       font-weight: 700;
       cursor: pointer;
@@ -1151,18 +1162,62 @@
     }
 
     @media (max-width: 960px) {
-      .hero-copy-block,
-      .contact-layout {
+      .hero-copy-block {
         grid-template-columns: 1fr;
       }
 
-      .about-grid,
       .faq-grid {
         grid-template-columns: 1fr;
       }
 
       .hero-network {
-        min-height: 280px;
+        position: absolute;
+        top: 48px;
+        right: -34px;
+        z-index: 1;
+        width: clamp(190px, 31vw, 280px);
+        min-height: 0;
+        margin: 0;
+        opacity: 0.28;
+        transform: rotate(-7deg);
+      }
+
+      .about-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 7px;
+      }
+
+      .info-card {
+        display: grid;
+        place-items: center;
+        height: 38px;
+        min-height: 38px;
+        padding: 0 8px;
+        text-align: center;
+      }
+
+      .info-card h2,
+      .info-card > p:not(.nf-label) {
+        display: none;
+      }
+
+      .info-card .nf-label {
+        justify-content: center;
+        color: var(--fg-0);
+        font-family: var(--font-sans);
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0;
+        line-height: 18px;
+        text-transform: none;
+      }
+
+      .info-card .nf-label::before {
+        display: none;
+      }
+
+      .info-card p {
+        margin-top: 0;
       }
     }
 
@@ -1317,6 +1372,7 @@
       }
 
       .contact-layout {
+        grid-template-columns: 1fr;
         gap: 20px;
       }
 
@@ -1474,6 +1530,43 @@
         line-height: 17px;
       }
 
+    }
+
+    @media (max-width: 420px) {
+      .contact-form {
+        padding-inline: 12px;
+      }
+
+      .form-row.two,
+      .radio-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .radio-card {
+        min-height: 64px;
+      }
+
+      .radio-code,
+      .radio-meta {
+        font-size: 8px;
+      }
+
+      .radio-name {
+        font-size: 11px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .turnstile-row {
+        width: calc(100vw - 69px);
+        height: 44px;
+      }
+
+      .cf-turnstile {
+        width: 300px;
+        transform: scale(0.67);
+        transform-origin: left top;
+      }
     }
   </style>
 </head>
@@ -1645,6 +1738,10 @@
             <span>I need to share private details and would prefer a direct email thread first.</span>
           </label>
 
+          <div class="turnstile-row">
+            <div class="cf-turnstile" data-sitekey="0x4AAAAAADcztjYVFPC8VLN4" data-action="about_contact" data-theme="dark" data-size="flexible"></div>
+          </div>
+
           <div class="submit-row">
             <button class="submit" type="submit">Submit request</button>
           </div>
@@ -1723,12 +1820,11 @@
       <div class="faq-head">
         <div>
           <span class="nf-label">Common Questions</span>
-          <h2>Before you send it.</h2>
         </div>
       </div>
 
       <div class="faq-grid">
-        <details class="faq-item" open>
+        <details class="faq-item">
           <summary><span class="faq-num">01</span><span>What kinds of work fit?</span></summary>
           <div class="faq-a">Computer repair, cleanup, device setup, printer help, account issues, websites, business workflows, automation, local utilities, and custom tools.</div>
         </details>
@@ -1765,13 +1861,50 @@
     mobileMoreInfo.addEventListener('click', () => setMobileSideOpen(true));
     mobileSideClose.addEventListener('click', () => setMobileSideOpen(false));
 
-    document.getElementById('prototype-contact-form').addEventListener('submit', (event) => {
+    document.getElementById('prototype-contact-form').addEventListener('submit', async (event) => {
       event.preventDefault();
-      const button = event.currentTarget.querySelector('.submit');
-      button.textContent = 'Request queued';
-      button.style.background = 'var(--ok)';
-      button.style.borderColor = 'var(--ok)';
+      const form = event.currentTarget;
+      const button = form.querySelector('.submit');
+      const originalText = button.textContent;
+      button.textContent = 'Sending...';
       button.disabled = true;
+
+      try {
+        const response = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: form.querySelector('#name').value,
+            email: form.querySelector('#email').value,
+            organization: form.querySelector('#organization').value,
+            timezone: form.querySelector('#timezone').value,
+            engagement: form.querySelector('input[name="engagement"]:checked')?.value,
+            timeline: form.querySelector('#timeline').value,
+            budget: form.querySelector('#budget').value,
+            message: form.querySelector('#message').value,
+            privateDetails: form.querySelector('#privacy').checked,
+            turnstileToken: form.querySelector('[name="cf-turnstile-response"]')?.value
+          })
+        });
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.message || 'Request could not be sent.');
+        }
+
+        button.textContent = 'Request sent';
+        button.style.background = 'var(--ok)';
+        button.style.borderColor = 'var(--ok)';
+        form.reset();
+      } catch (error) {
+        if (window.turnstile) window.turnstile.reset();
+        button.textContent = 'Try again';
+        button.disabled = false;
+        window.alert(`${error.message} You can also email info@theneurofoundry.com directly.`);
+        setTimeout(() => {
+          if (!button.disabled) button.textContent = originalText;
+        }, 3000);
+      }
     });
   </script>
 </body>
