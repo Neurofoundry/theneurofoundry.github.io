@@ -486,7 +486,7 @@
         <h1>Downloads</h1>
         <p>Public utilities, release builds, and support links for Neurofoundry software. Skeleton Key is the first active package on the shelf.</p>
         <div class="hero-cta">
-          <a href="https://downloads.theneurofoundry.com/SkeletonKeySetup.exe" class="btn-primary">Download Skeleton Key</a>
+          <a href="https://skeleton-key-download-counter.csirico9.workers.dev/download/SkeletonKeySetup.exe" class="btn-primary">Download Skeleton Key</a>
           <a href="../checkout/skeleton-key/" class="btn-ghost">Unlock full usage</a>
         </div>
       </div>
@@ -518,9 +518,9 @@
           </div>
           <p class="dl-desc">Credential storage for API keys, tokens, and sensitive developer secrets. Free access tier available.</p>
           <div class="dl-footer">
-            <span class="dl-platform">Windows / 0 downloads</span>
+            <span class="dl-platform">Windows / <span id="skeleton-key-download-count">0</span> downloads</span>
             <span class="dl-spacer"></span>
-            <a href="https://downloads.theneurofoundry.com/SkeletonKeySetup.exe" class="dl-btn">Download</a>
+            <a href="https://skeleton-key-download-counter.csirico9.workers.dev/download/SkeletonKeySetup.exe" class="dl-btn">Download</a>
             <a href="../checkout/skeleton-key/" class="dl-btn">Purchase</a>
           </div>
         </article>
@@ -908,5 +908,13 @@
 
   <div data-site-footer></div>
   <script src="../common/site-footer.js?v=20260519-footer" data-base="../"></script>
+  <script>
+    fetch('https://skeleton-key-download-counter.csirico9.workers.dev/count')
+      .then((response) => response.ok ? response.json() : Promise.reject())
+      .then(({ count }) => {
+        document.getElementById('skeleton-key-download-count').textContent = Number(count).toLocaleString();
+      })
+      .catch(() => {});
+  </script>
 </body>
 </html>

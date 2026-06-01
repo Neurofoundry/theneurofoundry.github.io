@@ -1,0 +1,25 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "skeleton-key-download-counter",
+  "main": "src/index.js",
+  "compatibility_date": "2026-06-01",
+  "vars": {
+    "INSTALLER_URL": "https://downloads.theneurofoundry.com/SkeletonKeySetup.exe"
+  },
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "DOWNLOAD_COUNTER",
+        "class_name": "DownloadCounter"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": [
+        "DownloadCounter"
+      ]
+    }
+  ]
+}
