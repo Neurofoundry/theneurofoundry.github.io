@@ -4,6 +4,7 @@
  */
 
 require('dotenv').config();
+const crypto = require('crypto');
 const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
@@ -175,9 +176,69 @@ async function verifyTurnstileToken(token, remoteIp) {
   }
 }
 
+function getContactClientIp(req) {
+  return String(req.headers['fly-client-ip'] || req.ip || '').trim();
+}
+
+function getContactRateLimitKey(req) {
+  const ip = getContactClientIp(req);
+  if (!ip.includes(':')) return ip;
+
+  // Group IPv6 clients by /64 so rotating interface identifiers cannot bypass the limit.
+  return ip.split(':').slice(0, 4).join(':');
+}
+
+const CONTACT_COOLDOWN_MS = 60 * 60 * 1000;
+const contactCooldowns = new Map();
+const contactApprovalTokens = new Map();
+
+function getContactCooldownKeys(req, email) {
+  return [`email:${email}`, `ip:${getContactRateLimitKey(req)}`];
+}
+
+function getActiveContactCooldown(keys) {
+  const now = Date.now();
+  let active = null;
+
+  for (const key of keys) {
+    const entry = contactCooldowns.get(key);
+    if (!entry) continue;
+    if (entry.expiresAt <= now) {
+      contactCooldowns.delete(key);
+      contactApprovalTokens.delete(entry.approvalToken);
+      continue;
+    }
+    if (!active || entry.expiresAt > active.expiresAt) active = entry;
+  }
+
+  return active;
+}
+
+function setContactCooldown(keys, approvalToken) {
+  const entry = {
+    approvalToken,
+    expiresAt: Date.now() + CONTACT_COOLDOWN_MS
+  };
+  keys.forEach((key) => contactCooldowns.set(key, entry));
+  contactApprovalTokens.set(approvalToken, keys);
+}
+
+app.get('/api/contact/approve/:token', (req, res) => {
+  const token = String(req.params.token || '').trim();
+  const keys = contactApprovalTokens.get(token);
+  if (!keys) {
+    return res.status(404).type('text/plain').send('This contact approval link is invalid or has already been used.');
+  }
+
+  keys.forEach((key) => contactCooldowns.delete(key));
+  contactApprovalTokens.delete(token);
+  return res.type('text/plain').send('Contact cooldown cleared. This sender can submit another request.');
+});
+
 const contactLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 5,
+  keyGenerator: getContactRateLimitKey,
   standardHeaders: true,
   legacyHeaders: false,
   message: {
@@ -212,7 +273,18 @@ app.post('/api/contact', contactLimiter, async (req, res, next) => {
       });
     }
 
-    const remoteIp = String(req.headers['cf-connecting-ip'] || req.ip || '').trim();
+    const cooldownKeys = getContactCooldownKeys(req, email);
+    const cooldown = getActiveContactCooldown(cooldownKeys);
+    if (cooldown) {
+      const retryAfterSeconds = Math.ceil((cooldown.expiresAt - Date.now()) / 1000);
+      res.set('Retry-After', String(retryAfterSeconds));
+      return res.status(429).json({
+        success: false,
+        message: 'Your request was already sent. Please wait up to one hour before sending another message.'
+      });
+    }
+
+    const remoteIp = getContactClientIp(req);
     const turnstile = await verifyTurnstileToken(turnstileToken, remoteIp);
     if (!turnstile.success) {
       return res.status(turnstile.reason === 'turnstile_not_configured' ? 503 : 400).json({
@@ -224,6 +296,9 @@ app.post('/api/contact', contactLimiter, async (req, res, next) => {
     }
 
     const recipient = String(process.env.CONTACT_FORM_TO || 'info@theneurofoundry.com').trim();
+    const approvalToken = crypto.randomBytes(32).toString('hex');
+    const approvalBase = process.env.APP_URL || 'https://nf-auth-clean-20260219.fly.dev';
+    const approvalUrl = new URL(`/api/contact/approve/${approvalToken}`, approvalBase).toString();
     const text = [
       'New request from the Neurofoundry About page',
       '',
@@ -237,7 +312,10 @@ app.post('/api/contact', contactLimiter, async (req, res, next) => {
       `Private-details email thread requested: ${privateDetails ? 'Yes' : 'No'}`,
       '',
       'Work description:',
-      message
+      message,
+      '',
+      'Allow another submission from this sender before the one-hour cooldown expires:',
+      approvalUrl
     ].join('\n');
 
     const result = await sendCrmEmail({
@@ -254,6 +332,8 @@ app.post('/api/contact', contactLimiter, async (req, res, next) => {
         message: 'The request could not be sent right now. Please email info@theneurofoundry.com directly.'
       });
     }
+
+    setContactCooldown(cooldownKeys, approvalToken);
 
     return res.json({
       success: true,
