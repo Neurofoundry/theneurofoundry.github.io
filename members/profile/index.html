@@ -405,6 +405,10 @@
       border-radius: 8px;
     }
 
+    .profile-panel[hidden] {
+      display: none;
+    }
+
     .panel-header {
       display: flex;
       align-items: flex-start;
@@ -433,6 +437,45 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 18px 16px;
       padding: 22px;
+    }
+
+    .profile-kv-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      padding: 22px;
+    }
+
+    .profile-kv {
+      min-height: 82px;
+      padding: 14px 15px;
+      border: 1px solid var(--line-soft);
+      border-radius: 8px;
+      background: rgba(15, 17, 19, 0.74);
+    }
+
+    .profile-kv span {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--muted-text);
+      font: 700 11px/1.2 var(--mono);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .profile-kv strong {
+      display: block;
+      color: #fff;
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .profile-panel-actions {
+      grid-column: 1 / -1;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding-top: 2px;
     }
 
     .form-group.full,
@@ -876,7 +919,7 @@
 
       .tabs {
         display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr)) 16px minmax(0, 1fr);
+        grid-template-columns: repeat(3, minmax(0, 1fr));
         padding: 0 10px;
         background: #080a0a;
       }
@@ -925,6 +968,17 @@
         grid-template-columns: 1fr;
         gap: 17px;
         padding: 17px 18px 20px;
+      }
+
+      .profile-kv-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 17px 18px 20px;
+      }
+
+      .profile-panel-actions {
+        align-items: stretch;
+        flex-direction: column;
       }
 
       input[type="text"],
@@ -1009,15 +1063,13 @@
 
     <div class="settings-wrap">
       <nav class="tabs" aria-label="Profile settings sections">
-        <a class="tab active" href="#">Account</a>
-        <a class="tab" href="#">Security</a>
-        <a class="tab" href="#">Billing</a>
-        <span class="tab-dot" aria-hidden="true">&middot;</span>
-        <a class="tab" href="#">Email</a>
+        <a class="tab active" href="#account" data-profile-tab="account" aria-controls="account-panel" aria-selected="true">Account</a>
+        <a class="tab" href="#security" data-profile-tab="security" aria-controls="security-panel" aria-selected="false">Security</a>
+        <a class="tab" href="#billing" data-profile-tab="billing" aria-controls="billing-panel" aria-selected="false">Billing</a>
       </nav>
 
       <div class="content-grid">
-        <section class="panel" aria-labelledby="account-title">
+        <section class="panel profile-panel" id="account-panel" data-profile-panel="account" aria-labelledby="account-title">
           <div class="panel-header">
             <div>
               <h2 class="panel-title" id="account-title">Account Details</h2>
@@ -1065,6 +1117,72 @@
           </form>
         </section>
 
+        <section class="panel profile-panel" id="security-panel" data-profile-panel="security" aria-labelledby="security-title" hidden>
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title" id="security-title">Security</h2>
+              <p class="panel-subtitle">Review sign-in status and account access controls.</p>
+            </div>
+            <span id="securityStatusBadge" class="verification-badge">Checking</span>
+          </div>
+
+          <div class="profile-kv-grid">
+            <div class="profile-kv">
+              <span>Email Verification</span>
+              <strong id="securityEmailStatus">Checking</strong>
+            </div>
+            <div class="profile-kv">
+              <span>Sign-In Method</span>
+              <strong id="securityAuthProvider">Loading...</strong>
+            </div>
+            <div class="profile-kv">
+              <span>Last Login</span>
+              <strong id="securityLastLogin">Loading...</strong>
+            </div>
+            <div class="profile-kv">
+              <span>Password Access</span>
+              <strong id="securityPasswordStatus">Loading...</strong>
+            </div>
+            <div class="profile-panel-actions">
+              <a class="btn secondary" href="/members/reset-password/">Reset Password</a>
+              <button type="button" class="btn secondary" onclick="handleLogout()">Logout</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel profile-panel" id="billing-panel" data-profile-panel="billing" aria-labelledby="billing-title" hidden>
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title" id="billing-title">Billing</h2>
+              <p class="panel-subtitle">Review plan status and Skeleton Key access.</p>
+            </div>
+            <span id="billingStatusBadge" class="verification-badge">Checking</span>
+          </div>
+
+          <div class="profile-kv-grid">
+            <div class="profile-kv">
+              <span>Current Plan</span>
+              <strong id="billingPlanStatus">Loading...</strong>
+            </div>
+            <div class="profile-kv">
+              <span>Skeleton Key</span>
+              <strong id="billingSkeletonKeyStatus">Loading...</strong>
+            </div>
+            <div class="profile-kv">
+              <span>Checkout Status</span>
+              <strong id="billingCheckoutStatus">Loading...</strong>
+            </div>
+            <div class="profile-kv">
+              <span>Member Since</span>
+              <strong id="billingMemberSince">Loading...</strong>
+            </div>
+            <div class="profile-panel-actions">
+              <a class="btn primary" href="/checkout/skeleton-key/">Unlock Skeleton Key</a>
+              <a class="btn secondary" href="/downloads/">Downloads</a>
+            </div>
+          </div>
+        </section>
+
         <aside class="side-stack" aria-label="Profile summary">
           <section class="panel side-card notice">
             <h3>Profile Settings</h3>
@@ -1086,7 +1204,6 @@
             <ul class="mini-list">
               <li><span>Security</span><strong>Password, sessions</strong></li>
               <li><span>Billing</span><strong>Plan, invoices</strong></li>
-              <li><span>Email</span><strong>Preferences</strong></li>
             </ul>
           </section>
         </aside>
@@ -1256,6 +1373,11 @@
       element.insertBefore(document.createTextNode(text), element.firstChild);
     }
 
+    function setText(elementId, text) {
+      const element = document.getElementById(elementId);
+      if (element) element.textContent = text;
+    }
+
     function formatLocation(value) {
       const location = String(value || '').trim();
       if (!location) return 'Unavailable';
@@ -1277,6 +1399,21 @@
       const initials = `${first[0] || ''}${last[0] || ''}`.trim();
       if (initials) return initials.toUpperCase();
       return (emailName.slice(0, 2) || 'NF').toUpperCase();
+    }
+
+    function formatAuthProvider(user) {
+      const provider = String(user.authProvider || 'local').trim().toLowerCase();
+      if (provider === 'google') return 'Google';
+      if (provider === 'github') return 'GitHub';
+      return 'Email and Password';
+    }
+
+    function hasSkeletonKeyAccess(user) {
+      const metadata = user.metadata && typeof user.metadata === 'object' ? user.metadata : {};
+      return metadata.skeletonKeyAccessCompleted === true
+        || metadata.skeleton_key_access_completed === true
+        || metadata.skeletonKeyAccess?.completed === true
+        || metadata.skeletonKeyPurchase?.completed === true;
     }
 
     function syncProfileSummary(user, preferences) {
@@ -1309,6 +1446,17 @@
       document.getElementById('planStatus').textContent = plan;
       document.getElementById('lastLogin').textContent = lastLogin;
       document.getElementById('marketingStatus').textContent = preferences.marketingOptOut ? 'Opted Out' : 'Subscribed';
+      setText('securityStatusBadge', emailStatus);
+      document.getElementById('securityStatusBadge').className = verificationClass;
+      setText('securityEmailStatus', emailStatus);
+      setText('securityAuthProvider', formatAuthProvider(user));
+      setText('securityLastLogin', lastLogin);
+      setText('securityPasswordStatus', isOAuthUser(user) ? 'Managed by OAuth provider' : 'Password reset available');
+      setText('billingStatusBadge', plan);
+      setText('billingPlanStatus', plan);
+      setText('billingSkeletonKeyStatus', hasSkeletonKeyAccess(user) ? 'Unlocked' : 'Not unlocked');
+      setText('billingCheckoutStatus', hasSkeletonKeyAccess(user) ? 'Access recorded' : 'Checkout available');
+      setText('billingMemberSince', memberSince);
     }
 
     function isOAuthUser(user) {
@@ -1476,9 +1624,30 @@
     async function handleLogout() {
       if (confirm('Are you sure you want to logout?')) {
         await window.nfAuth.logout();
-        window.location.href = '/home.html';
+        window.location.href = '/';
       }
     }
+
+    function activateProfileTab(tabName) {
+      const activeName = ['account', 'security', 'billing'].includes(tabName) ? tabName : 'account';
+      document.querySelectorAll('[data-profile-tab]').forEach((tab) => {
+        const isActive = tab.dataset.profileTab === activeName;
+        tab.classList.toggle('active', isActive);
+        tab.setAttribute('aria-selected', String(isActive));
+      });
+      document.querySelectorAll('[data-profile-panel]').forEach((panel) => {
+        panel.hidden = panel.dataset.profilePanel !== activeName;
+      });
+    }
+
+    document.querySelectorAll('[data-profile-tab]').forEach((tab) => {
+      tab.addEventListener('click', (event) => {
+        event.preventDefault();
+        const tabName = tab.dataset.profileTab;
+        activateProfileTab(tabName);
+        if (history.replaceState) history.replaceState(null, '', `#${tabName}`);
+      });
+    });
 
     function showMessage(text, type) {
       const message = document.getElementById('message');
@@ -1490,6 +1659,7 @@
       }, 5000);
     }
 
+    activateProfileTab(window.location.hash.replace('#', ''));
     loadProfile();
     loadRecentCrafts();
   </script>
