@@ -83,7 +83,6 @@
     const currentAttr = isCurrent ? ' aria-current="page"' : '';
     return `<a href="${href}"${currentAttr}>${link.label}</a>`;
   }).join('');
-  const mobileNavItems = `${navItems}<a href="${basePath}members/signup/">Sign Up</a>`;
 
   const escapeHtml = (value) => String(value || '').replace(/[&<>"']/g, (char) => ({
     '&': '&amp;',
@@ -232,6 +231,37 @@
     `;
   };
 
+  const renderMobileAuthAction = () => {
+    if (getAuthState()) {
+      return '<button class="nf-mobile-logout" type="button" data-nf-mobile-logout>Log Out</button>';
+    }
+
+    return `<a href="${basePath}members/signup/">Sign Up</a>`;
+  };
+
+  const logout = async () => {
+    try {
+      await fetch(`${resolveApiBase()}/auth/logout`, {
+        method: 'POST',
+        credentials: 'include'
+      });
+    } catch (_) {
+      // Logout should still clear local state if the server is unreachable.
+    } finally {
+      cookieAuthState = null;
+      try {
+        if (window.localStorage) {
+          window.localStorage.removeItem('nf_auth');
+        }
+      } catch (_) {
+        // Storage removal is best-effort.
+      }
+      window.dispatchEvent(new CustomEvent('auth-state-changed', {
+        detail: { user: null, token: null }
+      }));
+    }
+  };
+
   mount.innerHTML = `
     <header class="nf-site-header">
       <div class="nf-header-container">
@@ -251,7 +281,8 @@
             <span aria-hidden="true"></span>
           </button>
           <nav class="nf-mobile-menu" id="nf-mobile-menu" aria-label="Mobile navigation" hidden>
-            ${mobileNavItems}
+            ${navItems}
+            <span data-nf-mobile-auth-action></span>
           </nav>
         </div>
       </div>
@@ -265,6 +296,9 @@
   const updateAuthSlots = () => {
     mount.querySelectorAll('[data-nf-auth-slot]').forEach((slot) => {
       slot.innerHTML = renderAuthLink();
+    });
+    mount.querySelectorAll('[data-nf-mobile-auth-action]').forEach((slot) => {
+      slot.innerHTML = renderMobileAuthAction();
     });
     mount.querySelectorAll('.nf-profile-avatar img').forEach((image) => {
       image.addEventListener('error', () => {
@@ -314,6 +348,12 @@
     if (!mount.contains(event.target)) {
       closeMenu();
     }
+  });
+
+  menu.addEventListener('click', (event) => {
+    if (!event.target.closest('[data-nf-mobile-logout]')) return;
+    closeMenu();
+    logout();
   });
 
   document.addEventListener('keydown', (event) => {

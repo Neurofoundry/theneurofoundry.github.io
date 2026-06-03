@@ -321,9 +321,13 @@
     display: none;
   }
 
-  .nf-mobile-menu a {
+  .nf-mobile-menu a,
+  .nf-mobile-menu button {
     min-height: 31px;
+    width: 100%;
+    border: 0;
     border-radius: 6px;
+    background: transparent;
     color: var(--nf-header-muted);
     text-decoration: none;
     display: flex;
@@ -331,11 +335,14 @@
     justify-content: flex-end;
     padding: 0 9px;
     font-size: 12px;
+    font: inherit;
     text-align: right;
     white-space: nowrap;
+    cursor: pointer;
   }
 
   .nf-mobile-menu a:hover,
+  .nf-mobile-menu button:hover,
   .nf-mobile-menu a[aria-current="page"] {
     color: var(--nf-header-primary);
     background: rgba(255, 255, 255, 0.06);
