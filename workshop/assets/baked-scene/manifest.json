@@ -1,0 +1,540 @@
+{
+  "exportedAt": "2026-06-04T19:46:46.333Z",
+  "url": "file:///D:/0___TESTZONE/_theneurofoundry/workshop/claude_run.html",
+  "scene": {
+    "background": "#ffffff",
+    "keyColor": "#fec79a",
+    "rimColor": "#81543b",
+    "fogDensity": 0.022,
+    "gridOpacity": 0,
+    "ambientIntensity": 2.05,
+    "keyIntensity": 0,
+    "workIntensity": 3.25,
+    "fillIntensity": 5.7,
+    "rimIntensity": 3.45,
+    "envIntensity": 2.65,
+    "surfTreatment": true,
+    "surfTintColor": "#8a4c3d",
+    "surfUnify": 0.81,
+    "surfSaturation": 0.89,
+    "surfDetail": 1.53,
+    "postFxEnabled": true,
+    "bloomEnabled": true,
+    "bloomThreshold": 0,
+    "bloomStrength": 0.42,
+    "bloomRadius": 0.11,
+    "domeShaderEnabled": true,
+    "domeShaderIntensity": 0.23,
+    "steamEnabled": true,
+    "steamIntensity": 0.37,
+    "vignetteEnabled": true,
+    "vignetteAmount": 0.96,
+    "embersEnabled": true,
+    "embersIntensity": 0.9,
+    "heatHazeEnabled": true,
+    "heatHazeStrength": 0.72,
+    "steamBurstEnabled": true,
+    "steamBurstIntensity": 0.6
+  },
+  "transforms": {
+    "import-1780587069917": {
+      "position": [
+        0,
+        0.18,
+        -21.4
+      ],
+      "rotation": [
+        -0.12217304763960307,
+        -1.5707963267948966,
+        -0.12217304763960307
+      ],
+      "scale": [
+        9.62,
+        9.62,
+        9.62
+      ]
+    },
+    "import-1780587159561": {
+      "position": [
+        21.7,
+        0.18,
+        5.2
+      ],
+      "rotation": [
+        0,
+        3.141592653589793,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    "import-1780587175392": {
+      "position": [
+        -0.1,
+        0.5,
+        -18.7
+      ],
+      "rotation": [
+        0.19198621771937624,
+        -1.5533430342749532,
+        0.06981317007977318
+      ],
+      "scale": [
+        5.39,
+        5.39,
+        5.39
+      ]
+    },
+    "import-1780595038090": {
+      "position": [
+        -21.3,
+        -0.5,
+        -11.8
+      ],
+      "rotation": [
+        -0.017453292519943295,
+        -0.6108652381980153,
+        0.017453292519943295
+      ],
+      "scale": [
+        6.54,
+        6.54,
+        6.54
+      ]
+    },
+    "import-1780595153942": {
+      "position": [
+        -20.6,
+        0.18,
+        15
+      ],
+      "rotation": [
+        0.017453292519943295,
+        0.05235987755982989,
+        0
+      ],
+      "scale": [
+        3.25,
+        3.25,
+        3.25
+      ]
+    },
+    "import-1780595235206": {
+      "position": [
+        7.2,
+        -0.2,
+        -17.8
+      ],
+      "rotation": [
+        -0.05235987755982989,
+        1.6057029118347832,
+        -0.05235987755982989
+      ],
+      "scale": [
+        2.78,
+        2.78,
+        2.78
+      ]
+    },
+    "import-1780595296043": {
+      "position": [
+        -0.2,
+        1.2,
+        -17.1
+      ],
+      "rotation": [
+        0,
+        3.141592653589793,
+        0
+      ],
+      "scale": [
+        1.61,
+        1.61,
+        1.61
+      ]
+    },
+    "import-1780595344650": {
+      "position": [
+        -7.6,
+        -0.3,
+        -18.1
+      ],
+      "rotation": [
+        -0.017453292519943295,
+        -1.53588974175501,
+        -0.05235987755982989
+      ],
+      "scale": [
+        2.78,
+        2.78,
+        2.78
+      ]
+    },
+    "import-1780595692635": {
+      "position": [
+        18.5,
+        -0.3,
+        -17.1
+      ],
+      "rotation": [
+        -0.08726646259971647,
+        -1.413716694115407,
+        -0.05235987755982989
+      ],
+      "scale": [
+        3.02,
+        3.02,
+        3.02
+      ]
+    },
+    "import-1780595790551": {
+      "position": [
+        25.2,
+        0.18,
+        4.8
+      ],
+      "rotation": [
+        0.05235987755982989,
+        -1.117010721276371,
+        0.08726646259971647
+      ],
+      "scale": [
+        3.02,
+        3.02,
+        3.02
+      ]
+    },
+    "import-1780595838652": {
+      "position": [
+        21.7,
+        0.18,
+        14.3
+      ],
+      "rotation": [
+        -0.017453292519943295,
+        -0.05235987755982989,
+        -0.017453292519943295
+      ],
+      "scale": [
+        3.72,
+        3.72,
+        3.72
+      ]
+    },
+    "import-1780595909337": {
+      "position": [
+        -21,
+        0.18,
+        3.4
+      ],
+      "rotation": [
+        -0.017453292519943295,
+        -3.0892327760299634,
+        0.05235987755982989
+      ],
+      "scale": [
+        3.02,
+        3.02,
+        3.02
+      ]
+    },
+    "import-1780595948572": {
+      "position": [
+        -23.1,
+        0.18,
+        5.8
+      ],
+      "rotation": [
+        -0.017453292519943295,
+        -3.001966313430247,
+        0.12217304763960307
+      ],
+      "scale": [
+        5.13,
+        5.13,
+        5.13
+      ]
+    },
+    "import-1780595975167": {
+      "position": [
+        -23.4,
+        3.7,
+        16.7
+      ],
+      "rotation": [
+        -0.017453292519943295,
+        -3.001966313430247,
+        0.017453292519943295
+      ],
+      "scale": [
+        11.7,
+        11.7,
+        11.7
+      ]
+    },
+    "import-1780596306107": {
+      "position": [
+        -12.2,
+        18,
+        -15.7
+      ],
+      "rotation": [
+        -3.001966313430247,
+        3.141592653589793,
+        -0.05235987755982989
+      ],
+      "scale": [
+        2.08,
+        2.08,
+        2.08
+      ]
+    },
+    "import-1780596439119": {
+      "position": [
+        -18.5,
+        0.2,
+        4.1
+      ],
+      "rotation": [
+        -0.017453292519943295,
+        0.08726646259971647,
+        0.017453292519943295
+      ],
+      "scale": [
+        1.84,
+        1.84,
+        1.84
+      ]
+    },
+    "import-1780599387246": {
+      "position": [
+        0,
+        1.7,
+        -14.6
+      ],
+      "rotation": [
+        0.05235987755982989,
+        1.5707963267948966,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    "import-1780600499536": {
+      "position": [
+        2.9,
+        -1,
+        6.5
+      ],
+      "rotation": [
+        0.017453292519943295,
+        1.7453292519943295,
+        -0.03490658503988659
+      ],
+      "scale": [
+        0.42,
+        0.42,
+        0.42
+      ]
+    }
+  },
+  "assets": [
+    {
+      "id": "import-1780587069917",
+      "label": "selected_model_20260603_233818_meshopt",
+      "name": "selected_model_20260603_233818_meshopt.glb",
+      "type": "model/gltf-binary",
+      "savedAt": 1780587069917,
+      "file": "assets/baked-scene/import-1780587069917-selected_model_20260603_233818_meshopt.glb",
+      "size": 747316
+    },
+    {
+      "id": "import-1780587159561",
+      "label": "selected_model_20260531_051856_plain",
+      "name": "selected_model_20260531_051856_plain.glb",
+      "type": "model/gltf-binary",
+      "savedAt": 1780587159562,
+      "file": "assets/baked-scene/import-1780587159561-selected_model_20260531_051856_plain.glb",
+      "size": 25277580
+    },
+    {
+      "id": "import-1780587175392",
+      "label": "selected_model_20260602_165111_plain",
+      "name": "selected_model_20260602_165111_plain.glb",
+      "type": "model/gltf-binary",
+      "savedAt": 1780587175392,
+      "file": "assets/baked-scene/import-1780587175392-selected_model_20260602_165111_plain.glb",
+      "size": 36535440
+    },
+    {
+      "id": "import-1780595038090",
+      "label": "archway.web.webp",
+      "name": "archway.web.webp.glb",
+      "type": "model/gltf-binary",
+      "savedAt": 1780595038090,
+      "file": "assets/baked-scene/import-1780595038090-archway.web.webp.glb",
+      "size": 990592
+    },
+    {
+      "id": "import-1780595153942",
+      "label": "generator.web.webp",
+      "name": "generator.web.webp.glb",
+      "type": "model/gltf-binary",
+      "savedAt": 1780595153942,
+      "file": "assets/baked-scene/import-1780595153942-generator.web.webp.glb",
+      "size": 815172
+    },
+    {
+      "id": "import-1780595235206",
+      "label": "tank.web.webp",
+      "name": "tank.web.webp.glb",
+      "type": "model/gltf-binary",
+      "savedAt": 1780595235206,
+      "file": "assets/baked-scene/import-1780595235206-tank.web.webp.glb",
+      "size": 748216
+    },
+    {
+      "id": "import-1780595296043",
+      "label": "pillar2.web.webp",
+      "name": "pillar2.web.webp.glb",
+      "type": "model/gltf-binary",
+      "savedAt": 1780595296043,
+      "file": "assets/baked-scene/import-1780595296043-pillar2.web.webp.glb",
+      "size": 626084
+    },
+    {
+      "id": "import-1780595344650",
+      "label": "tank.web.webp",
+      "name": "tank.web.webp.glb",
+      "type": "model/gltf-binary",
+      "savedAt": 1780595344650,
+      "file": "assets/baked-scene/import-1780595344650-tank.web.webp.glb",
+      "size": 748216
+    },
+    {
+      "id": "import-1780595692635",
+      "label": "railway.web.webp",
+      "name": "railway.web.webp.glb",
+      "type": "model/gltf-binary",
+      "savedAt": 1780595692635,
+      "file": "assets/baked-scene/import-1780595692635-railway.web.webp.glb",
+      "size": 628572
+    },
+    {
+      "id": "import-1780595790551",
+      "label": "railway2.web.webp",
+      "name": "railway2.web.webp.glb",
+      "type": "model/gltf-binary",
+      "savedAt": 1780595790551,
+      "file": "assets/baked-scene/import-1780595790551-railway2.web.webp.glb",
+      "size": 635428
+    },
+    {
+      "id": "import-1780595838652",
+      "label": "wall1.web.webp",
+      "name": "wall1.web.webp.glb",
+      "type": "model/gltf-binary",
+      "savedAt": 1780595838652,
+      "file": "assets/baked-scene/import-1780595838652-wall1.web.webp.glb",
+      "size": 709056
+    },
+    {
+      "id": "import-1780595909337",
+      "label": "wall2.web.webp",
+      "name": "wall2.web.webp.glb",
+      "type": "model/gltf-binary",
+      "savedAt": 1780595909338,
+      "file": "assets/baked-scene/import-1780595909337-wall2.web.webp.glb",
+      "size": 724776
+    },
+    {
+      "id": "import-1780595948572",
+      "label": "walll3.web.webp",
+      "name": "walll3.web.webp.glb",
+      "type": "model/gltf-binary",
+      "savedAt": 1780595948572,
+      "file": "assets/baked-scene/import-1780595948572-walll3.web.webp.glb",
+      "size": 724776
+    },
+    {
+      "id": "import-1780595975167",
+      "label": "wall2.web.webp",
+      "name": "wall2.web.webp.glb",
+      "type": "model/gltf-binary",
+      "savedAt": 1780595975167,
+      "file": "assets/baked-scene/import-1780595975167-wall2.web.webp.glb",
+      "size": 724776
+    },
+    {
+      "id": "import-1780596306107",
+      "label": "ruin3.web.webp",
+      "name": "ruin3.web.webp.glb",
+      "type": "model/gltf-binary",
+      "savedAt": 1780596306107,
+      "file": "assets/baked-scene/import-1780596306107-ruin3.web.webp.glb",
+      "size": 652320
+    },
+    {
+      "id": "import-1780596439119",
+      "label": "holograph1.web.webp",
+      "name": "holograph1.web.webp.glb",
+      "type": "model/gltf-binary",
+      "savedAt": 1780596439119,
+      "file": "assets/baked-scene/import-1780596439119-holograph1.web.webp.glb",
+      "size": 690088
+    },
+    {
+      "id": "import-1780599387246",
+      "label": "selected_model_20260603_233818_plain",
+      "name": "selected_model_20260603_233818_plain.glb",
+      "type": "model/gltf-binary",
+      "savedAt": 1780599387246,
+      "file": "assets/baked-scene/import-1780599387246-selected_model_20260603_233818_plain.glb",
+      "size": 2848784
+    },
+    {
+      "id": "import-1780600499536",
+      "label": "new",
+      "name": "new.glb",
+      "type": "model/gltf-binary",
+      "savedAt": 1780600499536,
+      "file": "assets/baked-scene/import-1780600499536-new.glb",
+      "size": 11620676
+    }
+  ],
+  "textures": [
+    {
+      "id": "backWall",
+      "slot": "backWall",
+      "name": "e6cb7ab1-cc9b-4bf7-8629-a5fb14fc5b22 (1).png",
+      "type": "image/png",
+      "savedAt": 1780586974630,
+      "file": "assets/baked-scene/backWall-e6cb7ab1-cc9b-4bf7-8629-a5fb14fc5b22-1.png",
+      "size": 2848899
+    },
+    {
+      "id": "floor",
+      "slot": "floor",
+      "name": "ChatGPT Image Mar 3, 2026, 08_20_41 AM.png",
+      "type": "image/png",
+      "savedAt": 1780599840482,
+      "file": "assets/baked-scene/floor-chatgpt-image-mar-3-2026-08_20_41-am.png",
+      "size": 1811593
+    },
+    {
+      "id": "rightWall",
+      "slot": "rightWall",
+      "name": "ChatGPT Image Mar 3, 2026, 08_20_41 AM.png",
+      "type": "image/png",
+      "savedAt": 1780587018397,
+      "file": "assets/baked-scene/rightWall-chatgpt-image-mar-3-2026-08_20_41-am.png",
+      "size": 2727935
+    }
+  ]
+}
