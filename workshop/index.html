@@ -196,6 +196,16 @@
       color: #fff;
     }
 
+    .room-controls button.is-locked {
+      border: 1px dashed rgba(255, 168, 130, 0.26);
+    }
+
+    .room-controls .lock-glyph {
+      margin-right: 2px;
+      font-size: 11px;
+      opacity: 0.8;
+    }
+
     .room-controls button:disabled,
     .room-controls button.is-disabled {
       color: rgba(135, 144, 149, 0.42);
@@ -225,61 +235,151 @@
       filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.42));
     }
 
+    /* ---- Forge status label + tracked beacon ---- */
     .forge-holo {
       position: absolute;
-      top: 18.2%;
-      left: 23.6%;
-      z-index: 4;
-      width: min(230px, 22vw);
-      height: auto;
-      color: rgba(224, 43, 43, 0.86);
+      top: 20px;
+      left: 20px;
+      z-index: 5;
+      display: inline-flex;
+      align-items: center;
+      gap: 11px;
+      width: auto;
+      padding: 12px 18px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgba(10, 7, 6, 0.82);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(12px);
       pointer-events: none;
-      transform: none;
-      filter: none;
+      white-space: nowrap;
     }
 
-    .forge-holo-card {
-      position: relative;
-      display: grid;
-      align-items: center;
-      width: 100%;
-      min-height: 62px;
-      padding: 13px 16px;
-      border: 1px solid rgba(224, 71, 60, 0.38);
-      border-radius: 7px;
-      background:
-        linear-gradient(150deg, rgba(224, 71, 60, 0.08), transparent 48%),
-        rgba(0, 0, 0, 0.75);
-      box-shadow:
-        0 12px 28px rgba(0, 0, 0, 0.36),
-        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    .forge-holo::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 1px;
+      border-radius: 10px 10px 0 0;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: 0.7;
+    }
+
+    .forge-holo-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ff5a3c;
+      box-shadow: 0 0 10px 1px rgba(255, 90, 60, 0.85);
+      animation: forge-pulse 1.9s ease-in-out infinite;
+    }
+
+    @keyframes forge-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
     }
 
     .forge-holo-label {
-      color: rgba(255, 255, 255, 0.75);
-      font: 800 clamp(18px, 1.75vw, 25px)/1.05 Arial, sans-serif;
-      letter-spacing: 0;
-      text-transform: none;
-      text-shadow: none;
+      color: #fff;
+      font: 800 10px/1 var(--mono);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
     }
 
-    .three-workshop.is-view-front .forge-holo-card {
+    .three-workshop.is-view-left .forge-holo-dot {
+      background: #6b7375;
+      box-shadow: none;
+    }
+
+    .three-workshop.is-view-left .forge-holo::before {
+      opacity: 0.25;
+    }
+
+    .forge-beacon-node {
+      position: absolute;
+      top: 0;
+      left: -9999px;
+      z-index: 5;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 13px;
+      border: 1px solid rgba(255, 138, 114, 0.45);
+      border-radius: 8px;
+      background: rgba(14, 8, 7, 0.9);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(10px);
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.35s ease;
+      white-space: nowrap;
+    }
+
+    .forge-beacon-node .pip {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #ff5a3c;
+      box-shadow: 0 0 9px 1px rgba(255, 90, 60, 0.85);
+    }
+
+    .forge-beacon-node .lbl {
+      color: #fff;
+      font: 800 10px/1 var(--mono);
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    .forge-beacon-line {
+      position: absolute;
+      top: 0;
+      left: -9999px;
+      z-index: 4;
+      height: 0;
+      border-top: 1px solid var(--accent);
+      box-shadow: 0 0 6px rgba(224, 71, 60, 0.5);
+      opacity: 0;
+      pointer-events: none;
+      transform-origin: 0 0;
+      transition: opacity 0.35s ease;
+    }
+
+    .forge-beacon-ring {
+      position: absolute;
+      top: 0;
+      left: -9999px;
+      z-index: 5;
+      width: 18px;
+      height: 18px;
+      margin: -9px 0 0 -9px;
+      border-radius: 50%;
+      background: #ff5a3c;
+      box-shadow: 0 0 0 0 rgba(255, 90, 60, 0.6);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+      animation: forge-ping 2.4s ease-out infinite;
+    }
+
+    .forge-beacon-ring::after {
+      content: "";
+      position: absolute;
+      inset: 4px;
+      border-radius: 50%;
+      background: #fff;
+      opacity: 0.85;
+    }
+
+    @keyframes forge-ping {
+      0% { box-shadow: 0 0 0 0 rgba(255, 90, 60, 0.55); }
+      100% { box-shadow: 0 0 0 26px rgba(255, 90, 60, 0); }
+    }
+
+    .three-workshop.is-view-front .forge-beacon-node,
+    .three-workshop.is-view-front .forge-beacon-line,
+    .three-workshop.is-view-front .forge-beacon-ring {
       opacity: 1;
-    }
-
-    .three-workshop.is-view-left .forge-holo {
-      color: rgba(150, 154, 154, 0.48);
-    }
-
-    .three-workshop.is-view-left .forge-holo-card {
-      border-color: rgba(150, 154, 154, 0.32);
-      background: rgba(0, 0, 0, 0.74);
-      opacity: 0.75;
-    }
-
-    .three-workshop.is-view-left .forge-holo-label {
-      color: rgba(170, 174, 174, 0.75);
-      text-shadow: none;
     }
 
     .load-error {
@@ -533,13 +633,18 @@
     <div class="room-controls" aria-label="Workshop room view">
       <button type="button" data-room-view="left">Look left</button>
       <button type="button" class="is-active" data-room-view="front">Front</button>
-      <button type="button" class="is-disabled" data-room-view="right" disabled aria-disabled="true">Look right</button>
+      <button type="button" class="is-disabled is-locked" data-room-view="right" disabled aria-disabled="true"><span class="lock-glyph" aria-hidden="true">&#128274;</span> Look right</button>
     </div>
     <div class="forge-holo" aria-hidden="true">
-      <div class="forge-holo-card">
-        <span class="forge-holo-label" data-forge-holo-label>The Forge</span>
-      </div>
+      <span class="forge-holo-dot"></span>
+      <span class="forge-holo-label" data-forge-holo-label>Active</span>
     </div>
+    <div class="forge-beacon-node" data-beacon-node aria-hidden="true">
+      <span class="pip"></span>
+      <span class="lbl">The Forge</span>
+    </div>
+    <div class="forge-beacon-line" data-beacon-line aria-hidden="true"></div>
+    <div class="forge-beacon-ring" data-beacon-ring aria-hidden="true"></div>
     <div class="room-note" aria-hidden="true">
       <img src="assets/brand/logo03_color.png" alt="">
     </div>
@@ -704,6 +809,9 @@
       const canvas = document.querySelector('#three-workshop-canvas');
       const workshopShell = document.querySelector('[data-workshop-shell]');
       const forgeHoloLabel = document.querySelector('[data-forge-holo-label]');
+      const beaconNode = document.querySelector('[data-beacon-node]');
+      const beaconLine = document.querySelector('[data-beacon-line]');
+      const beaconRing = document.querySelector('[data-beacon-ring]');
       const errorPanel = document.querySelector('[data-load-error]');
       const builderPanel = document.querySelector('[data-builder-panel]');
       const builderTarget = document.querySelector('[data-builder-target]');
@@ -2811,7 +2919,7 @@
         document.querySelector('[data-facing-label]').textContent = views[view].label;
         workshopShell?.classList.toggle('is-view-left', view === 'left');
         workshopShell?.classList.toggle('is-view-front', view === 'front');
-        if (forgeHoloLabel) forgeHoloLabel.textContent = view === 'left' ? 'Disconnected' : 'The Forge';
+        if (forgeHoloLabel) forgeHoloLabel.textContent = view === 'left' ? 'Disconnected' : 'Active';
         document.querySelectorAll('[data-room-view]').forEach((button) => {
           button.classList.toggle('is-active', button.dataset.roomView === view);
         });
@@ -2911,6 +3019,28 @@
           heatHazePass.uniforms.uTime.value = fxTime;
           const proj = forgeGlow.position.clone().project(camera);
           heatHazePass.uniforms.uCenter.value.set(proj.x * 0.5 + 0.5, proj.y * 0.5 + 0.5);
+        }
+        if (beaconRing && beaconNode && beaconLine) {
+          const bp = forgeGlow.position.clone().project(camera);
+          const rect = canvas.getBoundingClientRect();
+          const rx = (bp.x * 0.5 + 0.5) * rect.width + rect.left;
+          const ry = (-bp.y * 0.5 + 0.5) * rect.height + rect.top + 34;
+          const nx = rx - Math.min(170, rect.width * 0.14);
+          const ny = ry - 96;
+          beaconRing.style.left = rx + 'px';
+          beaconRing.style.top = ry + 'px';
+          beaconNode.style.left = nx + 'px';
+          beaconNode.style.top = ny + 'px';
+          const x1 = nx + 60;
+          const y1 = ny + 16;
+          const x2 = rx;
+          const y2 = ry;
+          const dx = x2 - x1;
+          const dy = y2 - y1;
+          beaconLine.style.left = x1 + 'px';
+          beaconLine.style.top = y1 + 'px';
+          beaconLine.style.width = Math.hypot(dx, dy) + 'px';
+          beaconLine.style.transform = 'rotate(' + (Math.atan2(dy, dx) * 180 / Math.PI) + 'deg)';
         }
         raycaster.setFromCamera(pointer, camera);
         const hit = raycaster.intersectObjects(stationTargets, false)[0];
