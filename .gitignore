@@ -12,9 +12,11 @@ hidden/
 .vscode/settings.json
 dist/
 build/
+public/
 .cache/
 uploads/*
 !uploads/avatars/.gitkeep
 import_scripts/Forge/
 outdated/
 output/playwright/
+data/auth-users.json

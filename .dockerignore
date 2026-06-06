@@ -15,16 +15,12 @@ import_scripts/Forge/.git
 *.temp
 *.bak
 *.zip
-*.exe
-*.mp4
 *.mov
 *.avi
 *.mkv
-*.webm
 *.vsix
 
 # Large unrelated workspaces and archives
-downloads/
 main-preview-edit/
 main-html-edit/
 cloudflare-hello-workflows/
@@ -35,9 +31,6 @@ telemetry/
 hidden/
 editing/
 log/
-assets/videos/
-assets/neurofoundry-hero-bg.mp4
-assets/thalamaspreview.mp4
 
 # Large root gallery/Forge assets not needed by the auth API container
 3v_sbrain.gif
@@ -55,6 +48,10 @@ sdrone.png
 
 # Nested dependency trees outside the auth app
 **/node_modules/
+
+# Local fallback data and generated output never enter the runtime image.
+data/
+public/
 
 # Local/editor/runtime clutter
 .venv/

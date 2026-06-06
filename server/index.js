@@ -5,6 +5,7 @@
 
 require('dotenv').config();
 const crypto = require('crypto');
+const path = require('path');
 const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
@@ -70,8 +71,13 @@ app.use(express.json({ limit: '32mb' }));
 app.use(express.urlencoded({ extended: true, limit: '32mb' }));
 app.use(cookieParser());
 
-// Serve static files from root directory
-app.use(express.static('.'));
+// Serve only the explicit public build artifact.
+const publicDirectory = path.resolve(__dirname, '..', 'public');
+app.use(express.static(publicDirectory, {
+  dotfiles: 'deny',
+  index: 'index.html',
+  fallthrough: true
+}));
 
 // Serve uploads directory
 app.use('/uploads', express.static('uploads'));

@@ -1,9 +1,17 @@
-# Neurofoundry — commit-ready landing (GitHub Pages + Cloudflare)
-- Replace EMAIL_PLACEHOLDER in `index.html` with your public email
-- Replace TALLY_FORM_URL with your Tally form link
+# Neurofoundry
 
-## Deploy
-1. Push this folder to your GitHub repo.
-2. Enable GitHub Pages (Settings → Pages → Branch main, root).
-3. Add custom domain `www.theneurofoundry.com` in GitHub Pages.
-4. Cloudflare: CNAME www → theneurofoundry.github.io (proxied).
+## Public Deployment Boundary
+
+The repository root is private application source. It must never be served or
+published directly.
+
+`npm run build:public` creates an ignored `public/` artifact from the explicit
+allowlist in `tools/build-public.mjs`.
+
+- GitHub Pages deploys only `public/` through `.github/workflows/pages.yml`.
+- The Fly image contains only `server/`, production dependencies, and the
+  generated `public/` artifact.
+- Express serves only `public/`.
+
+GitHub Pages must use **GitHub Actions** as its source, not deployment from the
+root of `main`.

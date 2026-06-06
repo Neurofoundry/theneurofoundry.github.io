@@ -4,6 +4,8 @@
   "description": "Neurofoundry AI-powered platform with OAuth authentication",
   "main": "server/index.js",
   "scripts": {
+    "build:public": "node tools/build-public.mjs",
+    "prestart": "npm run build:public",
     "start": "node server/index.js",
     "dev": "nodemon server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
