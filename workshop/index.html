@@ -331,31 +331,18 @@
       text-transform: uppercase;
     }
 
-    .turn-beacon-node {
-      border-color: rgba(150, 154, 154, 0.32);
-      background: rgba(8, 9, 9, 0.88);
-    }
-
-    .turn-beacon-node .pip,
-    .turn-beacon-ring {
+    .forge-beacon-ring.offline-beacon-ring {
       background: #747a7c;
       box-shadow: none;
+      animation: none;
     }
 
-    .turn-beacon-node .lbl {
-      color: rgba(196, 201, 202, 0.82);
-    }
-
-    .forge-beacon-line.turn-beacon-line {
+    .forge-beacon-line.offline-beacon-line {
       border-top-color: rgba(150, 154, 154, 0.58);
       box-shadow: none;
     }
 
-    .forge-beacon-ring.turn-beacon-ring {
-      animation: none;
-    }
-
-    .forge-beacon-ring.turn-beacon-ring::after {
+    .forge-beacon-ring.offline-beacon-ring::after {
       background: #b5babc;
       opacity: 0.72;
     }
@@ -674,12 +661,8 @@
     </div>
     <div class="forge-beacon-line" data-beacon-line aria-hidden="true"></div>
     <div class="forge-beacon-ring" data-beacon-ring aria-hidden="true"></div>
-    <div class="forge-beacon-node turn-beacon-node" data-turn-beacon-node aria-hidden="true">
-      <span class="pip"></span>
-      <span class="lbl">Guides</span>
-    </div>
-    <div class="forge-beacon-line turn-beacon-line" data-turn-beacon-line aria-hidden="true"></div>
-    <div class="forge-beacon-ring turn-beacon-ring" data-turn-beacon-ring aria-hidden="true"></div>
+    <div class="forge-beacon-line offline-beacon-line" data-offline-beacon-line aria-hidden="true"></div>
+    <div class="forge-beacon-ring offline-beacon-ring" data-offline-beacon-ring aria-hidden="true"></div>
     <div class="room-note" aria-hidden="true">
       <img src="assets/brand/logo03_color.png" alt="">
     </div>
@@ -847,9 +830,8 @@
       const beaconNode = document.querySelector('[data-beacon-node]');
       const beaconLine = document.querySelector('[data-beacon-line]');
       const beaconRing = document.querySelector('[data-beacon-ring]');
-      const turnBeaconNode = document.querySelector('[data-turn-beacon-node]');
-      const turnBeaconLine = document.querySelector('[data-turn-beacon-line]');
-      const turnBeaconRing = document.querySelector('[data-turn-beacon-ring]');
+      const offlineBeaconLine = document.querySelector('[data-offline-beacon-line]');
+      const offlineBeaconRing = document.querySelector('[data-offline-beacon-ring]');
       const errorPanel = document.querySelector('[data-load-error]');
       const builderPanel = document.querySelector('[data-builder-panel]');
       const builderTarget = document.querySelector('[data-builder-target]');
@@ -2941,7 +2923,6 @@
           label: 'Community / Right'
         }
       };
-      const leftTurnBeaconPosition = new THREE.Vector3(-roomWidth / 2 + 0.35, 6.2, backZ + 7.5);
       let activeView = 'front';
       let desiredPosition = views.front.position.clone();
       let desiredTarget = views.front.target.clone();
@@ -3081,29 +3062,24 @@
           beaconLine.style.width = Math.hypot(dx, dy) + 'px';
           beaconLine.style.transform = 'rotate(' + (Math.atan2(dy, dx) * 180 / Math.PI) + 'deg)';
         }
-        if (turnBeaconRing && turnBeaconNode && turnBeaconLine) {
-          const bp = leftTurnBeaconPosition.clone().project(camera);
+        if (offlineBeaconRing && offlineBeaconLine) {
           const rect = canvas.getBoundingClientRect();
-          const rx = (bp.x * 0.5 + 0.5) * rect.width + rect.left;
-          const ry = (-bp.y * 0.5 + 0.5) * rect.height + rect.top;
-          const nx = rx + Math.min(155, rect.width * 0.13);
-          const ny = ry - 74;
-          const isVisible = activeView === 'left' && bp.z > -1 && bp.z < 1;
-          turnBeaconRing.style.opacity = isVisible ? '1' : '0';
-          turnBeaconNode.style.opacity = isVisible ? '1' : '0';
-          turnBeaconLine.style.opacity = isVisible ? '1' : '0';
-          turnBeaconRing.style.left = rx + 'px';
-          turnBeaconRing.style.top = ry + 'px';
-          turnBeaconNode.style.left = nx + 'px';
-          turnBeaconNode.style.top = ny + 'px';
-          const x1 = nx - 70;
-          const y1 = ny + 16;
+          const rx = rect.left + rect.width * 0.333;
+          const ry = rect.top + rect.height * 0.505;
+          const statusRect = document.querySelector('.forge-holo')?.getBoundingClientRect();
+          const x1 = statusRect ? statusRect.right : rect.left + 110;
+          const y1 = statusRect ? statusRect.top + statusRect.height / 2 : rect.top + 40;
           const dx = rx - x1;
           const dy = ry - y1;
-          turnBeaconLine.style.left = x1 + 'px';
-          turnBeaconLine.style.top = y1 + 'px';
-          turnBeaconLine.style.width = Math.hypot(dx, dy) + 'px';
-          turnBeaconLine.style.transform = 'rotate(' + (Math.atan2(dy, dx) * 180 / Math.PI) + 'deg)';
+          const isVisible = activeView === 'left';
+          offlineBeaconRing.style.opacity = isVisible ? '1' : '0';
+          offlineBeaconLine.style.opacity = isVisible ? '1' : '0';
+          offlineBeaconRing.style.left = rx + 'px';
+          offlineBeaconRing.style.top = ry + 'px';
+          offlineBeaconLine.style.left = x1 + 'px';
+          offlineBeaconLine.style.top = y1 + 'px';
+          offlineBeaconLine.style.width = Math.hypot(dx, dy) + 'px';
+          offlineBeaconLine.style.transform = 'rotate(' + (Math.atan2(dy, dx) * 180 / Math.PI) + 'deg)';
         }
         raycaster.setFromCamera(pointer, camera);
         const hit = raycaster.intersectObjects(stationTargets, false)[0];
