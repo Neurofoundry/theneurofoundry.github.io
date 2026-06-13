@@ -21,16 +21,28 @@
   <main class="builder-page">
     <section class="builder-intro">
       <div>
-        <span class="eyebrow">Practical tool / private by default</span>
-        <h1>Build a resume that is ready to send.</h1>
+        <a class="back-link" href="../downloads/"><span aria-hidden="true">&larr;</span>Back to Downloads</a>
+        <h1>Build a Resume</h1>
         <p>Choose a layout, fill in your information, and save a polished PDF. Your work stays in this browser.</p>
       </div>
       <div class="intro-actions">
         <span class="save-status" id="saveStatus">Saved locally</span>
         <button class="button secondary" id="clearButton" type="button">Start over</button>
         <button class="button primary" id="printButton" type="button">Save PDF</button>
+        <button class="print-help-trigger" id="printHelpButton" type="button" aria-haspopup="dialog" aria-controls="printHelpDialog">Issues with Printing?</button>
       </div>
     </section>
+
+    <dialog class="print-help-dialog" id="printHelpDialog" aria-labelledby="printHelpTitle">
+      <div class="print-help-card">
+        <div class="print-help-heading">
+          <h2 id="printHelpTitle">Print Settings</h2>
+          <button class="print-help-close" type="button" data-close-print-help>Close</button>
+        </div>
+        <p>Change your settings for the best results before you save.</p>
+        <img src="assets/print-settings.png" alt="Chrome print settings showing Save as PDF, all pages, one page per sheet, no margins, and background graphics enabled.">
+      </div>
+    </dialog>
 
     <div class="mobile-view-switch" role="tablist" aria-label="Builder view">
       <button type="button" class="is-active" data-mobile-view="editor" role="tab" aria-selected="true">Edit</button>
@@ -58,7 +70,7 @@
             <div class="field-grid two">
               <label>Full name<input name="name" autocomplete="name" placeholder="John Doe"></label>
               <label>Professional title<input name="role" placeholder="Professional Title"></label>
-              <label>Location<input name="location" autocomplete="address-level2" placeholder="Tampa, FL"></label>
+              <label>Location<input name="location" autocomplete="address-level2" placeholder="City, State"></label>
               <label>Phone<input name="phone" autocomplete="tel" placeholder="555-123-4567"></label>
               <label>Email<input name="email" type="email" autocomplete="email" placeholder="john.doe@email.com"></label>
               <label>LinkedIn or website<input name="linkedin" placeholder="linkedin.com/in/johndoe"></label>
@@ -67,34 +79,24 @@
           </fieldset>
 
           <fieldset>
-            <legend>Experience</legend>
-            <div class="repeat-card">
-              <span class="repeat-label">Position 01</span>
-              <div class="field-grid two">
-                <label>Job title<input name="job1Title" placeholder="Job Title One"></label>
-                <label>Dates<input name="job1Dates" placeholder="2023 - Present"></label>
-              </div>
-              <label>Company and location<input name="job1Org" placeholder="Company Name, City, ST"></label>
-              <label>Achievements, one per line<textarea name="job1Bullets" rows="4" placeholder="Improved a measurable result by taking a specific action.&#10;Coordinated work across teams to deliver an outcome."></textarea></label>
+            <div class="fieldset-heading">
+              <legend>Experience</legend>
+              <button class="entry-button" id="addPositionButton" type="button">Add position</button>
             </div>
-            <div class="repeat-card">
-              <span class="repeat-label">Position 02</span>
-              <div class="field-grid two">
-                <label>Job title<input name="job2Title" placeholder="Job Title Two"></label>
-                <label>Dates<input name="job2Dates" placeholder="2020 - 2023"></label>
-              </div>
-              <label>Company and location<input name="job2Org" placeholder="Company Name, City, ST"></label>
-              <label>Achievements, one per line<textarea name="job2Bullets" rows="4" placeholder="Managed responsibilities with attention to detail and customer needs.&#10;Prepared reports and resolved day-to-day issues."></textarea></label>
-            </div>
+            <div id="positionsList"></div>
           </fieldset>
 
           <fieldset>
-            <legend>Skills and education</legend>
+            <legend>Skills</legend>
             <label>Skills, separated by commas<textarea name="skills" rows="3" placeholder="Project coordination, Customer service, Reporting, Microsoft Office"></textarea></label>
-            <div class="field-grid two">
-              <label>Degree or certificate<input name="educationTitle" placeholder="Certificate or Degree"></label>
-              <label>School and year<input name="educationSchool" placeholder="Example Institute, 2025"></label>
+          </fieldset>
+
+          <fieldset>
+            <div class="fieldset-heading">
+              <legend>Education</legend>
+              <button class="entry-button" id="addEducationButton" type="button">Add education</button>
             </div>
+            <div id="educationList"></div>
           </fieldset>
         </form>
       </aside>
