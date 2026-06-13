@@ -1,0 +1,2286 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workshop | Neurofoundry</title>
+  <link rel="icon" type="image/png" href="../anvil.png">
+  <link rel="stylesheet" href="../common/site-header.css?v=20260519b">
+  <style>
+    :root {
+      --bg: #050708;
+      --panel: rgba(6, 8, 9, 0.84);
+      --line: rgba(255, 255, 255, 0.12);
+      --muted: #879095;
+      --text: #edf1f3;
+      --accent: #e0473c;
+      --accent-soft: #ff9085;
+      --mono: "JetBrains Mono", Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, sans-serif;
+    }
+
+    .three-workshop {
+      position: fixed;
+      inset: 64px 0 0;
+      overflow: hidden;
+      background: #040607;
+    }
+
+    #three-workshop-canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+      cursor: grab;
+    }
+
+    #three-workshop-canvas.is-dragging { cursor: grabbing; }
+    #three-workshop-canvas.is-over-forge { cursor: pointer; }
+
+    .room-hud {
+      position: absolute;
+      top: 16px;
+      left: 50%;
+      z-index: 4;
+      width: min(1180px, calc(100% - 40px));
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      color: var(--muted);
+      font: 700 10px/1.35 var(--mono);
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+
+    .room-hud strong { color: var(--accent-soft); }
+
+    .community-reel {
+      position: absolute;
+      top: 16px;
+      left: 50%;
+      z-index: 5;
+      width: min(1180px, calc(100% - 40px));
+      min-height: 84px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 18px;
+      padding: 15px 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(5, 7, 8, 0.76);
+      box-shadow: 0 18px 46px rgba(0, 0, 0, 0.32);
+      transform: translateX(-50%);
+      backdrop-filter: blur(14px);
+    }
+
+    .community-reel[hidden] {
+      display: none;
+    }
+
+    .community-reel-slide {
+      display: none;
+      gap: 8px;
+    }
+
+    .community-reel-slide.is-active {
+      display: grid;
+    }
+
+    .community-reel-kicker {
+      color: var(--accent-soft);
+      font: 800 10px/1 var(--mono);
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    .community-reel-title {
+      margin: 0;
+      color: #fff;
+      font: 800 18px/1.12 Arial, sans-serif;
+      letter-spacing: 0;
+    }
+
+    .community-reel-copy {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.62);
+      font: 600 12px/1.45 Arial, sans-serif;
+    }
+
+    .community-reel-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      padding: 0 16px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 999px;
+      background: var(--accent);
+      color: #fff;
+      font: 800 10px/1 var(--mono);
+      letter-spacing: 0.1em;
+      text-decoration: none;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .community-reel-action:hover,
+    .community-reel-action:focus-visible {
+      background: #f05a4f;
+      outline: none;
+    }
+
+    .room-hud-status {
+      margin-left: auto;
+      color: rgba(255, 255, 255, 0.38);
+    }
+
+    .room-controls {
+      position: absolute;
+      bottom: 22px;
+      left: 50%;
+      z-index: 4;
+      display: flex;
+      gap: 4px;
+      padding: 5px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(5, 7, 8, 0.82);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.34);
+      transform: translateX(-50%);
+    }
+
+    .room-controls button {
+      min-height: 34px;
+      padding: 7px 15px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font: 700 10px/1 var(--mono);
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .room-controls button:hover,
+    .room-controls button:focus-visible {
+      color: #fff;
+      outline: none;
+    }
+
+    .room-controls button.is-active {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .room-note {
+      position: absolute;
+      right: 18px;
+      bottom: 18px;
+      z-index: 4;
+      max-width: 240px;
+      color: rgba(255, 255, 255, 0.34);
+      font: 600 9px/1.55 var(--mono);
+      letter-spacing: 0.09em;
+      text-align: right;
+      text-transform: uppercase;
+      pointer-events: none;
+    }
+
+    .load-error {
+      position: absolute;
+      inset: 0;
+      z-index: 8;
+      display: none;
+      place-items: center;
+      padding: 24px;
+      background: #080a0b;
+      color: var(--accent-soft);
+      font: 700 13px/1.6 var(--mono);
+      text-align: center;
+    }
+
+    .builder-panel {
+      position: absolute;
+      left: 16px;
+      bottom: 18px;
+      z-index: 7;
+      width: min(360px, calc(100% - 32px));
+      max-height: min(70vh, 650px);
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(5, 7, 8, 0.9);
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.42);
+      color: var(--text);
+      backdrop-filter: blur(14px);
+    }
+
+    .builder-panel.is-collapsed .builder-body {
+      display: none;
+    }
+
+    .builder-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .builder-title {
+      color: #fff;
+      font: 800 10px/1 var(--mono);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .builder-toggle,
+    .builder-button,
+    .builder-file::file-selector-button {
+      min-height: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.06);
+      color: #fff;
+      cursor: pointer;
+      font: 800 10px/1 var(--mono);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .builder-toggle {
+      width: 32px;
+    }
+
+    .builder-body {
+      display: grid;
+      gap: 12px;
+      max-height: calc(min(70vh, 650px) - 52px);
+      overflow: auto;
+      padding: 12px;
+    }
+
+    .builder-field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .builder-field label,
+    .builder-group-title {
+      color: var(--accent-soft);
+      font: 800 9px/1 var(--mono);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .builder-select,
+    .builder-file,
+    .builder-color {
+      width: 100%;
+      min-height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: rgba(0, 0, 0, 0.26);
+      color: #fff;
+      font: 700 11px/1.2 var(--mono);
+    }
+
+    .builder-select {
+      padding: 0 8px;
+    }
+
+    .builder-file {
+      padding: 6px;
+    }
+
+    .builder-color {
+      padding: 3px 6px;
+    }
+
+    .builder-group {
+      display: grid;
+      gap: 7px;
+      padding-top: 2px;
+    }
+
+    .builder-slider {
+      display: grid;
+      grid-template-columns: 18px minmax(0, 1fr) 54px;
+      align-items: center;
+      gap: 7px;
+      color: rgba(255, 255, 255, 0.74);
+      font: 800 10px/1 var(--mono);
+      text-transform: uppercase;
+    }
+
+    .builder-slider input {
+      width: 100%;
+      accent-color: var(--accent);
+    }
+
+    .builder-check {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255, 255, 255, 0.78);
+      font: 800 10px/1 var(--mono);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .builder-check input {
+      accent-color: var(--accent);
+    }
+
+    .builder-value {
+      color: rgba(255, 255, 255, 0.62);
+      text-align: right;
+      text-transform: none;
+    }
+
+    .builder-actions {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+
+    .builder-button.is-active {
+      border-color: rgba(224, 71, 60, 0.72);
+      background: rgba(224, 71, 60, 0.22);
+      color: #fff;
+    }
+
+    .builder-button:hover,
+    .builder-button:focus-visible,
+    .builder-toggle:hover,
+    .builder-toggle:focus-visible {
+      border-color: var(--accent);
+      outline: none;
+    }
+
+    .builder-status {
+      min-height: 14px;
+      color: rgba(255, 255, 255, 0.48);
+      font: 700 10px/1.4 var(--mono);
+    }
+
+    @media (max-width: 720px) {
+      .community-reel {
+        width: calc(100% - 24px);
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 13px;
+      }
+
+      .community-reel-title {
+        font-size: 16px;
+      }
+
+      .community-reel-action {
+        width: 100%;
+      }
+
+      .room-hud {
+        top: 270px;
+        width: calc(100% - 24px);
+        flex-wrap: wrap;
+        gap: 8px 12px;
+      }
+
+      .room-hud-status {
+        width: 100%;
+        margin-left: 0;
+      }
+
+      .builder-panel {
+        right: 12px;
+        left: 12px;
+        bottom: 76px;
+        width: auto;
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <div data-site-header></div>
+
+  <main class="three-workshop">
+    <canvas id="three-workshop-canvas" aria-label="Interactive 3D workshop room"></canvas>
+    <section class="community-reel" aria-label="Community highlight reel" hidden>
+      <div>
+        <div class="community-reel-slide is-active" data-reel-slide>
+          <span class="community-reel-kicker">Workshop under construction</span>
+          <h1 class="community-reel-title">Community highlight reels are being assembled.</h1>
+          <p class="community-reel-copy">The live room stays open while member work, saves, and Forge builds get wired into this space.</p>
+        </div>
+        <div class="community-reel-slide" data-reel-slide>
+          <span class="community-reel-kicker">Forge entry</span>
+          <h1 class="community-reel-title">Start from the Forge, then bring the finished work back here.</h1>
+          <p class="community-reel-copy">This workshop will rotate through community pieces once the public feed is ready.</p>
+        </div>
+        <div class="community-reel-slide" data-reel-slide>
+          <span class="community-reel-kicker">Member workbench</span>
+          <h1 class="community-reel-title">Saved crafts, experiments, and reels will live in this room.</h1>
+          <p class="community-reel-copy">The Three.js floor is the current direction. The broader showcase is still in progress.</p>
+        </div>
+      </div>
+      <a class="community-reel-action" href="https://forge.theneurofoundry.com/" target="_blank" rel="noopener">Open Forge</a>
+    </section>
+    <div class="room-hud">
+      <span>Floor <strong>NF-THREE-01</strong></span>
+      <span>Facing <strong data-facing-label>The Forge / Ahead</strong></span>
+      <span class="room-hud-status">Drag room / Select station</span>
+    </div>
+    <div class="room-controls" aria-label="Workshop room view">
+      <button type="button" data-room-view="left">Look left</button>
+      <button type="button" class="is-active" data-room-view="front">Front</button>
+      <button type="button" data-room-view="right">Look right</button>
+    </div>
+    <p class="room-note">Workshop under construction / Three.js room study / authored camera snaps</p>
+    <div class="load-error" data-load-error>
+      Three.js could not load. This experiment needs a network connection for its isolated CDN script.
+    </div>
+    <aside class="builder-panel" data-builder-panel aria-label="Workshop builder controls">
+      <div class="builder-header">
+        <span class="builder-title">Model Builder</span>
+        <button class="builder-toggle" type="button" data-builder-toggle aria-label="Toggle model builder">-</button>
+      </div>
+      <div class="builder-body">
+        <div class="builder-field">
+          <label for="builderTarget">Target</label>
+          <select class="builder-select" id="builderTarget" data-builder-target></select>
+        </div>
+        <div class="builder-field">
+          <label for="builderImport">Import GLB/GLTF</label>
+          <input class="builder-file" id="builderImport" type="file" accept=".glb,.gltf,model/gltf-binary,model/gltf+json" data-builder-import>
+        </div>
+        <div class="builder-group" aria-label="Position controls">
+          <span class="builder-group-title">Position</span>
+          <label class="builder-slider">X <input type="range" min="-30" max="30" step="0.1" data-transform="position.x"><span class="builder-value" data-transform-value="position.x">0</span></label>
+          <label class="builder-slider">Y <input type="range" min="-2" max="18" step="0.1" data-transform="position.y"><span class="builder-value" data-transform-value="position.y">0</span></label>
+          <label class="builder-slider">Z <input type="range" min="-30" max="30" step="0.1" data-transform="position.z"><span class="builder-value" data-transform-value="position.z">0</span></label>
+        </div>
+        <div class="builder-group" aria-label="Rotation controls">
+          <span class="builder-group-title">Rotation</span>
+          <label class="builder-slider">X <input type="range" min="-180" max="180" step="1" data-transform="rotation.x"><span class="builder-value" data-transform-value="rotation.x">0</span></label>
+          <label class="builder-slider">Y <input type="range" min="-180" max="180" step="1" data-transform="rotation.y"><span class="builder-value" data-transform-value="rotation.y">0</span></label>
+          <label class="builder-slider">Z <input type="range" min="-180" max="180" step="1" data-transform="rotation.z"><span class="builder-value" data-transform-value="rotation.z">0</span></label>
+        </div>
+        <div class="builder-group" aria-label="Scale controls">
+          <span class="builder-group-title">Scale</span>
+          <label class="builder-slider">S <input type="range" min="0.05" max="40" step="0.01" data-transform="scale"><span class="builder-value" data-transform-value="scale">1</span></label>
+        </div>
+        <div class="builder-field">
+          <label for="builderAnimation">Animation / Pose</label>
+          <select class="builder-select" id="builderAnimation" data-builder-animation disabled></select>
+        </div>
+        <div class="builder-group" aria-label="Scene controls">
+          <span class="builder-group-title">Scene</span>
+          <div class="builder-field">
+            <label for="builderBg">Background</label>
+            <input class="builder-color" id="builderBg" type="color" value="#040607" data-scene-color="background">
+          </div>
+          <label class="builder-slider">Fog <input type="range" min="0" max="0.06" step="0.001" data-scene-control="fogDensity"><span class="builder-value" data-scene-value="fogDensity">0.014</span></label>
+          <label class="builder-slider">Grid <input type="range" min="0" max="1" step="0.01" data-scene-control="gridOpacity"><span class="builder-value" data-scene-value="gridOpacity">0.42</span></label>
+        </div>
+        <div class="builder-group" aria-label="Light controls">
+          <span class="builder-group-title">Lights</span>
+          <div class="builder-field">
+            <label for="builderKeyColor">Key Color</label>
+            <input class="builder-color" id="builderKeyColor" type="color" value="#eaf6f2" data-scene-color="keyColor">
+          </div>
+          <label class="builder-slider">Amb <input type="range" min="0" max="5" step="0.05" data-scene-control="ambientIntensity"><span class="builder-value" data-scene-value="ambientIntensity">1.38</span></label>
+          <label class="builder-slider">Key <input type="range" min="0" max="8" step="0.05" data-scene-control="keyIntensity"><span class="builder-value" data-scene-value="keyIntensity">2.45</span></label>
+          <label class="builder-slider">Work <input type="range" min="0" max="10" step="0.05" data-scene-control="workIntensity"><span class="builder-value" data-scene-value="workIntensity">3.2</span></label>
+          <label class="builder-slider">Fill <input type="range" min="0" max="8" step="0.05" data-scene-control="fillIntensity"><span class="builder-value" data-scene-value="fillIntensity">3.25</span></label>
+          <div class="builder-field">
+            <label for="builderRimColor">Rim Color</label>
+            <input class="builder-color" id="builderRimColor" type="color" value="#7fa8ff" data-scene-color="rimColor">
+          </div>
+          <label class="builder-slider">Rim <input type="range" min="0" max="8" step="0.05" data-scene-control="rimIntensity"><span class="builder-value" data-scene-value="rimIntensity">1.4</span></label>
+          <label class="builder-slider">Env <input type="range" min="0" max="3" step="0.01" data-scene-control="envIntensity"><span class="builder-value" data-scene-value="envIntensity">0.85</span></label>
+        </div>
+        <div class="builder-group" aria-label="Surface controls">
+          <span class="builder-group-title">Surface</span>
+          <label class="builder-check"><input type="checkbox" data-scene-toggle="surfTreatment" checked> Unify Models</label>
+          <div class="builder-field">
+            <label for="builderSurfTint">Tint</label>
+            <input class="builder-color" id="builderSurfTint" type="color" value="#8f6f4e" data-scene-color="surfTintColor">
+          </div>
+          <label class="builder-slider">Mix <input type="range" min="0" max="1" step="0.01" data-scene-control="surfUnify"><span class="builder-value" data-scene-value="surfUnify">0.35</span></label>
+          <label class="builder-slider">Sat <input type="range" min="0" max="1.5" step="0.01" data-scene-control="surfSaturation"><span class="builder-value" data-scene-value="surfSaturation">0.82</span></label>
+          <label class="builder-slider">Grit <input type="range" min="0" max="3" step="0.01" data-scene-control="surfDetail"><span class="builder-value" data-scene-value="surfDetail">0.6</span></label>
+        </div>
+        <div class="builder-group" aria-label="Render controls">
+          <span class="builder-group-title">Render</span>
+          <label class="builder-check"><input type="checkbox" data-scene-toggle="postFxEnabled" checked> Post FX</label>
+          <label class="builder-check"><input type="checkbox" data-scene-toggle="bloomEnabled" checked> Bloom</label>
+          <label class="builder-slider">Thr <input type="range" min="0" max="1" step="0.01" data-scene-control="bloomThreshold"><span class="builder-value" data-scene-value="bloomThreshold">0.72</span></label>
+          <label class="builder-slider">Str <input type="range" min="0" max="2" step="0.01" data-scene-control="bloomStrength"><span class="builder-value" data-scene-value="bloomStrength">0.35</span></label>
+          <label class="builder-slider">Rad <input type="range" min="0" max="1" step="0.01" data-scene-control="bloomRadius"><span class="builder-value" data-scene-value="bloomRadius">0.42</span></label>
+          <label class="builder-check"><input type="checkbox" data-scene-toggle="domeShaderEnabled" checked> Dome Shader</label>
+          <label class="builder-slider">Glow <input type="range" min="0" max="1.5" step="0.01" data-scene-control="domeShaderIntensity"><span class="builder-value" data-scene-value="domeShaderIntensity">0.42</span></label>
+          <label class="builder-check"><input type="checkbox" data-scene-toggle="steamEnabled" checked> Steam</label>
+          <label class="builder-slider">Hot <input type="range" min="0" max="2" step="0.01" data-scene-control="steamIntensity"><span class="builder-value" data-scene-value="steamIntensity">0.85</span></label>
+          <label class="builder-check"><input type="checkbox" data-scene-toggle="vignetteEnabled" checked> Vignette</label>
+          <label class="builder-slider">Vig <input type="range" min="0" max="1" step="0.01" data-scene-control="vignetteAmount"><span class="builder-value" data-scene-value="vignetteAmount">0.82</span></label>
+          <label class="builder-check"><input type="checkbox" data-scene-toggle="embersEnabled" checked> Embers</label>
+          <label class="builder-slider">Emb <input type="range" min="0" max="2" step="0.01" data-scene-control="embersIntensity"><span class="builder-value" data-scene-value="embersIntensity">1</span></label>
+          <label class="builder-check"><input type="checkbox" data-scene-toggle="heatHazeEnabled" checked> Heat Haze</label>
+          <label class="builder-slider">Haze <input type="range" min="0" max="2" step="0.01" data-scene-control="heatHazeStrength"><span class="builder-value" data-scene-value="heatHazeStrength">1</span></label>
+          <label class="builder-check"><input type="checkbox" data-scene-toggle="steamBurstEnabled" checked> Steam Burst</label>
+          <label class="builder-slider">Jet <input type="range" min="0" max="2" step="0.01" data-scene-control="steamBurstIntensity"><span class="builder-value" data-scene-value="steamBurstIntensity">0.6</span></label>
+        </div>
+        <div class="builder-group" aria-label="Texture controls">
+          <span class="builder-group-title">Textures</span>
+          <div class="builder-field">
+            <label for="textureBack">Back Wall</label>
+            <input class="builder-file" id="textureBack" type="file" accept="image/*" data-texture-import="backWall">
+          </div>
+          <div class="builder-field">
+            <label for="textureLeft">Left Wall</label>
+            <input class="builder-file" id="textureLeft" type="file" accept="image/*" data-texture-import="leftWall">
+          </div>
+          <div class="builder-field">
+            <label for="textureRight">Right Wall</label>
+            <input class="builder-file" id="textureRight" type="file" accept="image/*" data-texture-import="rightWall">
+          </div>
+          <div class="builder-field">
+            <label for="textureDome">Dome</label>
+            <input class="builder-file" id="textureDome" type="file" accept="image/*" data-texture-import="dome">
+          </div>
+          <div class="builder-field">
+            <label for="textureFloor">Floor</label>
+            <input class="builder-file" id="textureFloor" type="file" accept="image/*" data-texture-import="floor">
+          </div>
+        </div>
+        <div class="builder-actions">
+          <button class="builder-button" type="button" data-builder-free-view>Free View</button>
+          <button class="builder-button" type="button" data-builder-pose disabled>Apply Pose</button>
+          <button class="builder-button" type="button" data-builder-reload>Reload Target</button>
+          <button class="builder-button" type="button" data-builder-remove>Remove Target</button>
+          <button class="builder-button" type="button" data-builder-scene-reset>Reset Scene</button>
+          <button class="builder-button" type="button" data-builder-reset>Reset</button>
+          <button class="builder-button" type="button" data-builder-copy>Copy</button>
+        </div>
+        <div class="builder-status" data-builder-status>Waiting for models.</div>
+      </div>
+    </aside>
+  </main>
+
+  <script src="../common/site-header.js?v=20260603-mobile-logout" data-base="../" data-root="../" data-current="workshop"></script>
+  <script>
+    (() => {
+      const slides = Array.from(document.querySelectorAll('[data-reel-slide]'));
+      if (slides.length < 2) return;
+      let activeIndex = 0;
+      window.setInterval(() => {
+        slides[activeIndex].classList.remove('is-active');
+        activeIndex = (activeIndex + 1) % slides.length;
+        slides[activeIndex].classList.add('is-active');
+      }, 4600);
+    })();
+  </script>
+  <script type="module">
+    import * as THREE from 'https://esm.sh/three@0.160.1';
+    import { OrbitControls } from 'https://esm.sh/three@0.160.1/examples/jsm/controls/OrbitControls.js';
+    import { EffectComposer } from 'https://esm.sh/three@0.160.1/examples/jsm/postprocessing/EffectComposer.js';
+    import { RenderPass } from 'https://esm.sh/three@0.160.1/examples/jsm/postprocessing/RenderPass.js';
+    import { UnrealBloomPass } from 'https://esm.sh/three@0.160.1/examples/jsm/postprocessing/UnrealBloomPass.js';
+    import { OutputPass } from 'https://esm.sh/three@0.160.1/examples/jsm/postprocessing/OutputPass.js';
+    import { ShaderPass } from 'https://esm.sh/three@0.160.1/examples/jsm/postprocessing/ShaderPass.js';
+    import { GLTFLoader } from 'https://esm.sh/three@0.160.1/examples/jsm/loaders/GLTFLoader.js';
+    import { KTX2Loader } from 'https://esm.sh/three@0.160.1/examples/jsm/loaders/KTX2Loader.js';
+    import { MeshoptDecoder } from 'https://esm.sh/three@0.160.1/examples/jsm/libs/meshopt_decoder.module.js';
+
+    (() => {
+      const canvas = document.querySelector('#three-workshop-canvas');
+      const errorPanel = document.querySelector('[data-load-error]');
+      const builderPanel = document.querySelector('[data-builder-panel]');
+      const builderTarget = document.querySelector('[data-builder-target]');
+      const builderStatus = document.querySelector('[data-builder-status]');
+      const builderImport = document.querySelector('[data-builder-import]');
+      const builderFreeView = document.querySelector('[data-builder-free-view]');
+      const builderAnimation = document.querySelector('[data-builder-animation]');
+      const builderPose = document.querySelector('[data-builder-pose]');
+      const builderTargets = new Map();
+      const animationMixers = [];
+      const builderTransformStorageKey = 'nf_workshop_builder_transforms_v1';
+      const builderSceneStorageKey = 'nf_workshop_builder_scene_v1';
+      const builderAssetDbName = 'nf_workshop_builder_assets_v1';
+      const builderAssetStoreName = 'assets';
+      const builderTextureStoreName = 'textures';
+      let activeBuilderTarget = '';
+      let freeViewEnabled = false;
+      if (!canvas) {
+        if (errorPanel) errorPanel.style.display = 'grid';
+        return;
+      }
+
+      const setBuilderStatus = (message) => {
+        if (builderStatus) builderStatus.textContent = message;
+      };
+
+      const readSavedTransforms = () => {
+        try {
+          return JSON.parse(window.localStorage.getItem(builderTransformStorageKey) || '{}');
+        } catch (_) {
+          return {};
+        }
+      };
+
+      const writeSavedTransforms = (transforms) => {
+        try {
+          window.localStorage.setItem(builderTransformStorageKey, JSON.stringify(transforms));
+        } catch (_) {
+          setBuilderStatus('Could not save transform.');
+        }
+      };
+
+      const defaultSceneSettings = {
+        background: '#040607',
+        keyColor: '#eaf6f2',
+        rimColor: '#7fa8ff',
+        fogDensity: 0.014,
+        gridOpacity: 0.42,
+        ambientIntensity: 1.38,
+        keyIntensity: 2.45,
+        workIntensity: 3.2,
+        fillIntensity: 3.25,
+        rimIntensity: 1.4,
+        envIntensity: 0.85,
+        surfTreatment: true,
+        surfTintColor: '#8f6f4e',
+        surfUnify: 0.35,
+        surfSaturation: 0.82,
+        surfDetail: 0.6,
+        postFxEnabled: true,
+        bloomEnabled: true,
+        bloomThreshold: 0.8,
+        bloomStrength: 0.62,
+        bloomRadius: 0.46,
+        domeShaderEnabled: true,
+        domeShaderIntensity: 0.42,
+        steamEnabled: true,
+        steamIntensity: 0.85,
+        vignetteEnabled: true,
+        vignetteAmount: 0.82,
+        embersEnabled: true,
+        embersIntensity: 1.0,
+        heatHazeEnabled: true,
+        heatHazeStrength: 1.0,
+        steamBurstEnabled: true,
+        steamBurstIntensity: 0.5
+      };
+      let sceneSettings = { ...defaultSceneSettings };
+      let sceneControlTargets = null;
+
+      const readSavedSceneSettings = () => {
+        try {
+          return {
+            ...defaultSceneSettings,
+            ...JSON.parse(window.localStorage.getItem(builderSceneStorageKey) || '{}')
+          };
+        } catch (_) {
+          return { ...defaultSceneSettings };
+        }
+      };
+
+      const writeSavedSceneSettings = () => {
+        try {
+          window.localStorage.setItem(builderSceneStorageKey, JSON.stringify(sceneSettings));
+        } catch (_) {
+          setBuilderStatus('Could not save scene settings.');
+        }
+      };
+
+      const transformControls = () => Array.from(document.querySelectorAll('[data-transform]'));
+
+      const cloneTransform = (object) => ({
+        position: object.position.clone(),
+        rotation: object.rotation.clone(),
+        scale: object.scale.clone()
+      });
+
+      const getActiveBuilderRecord = () => builderTargets.get(activeBuilderTarget);
+
+      const formatNumber = (value) => {
+        const rounded = Math.round(value * 100) / 100;
+        return Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(2).replace(/0$/, '');
+      };
+
+      const getTransformValue = (object, key) => {
+        if (key === 'scale') return object.scale.x;
+        const [group, axis] = key.split('.');
+        const value = object[group][axis];
+        return group === 'rotation' ? THREE.MathUtils.radToDeg(value) : value;
+      };
+
+      const setTransformValue = (object, key, value) => {
+        if (key === 'scale') {
+          object.scale.setScalar(value);
+          return;
+        }
+        const [group, axis] = key.split('.');
+        object[group][axis] = group === 'rotation' ? THREE.MathUtils.degToRad(value) : value;
+      };
+
+      const sceneControlInputs = () => Array.from(document.querySelectorAll('[data-scene-control]'));
+      const sceneColorInputs = () => Array.from(document.querySelectorAll('[data-scene-color]'));
+      const sceneToggleInputs = () => Array.from(document.querySelectorAll('[data-scene-toggle]'));
+
+      const syncSceneControlLabels = () => {
+        sceneControlInputs().forEach((input) => {
+          const key = input.dataset.sceneControl;
+          const value = Number(sceneSettings[key]);
+          input.value = String(value);
+          const label = document.querySelector(`[data-scene-value="${key}"]`);
+          if (label) label.textContent = formatNumber(value);
+        });
+        sceneColorInputs().forEach((input) => {
+          input.value = sceneSettings[input.dataset.sceneColor] || input.value;
+        });
+        sceneToggleInputs().forEach((input) => {
+          input.checked = Boolean(sceneSettings[input.dataset.sceneToggle]);
+        });
+      };
+
+      const applySceneSettings = () => {
+        if (!sceneControlTargets) return;
+        sceneControlTargets.scene.background = new THREE.Color(sceneSettings.background);
+        sceneControlTargets.scene.fog.density = Number(sceneSettings.fogDensity);
+        sceneControlTargets.grid.material.opacity = Number(sceneSettings.gridOpacity);
+        sceneControlTargets.domeGrid.material.opacity = Math.min(0.5, Number(sceneSettings.gridOpacity) * 0.43);
+        sceneControlTargets.ambient.intensity = Number(sceneSettings.ambientIntensity);
+        sceneControlTargets.key.intensity = Number(sceneSettings.keyIntensity);
+        sceneControlTargets.key.color.set(sceneSettings.keyColor);
+        sceneControlTargets.workLight.intensity = Number(sceneSettings.workIntensity);
+        sceneControlTargets.leftFill.intensity = Number(sceneSettings.fillIntensity);
+        sceneControlTargets.rightFill.intensity = Number(sceneSettings.fillIntensity) * 0.91;
+        sceneControlTargets.rimLight.intensity = Number(sceneSettings.rimIntensity);
+        sceneControlTargets.rimLight.color.set(sceneSettings.rimColor);
+        sceneControlTargets.importedMaterials.forEach((m) => { m.envMapIntensity = Number(sceneSettings.envIntensity); });
+        const surfOn = Boolean(sceneSettings.surfTreatment);
+        sceneControlTargets.cohesionUniforms.uUnify.value = surfOn ? Number(sceneSettings.surfUnify) : 0;
+        sceneControlTargets.cohesionUniforms.uSat.value = surfOn ? Number(sceneSettings.surfSaturation) : 1;
+        sceneControlTargets.cohesionUniforms.uTint.value.set(sceneSettings.surfTintColor);
+        sceneControlTargets.detailMaterials.forEach((m) => { const s = surfOn ? Number(sceneSettings.surfDetail) : 0; if (m.normalScale) m.normalScale.set(s, s); });
+        sceneControlTargets.bloomPass.enabled = Boolean(sceneSettings.postFxEnabled && sceneSettings.bloomEnabled);
+        sceneControlTargets.bloomPass.threshold = Number(sceneSettings.bloomThreshold);
+        sceneControlTargets.bloomPass.strength = Number(sceneSettings.bloomStrength);
+        sceneControlTargets.bloomPass.radius = Number(sceneSettings.bloomRadius);
+        sceneControlTargets.domeAura.visible = Boolean(sceneSettings.domeShaderEnabled);
+        sceneControlTargets.domeAura.material.uniforms.uIntensity.value = Number(sceneSettings.domeShaderIntensity);
+        sceneControlTargets.steamGroup.visible = Boolean(sceneSettings.steamEnabled);
+        sceneControlTargets.steamGroup.traverse((object) => {
+          if (object.material && object.material.uniforms && object.material.uniforms.uIntensity) {
+            object.material.uniforms.uIntensity.value = Number(sceneSettings.steamIntensity);
+          }
+        });
+        sceneControlTargets.heatHazePass.enabled = Boolean(sceneSettings.postFxEnabled && sceneSettings.heatHazeEnabled);
+        sceneControlTargets.heatHazePass.uniforms.uStrength.value = Number(sceneSettings.heatHazeStrength);
+        sceneControlTargets.vignettePass.enabled = Boolean(sceneSettings.postFxEnabled && sceneSettings.vignetteEnabled);
+        sceneControlTargets.vignettePass.uniforms.uStrength.value = Number(sceneSettings.vignetteAmount);
+        sceneControlTargets.emberPoints.visible = Boolean(sceneSettings.embersEnabled);
+        sceneControlTargets.emberPoints.material.uniforms.uIntensity.value = Number(sceneSettings.embersIntensity);
+        sceneControlTargets.steamBurst.visible = Boolean(sceneSettings.steamBurstEnabled);
+        sceneControlTargets.steamBurst.material.uniforms.uIntensity.value = Number(sceneSettings.steamBurstIntensity);
+      };
+
+      const applyTextureBlob = (slot, blob) => {
+        if (!sceneControlTargets || !blob) return;
+        const target = sceneControlTargets.textures && sceneControlTargets.textures[slot];
+        if (!target) return;
+        const url = URL.createObjectURL(blob);
+        new THREE.TextureLoader().load(
+          url,
+          (texture) => {
+            texture.colorSpace = THREE.SRGBColorSpace;
+            texture.wrapS = THREE.RepeatWrapping;
+            texture.wrapT = THREE.RepeatWrapping;
+            texture.repeat.set(slot === 'dome' ? 2 : 1, 1);
+            target.material.map = texture;
+            target.material.color.set(0xffffff);
+            target.material.needsUpdate = true;
+            URL.revokeObjectURL(url);
+            setBuilderStatus(`${target.label} texture loaded.`);
+          },
+          undefined,
+          () => {
+            URL.revokeObjectURL(url);
+            setBuilderStatus(`${target.label} texture failed.`);
+          }
+        );
+      };
+
+      const reloadBuilderTarget = () => {
+        const record = getActiveBuilderRecord();
+        if (!record) return;
+        if (record.asset) {
+          persistBuilderTransform(record);
+          if (record.object.parent) record.object.parent.remove(record.object);
+          builderTargets.delete(record.id);
+          loadImportedBuilderAsset(record.asset, true);
+          setBuilderStatus(`${record.label} reloading.`);
+          return;
+        }
+        persistBuilderTransform(record);
+        window.location.reload();
+      };
+
+      const removeBuilderTarget = () => {
+        const record = getActiveBuilderRecord();
+        if (!record) return;
+        if (!record.asset) {
+          setBuilderStatus('Built-in targets stay in the room.');
+          return;
+        }
+        if (record.object.parent) record.object.parent.remove(record.object);
+        builderTargets.delete(record.id);
+        const transforms = readSavedTransforms();
+        delete transforms[record.id];
+        writeSavedTransforms(transforms);
+        deleteImportedAsset(record.id).catch((error) => console.warn('Imported asset delete failed', error));
+        activeBuilderTarget = builderTargets.keys().next().value || '';
+        syncBuilderTargetList();
+        setBuilderStatus(`${record.label} removed.`);
+      };
+
+      const captureTransform = (object) => ({
+        position: object.position.toArray(),
+        rotation: [object.rotation.x, object.rotation.y, object.rotation.z],
+        scale: object.scale.toArray()
+      });
+
+      const applySavedTransform = (object, transform) => {
+        if (!transform) return;
+        if (Array.isArray(transform.position)) object.position.fromArray(transform.position);
+        if (Array.isArray(transform.rotation)) object.rotation.set(transform.rotation[0] || 0, transform.rotation[1] || 0, transform.rotation[2] || 0);
+        if (Array.isArray(transform.scale)) object.scale.fromArray(transform.scale);
+      };
+
+      const persistBuilderTransform = (record) => {
+        if (!record) return;
+        const transforms = readSavedTransforms();
+        transforms[record.id] = {
+          ...transforms[record.id],
+          ...captureTransform(record.object)
+        };
+        writeSavedTransforms(transforms);
+      };
+
+      const persistBuilderAnimation = (record, clipName) => {
+        if (!record) return;
+        const transforms = readSavedTransforms();
+        transforms[record.id] = {
+          ...transforms[record.id],
+          animation: clipName || ''
+        };
+        writeSavedTransforms(transforms);
+      };
+
+      const openBuilderAssetDb = () => new Promise((resolve, reject) => {
+        if (!window.indexedDB) {
+          reject(new Error('IndexedDB unavailable'));
+          return;
+        }
+        const request = window.indexedDB.open(builderAssetDbName, 2);
+        request.onupgradeneeded = () => {
+          const db = request.result;
+          if (!db.objectStoreNames.contains(builderAssetStoreName)) {
+            db.createObjectStore(builderAssetStoreName, { keyPath: 'id' });
+          }
+          if (!db.objectStoreNames.contains(builderTextureStoreName)) {
+            db.createObjectStore(builderTextureStoreName, { keyPath: 'id' });
+          }
+        };
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error || new Error('IndexedDB open failed'));
+      });
+
+      const saveImportedAsset = async (asset) => {
+        const db = await openBuilderAssetDb();
+        await new Promise((resolve, reject) => {
+          const tx = db.transaction(builderAssetStoreName, 'readwrite');
+          tx.objectStore(builderAssetStoreName).put(asset);
+          tx.oncomplete = resolve;
+          tx.onerror = () => reject(tx.error || new Error('Asset save failed'));
+        });
+        db.close();
+      };
+
+      const deleteImportedAsset = async (id) => {
+        const db = await openBuilderAssetDb();
+        await new Promise((resolve, reject) => {
+          const tx = db.transaction(builderAssetStoreName, 'readwrite');
+          tx.objectStore(builderAssetStoreName).delete(id);
+          tx.oncomplete = resolve;
+          tx.onerror = () => reject(tx.error || new Error('Asset delete failed'));
+        });
+        db.close();
+      };
+
+      const saveTextureAsset = async (texture) => {
+        const db = await openBuilderAssetDb();
+        await new Promise((resolve, reject) => {
+          const tx = db.transaction(builderTextureStoreName, 'readwrite');
+          tx.objectStore(builderTextureStoreName).put(texture);
+          tx.oncomplete = resolve;
+          tx.onerror = () => reject(tx.error || new Error('Texture save failed'));
+        });
+        db.close();
+      };
+
+      const loadImportedAssets = async () => {
+        try {
+          const db = await openBuilderAssetDb();
+          const assets = await new Promise((resolve, reject) => {
+            const tx = db.transaction(builderAssetStoreName, 'readonly');
+            const request = tx.objectStore(builderAssetStoreName).getAll();
+            request.onsuccess = () => resolve(request.result || []);
+            request.onerror = () => reject(request.error || new Error('Asset load failed'));
+          });
+          db.close();
+          return assets;
+        } catch (_) {
+          return [];
+        }
+      };
+
+      const loadTextureAssets = async () => {
+        try {
+          const db = await openBuilderAssetDb();
+          const textures = await new Promise((resolve, reject) => {
+            const tx = db.transaction(builderTextureStoreName, 'readonly');
+            const request = tx.objectStore(builderTextureStoreName).getAll();
+            request.onsuccess = () => resolve(request.result || []);
+            request.onerror = () => reject(request.error || new Error('Texture load failed'));
+          });
+          db.close();
+          return textures;
+        } catch (_) {
+          return [];
+        }
+      };
+
+      const refreshBuilderControls = () => {
+        const record = getActiveBuilderRecord();
+        transformControls().forEach((input) => {
+          const valueLabel = document.querySelector(`[data-transform-value="${input.dataset.transform}"]`);
+          if (!record) {
+            input.disabled = true;
+            if (valueLabel) valueLabel.textContent = '-';
+            return;
+          }
+          input.disabled = false;
+          const value = getTransformValue(record.object, input.dataset.transform);
+          input.value = String(value);
+          if (valueLabel) valueLabel.textContent = formatNumber(value);
+        });
+      };
+
+      const refreshAnimationControls = () => {
+        const record = getActiveBuilderRecord();
+        if (!builderAnimation || !builderPose) return;
+        builderAnimation.innerHTML = '';
+        const clips = record && record.animations ? record.animations : [];
+        if (!clips.length) {
+          const option = document.createElement('option');
+          option.value = '';
+          option.textContent = 'No clips';
+          builderAnimation.append(option);
+          builderAnimation.disabled = true;
+          builderPose.disabled = true;
+          builderPose.classList.remove('is-active');
+          return;
+        }
+        clips.forEach((clip) => {
+          const option = document.createElement('option');
+          option.value = clip.name;
+          option.textContent = clip.name || 'Unnamed clip';
+          builderAnimation.append(option);
+        });
+        const restOption = document.createElement('option');
+        restOption.value = '__static__';
+        restOption.textContent = 'Static / Rest';
+        builderAnimation.prepend(restOption);
+        const savedAnimation = readSavedTransforms()[record.id]?.animation;
+        if (savedAnimation === '__static__') {
+          builderAnimation.value = '__static__';
+        } else if (savedAnimation && clips.some((clip) => clip.name === savedAnimation)) {
+          builderAnimation.value = savedAnimation;
+        }
+        builderAnimation.disabled = false;
+        builderPose.disabled = false;
+        builderPose.classList.toggle('is-active', Boolean(record.activeAction));
+      };
+
+      const playBuilderAnimation = (id, clipName, persist = true) => {
+        const record = builderTargets.get(id);
+        if (!record || !record.mixer || !record.animations || !record.animations.length) return;
+        if (clipName === '__static__') {
+          if (record.activeAction) record.activeAction.stop();
+          record.activeAction = null;
+          record.mixer.stopAllAction();
+          record.mixer.setTime(0);
+          if (record.root) {
+            record.root.traverse((object) => {
+              if (object.isSkinnedMesh && object.skeleton) object.skeleton.pose();
+            });
+          }
+          if (persist) persistBuilderAnimation(record, '__static__');
+          if (activeBuilderTarget === id) {
+            if (builderAnimation) builderAnimation.value = '__static__';
+            if (builderPose) builderPose.classList.remove('is-active');
+            setBuilderStatus(`${record.label}: Static / Rest applied.`);
+          }
+          return;
+        }
+        const clip = record.animations.find((candidate) => candidate.name === clipName) || record.animations[0];
+        if (!clip) return;
+        if (record.activeAction) record.activeAction.stop();
+        const action = record.mixer.clipAction(clip);
+        action.reset();
+        action.setLoop(THREE.LoopOnce);
+        action.clampWhenFinished = true;
+        action.play();
+        record.activeAction = action;
+        if (persist) persistBuilderAnimation(record, clip.name);
+        if (activeBuilderTarget === id) {
+          if (builderAnimation) builderAnimation.value = clip.name;
+          if (builderPose) builderPose.classList.add('is-active');
+          setBuilderStatus(`${record.label}: ${clip.name || 'pose'} applied.`);
+        }
+      };
+
+      const syncBuilderTargetList = () => {
+        if (!builderTarget) return;
+        const selected = activeBuilderTarget || builderTarget.value;
+        builderTarget.innerHTML = '';
+        builderTargets.forEach((record, id) => {
+          const option = document.createElement('option');
+          option.value = id;
+          option.textContent = record.label;
+          builderTarget.append(option);
+        });
+        if (builderTargets.has(selected)) activeBuilderTarget = selected;
+        else activeBuilderTarget = builderTargets.keys().next().value || '';
+        builderTarget.value = activeBuilderTarget;
+        refreshBuilderControls();
+        refreshAnimationControls();
+      };
+
+      const registerBuilderTarget = (id, label, object, activate = true, animationConfig = null) => {
+        const defaults = cloneTransform(object);
+        const savedTransform = readSavedTransforms()[id];
+        applySavedTransform(object, savedTransform);
+        const mixer = animationConfig && animationConfig.root && animationConfig.animations?.length
+          ? new THREE.AnimationMixer(animationConfig.root)
+          : null;
+        builderTargets.set(id, {
+          id,
+          label,
+          object,
+          defaults,
+          mixer,
+          root: animationConfig?.root || null,
+          animations: animationConfig?.animations || [],
+          asset: animationConfig?.asset || null,
+          activeAction: null
+        });
+        if (mixer) animationMixers.push(mixer);
+        if (activate || !activeBuilderTarget) activeBuilderTarget = id;
+        syncBuilderTargetList();
+        if (activeBuilderTarget === id) setBuilderStatus(`${label} selected.`);
+        if (savedTransform?.animation) {
+          window.setTimeout(() => playBuilderAnimation(id, savedTransform.animation, false), 0);
+        }
+      };
+
+      const resetBuilderTarget = () => {
+        const record = getActiveBuilderRecord();
+        if (!record) return;
+        record.object.position.copy(record.defaults.position);
+        record.object.rotation.copy(record.defaults.rotation);
+        record.object.scale.copy(record.defaults.scale);
+        persistBuilderTransform(record);
+        refreshBuilderControls();
+        setBuilderStatus(`${record.label} reset.`);
+      };
+
+      const copyBuilderTransform = async () => {
+        const record = getActiveBuilderRecord();
+        if (!record) return;
+        const payload = {
+          id: record.id,
+          label: record.label,
+          position: record.object.position.toArray().map((value) => Number(value.toFixed(3))),
+          rotationDegrees: [
+            record.object.rotation.x,
+            record.object.rotation.y,
+            record.object.rotation.z
+          ].map((value) => Number(THREE.MathUtils.radToDeg(value).toFixed(2))),
+          scale: record.object.scale.toArray().map((value) => Number(value.toFixed(3)))
+        };
+        const text = JSON.stringify(payload, null, 2);
+        try {
+          await navigator.clipboard.writeText(text);
+          setBuilderStatus('Transform copied.');
+        } catch (_) {
+          console.log('Workshop transform', payload);
+          setBuilderStatus('Transform logged to console.');
+        }
+      };
+
+      const normalizeImportedModel = (model, width = 4) => {
+        const bounds = new THREE.Box3().setFromObject(model);
+        const size = bounds.getSize(new THREE.Vector3());
+        const center = bounds.getCenter(new THREE.Vector3());
+        const scale = width / Math.max(size.x, size.y, size.z, 0.001);
+        model.scale.setScalar(scale);
+        model.position.set(-center.x * scale, -(bounds.min.y * scale), -center.z * scale);
+        model.traverse((object) => {
+          if (!object.isMesh) return;
+          object.frustumCulled = false;
+          object.castShadow = true;
+          object.receiveShadow = true;
+        });
+        return { size, center, scale };
+      };
+
+      builderPanel?.addEventListener('pointerdown', (event) => event.stopPropagation());
+      builderPanel?.addEventListener('click', (event) => event.stopPropagation());
+      document.querySelector('[data-builder-toggle]')?.addEventListener('click', () => {
+        builderPanel?.classList.toggle('is-collapsed');
+      });
+      builderTarget?.addEventListener('change', () => {
+        activeBuilderTarget = builderTarget.value;
+        refreshBuilderControls();
+        refreshAnimationControls();
+        const record = getActiveBuilderRecord();
+        if (record) setBuilderStatus(`${record.label} selected.`);
+      });
+      transformControls().forEach((input) => {
+        input.addEventListener('input', () => {
+          const record = getActiveBuilderRecord();
+          if (!record) return;
+          const value = Number(input.value);
+          setTransformValue(record.object, input.dataset.transform, value);
+          persistBuilderTransform(record);
+          const valueLabel = document.querySelector(`[data-transform-value="${input.dataset.transform}"]`);
+          if (valueLabel) valueLabel.textContent = formatNumber(value);
+        });
+      });
+      document.querySelector('[data-builder-reset]')?.addEventListener('click', resetBuilderTarget);
+      document.querySelector('[data-builder-copy]')?.addEventListener('click', copyBuilderTransform);
+      builderPose?.addEventListener('click', () => {
+        const record = getActiveBuilderRecord();
+        if (!record || !builderAnimation) return;
+        playBuilderAnimation(record.id, builderAnimation.value);
+      });
+      sceneControlInputs().forEach((input) => {
+        input.addEventListener('input', () => {
+          sceneSettings[input.dataset.sceneControl] = Number(input.value);
+          writeSavedSceneSettings();
+          syncSceneControlLabels();
+          applySceneSettings();
+        });
+      });
+      sceneColorInputs().forEach((input) => {
+        input.addEventListener('input', () => {
+          sceneSettings[input.dataset.sceneColor] = input.value;
+          writeSavedSceneSettings();
+          applySceneSettings();
+        });
+      });
+      sceneToggleInputs().forEach((input) => {
+        input.addEventListener('change', () => {
+          sceneSettings[input.dataset.sceneToggle] = input.checked;
+          writeSavedSceneSettings();
+          syncSceneControlLabels();
+          applySceneSettings();
+        });
+      });
+      document.querySelector('[data-builder-scene-reset]')?.addEventListener('click', () => {
+        sceneSettings = { ...defaultSceneSettings };
+        writeSavedSceneSettings();
+        syncSceneControlLabels();
+        applySceneSettings();
+        setBuilderStatus('Scene settings reset.');
+      });
+      document.querySelector('[data-builder-reload]')?.addEventListener('click', reloadBuilderTarget);
+      document.querySelector('[data-builder-remove]')?.addEventListener('click', removeBuilderTarget);
+      document.querySelectorAll('[data-texture-import]').forEach((input) => {
+        input.addEventListener('change', () => {
+          const file = input.files && input.files[0];
+          const slot = input.dataset.textureImport;
+          if (!file || !slot) return;
+          const texture = {
+            id: slot,
+            slot,
+            name: file.name,
+            type: file.type || 'image/png',
+            blob: file,
+            savedAt: Date.now()
+          };
+          saveTextureAsset(texture).catch((error) => {
+            console.warn('Texture could not be saved for reload', error);
+            setBuilderStatus(`${file.name} loaded, but reload save failed.`);
+          });
+          applyTextureBlob(slot, file);
+          input.value = '';
+        });
+      });
+
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x040607);
+      scene.fog = new THREE.FogExp2(0x040607, 0.014);
+      sceneSettings = readSavedSceneSettings();
+      syncSceneControlLabels();
+
+      const renderer = new THREE.WebGLRenderer({
+        canvas,
+        antialias: true,
+        alpha: false,
+        powerPreference: 'high-performance'
+      });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.28;
+
+      const camera = new THREE.PerspectiveCamera(46, 1, 0.1, 320);
+      const lookTarget = new THREE.Vector3(0, 1.4, -12);
+      const composer = new EffectComposer(renderer);
+      const renderPass = new RenderPass(scene, camera);
+      const bloomPass = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.62, 0.46, 0.8);
+
+      // --- Heat-haze refraction pass (screen-space, anchored to the forge) ---
+      const heatHazePass = new ShaderPass({
+        uniforms: {
+          tDiffuse: { value: null },
+          uTime: { value: 0 },
+          uStrength: { value: 1.0 },
+          uCenter: { value: new THREE.Vector2(0.5, 0.62) },
+          uRadius: { value: 0.34 },
+          uAspect: { value: 1 }
+        },
+        vertexShader: `
+          varying vec2 vUv;
+          void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }
+        `,
+        fragmentShader: `
+          uniform sampler2D tDiffuse;
+          uniform float uTime; uniform float uStrength; uniform float uRadius; uniform float uAspect;
+          uniform vec2 uCenter;
+          varying vec2 vUv;
+          float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+          float noise(vec2 p){
+            vec2 i = floor(p); vec2 f = fract(p);
+            float a = hash(i), b = hash(i + vec2(1.0, 0.0)), c = hash(i + vec2(0.0, 1.0)), d = hash(i + vec2(1.0, 1.0));
+            vec2 u = f * f * (3.0 - 2.0 * f);
+            return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
+          }
+          void main(){
+            vec2 d = vUv - uCenter; d.x *= uAspect;
+            float dist = length(d);
+            float mask = smoothstep(uRadius, uRadius * 0.15, dist);
+            float n1 = noise(vec2(vUv.x * 24.0, vUv.y * 18.0 - uTime * 1.5));
+            float n2 = noise(vec2(vUv.x * 46.0 + 7.0, vUv.y * 34.0 - uTime * 2.3));
+            vec2 offset = vec2(n1 - 0.5, n2 - 0.5) * 0.014 * mask * uStrength;
+            gl_FragColor = texture2D(tDiffuse, vUv + offset);
+          }
+        `
+      });
+
+      // --- Vignette pass (stage framing) ---
+      const vignettePass = new ShaderPass({
+        uniforms: {
+          tDiffuse: { value: null },
+          uStrength: { value: 0.82 }
+        },
+        vertexShader: `
+          varying vec2 vUv;
+          void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }
+        `,
+        fragmentShader: `
+          uniform sampler2D tDiffuse; uniform float uStrength;
+          varying vec2 vUv;
+          void main(){
+            vec4 col = texture2D(tDiffuse, vUv);
+            float dist = distance(vUv, vec2(0.5));
+            float vig = smoothstep(0.85, 0.32, dist);
+            col.rgb *= mix(1.0 - uStrength, 1.0, vig);
+            gl_FragColor = col;
+          }
+        `
+      });
+
+      const outputPass = new OutputPass();
+      composer.addPass(renderPass);
+      composer.addPass(bloomPass);
+      composer.addPass(heatHazePass);
+      composer.addPass(vignettePass);
+      composer.addPass(outputPass);
+      const orbitControls = new OrbitControls(camera, canvas);
+      orbitControls.enabled = false;
+      orbitControls.enableDamping = true;
+      orbitControls.dampingFactor = 0.08;
+      orbitControls.target.copy(lookTarget);
+      orbitControls.minDistance = 2.5;
+      orbitControls.maxDistance = 90;
+      orbitControls.maxPolarAngle = Math.PI * 0.48;
+
+      const setFreeView = (enabled) => {
+        freeViewEnabled = enabled;
+        orbitControls.enabled = enabled;
+        if (enabled) {
+          orbitControls.target.copy(lookTarget);
+          orbitControls.update();
+          setBuilderStatus('Free view enabled.');
+        } else {
+          setBuilderStatus('Snap view enabled.');
+        }
+        builderFreeView?.classList.toggle('is-active', enabled);
+      };
+
+      builderFreeView?.addEventListener('click', () => setFreeView(!freeViewEnabled));
+
+      const colors = {
+        dark: 0x080b0c,
+        wall: 0x101516,
+        floor: 0x090c0d,
+        metal: 0x171d1e,
+        edge: 0x46312e,
+        accent: 0xe0473c,
+        ember: 0xff684e,
+        pale: 0xf0e8df
+      };
+
+      const mats = {
+        wall: new THREE.MeshStandardMaterial({
+          color: colors.wall,
+          emissive: 0x071011,
+          emissiveIntensity: 0.72,
+          roughness: 0.94,
+          metalness: 0.04
+        }),
+        sideWall: new THREE.MeshStandardMaterial({
+          color: 0x0a0e0f,
+          emissive: 0x071011,
+          emissiveIntensity: 0.82,
+          roughness: 0.96,
+          metalness: 0.03
+        }),
+        floor: new THREE.MeshStandardMaterial({ color: colors.floor, roughness: 0.88, metalness: 0.12 }),
+        dome: new THREE.MeshStandardMaterial({
+          color: 0x0b1112,
+          emissive: 0x101f20,
+          emissiveIntensity: 0.55,
+          roughness: 0.98,
+          metalness: 0.02,
+          side: THREE.BackSide,
+          transparent: true,
+          opacity: 0.78
+        }),
+        metal: new THREE.MeshStandardMaterial({ color: colors.metal, roughness: 0.64, metalness: 0.62 }),
+        edge: new THREE.MeshStandardMaterial({ color: colors.edge, roughness: 0.55, metalness: 0.5 }),
+        accent: new THREE.MeshStandardMaterial({
+          color: colors.accent,
+          emissive: colors.accent,
+          emissiveIntensity: 0.68,
+          roughness: 0.48,
+          metalness: 0.36
+        }),
+        hot: new THREE.MeshStandardMaterial({
+          color: colors.ember,
+          emissive: colors.ember,
+          emissiveIntensity: 2.4,
+          roughness: 0.34,
+          metalness: 0.18
+        }),
+        darkMetal: new THREE.MeshStandardMaterial({ color: 0x090b0c, roughness: 0.5, metalness: 0.76 })
+      };
+
+      const makeGridTexture = (lineColor, backgroundColor, size = 512, divisions = 10) => {
+        const board = document.createElement('canvas');
+        board.width = size;
+        board.height = size;
+        const ctx = board.getContext('2d');
+        ctx.fillStyle = backgroundColor;
+        ctx.fillRect(0, 0, size, size);
+        ctx.strokeStyle = lineColor;
+        ctx.lineWidth = 1;
+        const step = size / divisions;
+        for (let index = 0; index <= divisions; index += 1) {
+          const offset = Math.round(index * step) + 0.5;
+          ctx.beginPath();
+          ctx.moveTo(offset, 0);
+          ctx.lineTo(offset, size);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(0, offset);
+          ctx.lineTo(size, offset);
+          ctx.stroke();
+        }
+        const texture = new THREE.CanvasTexture(board);
+        texture.colorSpace = THREE.SRGBColorSpace;
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        return texture;
+      };
+
+      mats.wall.map = makeGridTexture('rgba(130,154,156,0.24)', '#111617');
+      mats.wall.map.repeat.set(3.5, 1.75);
+      mats.wall.needsUpdate = true;
+      mats.sideWall.map = makeGridTexture('rgba(116,138,140,0.22)', '#090d0e');
+      mats.sideWall.map.repeat.set(2.8, 1.75);
+      mats.sideWall.needsUpdate = true;
+
+      const room = new THREE.Group();
+      scene.add(room);
+
+      const makeBox = (width, height, depth, material, position, parent = room) => {
+        const mesh = new THREE.Mesh(new THREE.BoxGeometry(width, height, depth), material);
+        mesh.position.set(position[0], position[1], position[2]);
+        parent.add(mesh);
+        return mesh;
+      };
+
+      const makeWall = (width, height, position, rotationY, material) => {
+        const wall = makeBox(width, height, 0.26, material, position);
+        wall.rotation.y = rotationY;
+        return wall;
+      };
+
+      const addFrame = (parent, width, height, depth, material) => {
+        const bar = 0.16;
+        makeBox(width + bar, bar, depth, material, [0, height / 2, 0], parent);
+        makeBox(width + bar, bar, depth, material, [0, -height / 2, 0], parent);
+        makeBox(bar, height, depth, material, [-width / 2, 0, 0], parent);
+        makeBox(bar, height, depth, material, [width / 2, 0, 0], parent);
+      };
+
+      const makeTextTexture = (eyebrow, title, copy, accent = '#e0473c') => {
+        const board = document.createElement('canvas');
+        board.width = 1024;
+        board.height = 512;
+        const ctx = board.getContext('2d');
+        ctx.fillStyle = '#070a0b';
+        ctx.fillRect(0, 0, board.width, board.height);
+        ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+        ctx.lineWidth = 4;
+        ctx.strokeRect(3, 3, board.width - 6, board.height - 6);
+        ctx.fillStyle = accent;
+        ctx.font = '700 30px monospace';
+        ctx.fillText(eyebrow.toUpperCase(), 60, 94);
+        ctx.fillStyle = '#f1f2f2';
+        ctx.font = '800 92px Arial';
+        ctx.fillText(title, 60, 226);
+        ctx.fillStyle = '#90999d';
+        ctx.font = '500 32px Arial';
+        ctx.fillText(copy, 60, 310);
+        const texture = new THREE.CanvasTexture(board);
+        texture.colorSpace = THREE.SRGBColorSpace;
+        texture.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+        return texture;
+      };
+
+      const stationTargets = [];
+      const addStation = ({ wall, offset, eyebrow, title, copy, href = '' }) => {
+        const station = new THREE.Group();
+        station.position.copy(offset);
+        wall.add(station);
+        const faceMaterial = new THREE.MeshStandardMaterial({
+          color: 0xffffff,
+          map: makeTextTexture(eyebrow, title, copy),
+          roughness: 0.76,
+          metalness: 0.1
+        });
+        const face = makeBox(7.8, 3.75, 0.28, faceMaterial, [0, 0, 0.42], station);
+        addFrame(station, 8.08, 4.03, 0.52, mats.metal);
+        face.userData.href = href;
+        if (href) stationTargets.push(face);
+      };
+
+      const roomWidth = 48;
+      const roomDepth = 62;
+      const wallHeight = 19;
+      const backZ = -18;
+      const backWall = makeWall(roomWidth, wallHeight, [0, wallHeight / 2, backZ], 0, mats.wall);
+      const leftWall = makeWall(roomDepth, wallHeight, [-roomWidth / 2, wallHeight / 2, backZ + roomDepth / 2], Math.PI / 2, mats.sideWall);
+      const rightWall = makeWall(roomDepth, wallHeight, [roomWidth / 2, wallHeight / 2, backZ + roomDepth / 2], -Math.PI / 2, mats.sideWall);
+      backWall.material = mats.wall.clone();
+      leftWall.material = mats.sideWall.clone();
+      rightWall.material = mats.sideWall.clone();
+
+      const floor = makeBox(roomWidth, 0.2, roomDepth, mats.floor, [0, -0.12, backZ + roomDepth / 2]);
+      floor.receiveShadow = true;
+
+      const domeGeometry = new THREE.SphereGeometry(42, 64, 24, 0, Math.PI * 2, 0, Math.PI / 2);
+      const dome = new THREE.Mesh(
+        domeGeometry,
+        mats.dome
+      );
+      dome.position.set(0, -0.35, backZ + roomDepth / 2);
+      dome.scale.set(0.98, 0.64, 1.04);
+      room.add(dome);
+
+      const domeAura = new THREE.Mesh(
+        domeGeometry,
+        new THREE.ShaderMaterial({
+          uniforms: {
+            uTime: { value: 0 },
+            uIntensity: { value: 0.42 },
+            uColor: { value: new THREE.Color(0xe0473c) }
+          },
+          vertexShader: `
+            varying vec3 vPos;
+            varying vec3 vNormal;
+            void main() {
+              vPos = position;
+              vNormal = normalize(normalMatrix * normal);
+              gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+          `,
+          fragmentShader: `
+            uniform float uTime;
+            uniform float uIntensity;
+            uniform vec3 uColor;
+            varying vec3 vPos;
+            varying vec3 vNormal;
+            void main() {
+              float rim = pow(1.0 - abs(vNormal.y), 1.8);
+              float scan = 0.5 + 0.5 * sin((vPos.x + vPos.z) * 0.32 + uTime * 0.85);
+              float heightFade = smoothstep(0.0, 28.0, vPos.y);
+              float alpha = (rim * 0.22 + scan * 0.055) * heightFade * uIntensity;
+              gl_FragColor = vec4(uColor, alpha);
+            }
+          `,
+          transparent: true,
+          depthWrite: false,
+          blending: THREE.AdditiveBlending,
+          side: THREE.BackSide
+        })
+      );
+      domeAura.position.copy(dome.position);
+      domeAura.scale.copy(dome.scale);
+      room.add(domeAura);
+
+      const domeGrid = new THREE.LineSegments(
+        new THREE.WireframeGeometry(domeGeometry),
+        new THREE.LineBasicMaterial({
+          color: 0x314346,
+          transparent: true,
+          opacity: 0.18,
+          depthWrite: false
+        })
+      );
+      domeGrid.position.copy(dome.position);
+      domeGrid.scale.copy(dome.scale);
+      domeGrid.material.opacity = 0.18;
+      room.add(domeGrid);
+
+      const grid = new THREE.GridHelper(54, 36, 0x69342f, 0x1d292b);
+      grid.position.set(0, 0.01, -7);
+      grid.material.opacity = 0.42;
+      grid.material.transparent = true;
+      room.add(grid);
+
+      const backFrame = new THREE.Group();
+      backFrame.position.set(0, wallHeight / 2, backZ + 0.2);
+      room.add(backFrame);
+      addFrame(backFrame, roomWidth - 0.28, wallHeight - 0.28, 0.18, mats.accent);
+
+      // Wall station cards and the procedural forge stand-in removed:
+      // the imported GLB forge now carries the visuals + click-to-route target.
+
+      const forgeGlow = new THREE.PointLight(colors.ember, 13, 16, 2);
+      forgeGlow.position.set(0, 10.6, backZ + 2.3);
+      room.add(forgeGlow);
+
+      // --- Rising ember particles drifting up from the forge ---
+      const emberCount = 140;
+      const emberGeometry = new THREE.BufferGeometry();
+      const emberBase = new Float32Array(emberCount * 3);
+      const emberSeed = new Float32Array(emberCount);
+      const emberSpeed = new Float32Array(emberCount);
+      for (let i = 0; i < emberCount; i += 1) {
+        emberBase[i * 3 + 0] = (Math.random() - 0.5) * 11.0;
+        emberBase[i * 3 + 1] = 1.4 + Math.random() * 6.5;
+        emberBase[i * 3 + 2] = backZ + 4.2 + (Math.random() - 0.5) * 3.2;
+        emberSeed[i] = Math.random();
+        emberSpeed[i] = 0.5 + Math.random() * 0.9;
+      }
+      emberGeometry.setAttribute('position', new THREE.BufferAttribute(emberBase.slice(), 3));
+      emberGeometry.setAttribute('aBase', new THREE.BufferAttribute(emberBase, 3));
+      emberGeometry.setAttribute('aSeed', new THREE.BufferAttribute(emberSeed, 1));
+      emberGeometry.setAttribute('aSpeed', new THREE.BufferAttribute(emberSpeed, 1));
+      const emberMaterial = new THREE.ShaderMaterial({
+        uniforms: {
+          uTime: { value: 0 },
+          uIntensity: { value: 1.0 },
+          uPixelRatio: { value: renderer.getPixelRatio() },
+          uColor: { value: new THREE.Color(0xff6a38) }
+        },
+        vertexShader: `
+          uniform float uTime; uniform float uIntensity; uniform float uPixelRatio;
+          attribute vec3 aBase; attribute float aSeed; attribute float aSpeed;
+          varying float vAlpha;
+          void main(){
+            float life = fract(uTime * aSpeed * 0.12 + aSeed);
+            vec3 pos = aBase;
+            pos.y += life * 9.5;
+            pos.x += sin(uTime * 0.6 + aSeed * 30.0) * 0.6 * life;
+            pos.z += cos(uTime * 0.5 + aSeed * 21.0) * 0.45 * life;
+            vec4 mv = modelViewMatrix * vec4(pos, 1.0);
+            gl_Position = projectionMatrix * mv;
+            float flicker = 0.55 + 0.45 * sin(uTime * 9.0 + aSeed * 100.0);
+            vAlpha = (1.0 - life) * (1.0 - life) * flicker * uIntensity;
+            gl_PointSize = (3.0 + aSeed * 4.5) * uPixelRatio * (60.0 / max(1.0, -mv.z));
+          }
+        `,
+        fragmentShader: `
+          uniform vec3 uColor;
+          varying float vAlpha;
+          void main(){
+            float d = length(gl_PointCoord - 0.5);
+            float soft = smoothstep(0.5, 0.0, d);
+            gl_FragColor = vec4(uColor, soft * vAlpha);
+          }
+        `,
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending
+      });
+      const emberPoints = new THREE.Points(emberGeometry, emberMaterial);
+      emberPoints.frustumCulled = false;
+      room.add(emberPoints);
+
+      // --- Steam burst jets: puffs that erupt from forge vents, billow, drift, dissipate ---
+      const steamJetCount = 6;
+      const steamPerJet = 34;
+      const steamTotal = steamJetCount * steamPerJet;
+      const steamGeometry = new THREE.BufferGeometry();
+      const steamOrigin = new Float32Array(steamTotal * 3);
+      const steamDir = new Float32Array(steamTotal * 3);
+      const steamSeed = new Float32Array(steamTotal);
+      const steamJet = new Float32Array(steamTotal);
+      let steamPtr = 0;
+      for (let j = 0; j < steamJetCount; j += 1) {
+        const baseX = -7.6 + j * 3.04;
+        const baseY = j % 2 === 0 ? 2.2 : 5.4;
+        const baseZ = backZ + 4.0;
+        const outX = (baseX / 8) * 0.5;
+        const jetPhase = j / steamJetCount;
+        for (let p = 0; p < steamPerJet; p += 1) {
+          const i3 = steamPtr * 3;
+          steamOrigin[i3 + 0] = baseX + (Math.random() - 0.5) * 1.3;
+          steamOrigin[i3 + 1] = baseY + (Math.random() - 0.5) * 0.7;
+          steamOrigin[i3 + 2] = baseZ + (Math.random() - 0.5) * 1.3;
+          const dx = outX + (Math.random() - 0.5) * 0.5;
+          const dy = 1.0 + Math.random() * 0.35;
+          const dz = (Math.random() - 0.5) * 0.4;
+          const inv = 1 / Math.hypot(dx, dy, dz);
+          steamDir[i3 + 0] = dx * inv;
+          steamDir[i3 + 1] = dy * inv;
+          steamDir[i3 + 2] = dz * inv;
+          steamSeed[steamPtr] = Math.random();
+          steamJet[steamPtr] = jetPhase + (Math.random() - 0.5) * 0.03;
+          steamPtr += 1;
+        }
+      }
+      steamGeometry.setAttribute('position', new THREE.BufferAttribute(steamOrigin.slice(), 3));
+      steamGeometry.setAttribute('aOrigin', new THREE.BufferAttribute(steamOrigin, 3));
+      steamGeometry.setAttribute('aDir', new THREE.BufferAttribute(steamDir, 3));
+      steamGeometry.setAttribute('aSeed', new THREE.BufferAttribute(steamSeed, 1));
+      steamGeometry.setAttribute('aJet', new THREE.BufferAttribute(steamJet, 1));
+      const steamBurstMaterial = new THREE.ShaderMaterial({
+        uniforms: {
+          uTime: { value: 0 },
+          uIntensity: { value: 0.5 },
+          uPixelRatio: { value: renderer.getPixelRatio() },
+          uPeriod: { value: 4.0 },
+          uActive: { value: 0.5 },
+          uColorHot: { value: new THREE.Color(0xffba8a) },
+          uColorCool: { value: new THREE.Color(0xb29684) }
+        },
+        vertexShader: `
+          uniform float uTime; uniform float uIntensity; uniform float uPixelRatio;
+          uniform float uPeriod; uniform float uActive;
+          attribute vec3 aOrigin; attribute vec3 aDir; attribute float aSeed; attribute float aJet;
+          varying float vAlpha; varying float vMix; varying float vSeed;
+          void main(){
+            float p = fract(uTime / uPeriod + aJet + aSeed * 0.04);
+            float vis = step(p, uActive);
+            float lt = clamp(p / uActive, 0.0, 1.0);
+            float ease = 1.0 - pow(1.0 - lt, 2.0);
+            vec3 pos = aOrigin + aDir * ease * (5.2 + aSeed * 3.0);
+            pos.y += ease * 2.8;
+            pos.x += sin(uTime * 0.8 + aSeed * 40.0) * lt * 1.1;
+            pos.z += cos(uTime * 0.6 + aSeed * 27.0) * lt * 0.6;
+            vec4 mv = modelViewMatrix * vec4(pos, 1.0);
+            gl_Position = projectionMatrix * mv;
+            float grow = mix(0.4, 1.0, lt);
+            float fade = smoothstep(0.0, 0.2, lt) * (1.0 - smoothstep(0.5, 1.0, lt));
+            vAlpha = fade * vis * uIntensity;
+            vMix = lt;
+            vSeed = aSeed;
+            gl_PointSize = (64.0 * grow) * uPixelRatio * (60.0 / max(1.0, -mv.z));
+          }
+        `,
+        fragmentShader: `
+          uniform vec3 uColorHot; uniform vec3 uColorCool;
+          varying float vAlpha; varying float vMix; varying float vSeed;
+          float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+          float noise(vec2 p){
+            vec2 i = floor(p), f = fract(p);
+            float a = hash(i), b = hash(i + vec2(1.0, 0.0)), c = hash(i + vec2(0.0, 1.0)), d = hash(i + vec2(1.0, 1.0));
+            vec2 u = f * f * (3.0 - 2.0 * f);
+            return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
+          }
+          void main(){
+            float d = length(gl_PointCoord - 0.5);
+            float soft = smoothstep(0.5, 0.16, d);
+            float n1 = noise(gl_PointCoord * 4.0 + vSeed * 23.0);
+            float n2 = noise(gl_PointCoord * 9.0 - vSeed * 11.0);
+            float wisp = mix(0.42, 1.0, n1) * mix(0.65, 1.0, n2);
+            vec3 col = mix(uColorHot, uColorCool, vMix);
+            gl_FragColor = vec4(col, soft * wisp * vAlpha);
+          }
+        `,
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.NormalBlending
+      });
+      const steamBurst = new THREE.Points(steamGeometry, steamBurstMaterial);
+      steamBurst.frustumCulled = false;
+      room.add(steamBurst);
+
+      const steamMaterial = new THREE.ShaderMaterial({
+        uniforms: {
+          uTime: { value: 0 },
+          uIntensity: { value: 0.85 },
+          uColor: { value: new THREE.Color(0xffb58a) }
+        },
+        vertexShader: `
+          varying vec2 vUv;
+          void main() {
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }
+        `,
+        fragmentShader: `
+          uniform float uTime;
+          uniform float uIntensity;
+          uniform vec3 uColor;
+          varying vec2 vUv;
+          float wave(vec2 uv, float speed, float scale) {
+            return sin((uv.x * scale + uv.y * 3.0) + uTime * speed) * 0.5 + 0.5;
+          }
+          void main() {
+            float plume = smoothstep(0.0, 0.34, vUv.y) * (1.0 - smoothstep(0.72, 1.0, vUv.y));
+            float edges = smoothstep(0.0, 0.22, vUv.x) * (1.0 - smoothstep(0.78, 1.0, vUv.x));
+            float vapor = (wave(vUv, 0.55, 10.0) * 0.45 + wave(vUv.yx, 0.32, 16.0) * 0.35 + 0.2);
+            float alpha = plume * edges * vapor * 0.22 * uIntensity;
+            gl_FragColor = vec4(uColor, alpha);
+          }
+        `,
+        transparent: true,
+        depthWrite: false,
+        side: THREE.DoubleSide,
+        blending: THREE.AdditiveBlending
+      });
+      const steamGroup = new THREE.Group();
+      const addSteamPlane = (position, rotationY, scale) => {
+        const plane = new THREE.Mesh(new THREE.PlaneGeometry(1, 1, 1, 1), steamMaterial.clone());
+        plane.position.set(position[0], position[1], position[2]);
+        plane.rotation.y = rotationY;
+        plane.scale.set(scale[0], scale[1], 1);
+        steamGroup.add(plane);
+      };
+      addSteamPlane([0, 4.1, backZ + 3.2], 0, [8.5, 8.8]);
+      addSteamPlane([-5.8, 3.4, backZ + 5.4], 0.22, [6.2, 6.8]);
+      addSteamPlane([6.4, 3.6, backZ + 5.2], -0.2, [6.4, 7.2]);
+      addSteamPlane([0, 1.7, 2.4], 0, [14, 3.2]);
+      room.add(steamGroup);
+
+      // --- Procedural forge env map: warm bounce from below so rough metal/stone
+      //     reads as a real surface instead of flat clay. Applied to imported models only. ---
+      const importedMaterials = [];
+      const pmrem = new THREE.PMREMGenerator(renderer);
+      const envCanvas = document.createElement('canvas');
+      envCanvas.width = 512;
+      envCanvas.height = 256;
+      const ectx = envCanvas.getContext('2d');
+      const egrad = ectx.createLinearGradient(0, 0, 0, 256);
+      egrad.addColorStop(0.0, '#0a0d10');
+      egrad.addColorStop(0.55, '#1c1210');
+      egrad.addColorStop(0.82, '#7a2f16');
+      egrad.addColorStop(1.0, '#ff7a33');
+      ectx.fillStyle = egrad;
+      ectx.fillRect(0, 0, 512, 256);
+      const hotSpot = ectx.createRadialGradient(256, 232, 8, 256, 232, 160);
+      hotSpot.addColorStop(0, 'rgba(255,150,60,0.85)');
+      hotSpot.addColorStop(1, 'rgba(255,150,60,0)');
+      ectx.fillStyle = hotSpot;
+      ectx.fillRect(0, 110, 512, 146);
+      const envEquirect = new THREE.Texture(envCanvas);
+      envEquirect.mapping = THREE.EquirectangularReflectionMapping;
+      envEquirect.colorSpace = THREE.SRGBColorSpace;
+      envEquirect.needsUpdate = true;
+      const forgeEnv = pmrem.fromEquirectangular(envEquirect).texture;
+      envEquirect.dispose();
+      pmrem.dispose();
+
+      // --- Procedural grit normal map (multi-octave value noise -> tangent normals) ---
+      const makeNoiseNormal = (size = 256, strength = 2.4) => {
+        const h = new Float32Array(size * size);
+        const rand = (x, y) => { const n = Math.sin(x * 127.1 + y * 311.7) * 43758.5453; return n - Math.floor(n); };
+        const lerp = (a, b, t) => a + (b - a) * t;
+        const vnoise = (x, y) => {
+          const xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi;
+          const u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf);
+          return lerp(lerp(rand(xi, yi), rand(xi + 1, yi), u), lerp(rand(xi, yi + 1), rand(xi + 1, yi + 1), u), v);
+        };
+        for (let y = 0; y < size; y += 1) for (let x = 0; x < size; x += 1) {
+          let amp = 1, freq = 8 / size, sum = 0, norm = 0;
+          for (let o = 0; o < 4; o += 1) { sum += vnoise(x * freq + o * 13.1, y * freq + o * 7.3) * amp; norm += amp; amp *= 0.5; freq *= 2; }
+          h[y * size + x] = sum / norm;
+        }
+        const c = document.createElement('canvas'); c.width = size; c.height = size;
+        const ctx = c.getContext('2d'); const img = ctx.createImageData(size, size);
+        const H = (x, y) => h[((y + size) % size) * size + ((x + size) % size)];
+        for (let y = 0; y < size; y += 1) for (let x = 0; x < size; x += 1) {
+          const dx = (H(x - 1, y) - H(x + 1, y)) * strength;
+          const dy = (H(x, y - 1) - H(x, y + 1)) * strength;
+          const len = Math.hypot(dx, dy, 1);
+          const i = (y * size + x) * 4;
+          img.data[i] = ((dx / len) * 0.5 + 0.5) * 255;
+          img.data[i + 1] = ((dy / len) * 0.5 + 0.5) * 255;
+          img.data[i + 2] = (1 / len) * 127.5 + 127.5;
+          img.data[i + 3] = 255;
+        }
+        ctx.putImageData(img, 0, 0);
+        const tex = new THREE.CanvasTexture(c);
+        tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+        tex.repeat.set(4, 4);
+        tex.colorSpace = THREE.NoColorSpace;
+        return tex;
+      };
+      const detailNormal = makeNoiseNormal();
+      const detailMaterials = [];
+
+      // --- Shared palette-cohesion uniforms (desaturate + pull toward one forge tint) ---
+      const cohesionUniforms = {
+        uTint: { value: new THREE.Color(sceneSettings.surfTintColor || '#8f6f4e') },
+        uUnify: { value: Number(sceneSettings.surfUnify ?? 0.35) },
+        uSat: { value: Number(sceneSettings.surfSaturation ?? 0.82) }
+      };
+
+      const flatterModel = (root) => {
+        root.traverse((object) => {
+          if (!object.isMesh || !object.material) return;
+          const apply = (m) => {
+            if (!m || !('envMapIntensity' in m)) return;
+            m.envMap = forgeEnv;
+            m.envMapIntensity = Number(sceneSettings.envIntensity ?? 0.85);
+            if (!m.normalMap) {
+              m.normalMap = detailNormal;
+              m.normalScale = new THREE.Vector2(Number(sceneSettings.surfDetail ?? 0.6), Number(sceneSettings.surfDetail ?? 0.6));
+              detailMaterials.push(m);
+            }
+            if (!m.userData.cohesionPatched) {
+              m.userData.cohesionPatched = true;
+              const prev = m.onBeforeCompile;
+              m.onBeforeCompile = (shader) => {
+                if (prev) prev(shader);
+                shader.uniforms.uTint = cohesionUniforms.uTint;
+                shader.uniforms.uUnify = cohesionUniforms.uUnify;
+                shader.uniforms.uSat = cohesionUniforms.uSat;
+                shader.fragmentShader = 'uniform vec3 uTint;\nuniform float uUnify;\nuniform float uSat;\n' +
+                  shader.fragmentShader.replace(
+                    '#include <color_fragment>',
+                    `#include <color_fragment>
+                    {
+                      float _l = dot(diffuseColor.rgb, vec3(0.299, 0.587, 0.114));
+                      vec3 _desat = mix(vec3(_l), diffuseColor.rgb, uSat);
+                      diffuseColor.rgb = mix(_desat, uTint * (_l * 2.0), uUnify);
+                    }`
+                  );
+              };
+            }
+            m.needsUpdate = true;
+            if (!importedMaterials.includes(m)) importedMaterials.push(m);
+          };
+          Array.isArray(object.material) ? object.material.forEach(apply) : apply(object.material);
+        });
+      };
+
+      const ktx2Loader = new KTX2Loader()
+        .setTranscoderPath('https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/libs/basis/')
+        .detectSupport(renderer);
+      const gltfLoader = new GLTFLoader();
+      gltfLoader.setKTX2Loader(ktx2Loader);
+      gltfLoader.setMeshoptDecoder(MeshoptDecoder);
+      const loadImportedBuilderAsset = (asset, activate = true) => {
+        const sourceUrl = URL.createObjectURL(asset.blob);
+        setBuilderStatus(`Loading ${asset.label}...`);
+        gltfLoader.load(
+          sourceUrl,
+          ({ scene: importedModel, animations }) => {
+            const importedWrapper = new THREE.Group();
+            normalizeImportedModel(importedModel, 4);
+            flatterModel(importedModel);
+            importedWrapper.position.set(0, 0.18, 5.2);
+            importedWrapper.rotation.y = Math.PI;
+            importedWrapper.add(importedModel);
+            room.add(importedWrapper);
+            registerBuilderTarget(asset.id, asset.label, importedWrapper, activate, {
+              root: importedModel,
+              animations,
+              asset
+            });
+            window.__lastImportedModel = importedWrapper;
+            URL.revokeObjectURL(sourceUrl);
+          },
+          undefined,
+          (error) => {
+            console.error('Imported model failed to load', error);
+            setBuilderStatus(`${asset.label} failed to load.`);
+            URL.revokeObjectURL(sourceUrl);
+          }
+        );
+      };
+
+      builderImport?.addEventListener('change', () => {
+        const file = builderImport.files && builderImport.files[0];
+        if (!file) return;
+        const id = `import-${Date.now()}`;
+        const label = file.name.replace(/\.(glb|gltf)$/i, '');
+        const asset = {
+          id,
+          label,
+          name: file.name,
+          type: file.type || 'model/gltf-binary',
+          blob: file,
+          savedAt: Date.now()
+        };
+        saveImportedAsset(asset).catch((error) => {
+          console.warn('Imported model could not be saved for reload', error);
+          setBuilderStatus(`${label} imported, but reload save failed.`);
+        });
+        loadImportedBuilderAsset(asset, true);
+        builderImport.value = '';
+      });
+      loadImportedAssets().then((assets) => {
+        assets.forEach((asset) => loadImportedBuilderAsset(asset, false));
+      });
+      gltfLoader.load(
+        './assets/forge.web.ktx2.glb',
+        ({ scene: forgeModel }) => {
+          const bounds = new THREE.Box3().setFromObject(forgeModel);
+          const size = bounds.getSize(new THREE.Vector3());
+          const center = bounds.getCenter(new THREE.Vector3());
+          const targetWidth = 11.5;
+          const scale = (targetWidth / Math.max(size.x, size.y, size.z)) * 1.5;
+          forgeModel.scale.setScalar(scale);
+          forgeModel.position.set(
+            -center.x * scale,
+            -(bounds.min.y * scale),
+            backZ - 0.8 - center.z * scale + (size.z * scale * 0.5)
+          );
+          forgeModel.rotation.y = -Math.PI / 2;
+          forgeModel.traverse((object) => {
+            if (!object.isMesh) return;
+            object.castShadow = true;
+            object.receiveShadow = true;
+            object.userData.href = 'https://forge.theneurofoundry.com';
+            stationTargets.push(object);
+          });
+          window.__forgeModelDebug = {
+            meshCount: 0,
+            sourceSize: size.toArray(),
+            sourceCenter: center.toArray(),
+            scale,
+            position: forgeModel.position.toArray()
+          };
+          forgeModel.traverse((object) => {
+            if (object.isMesh) window.__forgeModelDebug.meshCount += 1;
+          });
+          flatterModel(forgeModel);
+          room.add(forgeModel);
+          registerBuilderTarget('forge-model', 'Forge model', forgeModel, false);
+        },
+        undefined,
+        (error) => {
+          console.error('Forge GLB failed to load', error);
+          document.querySelector('.room-note').textContent = 'Forge model failed to load';
+        }
+      );
+      gltfLoader.load(
+        './assets/archnewest.npc.packed.glb',
+        ({ scene: archModel, animations }) => {
+          const bounds = new THREE.Box3().setFromObject(archModel);
+          const size = bounds.getSize(new THREE.Vector3());
+          const center = bounds.getCenter(new THREE.Vector3());
+          const targetWidth = 5.6;
+          const scale = targetWidth / Math.max(size.x, size.y, size.z);
+          archModel.scale.setScalar(scale);
+          archModel.position.set(-center.x * scale, -(bounds.min.y * scale), -center.z * scale);
+          archModel.rotation.set(0, 0, 0);
+          archModel.traverse((object) => {
+            if (!object.isMesh) return;
+            object.frustumCulled = false;
+            object.castShadow = true;
+            object.receiveShadow = true;
+          });
+          flatterModel(archModel);
+          const archWrapper = new THREE.Group();
+          archWrapper.position.set(0, 0.18, 5.8);
+          archWrapper.rotation.y = Math.PI;
+          archWrapper.add(archModel);
+          room.add(archWrapper);
+          archWrapper.updateMatrixWorld(true);
+          const finalBounds = new THREE.Box3().setFromObject(archWrapper);
+          window.__archModelDebug = {
+            meshCount: 0,
+            sourceSize: size.toArray(),
+            sourceCenter: center.toArray(),
+            scale,
+            modelPosition: archModel.position.toArray(),
+            modelRotation: archModel.rotation.toArray().slice(0, 3),
+            wrapperPosition: archWrapper.position.toArray(),
+            wrapperRotation: archWrapper.rotation.toArray().slice(0, 3),
+            finalMin: finalBounds.min.toArray(),
+            finalMax: finalBounds.max.toArray(),
+            finalSize: finalBounds.getSize(new THREE.Vector3()).toArray(),
+            animations: animations.map((clip) => clip.name)
+          };
+          archModel.traverse((object) => {
+            if (object.isMesh) window.__archModelDebug.meshCount += 1;
+          });
+          registerBuilderTarget('arch-npc', 'Arch NPC', archWrapper, true, {
+            root: archModel,
+            animations
+          });
+        },
+        undefined,
+        (error) => {
+          console.error('Arch GLB failed to load', error);
+          document.querySelector('.room-note').textContent = 'Arch model failed to load';
+        }
+      );
+
+      const ambient = new THREE.HemisphereLight(0x8ba4a4, 0x100706, 1.38);
+      scene.add(ambient);
+      const key = new THREE.DirectionalLight(0xeaf6f2, 2.45);
+      key.position.set(-5, 18, 10);
+      scene.add(key);
+      const overhead = new THREE.PointLight(0xb8d7cf, 4.8, 46, 1.45);
+      overhead.position.set(0, wallHeight + 5.4, 6);
+      scene.add(overhead);
+      const workLight = new THREE.PointLight(0xffb083, 3.2, 22, 1.6);
+      workLight.position.set(0, 5.4, 4.4);
+      scene.add(workLight);
+      const leftFill = new THREE.PointLight(0xff9a5a, 3.4, 30, 2);
+      leftFill.position.set(-8.5, 4.2, 2.6);
+      scene.add(leftFill);
+      const rightFill = new THREE.PointLight(0x8b3a2d, 3.1, 30, 2);
+      rightFill.position.set(10, 6, -4);
+      scene.add(rightFill);
+      // Cool rim from behind/above to separate models from the dark backdrop.
+      const rimLight = new THREE.DirectionalLight(0x7fa8ff, 1.4);
+      rimLight.position.set(-8, 16, -34);
+      rimLight.target.position.set(0, 5, 6);
+      scene.add(rimLight);
+      scene.add(rimLight.target);
+      sceneControlTargets = {
+        scene,
+        grid,
+        domeGrid,
+        ambient,
+        key,
+        workLight,
+        leftFill,
+        rightFill,
+        rimLight,
+        importedMaterials,
+        detailMaterials,
+        cohesionUniforms,
+        bloomPass,
+        heatHazePass,
+        vignettePass,
+        emberPoints,
+        steamBurst,
+        domeAura,
+        steamGroup,
+        textures: {
+          backWall: { label: 'Back wall', material: backWall.material },
+          leftWall: { label: 'Left wall', material: leftWall.material },
+          rightWall: { label: 'Right wall', material: rightWall.material },
+          dome: { label: 'Dome', material: dome.material },
+          floor: { label: 'Floor', material: floor.material }
+        }
+      };
+      applySceneSettings();
+      loadTextureAssets().then((textures) => {
+        textures.forEach((texture) => applyTextureBlob(texture.slot || texture.id, texture.blob));
+      });
+
+      const views = {
+        left: {
+          position: new THREE.Vector3(0, 6.35, 10),
+          target: new THREE.Vector3(-26, 6, -7),
+          label: 'Guides / Left'
+        },
+        front: {
+          position: new THREE.Vector3(0, 6.35, 10),
+          target: new THREE.Vector3(0, 6, backZ),
+          label: 'The Forge / Ahead'
+        },
+        right: {
+          position: new THREE.Vector3(0, 6.35, 10),
+          target: new THREE.Vector3(26, 6, -7),
+          label: 'Community / Right'
+        }
+      };
+      let activeView = 'front';
+      let desiredPosition = views.front.position.clone();
+      let desiredTarget = views.front.target.clone();
+      camera.position.copy(desiredPosition);
+      lookTarget.copy(desiredTarget);
+      camera.lookAt(lookTarget);
+
+      const updateActiveView = (view) => {
+        if (freeViewEnabled) setFreeView(false);
+        activeView = view;
+        desiredPosition.copy(views[view].position);
+        desiredTarget.copy(views[view].target);
+        document.querySelector('[data-facing-label]').textContent = views[view].label;
+        document.querySelectorAll('[data-room-view]').forEach((button) => {
+          button.classList.toggle('is-active', button.dataset.roomView === view);
+        });
+      };
+
+      document.querySelectorAll('[data-room-view]').forEach((button) => {
+        button.addEventListener('click', () => updateActiveView(button.dataset.roomView));
+      });
+
+      let dragging = false;
+      let pointerStart = 0;
+      let yawStart = 0;
+      let cameraYaw = 0;
+      canvas.addEventListener('pointerdown', (event) => {
+        if (freeViewEnabled) return;
+        dragging = true;
+        pointerStart = event.clientX;
+        yawStart = cameraYaw;
+        canvas.classList.add('is-dragging');
+        canvas.setPointerCapture(event.pointerId);
+      });
+      canvas.addEventListener('pointermove', (event) => {
+        if (freeViewEnabled) return;
+        if (!dragging) return;
+        cameraYaw = Math.max(-1, Math.min(1, yawStart + (event.clientX - pointerStart) / 620));
+        const side = cameraYaw < 0 ? views.left : views.right;
+        const amount = Math.abs(cameraYaw);
+        desiredPosition.lerpVectors(views.front.position, side.position, amount);
+        desiredTarget.lerpVectors(views.front.target, side.target, amount);
+      });
+      const finishDrag = () => {
+        if (freeViewEnabled) return;
+        if (!dragging) return;
+        dragging = false;
+        canvas.classList.remove('is-dragging');
+        if (cameraYaw < -0.3) updateActiveView('left');
+        else if (cameraYaw > 0.3) updateActiveView('right');
+        else updateActiveView('front');
+        cameraYaw = activeView === 'left' ? -1 : activeView === 'right' ? 1 : 0;
+      };
+      canvas.addEventListener('pointerup', finishDrag);
+      canvas.addEventListener('pointercancel', finishDrag);
+
+      const raycaster = new THREE.Raycaster();
+      const pointer = new THREE.Vector2(2, 2);
+      canvas.addEventListener('pointermove', (event) => {
+        const rect = canvas.getBoundingClientRect();
+        pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+        pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+      });
+      canvas.addEventListener('click', () => {
+        raycaster.setFromCamera(pointer, camera);
+        const hit = raycaster.intersectObjects(stationTargets, false)[0];
+        if (hit && hit.object.userData.href) window.location.href = hit.object.userData.href;
+      });
+
+      const resize = () => {
+        const width = canvas.clientWidth;
+        const height = canvas.clientHeight;
+        renderer.setSize(width, height, false);
+        composer.setSize(width, height);
+        heatHazePass.uniforms.uAspect.value = width / Math.max(1, height);
+        camera.aspect = width / Math.max(1, height);
+        camera.updateProjectionMatrix();
+      };
+      window.addEventListener('resize', resize);
+      resize();
+
+      const clock = new THREE.Clock();
+      let fxTime = 0;
+      const render = () => {
+        requestAnimationFrame(render);
+        const delta = Math.min(clock.getDelta(), 0.05);
+        if (freeViewEnabled) {
+          orbitControls.update();
+        } else {
+          const movement = 1 - Math.pow(0.001, delta);
+          camera.position.lerp(desiredPosition, movement);
+          lookTarget.lerp(desiredTarget, movement);
+          camera.lookAt(lookTarget);
+        }
+        domeAura.material.uniforms.uTime.value += delta;
+        steamGroup.traverse((object) => {
+          if (object.material && object.material.uniforms && object.material.uniforms.uTime) {
+            object.material.uniforms.uTime.value += delta;
+          }
+        });
+        animationMixers.forEach((mixer) => mixer.update(delta));
+        forgeGlow.intensity = 9.6 + Math.sin(performance.now() * 0.0032) * 0.7;
+        fxTime += delta;
+        emberMaterial.uniforms.uTime.value = fxTime;
+        steamBurstMaterial.uniforms.uTime.value = fxTime;
+        if (heatHazePass.enabled) {
+          heatHazePass.uniforms.uTime.value = fxTime;
+          const proj = forgeGlow.position.clone().project(camera);
+          heatHazePass.uniforms.uCenter.value.set(proj.x * 0.5 + 0.5, proj.y * 0.5 + 0.5);
+        }
+        raycaster.setFromCamera(pointer, camera);
+        const hit = raycaster.intersectObjects(stationTargets, false)[0];
+        canvas.classList.toggle('is-over-forge', Boolean(hit && hit.object.userData.href));
+        if (sceneSettings.postFxEnabled) composer.render();
+        else renderer.render(scene, camera);
+      };
+      render();
+    })();
+  </script>
+</body>
+</html>

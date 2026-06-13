@@ -147,6 +147,53 @@ app.get('/api/skeleton-key/changelog', (req, res) => {
   });
 });
 
+function secretsMatch(provided, expected) {
+  const providedBuffer = Buffer.from(String(provided || ''));
+  const expectedBuffer = Buffer.from(String(expected || ''));
+  return providedBuffer.length === expectedBuffer.length
+    && providedBuffer.length > 0
+    && crypto.timingSafeEqual(providedBuffer, expectedBuffer);
+}
+
+app.post('/api/skeleton-key/download-notification', async (req, res, next) => {
+  try {
+    const expectedSecret = process.env.SKELETON_KEY_DOWNLOAD_WEBHOOK_SECRET;
+    const providedSecret = String(req.get('authorization') || '').replace(/^Bearer\s+/i, '');
+    if (!secretsMatch(providedSecret, expectedSecret)) {
+      return res.status(401).json({ success: false, message: 'Unauthorized' });
+    }
+
+    const timestamp = cleanContactField(req.body.timestamp, 64) || new Date().toISOString();
+    const country = cleanContactField(req.body.country, 8) || 'unknown';
+    const uniqueCount = Number.isFinite(Number(req.body.uniqueCount)) ? Number(req.body.uniqueCount) : 0;
+    const count = Number.isFinite(Number(req.body.count)) ? Number(req.body.count) : 0;
+    const result = await sendDevConsoleEmail({
+      type: 'skeleton_key_unique_download',
+      to: process.env.SKELETON_KEY_DOWNLOAD_NOTIFICATION_TO || 'info@theneurofoundry.com',
+      subject: 'New unique Skeleton Key download',
+      text: [
+        'A new unique user downloaded Skeleton Key.',
+        '',
+        `Time: ${timestamp}`,
+        `Country: ${country}`,
+        `Unique downloads tracked: ${uniqueCount}`,
+        `Total download clicks tracked: ${count}`
+      ].join('\n')
+    });
+
+    if (!result.sent) {
+      return res.status(503).json({
+        success: false,
+        message: result.reason || 'Email notification was not sent'
+      });
+    }
+
+    return res.json({ success: true });
+  } catch (error) {
+    return next(error);
+  }
+});
+
 function cleanContactField(value, maxLength) {
   return String(value || '').trim().slice(0, maxLength);
 }

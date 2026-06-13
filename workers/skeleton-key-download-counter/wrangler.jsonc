@@ -2,9 +2,10 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "skeleton-key-download-counter",
   "main": "src/index.js",
-  "compatibility_date": "2026-06-01",
+  "compatibility_date": "2026-06-12",
   "vars": {
-    "INSTALLER_URL": "https://downloads.theneurofoundry.com/SkeletonKeySetup.exe"
+    "INSTALLER_URL": "https://downloads.theneurofoundry.com/SkeletonKeySetup.exe",
+    "DOWNLOAD_NOTIFICATION_URL": "https://api.theneurofoundry.com/api/skeleton-key/download-notification"
   },
   "durable_objects": {
     "bindings": [

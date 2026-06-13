@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Resume Builder | Neurofoundry</title>
+  <meta name="description" content="Create a polished, ATS-readable resume in your browser. Choose a template, enter your experience, and save it as a PDF.">
+  <meta name="theme-color" content="#0f1113">
+  <link rel="icon" type="image/png" href="../anvil.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&family=Michroma&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../common/site-header.css?v=20260519b">
+  <link rel="stylesheet" href="../common/site-footer.css">
+  <link rel="stylesheet" href="resume-builder.css?v=20260613a">
+</head>
+<body>
+  <div data-site-header></div>
+  <script src="../common/site-header.js?v=20260603-mobile-logout" data-base="../"></script>
+
+  <main class="builder-page">
+    <section class="builder-intro">
+      <div>
+        <span class="eyebrow">Practical tool / private by default</span>
+        <h1>Build a resume that is ready to send.</h1>
+        <p>Choose a layout, fill in your information, and save a polished PDF. Your work stays in this browser.</p>
+      </div>
+      <div class="intro-actions">
+        <span class="save-status" id="saveStatus">Saved locally</span>
+        <button class="button secondary" id="clearButton" type="button">Start over</button>
+        <button class="button primary" id="printButton" type="button">Save PDF</button>
+      </div>
+    </section>
+
+    <div class="mobile-view-switch" role="tablist" aria-label="Builder view">
+      <button type="button" class="is-active" data-mobile-view="editor" role="tab" aria-selected="true">Edit</button>
+      <button type="button" data-mobile-view="preview" role="tab" aria-selected="false">Preview</button>
+    </div>
+
+    <section class="builder-workspace" data-mobile-panel="editor">
+      <aside class="editor-panel" aria-label="Resume editor">
+        <div class="editor-head">
+          <div>
+            <span class="panel-kicker">Resume input</span>
+            <h2>Your information</h2>
+          </div>
+          <span class="completion" id="completion">0% complete</span>
+        </div>
+
+        <form id="resumeForm">
+          <fieldset>
+            <legend>Template</legend>
+            <div class="template-grid" id="templateGrid"></div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Basics</legend>
+            <div class="field-grid two">
+              <label>Full name<input name="name" autocomplete="name" placeholder="John Doe"></label>
+              <label>Professional title<input name="role" placeholder="Professional Title"></label>
+              <label>Location<input name="location" autocomplete="address-level2" placeholder="Tampa, FL"></label>
+              <label>Phone<input name="phone" autocomplete="tel" placeholder="555-123-4567"></label>
+              <label>Email<input name="email" type="email" autocomplete="email" placeholder="john.doe@email.com"></label>
+              <label>LinkedIn or website<input name="linkedin" placeholder="linkedin.com/in/johndoe"></label>
+            </div>
+            <label>Professional summary<textarea name="summary" rows="4" placeholder="Describe the value you bring, your experience, and what you do well."></textarea></label>
+          </fieldset>
+
+          <fieldset>
+            <legend>Experience</legend>
+            <div class="repeat-card">
+              <span class="repeat-label">Position 01</span>
+              <div class="field-grid two">
+                <label>Job title<input name="job1Title" placeholder="Job Title One"></label>
+                <label>Dates<input name="job1Dates" placeholder="2023 - Present"></label>
+              </div>
+              <label>Company and location<input name="job1Org" placeholder="Company Name, City, ST"></label>
+              <label>Achievements, one per line<textarea name="job1Bullets" rows="4" placeholder="Improved a measurable result by taking a specific action.&#10;Coordinated work across teams to deliver an outcome."></textarea></label>
+            </div>
+            <div class="repeat-card">
+              <span class="repeat-label">Position 02</span>
+              <div class="field-grid two">
+                <label>Job title<input name="job2Title" placeholder="Job Title Two"></label>
+                <label>Dates<input name="job2Dates" placeholder="2020 - 2023"></label>
+              </div>
+              <label>Company and location<input name="job2Org" placeholder="Company Name, City, ST"></label>
+              <label>Achievements, one per line<textarea name="job2Bullets" rows="4" placeholder="Managed responsibilities with attention to detail and customer needs.&#10;Prepared reports and resolved day-to-day issues."></textarea></label>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Skills and education</legend>
+            <label>Skills, separated by commas<textarea name="skills" rows="3" placeholder="Project coordination, Customer service, Reporting, Microsoft Office"></textarea></label>
+            <div class="field-grid two">
+              <label>Degree or certificate<input name="educationTitle" placeholder="Certificate or Degree"></label>
+              <label>School and year<input name="educationSchool" placeholder="Example Institute, 2025"></label>
+            </div>
+          </fieldset>
+        </form>
+      </aside>
+
+      <section class="preview-panel" data-mobile-panel="preview" aria-label="Resume preview">
+        <div class="preview-toolbar">
+          <div><span class="live-dot"></span>Live preview</div>
+          <span>US Letter / ATS-readable</span>
+        </div>
+        <div class="paper-stage">
+          <div class="paper-frame">
+            <iframe class="resume-preview" id="resumePreview" title="Resume document preview"></iframe>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <div data-site-footer></div>
+  <script src="../common/site-footer.js?v=20260519-footer" data-base="../"></script>
+  <script src="resume-builder.js?v=20260613a"></script>
+</body>
+</html>

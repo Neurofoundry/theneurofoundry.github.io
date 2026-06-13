@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>John Doe Resume - Template7</title>
+  <style>
+    :root { --ink: #17202b; --muted: #5b6876; --accent: #173a5e; --accent-soft: #edf3f8; --rule: #cbd6df; --paper: #fff; --desk: #e7ecf0; }
+    * { box-sizing: border-box; }
+    @page { size: letter; margin: 0; }
+    html, body { margin: 0; padding: 0; }
+    body { background: var(--desk); color: var(--ink); font-family: "Segoe UI", Arial, sans-serif; }
+    .document { padding: 24px 0 48px; }
+    .page { width: 8.5in; min-height: 11in; margin: 0 auto; background: var(--paper); box-shadow: 0 18px 40px rgba(23, 58, 94, 0.15); overflow: hidden; }
+    .resume-header { padding: 0.52in 0.64in 0.35in 2.48in; border-bottom: 1px solid var(--rule); }
+    .name { margin: 0; font-size: 31px; font-weight: 750; letter-spacing: 0.06em; text-transform: uppercase; }
+    .role { margin-top: 8px; font-size: 12px; font-weight: 700; letter-spacing: 0.17em; text-transform: uppercase; color: var(--accent); }
+    .resume-grid { display: grid; grid-template-columns: 2.14in minmax(0, 1fr); min-height: 8.95in; }
+    aside { grid-column: 1; grid-row: 1; margin-top: -1.35in; padding: 0.48in 0.28in 0.55in 0.42in; background: var(--accent); color: #fff; }
+    .main-column { grid-column: 2; padding: 0.3in 0.64in 0.62in 0.34in; }
+    .contact-grid { display: grid; gap: 11px; margin-bottom: 27px; font-size: 10px; line-height: 1.38; color: #e3ebf2; overflow-wrap: anywhere; }
+    .contact-item strong { display: block; margin-bottom: 3px; font-size: 8.8px; letter-spacing: 0.13em; text-transform: uppercase; color: #fff; }
+    .section + .section { margin-top: 20px; }
+    .section-title { margin: 0 0 10px; padding-bottom: 6px; border-bottom: 1px solid var(--rule); font-size: 10.8px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); }
+    aside .section-title { border-color: rgba(255,255,255,0.38); color: #fff; }
+    .summary { margin: 0; font-size: 11px; line-height: 1.58; }
+    .job + .job { margin-top: 16px; }
+    .job-break { margin-top: 16px; padding-top: 13px; border-top: 1px solid var(--rule); }
+    .job-header { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; }
+    .job-title { font-size: 11.3px; font-weight: 800; }
+    .job-dates { flex: 0 0 auto; padding: 2px 6px; background: var(--accent-soft); font-size: 9.6px; font-weight: 700; color: var(--accent); white-space: nowrap; }
+    .job-org { margin-top: 2px; font-size: 10.25px; color: var(--muted); }
+    ul { margin: 7px 0 0 16px; padding: 0; }
+    li { margin-bottom: 4px; font-size: 10px; line-height: 1.42; }
+    .skill-group + .skill-group { margin-top: 12px; }
+    .skill-group strong, .sidebar-item strong { display: block; margin-bottom: 3px; font-size: 9.5px; letter-spacing: 0.08em; text-transform: uppercase; color: #fff; }
+    .skill-group p, .sidebar-item { margin: 0; font-size: 9.85px; line-height: 1.48; color: #e3ebf2; }
+    .sidebar-item { margin-bottom: 12px; }
+    @media print { body { background: #fff; } .document { padding: 0; } .page { width: auto; min-height: 11in; margin: 0; box-shadow: none; } }
+  </style>
+</head>
+<body>
+  <main class="document"><section class="page">
+    <header class="resume-header"><h1 class="name">John Doe</h1><div class="role">Professional Title</div></header>
+    <div class="resume-grid">
+      <div class="main-column">
+        <section class="section"><h2 class="section-title">Summary</h2><p class="summary">Motivated professional with experience supporting daily operations, coordinating tasks, and contributing to team goals. Known for dependable follow-through, clear communication, and organized work habits.</p></section>
+        <section class="section"><h2 class="section-title">Work Experience</h2>
+          <article class="job"><div class="job-header"><div class="job-title">Job Title One</div><div class="job-dates">2023 - 2025</div></div><div class="job-org">Company Name, City, ST</div><ul><li>Supported daily department needs while maintaining accurate records, clear communication, and timely follow-through.</li><li>Coordinated routine tasks across team members, vendors, and internal stakeholders to keep work moving smoothly.</li><li>Identified process gaps and helped improve repeatable workflows, documentation, and handoff procedures.</li></ul></article>
+          <article class="job"><div class="job-header"><div class="job-title">Job Title Two</div><div class="job-dates">2020 - 2023</div></div><div class="job-org">Company Name, City, ST</div><ul><li>Managed assigned responsibilities in a fast-paced environment with attention to detail and customer needs.</li><li>Prepared reports, tracked priorities, and helped resolve day-to-day operational issues.</li></ul></article>
+          <article class="job job-break"><div class="job-header"><div class="job-title">Additional Projects</div><div class="job-dates">2025 - Present</div></div><div class="job-org">Portfolio or Project Name</div><ul><li>Completed independent projects that demonstrate initiative, organization, and applied problem-solving.</li><li>Created sample work, documentation, or process improvements relevant to the target role.</li></ul></article>
+        </section>
+      </div>
+      <aside><div class="contact-grid"><div class="contact-item"><strong>Location</strong><span>Tampa, FL</span></div><div class="contact-item"><strong>Phone</strong><span>555-123-4567</span></div><div class="contact-item"><strong>Email</strong><span>john.doe@email.com</span></div><div class="contact-item"><strong>LinkedIn</strong><span>linkedin.com/in/johndoe</span></div></div><section class="section"><h2 class="section-title">Skills</h2><div class="skill-group"><strong>Skill Group One</strong><p>Core capability, related tools, relevant process knowledge.</p></div><div class="skill-group"><strong>Skill Group Two</strong><p>Team coordination, documentation, scheduling, reporting.</p></div><div class="skill-group"><strong>Skill Group Three</strong><p>Customer service, issue resolution, communication.</p></div><div class="skill-group"><strong>Skill Group Four</strong><p>Quality control, data entry, records management.</p></div><div class="skill-group"><strong>Tools</strong><p>Microsoft Office, productivity software, industry-specific tools.</p></div></section><section class="section"><h2 class="section-title">Education</h2><div class="sidebar-item"><strong>Certificate or Degree</strong>Example Institute, 2025</div><div class="sidebar-item"><strong>Additional Education</strong>Example College, 2012</div></section></aside>
+    </div>
+  </section></main>
+</body>
+</html>

@@ -1,0 +1,649 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workshop Three.js Experiment | Neurofoundry</title>
+  <link rel="icon" type="image/png" href="../anvil.png">
+  <link rel="stylesheet" href="../common/site-header.css?v=20260519b">
+  <style>
+    :root {
+      --bg: #050708;
+      --panel: rgba(6, 8, 9, 0.84);
+      --line: rgba(255, 255, 255, 0.12);
+      --muted: #879095;
+      --text: #edf1f3;
+      --accent: #e0473c;
+      --accent-soft: #ff9085;
+      --mono: "JetBrains Mono", Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, sans-serif;
+    }
+
+    .three-workshop {
+      position: fixed;
+      inset: 64px 0 0;
+      overflow: hidden;
+      background: #040607;
+    }
+
+    #three-workshop-canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+      cursor: grab;
+    }
+
+    #three-workshop-canvas.is-dragging { cursor: grabbing; }
+    #three-workshop-canvas.is-over-forge { cursor: pointer; }
+
+    .room-hud {
+      position: absolute;
+      top: 16px;
+      left: 50%;
+      z-index: 4;
+      width: min(1180px, calc(100% - 40px));
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      color: var(--muted);
+      font: 700 10px/1.35 var(--mono);
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+
+    .room-hud strong { color: var(--accent-soft); }
+
+    .room-hud-status {
+      margin-left: auto;
+      color: rgba(255, 255, 255, 0.38);
+    }
+
+    .room-controls {
+      position: absolute;
+      bottom: 22px;
+      left: 50%;
+      z-index: 4;
+      display: flex;
+      gap: 4px;
+      padding: 5px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(5, 7, 8, 0.82);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.34);
+      transform: translateX(-50%);
+    }
+
+    .room-controls button {
+      min-height: 34px;
+      padding: 7px 15px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font: 700 10px/1 var(--mono);
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .room-controls button:hover,
+    .room-controls button:focus-visible {
+      color: #fff;
+      outline: none;
+    }
+
+    .room-controls button.is-active {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .room-note {
+      position: absolute;
+      right: 18px;
+      bottom: 18px;
+      z-index: 4;
+      max-width: 240px;
+      color: rgba(255, 255, 255, 0.34);
+      font: 600 9px/1.55 var(--mono);
+      letter-spacing: 0.09em;
+      text-align: right;
+      text-transform: uppercase;
+      pointer-events: none;
+    }
+
+    .load-error {
+      position: absolute;
+      inset: 0;
+      z-index: 8;
+      display: none;
+      place-items: center;
+      padding: 24px;
+      background: #080a0b;
+      color: var(--accent-soft);
+      font: 700 13px/1.6 var(--mono);
+      text-align: center;
+    }
+
+  </style>
+</head>
+<body>
+  <div data-site-header></div>
+
+  <main class="three-workshop">
+    <canvas id="three-workshop-canvas" aria-label="Interactive 3D workshop room"></canvas>
+    <div class="room-hud">
+      <span>Floor <strong>NF-THREE-01</strong></span>
+      <span>Facing <strong data-facing-label>The Forge / Ahead</strong></span>
+      <span class="room-hud-status">Drag room / Select station</span>
+    </div>
+    <div class="room-controls" aria-label="Workshop room view">
+      <button type="button" data-room-view="left">Look left</button>
+      <button type="button" class="is-active" data-room-view="front">Front</button>
+      <button type="button" data-room-view="right">Look right</button>
+    </div>
+    <p class="room-note">Three.js room study / fixed architecture / authored camera snaps</p>
+    <div class="load-error" data-load-error>
+      Three.js could not load. This experiment needs a network connection for its isolated CDN script.
+    </div>
+  </main>
+
+  <script src="../common/site-header.js" data-base="../" data-root="../" data-current="workshop"></script>
+  <script type="module">
+    import * as THREE from 'https://esm.sh/three@0.160.1';
+    import { GLTFLoader } from 'https://esm.sh/three@0.160.1/examples/jsm/loaders/GLTFLoader.js';
+    import { KTX2Loader } from 'https://esm.sh/three@0.160.1/examples/jsm/loaders/KTX2Loader.js';
+    import { MeshoptDecoder } from 'https://esm.sh/three@0.160.1/examples/jsm/libs/meshopt_decoder.module.js';
+
+    (() => {
+      const canvas = document.querySelector('#three-workshop-canvas');
+      const errorPanel = document.querySelector('[data-load-error]');
+      if (!canvas) {
+        if (errorPanel) errorPanel.style.display = 'grid';
+        return;
+      }
+
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x040607);
+      scene.fog = new THREE.FogExp2(0x040607, 0.014);
+
+      const renderer = new THREE.WebGLRenderer({
+        canvas,
+        antialias: true,
+        alpha: false,
+        powerPreference: 'high-performance'
+      });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.28;
+
+      const camera = new THREE.PerspectiveCamera(46, 1, 0.1, 320);
+      const lookTarget = new THREE.Vector3(0, 1.4, -12);
+
+      const colors = {
+        dark: 0x080b0c,
+        wall: 0x101516,
+        floor: 0x090c0d,
+        metal: 0x171d1e,
+        edge: 0x46312e,
+        accent: 0xe0473c,
+        ember: 0xff684e,
+        pale: 0xf0e8df
+      };
+
+      const mats = {
+        wall: new THREE.MeshStandardMaterial({
+          color: colors.wall,
+          emissive: 0x071011,
+          emissiveIntensity: 0.72,
+          roughness: 0.94,
+          metalness: 0.04
+        }),
+        sideWall: new THREE.MeshStandardMaterial({
+          color: 0x0a0e0f,
+          emissive: 0x071011,
+          emissiveIntensity: 0.82,
+          roughness: 0.96,
+          metalness: 0.03
+        }),
+        floor: new THREE.MeshStandardMaterial({ color: colors.floor, roughness: 0.88, metalness: 0.12 }),
+        ceiling: new THREE.MeshStandardMaterial({ color: 0x060809, roughness: 0.96, metalness: 0.02 }),
+        dome: new THREE.MeshStandardMaterial({
+          color: 0x0b1112,
+          emissive: 0x101f20,
+          emissiveIntensity: 0.55,
+          roughness: 0.98,
+          metalness: 0.02,
+          side: THREE.BackSide,
+          transparent: true,
+          opacity: 0.78
+        }),
+        metal: new THREE.MeshStandardMaterial({ color: colors.metal, roughness: 0.64, metalness: 0.62 }),
+        edge: new THREE.MeshStandardMaterial({ color: colors.edge, roughness: 0.55, metalness: 0.5 }),
+        accent: new THREE.MeshStandardMaterial({
+          color: colors.accent,
+          emissive: colors.accent,
+          emissiveIntensity: 0.68,
+          roughness: 0.48,
+          metalness: 0.36
+        }),
+        hot: new THREE.MeshStandardMaterial({
+          color: colors.ember,
+          emissive: colors.ember,
+          emissiveIntensity: 2.4,
+          roughness: 0.34,
+          metalness: 0.18
+        }),
+        darkMetal: new THREE.MeshStandardMaterial({ color: 0x090b0c, roughness: 0.5, metalness: 0.76 })
+      };
+
+      const makeGridTexture = (lineColor, backgroundColor, size = 512, divisions = 10) => {
+        const board = document.createElement('canvas');
+        board.width = size;
+        board.height = size;
+        const ctx = board.getContext('2d');
+        ctx.fillStyle = backgroundColor;
+        ctx.fillRect(0, 0, size, size);
+        ctx.strokeStyle = lineColor;
+        ctx.lineWidth = 1;
+        const step = size / divisions;
+        for (let index = 0; index <= divisions; index += 1) {
+          const offset = Math.round(index * step) + 0.5;
+          ctx.beginPath();
+          ctx.moveTo(offset, 0);
+          ctx.lineTo(offset, size);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(0, offset);
+          ctx.lineTo(size, offset);
+          ctx.stroke();
+        }
+        const texture = new THREE.CanvasTexture(board);
+        texture.colorSpace = THREE.SRGBColorSpace;
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        return texture;
+      };
+
+      mats.wall.map = makeGridTexture('rgba(130,154,156,0.24)', '#111617');
+      mats.wall.map.repeat.set(3.5, 1.75);
+      mats.wall.needsUpdate = true;
+      mats.sideWall.map = makeGridTexture('rgba(116,138,140,0.22)', '#090d0e');
+      mats.sideWall.map.repeat.set(2.8, 1.75);
+      mats.sideWall.needsUpdate = true;
+
+      const room = new THREE.Group();
+      scene.add(room);
+
+      const makeBox = (width, height, depth, material, position, parent = room) => {
+        const mesh = new THREE.Mesh(new THREE.BoxGeometry(width, height, depth), material);
+        mesh.position.set(position[0], position[1], position[2]);
+        parent.add(mesh);
+        return mesh;
+      };
+
+      const makeWall = (width, height, position, rotationY, material) => {
+        const wall = makeBox(width, height, 0.26, material, position);
+        wall.rotation.y = rotationY;
+        return wall;
+      };
+
+      const addFrame = (parent, width, height, depth, material) => {
+        const bar = 0.16;
+        makeBox(width + bar, bar, depth, material, [0, height / 2, 0], parent);
+        makeBox(width + bar, bar, depth, material, [0, -height / 2, 0], parent);
+        makeBox(bar, height, depth, material, [-width / 2, 0, 0], parent);
+        makeBox(bar, height, depth, material, [width / 2, 0, 0], parent);
+      };
+
+      const makeTextTexture = (eyebrow, title, copy, accent = '#e0473c') => {
+        const board = document.createElement('canvas');
+        board.width = 1024;
+        board.height = 512;
+        const ctx = board.getContext('2d');
+        ctx.fillStyle = '#070a0b';
+        ctx.fillRect(0, 0, board.width, board.height);
+        ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+        ctx.lineWidth = 4;
+        ctx.strokeRect(3, 3, board.width - 6, board.height - 6);
+        ctx.fillStyle = accent;
+        ctx.font = '700 30px monospace';
+        ctx.fillText(eyebrow.toUpperCase(), 60, 94);
+        ctx.fillStyle = '#f1f2f2';
+        ctx.font = '800 92px Arial';
+        ctx.fillText(title, 60, 226);
+        ctx.fillStyle = '#90999d';
+        ctx.font = '500 32px Arial';
+        ctx.fillText(copy, 60, 310);
+        const texture = new THREE.CanvasTexture(board);
+        texture.colorSpace = THREE.SRGBColorSpace;
+        texture.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+        return texture;
+      };
+
+      const stationTargets = [];
+      const addStation = ({ wall, offset, eyebrow, title, copy, href = '' }) => {
+        const station = new THREE.Group();
+        station.position.copy(offset);
+        wall.add(station);
+        const faceMaterial = new THREE.MeshStandardMaterial({
+          color: 0xffffff,
+          map: makeTextTexture(eyebrow, title, copy),
+          roughness: 0.76,
+          metalness: 0.1
+        });
+        const face = makeBox(7.8, 3.75, 0.28, faceMaterial, [0, 0, 0.42], station);
+        addFrame(station, 8.08, 4.03, 0.52, mats.metal);
+        face.userData.href = href;
+        if (href) stationTargets.push(face);
+      };
+
+      const roomWidth = 48;
+      const roomDepth = 62;
+      const wallHeight = 15;
+      const backZ = -18;
+      const backWall = makeWall(roomWidth, wallHeight, [0, wallHeight / 2, backZ], 0, mats.wall);
+      const leftWall = makeWall(roomDepth, wallHeight, [-roomWidth / 2, wallHeight / 2, backZ + roomDepth / 2], Math.PI / 2, mats.sideWall);
+      const rightWall = makeWall(roomDepth, wallHeight, [roomWidth / 2, wallHeight / 2, backZ + roomDepth / 2], -Math.PI / 2, mats.sideWall);
+
+      const floor = makeBox(roomWidth, 0.2, roomDepth, mats.floor, [0, -0.12, backZ + roomDepth / 2]);
+      const ceiling = makeBox(roomWidth, 0.18, roomDepth, mats.ceiling, [0, wallHeight + 0.12, backZ + roomDepth / 2]);
+      floor.receiveShadow = true;
+      ceiling.receiveShadow = true;
+
+      const dome = new THREE.Mesh(
+        new THREE.SphereGeometry(34, 48, 18, 0, Math.PI * 2, 0, Math.PI / 2),
+        mats.dome
+      );
+      dome.position.set(0, wallHeight - 0.2, backZ + roomDepth / 2);
+      dome.scale.set(1.12, 0.46, 0.9);
+      room.add(dome);
+
+      const domeGrid = new THREE.GridHelper(58, 24, 0x314346, 0x172325);
+      domeGrid.position.set(0, wallHeight - 0.05, backZ + roomDepth / 2);
+      domeGrid.rotation.x = Math.PI / 2;
+      domeGrid.material.opacity = 0.18;
+      domeGrid.material.transparent = true;
+      room.add(domeGrid);
+
+      const grid = new THREE.GridHelper(54, 36, 0x69342f, 0x1d292b);
+      grid.position.set(0, 0.01, -7);
+      grid.material.opacity = 0.42;
+      grid.material.transparent = true;
+      room.add(grid);
+
+      const backFrame = new THREE.Group();
+      backFrame.position.set(0, wallHeight / 2, backZ + 0.2);
+      room.add(backFrame);
+      addFrame(backFrame, roomWidth - 0.28, wallHeight - 0.28, 0.18, mats.accent);
+
+      addStation({
+        wall: backWall,
+        offset: new THREE.Vector3(0, 6.1, 0),
+        eyebrow: '01 / Active workspace',
+        title: 'The Forge',
+        copy: 'Shape a new creation.',
+        href: 'https://forge.theneurofoundry.com'
+      });
+      addStation({
+        wall: leftWall,
+        offset: new THREE.Vector3(-1.4, 6, 0),
+        eyebrow: '02 / Left workspace',
+        title: 'Guides',
+        copy: 'Reference materials and methods.'
+      });
+      addStation({
+        wall: rightWall,
+        offset: new THREE.Vector3(1.4, 6, 0),
+        eyebrow: '03 / Right workspace',
+        title: 'Community',
+        copy: 'Shared work and experiments.'
+      });
+
+      const forge = new THREE.Group();
+      forge.position.set(0, 11.15, backZ + 0.36);
+      room.add(forge);
+      makeBox(10.8, 1.68, 0.7, mats.darkMetal, [0, 0, 0], forge);
+      makeBox(10.1, 1.16, 0.86, mats.edge, [0, 0, 0.18], forge);
+      makeBox(9.62, 0.74, 1.02, mats.darkMetal, [0, 0, 0.34], forge);
+      makeBox(8.9, 0.08, 1.08, mats.hot, [0, -0.43, 0.38], forge);
+      addFrame(forge, 10.48, 1.42, 0.92, mats.metal);
+
+      const forgeLabelMaterial = new THREE.MeshStandardMaterial({
+        color: 0xffffff,
+        map: makeTextTexture('NF / Workbench', 'FORGE', 'Enter the active workspace.', '#ff806e'),
+        emissive: 0x4f110d,
+        emissiveIntensity: 0.46,
+        roughness: 0.42,
+        metalness: 0.24
+      });
+      const forgeLabel = makeBox(8.9, 0.66, 1.18, forgeLabelMaterial, [0, 0.02, 0.58], forge);
+      forgeLabel.userData.href = 'https://forge.theneurofoundry.com';
+      stationTargets.push(forgeLabel);
+
+      for (let index = 0; index < 8; index += 1) {
+        const x = -5 + index * 1.42;
+        makeBox(0.08, 1.46, 1.02, mats.accent, [x, 0, 0.5], forge);
+      }
+
+      const forgeGlow = new THREE.PointLight(colors.ember, 13, 16, 2);
+      forgeGlow.position.set(0, 10.6, backZ + 2.3);
+      room.add(forgeGlow);
+
+      const ktx2Loader = new KTX2Loader()
+        .setTranscoderPath('https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/libs/basis/')
+        .detectSupport(renderer);
+      const gltfLoader = new GLTFLoader();
+      gltfLoader.setKTX2Loader(ktx2Loader);
+      gltfLoader.setMeshoptDecoder(MeshoptDecoder);
+      gltfLoader.load(
+        './assets/forge.web.ktx2.glb',
+        ({ scene: forgeModel }) => {
+          const bounds = new THREE.Box3().setFromObject(forgeModel);
+          const size = bounds.getSize(new THREE.Vector3());
+          const center = bounds.getCenter(new THREE.Vector3());
+          const targetWidth = 11.5;
+          const scale = (targetWidth / Math.max(size.x, size.y, size.z)) * 1.5;
+          forgeModel.scale.setScalar(scale);
+          forgeModel.position.set(
+            -center.x * scale,
+            -(bounds.min.y * scale),
+            backZ - 0.8 - center.z * scale + (size.z * scale * 0.5)
+          );
+          forgeModel.rotation.y = -Math.PI / 2;
+          forgeModel.traverse((object) => {
+            if (!object.isMesh) return;
+            object.castShadow = true;
+            object.receiveShadow = true;
+          });
+          window.__forgeModelDebug = {
+            meshCount: 0,
+            sourceSize: size.toArray(),
+            sourceCenter: center.toArray(),
+            scale,
+            position: forgeModel.position.toArray()
+          };
+          forgeModel.traverse((object) => {
+            if (object.isMesh) window.__forgeModelDebug.meshCount += 1;
+          });
+          room.add(forgeModel);
+        },
+        undefined,
+        (error) => {
+          console.error('Forge GLB failed to load', error);
+          document.querySelector('.room-note').textContent = 'Forge model failed to load';
+        }
+      );
+      gltfLoader.load(
+        './assets/arch.web.webp.glb',
+        ({ scene: archModel }) => {
+          const bounds = new THREE.Box3().setFromObject(archModel);
+          const size = bounds.getSize(new THREE.Vector3());
+          const center = bounds.getCenter(new THREE.Vector3());
+          const targetWidth = 8.5;
+          const scale = (targetWidth / Math.max(size.x, size.y, size.z)) * 1.0;
+          archModel.scale.setScalar(scale);
+          archModel.position.set(
+            12 - center.x * scale,
+            -(bounds.min.y * scale),
+            backZ - 0.8 - center.z * scale + (size.z * scale * 0.5)
+          );
+          archModel.rotation.y = -Math.PI / 2;
+          archModel.traverse((object) => {
+            if (!object.isMesh) return;
+            object.castShadow = true;
+            object.receiveShadow = true;
+          });
+          room.add(archModel);
+        },
+        undefined,
+        (error) => {
+          console.error('Arch GLB failed to load', error);
+          document.querySelector('.room-note').textContent = 'Arch model failed to load';
+        }
+      );
+
+      const ambient = new THREE.HemisphereLight(0x8ba4a4, 0x100706, 1.38);
+      scene.add(ambient);
+      const key = new THREE.DirectionalLight(0xeaf6f2, 2.45);
+      key.position.set(-5, 18, 10);
+      scene.add(key);
+      const overhead = new THREE.PointLight(0xb8d7cf, 4.8, 46, 1.45);
+      overhead.position.set(0, wallHeight + 5.4, 6);
+      scene.add(overhead);
+      const workLight = new THREE.PointLight(0xffb083, 3.2, 22, 1.6);
+      workLight.position.set(0, 5.4, 4.4);
+      scene.add(workLight);
+      const leftFill = new THREE.PointLight(0x5f8990, 3.4, 30, 2);
+      leftFill.position.set(-10, 6, -4);
+      scene.add(leftFill);
+      const rightFill = new THREE.PointLight(0x8b3a2d, 3.1, 30, 2);
+      rightFill.position.set(10, 6, -4);
+      scene.add(rightFill);
+
+      const views = {
+        left: {
+          position: new THREE.Vector3(0, 6.35, 10),
+          target: new THREE.Vector3(-26, 6, -7),
+          label: 'Guides / Left'
+        },
+        front: {
+          position: new THREE.Vector3(0, 6.35, 10),
+          target: new THREE.Vector3(0, 6, backZ),
+          label: 'The Forge / Ahead'
+        },
+        right: {
+          position: new THREE.Vector3(0, 6.35, 10),
+          target: new THREE.Vector3(26, 6, -7),
+          label: 'Community / Right'
+        }
+      };
+      let activeView = 'front';
+      let desiredPosition = views.front.position.clone();
+      let desiredTarget = views.front.target.clone();
+      camera.position.copy(desiredPosition);
+      lookTarget.copy(desiredTarget);
+      camera.lookAt(lookTarget);
+
+      const updateActiveView = (view) => {
+        activeView = view;
+        desiredPosition.copy(views[view].position);
+        desiredTarget.copy(views[view].target);
+        document.querySelector('[data-facing-label]').textContent = views[view].label;
+        document.querySelectorAll('[data-room-view]').forEach((button) => {
+          button.classList.toggle('is-active', button.dataset.roomView === view);
+        });
+      };
+
+      document.querySelectorAll('[data-room-view]').forEach((button) => {
+        button.addEventListener('click', () => updateActiveView(button.dataset.roomView));
+      });
+
+      let dragging = false;
+      let pointerStart = 0;
+      let yawStart = 0;
+      let cameraYaw = 0;
+      canvas.addEventListener('pointerdown', (event) => {
+        dragging = true;
+        pointerStart = event.clientX;
+        yawStart = cameraYaw;
+        canvas.classList.add('is-dragging');
+        canvas.setPointerCapture(event.pointerId);
+      });
+      canvas.addEventListener('pointermove', (event) => {
+        if (!dragging) return;
+        cameraYaw = Math.max(-1, Math.min(1, yawStart + (event.clientX - pointerStart) / 620));
+        const side = cameraYaw < 0 ? views.left : views.right;
+        const amount = Math.abs(cameraYaw);
+        desiredPosition.lerpVectors(views.front.position, side.position, amount);
+        desiredTarget.lerpVectors(views.front.target, side.target, amount);
+      });
+      const finishDrag = () => {
+        if (!dragging) return;
+        dragging = false;
+        canvas.classList.remove('is-dragging');
+        if (cameraYaw < -0.3) updateActiveView('left');
+        else if (cameraYaw > 0.3) updateActiveView('right');
+        else updateActiveView('front');
+        cameraYaw = activeView === 'left' ? -1 : activeView === 'right' ? 1 : 0;
+      };
+      canvas.addEventListener('pointerup', finishDrag);
+      canvas.addEventListener('pointercancel', finishDrag);
+
+      const raycaster = new THREE.Raycaster();
+      const pointer = new THREE.Vector2(2, 2);
+      canvas.addEventListener('pointermove', (event) => {
+        const rect = canvas.getBoundingClientRect();
+        pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+        pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+      });
+      canvas.addEventListener('click', () => {
+        raycaster.setFromCamera(pointer, camera);
+        const hit = raycaster.intersectObjects(stationTargets, false)[0];
+        if (hit && hit.object.userData.href) window.location.href = hit.object.userData.href;
+      });
+
+      const resize = () => {
+        const width = canvas.clientWidth;
+        const height = canvas.clientHeight;
+        renderer.setSize(width, height, false);
+        camera.aspect = width / Math.max(1, height);
+        camera.updateProjectionMatrix();
+      };
+      window.addEventListener('resize', resize);
+      resize();
+
+      const clock = new THREE.Clock();
+      const render = () => {
+        requestAnimationFrame(render);
+        const delta = Math.min(clock.getDelta(), 0.05);
+        const movement = 1 - Math.pow(0.001, delta);
+        camera.position.lerp(desiredPosition, movement);
+        lookTarget.lerp(desiredTarget, movement);
+        camera.lookAt(lookTarget);
+        forgeGlow.intensity = 9.6 + Math.sin(performance.now() * 0.0032) * 0.7;
+        raycaster.setFromCamera(pointer, camera);
+        const hit = raycaster.intersectObjects(stationTargets, false)[0];
+        canvas.classList.toggle('is-over-forge', Boolean(hit && hit.object.userData.href));
+        renderer.render(scene, camera);
+      };
+      render();
+    })();
+  </script>
+</body>
+</html>

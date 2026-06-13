@@ -28,6 +28,7 @@ const publicDirectories = [
   'checkout',
   'common',
   'docs',
+  'resume-builder',
   'services',
   'shared'
 ];
