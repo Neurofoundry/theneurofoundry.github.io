@@ -34,7 +34,7 @@ const publicDirectories = [
 ];
 
 const publicDirectoryFiles = {
-  downloads: ['index.html', 'SkeletonKeySetup.exe'],
+  downloads: ['index.html', 'SkeletonKeySetup.exe', 'SieveSetup.exe'],
   members: [
     'login',
     'profile',

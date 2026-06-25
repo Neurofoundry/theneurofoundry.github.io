@@ -30,6 +30,7 @@ const { getProfileAvatar } = require('./services/r2AvatarClient');
 const { getLastSentEmail, getSentEmailLog, sendCrmEmail, sendDevConsoleEmail } = require('./services/emailService');
 const { getEmailDeliveryLog, getEmailQueueSnapshot } = require('./services/emailOrchestrator');
 const skeletonKeyChangelog = require('./data/skeleton-key-changelog.json');
+const whatsNewAnnouncements = require('./data/whatsnew-announcements.json');
 
 // Import middleware
 const { errorHandler } = require('./middleware/errorHandler');
@@ -144,6 +145,39 @@ app.get('/api/skeleton-key/changelog', (req, res) => {
   return res.type('application/json').json({
     messageId: changelog.messageId || key,
     ...changelog
+  });
+});
+
+app.get('/api/whatsnew/:project', (req, res) => {
+  const project = String(req.params.project || '').trim().toLowerCase();
+  const requested = String(req.query.messageId || '').trim();
+  const projectFeed = whatsNewAnnouncements[project] || {};
+  const globalFeed = whatsNewAnnouncements.global || {};
+
+  const findMessage = (feed, key) => {
+    if (!feed || !key) {
+      return null;
+    }
+    const message = feed[key] || null;
+    return message ? { key, message } : null;
+  };
+
+  const selected = requested
+    ? findMessage(projectFeed, requested) || findMessage(globalFeed, requested)
+    : findMessage(projectFeed, projectFeed.latest) || findMessage(globalFeed, globalFeed.latest);
+
+  if (!selected) {
+    return res.status(404).type('application/json').json({
+      error: 'whatsnew_not_found',
+      project,
+      key: requested || projectFeed.latest || globalFeed.latest || ''
+    });
+  }
+
+  return res.type('application/json').json({
+    project,
+    messageId: selected.message.messageId || selected.key,
+    ...selected.message
   });
 });
 

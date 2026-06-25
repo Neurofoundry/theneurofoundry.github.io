@@ -1,0 +1,44 @@
+{
+  "global": {
+    "latest": ""
+  },
+  "sieve": {
+    "latest": "sieve-launch-2026-06-25",
+    "sieve-launch-2026-06-25": {
+      "messageId": "sieve-launch-2026-06-25",
+      "windowTitle": "Whats New?",
+      "eyebrow": "WHAT'S NEW?",
+      "date": "06/25/2026",
+      "title": "SIEVE IS READY",
+      "sections": [
+        {
+          "subtitle": "Smarter File Review",
+          "items": [
+            {
+              "label": "Review images, videos, and documents from one focused workspace."
+            },
+            {
+              "label": "Preview files quickly while scanning folders and checking duplicates."
+            },
+            {
+              "label": "Filter by file type to focus on the files that matter most."
+            }
+          ]
+        },
+        {
+          "subtitle": "Controlled Cleanup",
+          "items": [
+            {
+              "label": "Stage collect, archive, recycle, and delete actions before anything changes."
+            },
+            {
+              "label": "Keep source folders organized while preserving a clear review path."
+            }
+          ]
+        }
+      ],
+      "site": "www.theneurofoundry.com",
+      "cta": "CONFIRM"
+    }
+  }
+}
