@@ -10,6 +10,7 @@ class NeurofoundryAuth {
     this.storageKey = 'nf_auth';
     this.user = null;
     this.token = null;
+    this.refreshToken = null;
 
     // Load auth state from storage
     this.loadAuthState();
@@ -25,6 +26,7 @@ class NeurofoundryAuth {
         const data = JSON.parse(stored);
         this.user = data.user;
         this.token = data.token;
+        this.refreshToken = data.refreshToken || null;
       }
     } catch (error) {
       console.error('Error loading auth state:', error);
@@ -34,13 +36,15 @@ class NeurofoundryAuth {
   /**
    * Save authentication state to localStorage
    */
-  saveAuthState(user, token) {
+  saveAuthState(user, token, refreshToken = this.refreshToken) {
     this.user = user;
     this.token = token;
+    this.refreshToken = refreshToken || null;
 
     localStorage.setItem(this.storageKey, JSON.stringify({
       user,
       token,
+      refreshToken: this.refreshToken,
       timestamp: Date.now()
     }));
 
@@ -56,6 +60,7 @@ class NeurofoundryAuth {
   clearAuthState() {
     this.user = null;
     this.token = null;
+    this.refreshToken = null;
     localStorage.removeItem(this.storageKey);
     window.dispatchEvent(new CustomEvent('auth-state-changed', {
       detail: { user: null, token: null }
@@ -80,10 +85,14 @@ class NeurofoundryAuth {
    * Make authenticated API request
    */
   async apiRequest(endpoint, options = {}) {
+    const requestOptions = { ...options };
+    const skipAuthRefresh = requestOptions.skipAuthRefresh === true;
+    delete requestOptions.skipAuthRefresh;
+
     const url = `${this.apiUrl}${endpoint}`;
     const headers = {
       'Content-Type': 'application/json',
-      ...options.headers
+      ...requestOptions.headers
     };
 
     if (this.token) {
@@ -91,7 +100,7 @@ class NeurofoundryAuth {
     }
 
     const response = await fetch(url, {
-      ...options,
+      ...requestOptions,
       headers,
       credentials: 'include' // Include cookies
     });
@@ -117,10 +126,56 @@ class NeurofoundryAuth {
     }
 
     if (!response.ok) {
+      if (
+        response.status === 401
+        && this.token
+        && this.refreshToken
+        && !skipAuthRefresh
+        && !endpoint.startsWith('/auth/')
+      ) {
+        const refreshed = await this.refreshAccessToken();
+        if (refreshed) {
+          return this.apiRequest(endpoint, {
+            ...requestOptions,
+            skipAuthRefresh: true
+          });
+        }
+      }
+
+      if (response.status === 401 && this.token && !endpoint.startsWith('/auth/')) {
+        this.clearAuthState();
+      }
+
       throw new Error(data.message || `HTTP ${response.status}: ${response.statusText}`);
     }
 
     return data;
+  }
+
+  async refreshAccessToken() {
+    try {
+      const response = await fetch(`${this.apiUrl}/auth/refresh`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ refreshToken: this.refreshToken }),
+        credentials: 'include'
+      });
+
+      const data = await response.json();
+      const tokens = data?.data?.tokens;
+      if (!response.ok || !tokens?.accessToken) {
+        this.clearAuthState();
+        return false;
+      }
+
+      this.saveAuthState(this.user, tokens.accessToken, tokens.refreshToken || this.refreshToken);
+      return true;
+    } catch (error) {
+      this.clearAuthState();
+      return false;
+    }
   }
 
   /**
@@ -143,7 +198,7 @@ class NeurofoundryAuth {
       });
 
       if (data.success && data.data && data.data.tokens && data.data.tokens.accessToken) {
-        this.saveAuthState(data.data.user, data.data.tokens.accessToken);
+        this.saveAuthState(data.data.user, data.data.tokens.accessToken, data.data.tokens.refreshToken);
       }
 
       return data;
@@ -163,7 +218,7 @@ class NeurofoundryAuth {
       });
 
       if (data.success && data.data) {
-        this.saveAuthState(data.data.user, data.data.tokens.accessToken);
+        this.saveAuthState(data.data.user, data.data.tokens.accessToken, data.data.tokens.refreshToken);
       }
 
       return data;
@@ -336,9 +391,10 @@ class NeurofoundryAuth {
             body: JSON.stringify({ redirect: redirectPath })
           });
           const token = data?.data?.tokens?.accessToken;
+          const refreshToken = data?.data?.tokens?.refreshToken;
           const user = data?.data?.user;
           if (data?.success && token && user) {
-            this.saveAuthState(user, token);
+            this.saveAuthState(user, token, refreshToken);
             finalizeResolve({
               type: 'oauth_success',
               token,
@@ -361,6 +417,7 @@ class NeurofoundryAuth {
 
         if (event.data.type === 'oauth_success') {
           const token = event.data.token;
+          const refreshToken = event.data.refreshToken || null;
           let user = event.data.user || null;
 
           if (!token) {
@@ -382,7 +439,7 @@ class NeurofoundryAuth {
             return finalizeReject(new Error('OAuth completed but no user data was returned'));
           }
 
-          this.saveAuthState(user, token);
+          this.saveAuthState(user, token, refreshToken);
           finalizeResolve({ ...event.data, user, token });
         } else if (event.data.type === 'oauth_error') {
           finalizeReject(new Error(event.data.message || 'OAuth failed'));
@@ -460,7 +517,7 @@ class NeurofoundryAuth {
       } else {
         // For redirect-based OAuth, save state directly
         if (user) {
-          this.saveAuthState(user, token);
+          this.saveAuthState(user, token, urlParams.get('refreshToken') || null);
         }
         window.location.href = redirectPath;
       }
