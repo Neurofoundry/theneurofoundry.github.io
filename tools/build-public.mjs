@@ -7,6 +7,7 @@ const outputRoot = path.join(repoRoot, 'public');
 
 const publicFiles = [
   'CNAME',
+  'ads.txt',
   'ai-plugin.json',
   'anvil.png',
   'auth-client.js',
