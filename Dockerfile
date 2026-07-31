@@ -13,6 +13,7 @@ COPY package*.json ./
 RUN npm ci --omit=dev
 
 COPY server ./server
+COPY admin_access/email_templates/neurofoundry_activation_template_ember.html ./admin_access/email_templates/neurofoundry_activation_template_ember.html
 COPY --from=public-builder /build/public ./public
 
 ENV NODE_ENV=production

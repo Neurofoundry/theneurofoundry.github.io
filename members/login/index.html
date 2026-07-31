@@ -483,6 +483,7 @@
     async function handleSocialLogin(provider) {
       try {
         await auth.loginWithOAuth(provider, getSafeRedirect());
+        window.location.href = getSafeRedirect();
       } catch (error) {
         alert('OAuth login failed: ' + (error.message || 'Could not connect to ' + provider));
       }

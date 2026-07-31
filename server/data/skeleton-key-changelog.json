@@ -1,5 +1,33 @@
 {
-  "latest": "2.1.0",
+  "latest": "2.2.0",
+  "2.2.0": {
+    "messageId": "2.2.0",
+    "version": "2.2.0",
+    "title": "What's New?",
+    "subtitle": "Aegis Pro Has Arrived.",
+    "items": [
+      {
+        "label": "A redesigned security console now spans the Dashboard, Key Vault, Notes, Generator, Audit, and Settings."
+      },
+      {
+        "label": "Vault Health detects reused, weak, and aging credentials entirely on your device."
+      },
+      {
+        "label": "Aegis Pro unlocks complete health findings, corrective actions, and unlimited vault storage."
+      },
+      {
+        "label": "Automated encrypted backups support daily or weekly schedules, custom destinations, and rolling retention."
+      },
+      {
+        "label": "Every automated backup is decrypted and verified before it replaces an older recovery copy."
+      },
+      {
+        "label": "Improved account, PIN, entitlement, and returning-user reliability across the Electron application."
+      }
+    ],
+    "footer": "Your secrets are yours to keep. Nothing leaves your machine.",
+    "cta": "CONFIRM"
+  },
   "2.1.0": {
     "messageId": "2.1.0",
     "version": "2.1.0",

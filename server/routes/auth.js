@@ -200,13 +200,6 @@ function issueOAuthSuccessRedirect(res, user, provider, redirectPath, mock = fal
   setAuthCookie(res, tokens.accessToken);
 
   if (redirectPath === '/skeleton-key/desktop') {
-    if (hasSkeletonKeyAccess(user)) {
-      return issueSkeletonKeyStatusPage(
-        res,
-        'Access Complete',
-        'Skeleton Key access is already complete for this account. Return to the Skeleton Key app to continue.'
-      );
-    }
     return createSkeletonKeyAuthCode(user.id, 'desktop_login', 10, 4)
       .then(({ code, expiresAt }) => {
         const safeEmail = escapeHtml(user.email);
@@ -940,6 +933,7 @@ router.get(
     return passport.authenticate('google', {
       scope: ['profile', 'email'],
       session: false,
+      ...(redirectPath === '/skeleton-key/desktop' ? { prompt: 'select_account' } : {}),
       state: encodeOAuthState({ redirectPath, expectedEmail })
     })(req, res, next);
   }

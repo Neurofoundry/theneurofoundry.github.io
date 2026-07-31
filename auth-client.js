@@ -356,6 +356,7 @@ class NeurofoundryAuth {
 
     return new Promise((resolve, reject) => {
       let settled = false;
+      const oauthResultKey = 'nf_oauth_result';
       const apiOrigin = new URL(this.apiUrl).origin;
       const allowedOrigins = new Set([
         window.location.origin,
@@ -368,6 +369,7 @@ class NeurofoundryAuth {
       const cleanup = () => {
         clearInterval(checkClosed);
         window.removeEventListener('message', messageHandler);
+        window.removeEventListener('storage', storageHandler);
       };
 
       const finalizeReject = (error) => {
@@ -411,14 +413,13 @@ class NeurofoundryAuth {
         }
       };
 
-      // Listen for messages from popup
-      const messageHandler = async (event) => {
-        if (!allowedOrigins.has(event.origin)) return;
+      const handleOAuthResult = async (result) => {
+        if (result.provider && result.provider !== provider) return;
 
-        if (event.data.type === 'oauth_success') {
-          const token = event.data.token;
-          const refreshToken = event.data.refreshToken || null;
-          let user = event.data.user || null;
+        if (result.type === 'oauth_success') {
+          const token = result.token;
+          const refreshToken = result.refreshToken || null;
+          let user = result.user || null;
 
           if (!token) {
             return finalizeReject(new Error('OAuth completed but no token was returned'));
@@ -440,13 +441,33 @@ class NeurofoundryAuth {
           }
 
           this.saveAuthState(user, token, refreshToken);
-          finalizeResolve({ ...event.data, user, token });
-        } else if (event.data.type === 'oauth_error') {
-          finalizeReject(new Error(event.data.message || 'OAuth failed'));
+          finalizeResolve({ ...result, user, token });
+        } else if (result.type === 'oauth_error') {
+          finalizeReject(new Error(result.message || 'OAuth failed'));
         }
       };
 
+      const messageHandler = async (event) => {
+        if (!allowedOrigins.has(event.origin)) return;
+        await handleOAuthResult(event.data);
+      };
+
+      const storageHandler = async (event) => {
+        if (event.key !== oauthResultKey || !event.newValue) return;
+        try {
+          await handleOAuthResult(JSON.parse(event.newValue));
+          localStorage.removeItem(oauthResultKey);
+        } catch (_) {
+        }
+      };
+
+      try {
+        localStorage.removeItem(oauthResultKey);
+      } catch (_) {
+      }
+
       window.addEventListener('message', messageHandler);
+      window.addEventListener('storage', storageHandler);
 
       // Check if popup was closed
       const checkClosed = setInterval(() => {
@@ -508,16 +529,32 @@ class NeurofoundryAuth {
 
       // For popup-based OAuth, send message to opener
       if (window.opener) {
+        const refreshToken = urlParams.get('refreshToken') || null;
         window.opener.postMessage({
           type: 'oauth_success',
           token: token,
-          user
+          refreshToken,
+          user,
+          provider: urlParams.get('provider') || null
         }, '*');
         setTimeout(() => window.close(), 100);
       } else {
-        // For redirect-based OAuth, save state directly
+        const refreshToken = urlParams.get('refreshToken') || null;
         if (user) {
-          this.saveAuthState(user, token, urlParams.get('refreshToken') || null);
+          try {
+            localStorage.setItem('nf_oauth_result', JSON.stringify({
+              type: 'oauth_success',
+              token,
+              refreshToken,
+              user,
+              provider: urlParams.get('provider') || null,
+              timestamp: Date.now()
+            }));
+            setTimeout(() => window.close(), 100);
+            return;
+          } catch (_) {
+            this.saveAuthState(user, token, refreshToken);
+          }
         }
         window.location.href = redirectPath;
       }
