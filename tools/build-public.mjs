@@ -35,7 +35,7 @@ const publicDirectories = [
 ];
 
 const publicDirectoryFiles = {
-  downloads: ['index.html', 'SkeletonKeySetup.exe', 'SieveSetup.exe'],
+  downloads: ['index.html', 'SkeletonKeySetup.exe', 'SieveSetup.exe', 'API-Pulse-v1.0.0.zip'],
   members: [
     'login',
     'profile',
