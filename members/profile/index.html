@@ -1221,10 +1221,6 @@
       apiUrl: window.NeurofoundryAuth.resolveDefaultApiUrl()
     });
 
-    if (!window.nfAuth.isAuthenticated()) {
-      window.location.href = '/members/login/?redirect=' + encodeURIComponent(window.location.pathname);
-    }
-
     let currentPreferences = {};
     const productionApiOrigin = 'https://api.theneurofoundry.com';
 
@@ -1525,6 +1521,10 @@
         document.getElementById('marketingOptOut').checked = !!preferences.marketingOptOut;
       } catch (error) {
         console.error('Error loading profile:', error);
+        if (!window.nfAuth.isAuthenticated()) {
+          window.location.replace('/members/login/?redirect=' + encodeURIComponent(window.location.pathname));
+          return;
+        }
         showMessage('Failed to load profile.', 'error');
       }
     }

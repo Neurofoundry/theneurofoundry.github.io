@@ -456,9 +456,20 @@
       return fallback;
     }
 
-    if (auth.isAuthenticated()) {
-      window.location.href = getSafeRedirect();
+    async function redirectAuthenticatedUser() {
+      if (auth.isAuthenticated()) {
+        window.location.replace(getSafeRedirect());
+        return;
+      }
+
+      try {
+        const profile = await auth.apiRequest('/profile');
+        if (profile && profile.success) window.location.replace(getSafeRedirect());
+      } catch (_) {
+      }
     }
+
+    redirectAuthenticatedUser();
 
     async function handleLogin(event) {
       event.preventDefault();
