@@ -362,10 +362,12 @@ main{position:relative;z-index:1}
   .checkout-form label{gap:3px;font-size:8px}
   .checkout-form input{min-height:34px;padding:0 9px;font-size:11px}
   .field-row{gap:0;border:1px solid rgba(255,255,255,.68);border-bottom:0;border-radius:8px 8px 0 0;overflow:hidden;background:rgba(7,8,9,.62)}
-  .field-row label{gap:0;padding:4px 7px 0}
+  .field-row label{gap:0;padding:0}
+  .field-row .field-label{display:none}
   .field-row label + label{border-left:1px solid rgba(255,255,255,.38)}
-  .field-row input{min-height:24px;padding:0;border:0;border-radius:0;background:transparent;line-height:24px}
+  .field-row input{min-height:42px;padding:0 12px;border:0;border-radius:0;background:#0f1113;font-size:16px;font-weight:400;line-height:42px}
   .payment-fields{border-color:rgba(255,255,255,.68);border-top:0;border-radius:0 0 8px 8px;background:rgba(7,8,9,.62)}
+  .field-row + .payment-fields{margin-top:-6px}
   .card-wrap{height:96px}
   .card-placeholder{min-height:40px;padding:0 9px;font-size:10px}
   .payment-fields #postalCode{min-height:42px;font-size:16px}
@@ -577,12 +579,12 @@ main{position:relative;z-index:1}
             </div>
             <div class="field-row">
               <label>
-                First Name
-                <input id="firstName" name="firstName" type="text" autocomplete="given-name" placeholder="Jane">
+                <span class="field-label">First Name</span>
+                <input id="firstName" name="firstName" type="text" autocomplete="given-name" placeholder="First Name">
               </label>
               <label>
-                Last Name
-                <input id="lastName" name="lastName" type="text" autocomplete="family-name" placeholder="Doe">
+                <span class="field-label">Last Name</span>
+                <input id="lastName" name="lastName" type="text" autocomplete="family-name" placeholder="Last Name">
               </label>
             </div>
             <div class="payment-fields">
