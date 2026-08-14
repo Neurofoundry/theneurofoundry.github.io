@@ -9,6 +9,13 @@ const productCatalog = {
     description: 'Aegis: Skeleton Key desktop access',
     amount: parseInt(process.env.SQUARE_SKELETON_KEY_PRICE_CENTS || '0', 10),
     currency: process.env.SQUARE_CURRENCY || 'USD'
+  },
+  reticon_v2: {
+    id: 'reticon_v2',
+    name: process.env.SQUARE_RETICON_NAME || 'Reticon',
+    description: 'Reticon custom reticle builder lifetime access',
+    amount: parseInt(process.env.SQUARE_RETICON_PRICE_CENTS || '299', 10),
+    currency: process.env.SQUARE_CURRENCY || 'USD'
   }
 };
 

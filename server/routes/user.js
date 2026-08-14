@@ -16,6 +16,14 @@ function hasSkeletonKeyAccess(user) {
   );
 }
 
+function hasReticonV2Access(user) {
+  const metadata = user?.metadata && typeof user.metadata === 'object' ? user.metadata : {};
+  const purchase = metadata.reticonV2Purchase && typeof metadata.reticonV2Purchase === 'object'
+    ? metadata.reticonV2Purchase
+    : {};
+  return !!(purchase.purchased && purchase.status === 'paid');
+}
+
 // ============================================
 // GET CURRENT USER
 // ============================================
@@ -38,7 +46,8 @@ router.get('/me', async (req, res, next) => {
           createdAt: req.user.createdAt,
           preferences: req.user.preferences,
           metadata: req.user.metadata,
-          skeletonKeyAccessCompleted: hasSkeletonKeyAccess(req.user)
+          skeletonKeyAccessCompleted: hasSkeletonKeyAccess(req.user),
+          reticonV2AccessCompleted: hasReticonV2Access(req.user)
         }
       }
     });

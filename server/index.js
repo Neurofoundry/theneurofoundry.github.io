@@ -59,10 +59,38 @@ app.use(helmet({
 app.use(cors(corsOptions));
 
 // Rate limiting
+const developerBypassIps = new Map();
+const developerBypassTtlMs = 12 * 60 * 60 * 1000;
+
+function getRateLimitClientKey(req) {
+  const cloudflareIp = String(req.get('CF-Connecting-IP') || '').trim();
+  if (cloudflareIp) return cloudflareIp;
+  const forwarded = String(req.get('X-Forwarded-For') || '').split(',')[0].trim();
+  return forwarded || req.ip;
+}
+
+function hasDeveloperRateLimitBypass(req) {
+  const configured = String(process.env.RATE_LIMIT_BYPASS_TOKEN || '');
+  const supplied = String(req.get('X-NF-Developer-Bypass') || '');
+  const now = Date.now();
+  const ip = getRateLimitClientKey(req);
+  const expiresAt = developerBypassIps.get(ip) || 0;
+  if (expiresAt > now) return true;
+  if (expiresAt) developerBypassIps.delete(ip);
+  if (!configured || !supplied) return false;
+  const expected = Buffer.from(configured);
+  const actual = Buffer.from(supplied);
+  if (expected.length !== actual.length || !crypto.timingSafeEqual(expected, actual)) return false;
+  developerBypassIps.set(ip, now + developerBypassTtlMs);
+  return true;
+}
+
 const limiter = rateLimit({
   windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000,
   max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 100,
-  message: 'Too many requests from this IP, please try again later.'
+  keyGenerator: getRateLimitClientKey,
+  skip: hasDeveloperRateLimitBypass,
+  message: { success: false, message: 'Too many requests. Please try again shortly.' }
 });
 app.use('/api/', limiter);
 

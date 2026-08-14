@@ -21,6 +21,7 @@ const { sendPasswordResetEmail, sendSkeletonKeyPinResetEmail, sendVerificationEm
 const { enqueueUserRegisteredEmail } = require('../services/emailOrchestrator');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
+const { optionalAuthMiddleware } = require('../middleware/auth');
 
 function isPlaceholderValue(value) {
   if (!value) return true;
@@ -154,6 +155,14 @@ function hasSkeletonKeyAccess(user) {
   );
 }
 
+function hasReticonV2Access(user) {
+  const metadata = user?.metadata && typeof user.metadata === 'object' ? user.metadata : {};
+  const purchase = metadata.reticonV2Purchase && typeof metadata.reticonV2Purchase === 'object'
+    ? metadata.reticonV2Purchase
+    : {};
+  return !!(purchase.purchased && purchase.status === 'paid');
+}
+
 function isEmailVerified(user) {
   return user?.emailVerified === true || user?.emailVerified === 1 || user?.emailVerified === '1';
 }
@@ -175,7 +184,8 @@ function publicUser(user) {
     role: user.role,
     planTier: user.planTier,
     accountStatus: user.accountStatus,
-    skeletonKeyAccessCompleted: hasSkeletonKeyAccess(user)
+    skeletonKeyAccessCompleted: hasSkeletonKeyAccess(user),
+    reticonV2AccessCompleted: hasReticonV2Access(user)
   };
 }
 
@@ -198,6 +208,11 @@ async function markSkeletonKeyAccessComplete(user) {
 function issueOAuthSuccessRedirect(res, user, provider, redirectPath, mock = false) {
   const tokens = generateTokens(user);
   setAuthCookie(res, tokens.accessToken);
+
+  if (redirectPath === '/reticon/desktop') {
+    return createSkeletonKeyAuthCode(user.id, 'reticon_desktop_login', 10, 4)
+      .then(({ code, expiresAt }) => issueReticonAccessCodePage(res, user, code, expiresAt));
+  }
 
   if (redirectPath === '/skeleton-key/desktop') {
     return createSkeletonKeyAuthCode(user.id, 'desktop_login', 10, 4)
@@ -652,13 +667,13 @@ function issueOAuthFailureRedirect(res, errorCode) {
   );
 }
 
-function issueSkeletonKeyStatusPage(res, title, message) {
+function issueSkeletonKeyStatusPage(res, title, message, appName = 'Aegis: Skeleton Key') {
   return res.send(`<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Aegis: Skeleton Key</title>
+  <title>${escapeHtml(appName)}</title>
   <style>
     html, body { margin: 0; min-height: 100%; background: #050505; color: #e7ebef; font-family: Inter, Arial, sans-serif; }
     body { display: grid; place-items: center; padding: 24px; }
@@ -674,6 +689,55 @@ function issueSkeletonKeyStatusPage(res, title, message) {
   </main>
   <script>
     setTimeout(function () { window.close(); }, 1200);
+  </script>
+</body>
+</html>`);
+}
+
+function issueReticonAccessCodePage(res, user, code, expiresAt) {
+  const safeCode = escapeHtml(code);
+  const safeEmail = escapeHtml(user.email);
+  const safeExpiresAt = formatDisplayDateTime(expiresAt);
+  return res.send(`<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reticon Account Link</title>
+  <style>
+    html, body { margin: 0; min-height: 100%; background: #050505; color: #f3f5f7; font-family: Inter, Arial, sans-serif; }
+    body { display: grid; place-items: center; padding: 24px; }
+    main { width: min(430px, 100%); border: 1px solid rgba(255, 93, 52, .34); background: linear-gradient(145deg, #121212, #080808); padding: 28px; text-align: center; box-shadow: 0 26px 70px rgba(0, 0, 0, .58); }
+    .eyebrow { color: #ff5d34; font-size: 11px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; }
+    h1 { margin: 8px 0 6px; font-size: 25px; letter-spacing: .08em; text-transform: uppercase; }
+    .email { color: #9ca6b2; font-size: 13px; }
+    .code { margin: 24px auto 18px; color: #fff; font: 800 46px/1 Consolas, monospace; letter-spacing: .22em; text-indent: .22em; text-shadow: 0 0 22px rgba(255, 93, 52, .45); }
+    p { margin: 8px 0 0; color: #aab2bc; font-size: 13px; line-height: 1.55; }
+    .expires { color: #6f7883; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="eyebrow">Neurofoundry / Reticon</div>
+    <h1>Link your account</h1>
+    <div class="email">${safeEmail}</div>
+    <div class="code">${safeCode}</div>
+    <p>Enter this one-time code in Reticon to finish signing in.</p>
+    <p class="expires">Expires ${safeExpiresAt}</p>
+  </main>
+  <script>
+    const code = ${JSON.stringify(code)};
+    const timer = setInterval(async function () {
+      try {
+        const response = await fetch('/api/auth/reticon/code-status?code=' + encodeURIComponent(code), { credentials: 'include' });
+        const payload = await response.json();
+        if (payload && payload.data && payload.data.used) {
+          clearInterval(timer);
+          document.querySelector('main').innerHTML = '<div class="eyebrow">Neurofoundry / Reticon</div><h1>Account linked</h1><p>You can return to Reticon.</p>';
+          setTimeout(function () { window.close(); }, 1200);
+        }
+      } catch (_) {}
+    }, 900);
   </script>
 </body>
 </html>`);
@@ -933,7 +997,7 @@ router.get(
     return passport.authenticate('google', {
       scope: ['profile', 'email'],
       session: false,
-      ...(redirectPath === '/skeleton-key/desktop' ? { prompt: 'select_account' } : {}),
+      ...(['/skeleton-key/desktop', '/reticon/desktop'].includes(redirectPath) ? { prompt: 'select_account' } : {}),
       state: encodeOAuthState({ redirectPath, expectedEmail })
     })(req, res, next);
   }
@@ -1000,19 +1064,19 @@ router.get(
       }
 
       const { redirectPath, expectedEmail } = decodeOAuthState(req.query.state);
-      if (redirectPath === '/skeleton-key/desktop') {
+      if (redirectPath === '/skeleton-key/desktop' || redirectPath === '/reticon/desktop') {
         if (!expectedEmail) {
           return issueSkeletonKeyStatusPage(
             res,
             'Email Required',
-            'Return to Skeleton Key and enter the Neurofoundry email before choosing Google.'
+            `Return to ${redirectPath === '/reticon/desktop' ? 'Reticon' : 'Skeleton Key'} and enter the Neurofoundry email before choosing Google.`
           );
         }
         if (normalizeEmail(user.email) !== expectedEmail) {
           return issueSkeletonKeyStatusPage(
             res,
             'Email Mismatch',
-            'The Google account selected does not match the email entered in Skeleton Key. Return to Skeleton Key and use the matching email.'
+            `The Google account selected does not match the email entered in ${redirectPath === '/reticon/desktop' ? 'Reticon' : 'Skeleton Key'}. Return to the app and use the matching email.`
           );
         }
       }
@@ -1199,6 +1263,117 @@ router.post(
           user: publicUser(updatedUser),
           tokens
         }
+      });
+    } catch (error) {
+      return next(error);
+    }
+  }
+);
+
+// ============================================
+// RETICON DESKTOP AUTH
+// ============================================
+router.post(
+  '/reticon/access-code/request',
+  [body('email').isEmail().normalizeEmail()],
+  async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ success: false, message: 'A valid email is required', errors: errors.array() });
+      }
+
+      return res.json({
+        success: true,
+        message: 'Open the Reticon account-link page in your browser.',
+        data: {
+          accessUrl: buildApiUrl(req, '/api/auth/reticon/access-code/browser', { email: req.body.email })
+        }
+      });
+    } catch (error) {
+      return next(error);
+    }
+  }
+);
+
+router.get(
+  '/reticon/access-code/browser',
+  optionalAuthMiddleware,
+  [query('email').isEmail().normalizeEmail()],
+  async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return issueSkeletonKeyStatusPage(res, 'Email Required', 'Return to Reticon and enter a valid Neurofoundry account email.', 'Reticon Account Link');
+      }
+
+      const accessUrl = buildApiUrl(req, '/api/auth/reticon/access-code/browser', { email: req.query.email });
+      if (!req.user) {
+        return res.redirect(buildFrontendUrl('/members/login/', { redirect: accessUrl }));
+      }
+      if (normalizeEmail(req.user.email) !== normalizeEmail(req.query.email)) {
+        return issueSkeletonKeyStatusPage(res, 'Email Mismatch', 'The signed-in Neurofoundry account does not match the email entered in Reticon.', 'Reticon Account Link');
+      }
+      if (!isEmailVerified(req.user) || !isActiveUser(req.user)) {
+        return issueSkeletonKeyStatusPage(res, 'Verified Account Required', 'Verify this Neurofoundry account before linking Reticon.', 'Reticon Account Link');
+      }
+
+      const result = await createSkeletonKeyAuthCode(req.user.id, 'reticon_desktop_login', 10, 4);
+      return issueReticonAccessCodePage(res, req.user, result.code, result.expiresAt);
+    } catch (error) {
+      return next(error);
+    }
+  }
+);
+
+router.get(
+  '/reticon/code-status',
+  [query('code').isLength({ min: 4, max: 4 }).isNumeric()],
+  async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ success: false, message: 'A valid 4-digit code is required', errors: errors.array() });
+      }
+      const status = await getSkeletonKeyAuthCodeStatus(req.query.code, 'reticon_desktop_login');
+      return res.json({ success: true, data: { found: !!status, used: !!status?.used, expired: !!status?.expired } });
+    } catch (error) {
+      return next(error);
+    }
+  }
+);
+
+router.post(
+  '/reticon/redeem-code',
+  [
+    body('code').isLength({ min: 4, max: 4 }).isNumeric(),
+    body('email').isEmail().normalizeEmail()
+  ],
+  async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ success: false, message: 'A valid email and 4-digit code are required', errors: errors.array() });
+      }
+
+      const codeStatus = await getSkeletonKeyAuthCodeStatus(req.body.code, 'reticon_desktop_login');
+      if (!codeStatus) return res.status(400).json({ success: false, message: 'Reticon code was not found' });
+      if (codeStatus.used) return res.status(400).json({ success: false, message: 'Reticon code was already used' });
+      if (codeStatus.expired) return res.status(400).json({ success: false, message: 'Reticon code expired' });
+      const user = await redeemSkeletonKeyAuthCode(req.body.code, 'reticon_desktop_login');
+      if (!user) return res.status(400).json({ success: false, message: 'Reticon code could not be redeemed' });
+      if (normalizeEmail(user.email) !== normalizeEmail(req.body.email)) {
+        return res.status(403).json({ success: false, message: 'Reticon verification did not match the requested account' });
+      }
+      if (!isEmailVerified(user) || !isActiveUser(user)) {
+        return res.status(403).json({ success: false, message: 'A verified Neurofoundry account is required' });
+      }
+
+      const tokens = generateTokens(user);
+      return res.json({
+        success: true,
+        message: 'Reticon account linked',
+        data: { user: publicUser(user), tokens }
       });
     } catch (error) {
       return next(error);

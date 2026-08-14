@@ -75,8 +75,26 @@ async function createUniqueConfirmationId(userId) {
   throw error;
 }
 
-async function markSkeletonKeyPurchase({ user, productId, confirmationId, payment }) {
-  if (!user || productId !== 'skeleton_key' || !payment) return;
+function getPurchaseMetadataKey(productId) {
+  if (productId === 'skeleton_key') return 'skeletonKeyPurchase';
+  if (productId === 'reticon_v2') return 'reticonV2Purchase';
+  return null;
+}
+
+function hasProductAccess(user, productId, confirmationId) {
+  const key = getPurchaseMetadataKey(productId);
+  const metadata = user?.metadata && typeof user.metadata === 'object' ? user.metadata : {};
+  const purchase = key && metadata[key] && typeof metadata[key] === 'object' ? metadata[key] : {};
+  return !!(
+    purchase.purchased &&
+    purchase.status === 'paid' &&
+    (!confirmationId || String(purchase.confirmationId || '') === String(confirmationId))
+  );
+}
+
+async function markProductPurchase({ user, productId, confirmationId, payment }) {
+  const key = getPurchaseMetadataKey(productId);
+  if (!user || !key || !payment) return;
 
   const metadata = user.metadata && typeof user.metadata === 'object' ? user.metadata : {};
   const squareCheckout = metadata.squareCheckout && typeof metadata.squareCheckout === 'object'
@@ -92,7 +110,7 @@ async function markSkeletonKeyPurchase({ user, productId, confirmationId, paymen
     billingId: payment.id,
     metadata: {
       ...metadata,
-      skeletonKeyPurchase: {
+      [key]: {
         purchased: true,
         status: 'paid',
         productId,
@@ -121,8 +139,8 @@ async function markSkeletonKeyPurchase({ user, productId, confirmationId, paymen
           }
         }
       }
-    }
-  });
+  }
+});
 }
 
 router.get('/config', (req, res, next) => {
@@ -170,7 +188,8 @@ router.post('/checkout', authMiddleware, requireEmailVerification, async (req, r
     }
 
     const confirmationId = await createUniqueConfirmationId(req.user.id);
-    const redirectUrl = buildPublicUrl(req, `/checkout/skeleton-key/success/?product=${encodeURIComponent(product.id)}&confirmation=${encodeURIComponent(confirmationId)}`);
+    const successPath = product.id === 'reticon_v2' ? 'reticonv2/success/index.html' : 'skeleton-key/success/';
+    const redirectUrl = buildPublicUrl(req, `/checkout/${successPath}?product=${encodeURIComponent(product.id)}&confirmation=${encodeURIComponent(confirmationId)}`);
     const buyer = { email: req.user.email, phone: req.user.phone };
     const noteParts = [
       `neurofoundry_product=${product.id}`,
@@ -280,7 +299,7 @@ router.post('/charge', authMiddleware, requireEmailVerification, async (req, res
       });
     }
 
-    await markSkeletonKeyPurchase({
+    await markProductPurchase({
       user: req.user,
       productId: product.id,
       confirmationId,
@@ -293,6 +312,38 @@ router.post('/charge', authMiddleware, requireEmailVerification, async (req, res
       orderId: payment.order_id || payment.id,
       paymentId: payment.id,
       receiptUrl: payment.receipt_url || null
+    });
+  } catch (error) {
+    return next(error);
+  }
+});
+
+router.post('/access/verify', async (req, res, next) => {
+  try {
+    const productId = String(req.body.productId || '').trim();
+    const email = normalizeEmail(req.body.email);
+    const confirmationId = String(req.body.confirmationId || '').trim();
+
+    if (!productId || !email || !confirmationId) {
+      return res.status(400).json({ success: false, message: 'Product, email, and confirmation are required.' });
+    }
+
+    let user = null;
+    if (dbType === 'cloudflare_d1') {
+      const rows = await db.query('SELECT * FROM users WHERE LOWER(email) = LOWER(?) LIMIT 1', [email]);
+      user = rows[0] || null;
+      if (user && typeof user.metadata === 'string') {
+        try { user.metadata = JSON.parse(user.metadata || '{}'); } catch (error) { user.metadata = {}; }
+      }
+    } else if (typeof db.entries === 'function') {
+      for (const [, candidate] of db.entries()) {
+        if (normalizeEmail(candidate.email) === email) { user = candidate; break; }
+      }
+    }
+
+    return res.json({
+      success: true,
+      access: hasProductAccess(user, productId, confirmationId)
     });
   } catch (error) {
     return next(error);
@@ -328,11 +379,11 @@ router.post('/square/webhook', async (req, res) => {
     const userId = note.user_id;
     const productId = note.neurofoundry_product;
 
-    if (userId && productId === 'skeleton_key') {
+    if (userId && getPurchaseMetadataKey(productId)) {
       try {
         const user = await findUserById(userId);
         if (user && normalizeEmail(user.email) === normalizeEmail(note.email)) {
-          await markSkeletonKeyPurchase({
+          await markProductPurchase({
             user,
             productId,
             confirmationId: note.confirmation_id || null,
@@ -340,7 +391,7 @@ router.post('/square/webhook', async (req, res) => {
           });
         }
       } catch (error) {
-        console.error('Failed to update Skeleton Key purchase metadata:', error);
+        console.error('Failed to update product purchase metadata:', error);
       }
     }
   }
