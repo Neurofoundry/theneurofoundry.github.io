@@ -483,7 +483,7 @@
     async function handleSocialLogin(provider) {
       const redirect = getSafeRedirect();
 
-      if (window.opener && redirect.includes('/checkout/reticon-v2/')) {
+      if (redirect.includes('/checkout/reticon-v2/')) {
         const oauthUrl = new URL(`${auth.apiUrl}/auth/${provider}`);
         oauthUrl.searchParams.set('redirect', redirect);
         window.location.href = oauthUrl.toString();

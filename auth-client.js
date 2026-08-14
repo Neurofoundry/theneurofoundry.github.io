@@ -356,6 +356,7 @@ class NeurofoundryAuth {
 
     return new Promise((resolve, reject) => {
       let settled = false;
+      let resultReceived = false;
       const oauthResultKey = 'nf_oauth_result';
       const apiOrigin = new URL(this.apiUrl).origin;
       const allowedOrigins = new Set([
@@ -415,6 +416,7 @@ class NeurofoundryAuth {
 
       const handleOAuthResult = async (result) => {
         if (result.provider && result.provider !== provider) return;
+        resultReceived = true;
 
         if (result.type === 'oauth_success') {
           const token = result.token;
@@ -473,6 +475,7 @@ class NeurofoundryAuth {
       const checkClosed = setInterval(() => {
         if (popup.closed) {
           clearInterval(checkClosed);
+          if (resultReceived) return;
           attemptDevOAuthFallback().then((didFallback) => {
             if (!didFallback) {
               finalizeReject(new Error('OAuth window was closed'));
