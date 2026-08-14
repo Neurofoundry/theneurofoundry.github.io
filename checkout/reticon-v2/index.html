@@ -943,6 +943,20 @@ document.addEventListener('keydown',event=>{if(event.key==='Escape'&&imageLightb
       if (signedInUser) setStatus('', '');
     });
 
+    window.addEventListener('storage', async (event) => {
+      if (event.key !== 'nf_oauth_result' || !event.newValue) return;
+
+      try {
+        const result = JSON.parse(event.newValue);
+        if (result.type !== 'oauth_success' || !result.token || !result.user) return;
+        auth.saveAuthState(result.user, result.token, result.refreshToken || null);
+        localStorage.removeItem('nf_oauth_result');
+        await loadAccount();
+        if (signedInUser) setStatus('', '');
+      } catch (_) {
+      }
+    });
+
     form.addEventListener('pointerdown', requireSignIn, true);
     form.addEventListener('focusin', requireSignIn, true);
     form.addEventListener('submit', startCheckout);

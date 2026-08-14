@@ -481,9 +481,18 @@
     }
 
     async function handleSocialLogin(provider) {
+      const redirect = getSafeRedirect();
+
+      if (window.opener && redirect.includes('/checkout/reticon-v2/')) {
+        const oauthUrl = new URL(`${auth.apiUrl}/auth/${provider}`);
+        oauthUrl.searchParams.set('redirect', redirect);
+        window.location.href = oauthUrl.toString();
+        return;
+      }
+
       try {
-        await auth.loginWithOAuth(provider, getSafeRedirect());
-        window.location.href = getSafeRedirect();
+        await auth.loginWithOAuth(provider, redirect);
+        window.location.href = redirect;
       } catch (error) {
         alert('OAuth login failed: ' + (error.message || 'Could not connect to ' + provider));
       }
