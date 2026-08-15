@@ -349,9 +349,10 @@ main{position:relative;z-index:1}
 .donation-options[hidden]{display:none}
 .donation-option{min-height:34px;border:1px solid var(--line-2);border-radius:6px;background:#0f1113;color:var(--fg-1);font:700 12px var(--sans);cursor:pointer}
 .donation-option.active{border-color:#53e868;color:#8cff99;box-shadow:inset 0 0 12px rgba(82,255,59,.1)}
-.donation-custom{grid-column:1/-1;display:flex!important;align-items:center;grid-template-columns:none!important;gap:8px!important}
+.donation-custom{grid-column:1/-1;display:flex!important;align-items:center;grid-template-columns:none!important;gap:8px!important;padding:0 10px;border:1px solid var(--line-2);border-radius:6px;background:#0f1113}
+.donation-custom.active{border-color:#53e868;box-shadow:inset 0 0 12px rgba(82,255,59,.1)}
 .donation-custom span{font:700 13px var(--sans);color:var(--fg-1)}
-.donation-custom input{min-height:38px}
+.donation-custom input{min-height:38px;border:0;padding-left:0}
 .square-secure{margin:14px 0 0;display:flex;align-items:center;justify-content:center;gap:8px;color:var(--fg-2);font-family:var(--sans);font-size:12px;letter-spacing:0;text-transform:none}
 .square-mark{width:18px;height:18px;object-fit:contain;opacity:.9}
 @media (max-width:520px){
@@ -755,6 +756,7 @@ document.addEventListener('keydown',event=>{if(event.key==='Escape'&&imageLightb
       if (!Number.isSafeInteger(amount) || amount < 100) return false;
       donationAmount = amount;
       document.querySelectorAll('.donation-option').forEach((item) => item.classList.toggle('active', item === selectedButton));
+      document.querySelector('.donation-custom').classList.remove('active');
       if (selectedButton) customDonation.value = '';
       updateCheckoutMode();
       return true;
@@ -1002,10 +1004,16 @@ document.addEventListener('keydown',event=>{if(event.key==='Escape'&&imageLightb
       document.querySelectorAll('.donation-option').forEach((item) => item.classList.remove('active'));
       if (Number.isSafeInteger(amount) && amount >= 100) {
         donationAmount = amount;
+        document.querySelector('.donation-custom').classList.add('active');
       } else {
         donationAmount = 0;
+        document.querySelector('.donation-custom').classList.remove('active');
       }
       updateCheckoutMode();
+    });
+    customDonation.addEventListener('focus', () => {
+      document.querySelectorAll('.donation-option').forEach((item) => item.classList.remove('active'));
+      if (donationAmount >= 100 && customDonation.value) document.querySelector('.donation-custom').classList.add('active');
     });
     loadAccount();
     loadProduct();
