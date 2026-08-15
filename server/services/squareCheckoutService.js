@@ -143,7 +143,7 @@ async function createPaymentLink({ productId, buyer, redirectUrl, note }) {
   };
 }
 
-async function createPayment({ productId, sourceId, buyer, note, referenceId }) {
+async function createPayment({ productId, sourceId, buyer, note, referenceId, amount, currency }) {
   const config = getSquareConfig();
 
   if (!config.accessToken || !config.locationId) {
@@ -158,17 +158,25 @@ async function createPayment({ productId, sourceId, buyer, note, referenceId }) 
     throw error;
   }
 
-  const product = getProduct(productId);
+  const product = productId ? getProduct(productId) : null;
+  const paymentAmount = amount == null ? product.amount : amount;
+  const paymentCurrency = currency || (product && product.currency) || process.env.SQUARE_CURRENCY || 'USD';
+
+  if (!Number.isInteger(paymentAmount) || paymentAmount <= 0) {
+    const error = new Error('Payment amount is invalid');
+    error.statusCode = 400;
+    throw error;
+  }
   const body = {
     idempotency_key: crypto.randomUUID(),
     source_id: sourceId,
     amount_money: {
-      amount: product.amount,
-      currency: product.currency
+      amount: paymentAmount,
+      currency: paymentCurrency
     },
     location_id: config.locationId,
     autocomplete: true,
-    note: note || product.description
+    note: note || (product && product.description) || 'Neurofoundry support donation'
   };
 
   if (buyer && buyer.email) {

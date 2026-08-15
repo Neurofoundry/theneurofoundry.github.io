@@ -187,6 +187,14 @@ router.post('/checkout', authMiddleware, requireEmailVerification, async (req, r
       });
     }
 
+    if (hasProductAccess(req.user, product.id)) {
+      return res.status(409).json({
+        success: false,
+        code: 'PRODUCT_ALREADY_OWNED',
+        message: 'You Already Own This Product.'
+      });
+    }
+
     const confirmationId = await createUniqueConfirmationId(req.user.id);
     const successPath = product.id === 'reticon_v2' ? 'reticonv2/success/index.html' : 'skeleton-key/success/';
     const redirectUrl = buildPublicUrl(req, `/checkout/${successPath}?product=${encodeURIComponent(product.id)}&confirmation=${encodeURIComponent(confirmationId)}`);
@@ -266,6 +274,14 @@ router.post('/charge', authMiddleware, requireEmailVerification, async (req, res
       });
     }
 
+    if (hasProductAccess(req.user, product.id)) {
+      return res.status(409).json({
+        success: false,
+        code: 'PRODUCT_ALREADY_OWNED',
+        message: 'You Already Own This Product.'
+      });
+    }
+
     if (!sourceId) {
       return res.status(400).json({
         success: false,
@@ -310,6 +326,69 @@ router.post('/charge', authMiddleware, requireEmailVerification, async (req, res
       success: true,
       confirmationId,
       orderId: payment.order_id || payment.id,
+      paymentId: payment.id,
+      receiptUrl: payment.receipt_url || null
+    });
+  } catch (error) {
+    return next(error);
+  }
+});
+
+router.post('/donation', authMiddleware, requireEmailVerification, async (req, res, next) => {
+  try {
+    const amount = Number(req.body.amount);
+    const confirmedEmail = normalizeEmail(req.body.email);
+    const accountEmail = normalizeEmail(req.user.email);
+    const sourceId = String(req.body.sourceId || '').trim();
+    const buyerName = String(req.body.buyerName || req.user.name || '').trim();
+
+    if (!confirmedEmail || confirmedEmail !== accountEmail) {
+      return res.status(403).json({ success: false, message: 'Email Does Not Match Signed-In Account.' });
+    }
+
+    if (!Number.isSafeInteger(amount) || amount < 100) {
+      return res.status(400).json({ success: false, message: 'Donation Must Be At Least $1.00.' });
+    }
+
+    if (!sourceId) {
+      return res.status(400).json({ success: false, message: 'Payment Source Is Required.' });
+    }
+
+    const confirmationId = await createUniqueConfirmationId(req.user.id);
+    const currency = process.env.SQUARE_CURRENCY || 'USD';
+    const payment = await createPayment({
+      sourceId,
+      amount,
+      currency,
+      buyer: { email: req.user.email, name: buyerName },
+      note: `neurofoundry_donation=true; user_id=${req.user.id}; email=${req.user.email}; confirmation_id=${confirmationId}`,
+      referenceId: confirmationId
+    });
+
+    if (String(payment.status || '').toUpperCase() !== 'COMPLETED') {
+      return res.status(402).json({ success: false, message: 'Donation Was Not Completed.', status: payment.status || null });
+    }
+
+    const metadata = req.user.metadata && typeof req.user.metadata === 'object' ? req.user.metadata : {};
+    const donations = metadata.donations && typeof metadata.donations === 'object' ? metadata.donations : {};
+    await updateUser(req.user.id, {
+      metadata: {
+        ...metadata,
+        donations: {
+          count: Number(donations.count || 0) + 1,
+          totalAmount: Number(donations.totalAmount || 0) + amount,
+          currency,
+          lastAmount: amount,
+          lastConfirmationId: confirmationId,
+          lastPaymentId: payment.id,
+          lastDonatedAt: payment.updated_at || payment.created_at || new Date().toISOString()
+        }
+      }
+    });
+
+    return res.json({
+      success: true,
+      confirmationId,
       paymentId: payment.id,
       receiptUrl: payment.receipt_url || null
     });

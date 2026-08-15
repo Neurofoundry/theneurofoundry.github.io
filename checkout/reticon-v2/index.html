@@ -345,6 +345,13 @@ main{position:relative;z-index:1}
 .status-card{border:1px solid var(--line-2);border-radius:10px;padding:11px 12px;background:rgba(255,255,255,.035);font-family:var(--mono);font-size:10px;line-height:1.45;letter-spacing:.08em;text-transform:uppercase;color:var(--fg-2)}
 .status-card.good{border-color:rgba(111,177,120,.55);color:#9ee5a8;background:rgba(111,177,120,.08)}
 .status-card.bad{border-color:rgba(255,102,51,.55);color:var(--accent-hi);background:rgba(224,71,60,.1)}
+.donation-options{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.donation-options[hidden]{display:none}
+.donation-option{min-height:34px;border:1px solid var(--line-2);border-radius:6px;background:#0f1113;color:var(--fg-1);font:700 12px var(--sans);cursor:pointer}
+.donation-option.active{border-color:#53e868;color:#8cff99;box-shadow:inset 0 0 12px rgba(82,255,59,.1)}
+.donation-custom{grid-column:1/-1;display:flex!important;align-items:center;grid-template-columns:none!important;gap:8px!important}
+.donation-custom span{font:700 13px var(--sans);color:var(--fg-1)}
+.donation-custom input{min-height:38px}
 .square-secure{margin:14px 0 0;display:flex;align-items:center;justify-content:center;gap:8px;color:var(--fg-2);font-family:var(--sans);font-size:12px;letter-spacing:0;text-transform:none}
 .square-mark{width:18px;height:18px;object-fit:contain;opacity:.9}
 @media (max-width:520px){
@@ -568,6 +575,13 @@ main{position:relative;z-index:1}
             Confirm Account Email
             <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com">
           </label>
+          <div id="donationOptions" class="donation-options" hidden>
+            <button class="donation-option active" type="button" data-amount="500">$5</button>
+            <button class="donation-option" type="button" data-amount="1000">$10</button>
+            <button class="donation-option" type="button" data-amount="2000">$20</button>
+            <button class="donation-option" type="button" data-amount="10000">$100</button>
+            <label class="donation-custom"><span>$</span><input id="customDonation" type="number" min="1" step="0.01" inputmode="decimal" placeholder="Other amount"></label>
+          </div>
           <div class="payment-card-shell">
             <div class="payment-card-head">
               <span>Card Details</span>
@@ -645,6 +659,8 @@ document.addEventListener('keydown',event=>{if(event.key==='Escape'&&imageLightb
     let squareCard = null;
     let squareConfig = null;
     let formattedPrice = '';
+    let ownsProduct = false;
+    let donationAmount = 500;
     let signInWindow = null;
     const apiBase = (() => {
       if (window.location.protocol === 'file:') {
@@ -673,6 +689,8 @@ document.addEventListener('keydown',event=>{if(event.key==='Escape'&&imageLightb
     const firstName = document.getElementById('firstName');
     const lastName = document.getElementById('lastName');
     const cardWrap = document.getElementById('cardWrap');
+    const donationOptions = document.getElementById('donationOptions');
+    const customDonation = document.getElementById('customDonation');
 
     function normalizeEmail(value) {
       return String(value || '').trim().toLowerCase();
@@ -718,7 +736,28 @@ document.addEventListener('keydown',event=>{if(event.key==='Escape'&&imageLightb
     }
 
     function updateReadyState() {
-      button.disabled = !(signedInUser && signedInUser.emailVerified && productData && squareCard);
+      button.disabled = !(signedInUser && signedInUser.emailVerified && productData && squareCard && (!ownsProduct || donationAmount >= 100));
+    }
+
+    function updateCheckoutMode() {
+      donationOptions.hidden = !ownsProduct;
+      priceLabel.textContent = ownsProduct ? 'Owned' : (formattedPrice || 'Loading');
+      button.innerHTML = ownsProduct
+        ? `Donate <span id="buttonAmount">${formatMoney(donationAmount, 'USD')}</span>`
+        : `Pay <span id="buttonAmount">${formattedPrice || '$2.99'}</span>`;
+      if (ownsProduct) {
+        setStatus('You Already Own Reticon. If You Would Like to Support Future Development, Choose a Donation Amount Below.', 'good');
+      }
+      updateReadyState();
+    }
+
+    function selectDonationAmount(amount, selectedButton) {
+      if (!Number.isSafeInteger(amount) || amount < 100) return false;
+      donationAmount = amount;
+      document.querySelectorAll('.donation-option').forEach((item) => item.classList.toggle('active', item === selectedButton));
+      if (selectedButton) customDonation.value = '';
+      updateCheckoutMode();
+      return true;
     }
 
     function formatMoney(amount, currency) {
@@ -738,9 +777,7 @@ document.addEventListener('keydown',event=>{if(event.key==='Escape'&&imageLightb
 
         productName.textContent = product.name;
         productDescription.textContent = product.description;
-        priceLabel.textContent = formattedPrice;
-        buttonAmount.textContent = formattedPrice;
-        updateReadyState();
+        updateCheckoutMode();
       } catch (error) {
         priceLabel.textContent = 'Unavailable';
         button.disabled = true;
@@ -826,7 +863,8 @@ document.addEventListener('keydown',event=>{if(event.key==='Escape'&&imageLightb
           setStatus('Email Verification is Required Before Purchase.', 'bad');
         }
 
-        updateReadyState();
+        ownsProduct = !!signedInUser.reticonV2AccessCompleted;
+        updateCheckoutMode();
       } catch (error) {
         setStatus('Sign In is Required Before Purchase.', 'bad');
       }
@@ -868,8 +906,9 @@ document.addEventListener('keydown',event=>{if(event.key==='Escape'&&imageLightb
       setStatus('', '');
 
       try {
+        const amount = ownsProduct ? donationAmount : productData.amount;
         const verificationDetails = {
-          amount: ((productData.amount || 0) / 100).toFixed(2),
+          amount: ((amount || 0) / 100).toFixed(2),
           currencyCode: productData.currency || 'USD',
           intent: 'CHARGE',
           customerInitiated: true,
@@ -887,10 +926,10 @@ document.addEventListener('keydown',event=>{if(event.key==='Escape'&&imageLightb
           throw new Error(message || 'Card Details Could Not Be Verified.');
         }
 
-        const data = await auth.apiRequest('/payments/charge', {
+        const data = await auth.apiRequest(ownsProduct ? '/payments/donation' : '/payments/charge', {
           method: 'POST',
           body: JSON.stringify({
-            productId,
+            ...(ownsProduct ? { amount: donationAmount } : { productId }),
             sourceId: tokenResult.token,
             email: email.value.trim(),
             buyerName: `${firstName.value.trim()} ${lastName.value.trim()}`
@@ -901,11 +940,17 @@ document.addEventListener('keydown',event=>{if(event.key==='Escape'&&imageLightb
           throw new Error(data.message || data.error || 'Payment Could Not Be Completed.');
         }
 
-        const confirmation = encodeURIComponent(data.confirmationId || data.orderId || '');
-        window.location.href = `/checkout/reticonv2/success/index.html?product=${encodeURIComponent(productId)}&confirmation=${confirmation}`;
+        if (ownsProduct) {
+          button.disabled = false;
+          updateCheckoutMode();
+          setStatus('Thank You for Supporting Neurofoundry.', 'good');
+        } else {
+          const confirmation = encodeURIComponent(data.confirmationId || data.orderId || '');
+          window.location.href = `/checkout/reticonv2/success/index.html?product=${encodeURIComponent(productId)}&confirmation=${confirmation}`;
+        }
       } catch (error) {
-        button.disabled = false;
-        button.innerHTML = `Pay <span id="buttonAmount">${formattedPrice}</span>`;
+        if (error && /already own/i.test(error.message || '')) ownsProduct = true;
+        updateCheckoutMode();
         setStatus(error.message || 'Payment Could Not Be Completed.', 'bad');
       }
     }
@@ -951,6 +996,17 @@ document.addEventListener('keydown',event=>{if(event.key==='Escape'&&imageLightb
     form.addEventListener('pointerdown', requireSignIn, true);
     form.addEventListener('focusin', requireSignIn, true);
     form.addEventListener('submit', startCheckout);
+    document.querySelectorAll('.donation-option').forEach((option) => option.addEventListener('click', () => selectDonationAmount(Number(option.dataset.amount), option)));
+    customDonation.addEventListener('input', () => {
+      const amount = Math.round(Number(customDonation.value) * 100);
+      document.querySelectorAll('.donation-option').forEach((item) => item.classList.remove('active'));
+      if (Number.isSafeInteger(amount) && amount >= 100) {
+        donationAmount = amount;
+      } else {
+        donationAmount = 0;
+      }
+      updateCheckoutMode();
+    });
     loadAccount();
     loadProduct();
     initSquareCard();
