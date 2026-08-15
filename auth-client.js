@@ -357,6 +357,7 @@ class NeurofoundryAuth {
     return new Promise((resolve, reject) => {
       let settled = false;
       let resultReceived = false;
+      let closeGraceTimer = null;
       const oauthResultKey = 'nf_oauth_result';
       const apiOrigin = new URL(this.apiUrl).origin;
       const allowedOrigins = new Set([
@@ -369,6 +370,7 @@ class NeurofoundryAuth {
 
       const cleanup = () => {
         clearInterval(checkClosed);
+        if (closeGraceTimer) clearTimeout(closeGraceTimer);
         window.removeEventListener('message', messageHandler);
         window.removeEventListener('storage', storageHandler);
       };
@@ -476,11 +478,14 @@ class NeurofoundryAuth {
         if (popup.closed) {
           clearInterval(checkClosed);
           if (resultReceived) return;
-          attemptDevOAuthFallback().then((didFallback) => {
-            if (!didFallback) {
-              finalizeReject(new Error('OAuth window was closed'));
-            }
-          });
+          closeGraceTimer = setTimeout(() => {
+            if (resultReceived || settled) return;
+            attemptDevOAuthFallback().then((didFallback) => {
+              if (!didFallback) {
+                finalizeReject(new Error('OAuth window was closed'));
+              }
+            });
+          }, 2000);
         }
       }, 500);
     });
@@ -533,14 +538,22 @@ class NeurofoundryAuth {
       // For popup-based OAuth, send message to opener
       if (window.opener) {
         const refreshToken = urlParams.get('refreshToken') || null;
-        window.opener.postMessage({
+        const result = {
           type: 'oauth_success',
           token: token,
           refreshToken,
           user,
           provider: urlParams.get('provider') || null
-        }, '*');
-        setTimeout(() => window.close(), 100);
+        };
+        try {
+          localStorage.setItem('nf_oauth_result', JSON.stringify({
+            ...result,
+            timestamp: Date.now()
+          }));
+        } catch (_) {
+        }
+        window.opener.postMessage(result, '*');
+        setTimeout(() => window.close(), 500);
       } else {
         const refreshToken = urlParams.get('refreshToken') || null;
         if (user) {
