@@ -329,15 +329,23 @@ main{position:relative;z-index:1}
 .access-row{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;padding:2px 0 16px;color:var(--fg-2);font-size:13px;line-height:1.35}
 .access-row strong{color:var(--fg-0);font-size:22px;line-height:1;font-weight:800;white-space:nowrap}
 .checkout-form{margin-top:16px;display:grid;gap:12px}
-.payment-card-shell{display:contents}
-.payment-card-head{display:none}
+.payment-card-shell{display:grid;gap:6px;padding:10px;border:1px solid var(--accent-border);border-radius:12px;background:linear-gradient(145deg,rgba(68,20,18,.72),rgba(17,12,14,.96) 46%,rgba(8,10,12,.98));box-shadow:inset 0 1px 0 rgba(255,255,255,.06),inset 0 -16px 30px rgba(0,0,0,.22),0 10px 24px -18px var(--accent-glow)}
+.payment-card-head{display:flex;align-items:center;justify-content:space-between;color:var(--fg-0);font-size:14px;font-weight:800}
+.payment-card-marks{display:flex;align-items:center;gap:10px;color:#f0b54d}
+.payment-card-marks svg{display:block;height:25px;width:auto}
+.payment-card-marks .contactless{height:23px;color:var(--fg-1)}
 .mobile-product-title{display:none}
 .checkout-form label{display:grid;gap:7px;font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--fg-2)}
 .checkout-form input{width:100%;min-height:46px;border:1px solid var(--line-2);border-radius:8px;background:#0f1113;color:var(--fg-0);padding:0 14px;font:600 13px var(--sans);outline:none}
 .checkout-form input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(224,71,60,.14)}
 .checkout-form input[readonly]{color:var(--fg-2);background:#0f1113}
-.field-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.payment-fields{display:grid;gap:0;border:1px solid #f4f6f8;border-radius:8px;overflow:hidden;background:#0f1113}
+.field-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;border:1px solid rgba(255,255,255,.68);border-bottom:0;border-radius:8px 8px 0 0;overflow:hidden;background:rgba(7,8,9,.62)}
+.field-row label{gap:0;padding:0}
+.field-row .field-label{display:none}
+.field-row label + label{border-left:1px solid rgba(255,255,255,.38)}
+.field-row input{min-height:42px;padding:0 12px;border:0;border-radius:0;background:#0f1113;font-size:16px;font-weight:400;line-height:42px}
+.payment-fields{display:grid;gap:0;border:1px solid rgba(255,255,255,.68);border-top:0;border-radius:0 0 8px 8px;overflow:hidden;background:rgba(7,8,9,.62)}
+.field-row + .payment-fields{margin-top:-6px}
 .card-wrap{height:96px;border:0;border-radius:0;background:transparent;overflow:hidden;padding:0;box-shadow:none}
 .card-wrap.focused{box-shadow:none}
 .card-placeholder{min-height:56px;display:flex;align-items:center;padding:0 14px;color:var(--fg-2);font-family:var(--sans);font-size:13px;line-height:1.4;letter-spacing:0}
@@ -617,11 +625,12 @@ main{position:relative;z-index:1}
         <span id="productName" hidden>Reticon</span><span id="productDescription" hidden>Custom reticle builder lifetime access.</span>
       </div>
 
-      <div class="card sys">
-        <div class="row"><span class="k">Version</span><span class="v">v2.0.0-rc</span></div>
-        <div class="row"><span class="k">Platform</span><span class="v">Windows</span></div>
-        <div class="row"><span class="k">Release Date</span><span class="v">8/15/2026</span></div>
-      </div>
+        <div class="card sys">
+          <div class="row"><span class="k">Version</span><span class="v">v2.0.0-rc</span></div>
+          <div class="row"><span class="k">Platform</span><span class="v">Windows</span></div>
+          <div class="row"><span class="k">Release Date</span><span class="v">8/15/2026</span></div>
+          <div class="row"><span class="k">Installer</span><a class="v" href="https://downloads.theneurofoundry.com/SetupReticon.exe">ReticonSetup.exe</a></div>
+        </div>
       <a class="btn ghost" href="../../downloads/">Back to Downloads</a>
     </aside>
   </section>
