@@ -230,8 +230,8 @@ main{position:relative;z-index:1}
 .btn.primary{background:linear-gradient(180deg, var(--accent-hi) 0%, var(--accent) 55%, var(--accent-lo) 100%);color:#fff;border-color:var(--accent-lo);box-shadow:0 6px 18px -4px var(--accent-glow), 0 0 0 1px rgba(255,255,255,.05) inset}
 .btn.primary:hover{transform:translateY(-1px);box-shadow:0 10px 26px -4px var(--accent-glow), 0 0 0 1px rgba(255,255,255,.08) inset}
 .btn.primary:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none;background:linear-gradient(180deg, #6a3833, #5a2f2b)}
-.checkout-form .btn.primary{background:linear-gradient(180deg,#4b5055 0%,#34383c 55%,#282b2e 100%);border-color:#5e656b;box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 6px 14px -10px rgba(0,0,0,.85);color:#75ff5e;-webkit-text-stroke:0;paint-order:normal}
-.checkout-form .btn.primary:hover{box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 8px 18px -12px rgba(0,0,0,.9)}
+.checkout-form .btn.primary{border-color:#00a43f;border-radius:18px;background:radial-gradient(140% 105% at 50% -18%,rgba(255,255,255,.36) 0 48%,rgba(255,255,255,.08) 49%,transparent 65%),linear-gradient(180deg,#08d967 0%,#00c653 58%,#00ab3f 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 -3px 0 rgba(0,92,30,.28),0 5px 0 #087523,0 9px 16px -10px rgba(0,0,0,.9);color:#fff;text-shadow:none;-webkit-text-stroke:0;paint-order:normal}
+.checkout-form .btn.primary:hover{box-shadow:inset 0 1px 0 rgba(255,255,255,.58),inset 0 -3px 0 rgba(0,92,30,.3),0 5px 0 #087523,0 11px 18px -10px rgba(0,0,0,.92)}
 .btn.ghost{background:rgba(255,255,255,.02);color:var(--fg-1);border-color:var(--line-2);margin-top:10px}
 .btn.ghost:hover{border-color:var(--accent-border);color:var(--accent-hi);background:var(--accent-tint)}
 .btn .arr{font-size:16px}
@@ -331,7 +331,7 @@ main{position:relative;z-index:1}
 .access-row strong{color:var(--fg-0);font-size:22px;line-height:1;font-weight:800;white-space:nowrap}
 .checkout-form{margin-top:16px;display:grid;gap:12px}
 .payment-card-shell{display:grid;gap:6px;padding:10px;border:1px solid #c7ccd1;border-radius:12px;background:linear-gradient(145deg,#fff 0%,#f4f5f6 58%,#e8ebed 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.95),0 10px 24px -18px rgba(0,0,0,.75)}
-.payment-card-head{display:flex;align-items:center;justify-content:space-between;color:#454b50;font-size:14px;font-weight:800}
+.payment-card-head{display:flex;align-items:center;justify-content:space-between;color:#20a94d;font-size:14px;font-weight:800}
 .payment-card-marks{display:flex;align-items:center;gap:10px;color:#777e84}
 .payment-card-marks svg{display:block;height:25px;width:auto}
 .payment-card-marks .contactless{height:23px;color:#777e84}
@@ -373,7 +373,7 @@ main{position:relative;z-index:1}
   .access-row{display:none}
   .checkout-form{margin-top:8px;gap:8px}
   .payment-card-shell{display:grid;gap:6px;padding:10px;border:1px solid #c7ccd1;border-radius:12px;background:linear-gradient(145deg,#fff 0%,#f4f5f6 58%,#e8ebed 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.95),0 10px 24px -18px rgba(0,0,0,.75)}
-  .payment-card-head{display:flex;align-items:center;justify-content:space-between;color:#454b50;font-size:14px;font-weight:800}
+  .payment-card-head{display:flex;align-items:center;justify-content:space-between;color:#20a94d;font-size:14px;font-weight:800}
   .payment-card-marks{display:flex;align-items:center;gap:10px;color:#777e84}
   .payment-card-marks svg{display:block;height:25px;width:auto}
   .payment-card-marks .contactless{height:23px;color:#777e84}
@@ -525,23 +525,23 @@ main{position:relative;z-index:1}
         <div class="features">
           <div class="feat">
             <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg></div>
-            <h3>Live preview pane</h3>
-            <p>Every color, shape, and thickness change reflects instantly &mdash; no restart, no re-render.</p>
+            <h3>Reticle Builder <span style="color:#e2a23a">PRO</span></h3>
+            <p>Design custom-built reticles tailored exactly to your liking. The possibilities are endless.</p>
           </div>
           <div class="feat">
             <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18"/><circle cx="7" cy="7" r=".8" fill="currentColor"/></svg></div>
-            <h3>Collapsible control panel</h3>
-            <p>Two-column card layout with a sidebar mode that folds out of the way once you're locked in.</p>
+            <h3>Presets, Placement, and Previews</h3>
+            <p>Store your favorite builds and execute complete control over positioning, scaling, visibility, color, and more &mdash; with convenient preview panels for all visible adjustments.</p>
           </div>
           <div class="feat">
             <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="9"/></svg></div>
-            <h3>Always-on-top overlay</h3>
-            <p>Sits over any application without stealing focus &mdash; games, DAWs, CAD, browsers, whatever.</p>
+            <h3>Extensive Library, and More Features Soon...</h3>
+            <p>Over 100 pre-built reticles at your disposal. Experiment with different colors, styles, or orientation. You never know what feels right until you try.</p>
           </div>
           <div class="feat">
             <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20 L20 4"/><rect x="3" y="15" width="6" height="6"/><rect x="15" y="3" width="6" height="6"/></svg></div>
-            <h3>Reticle designer <span style="color:var(--accent-hi);font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.14em">PAID</span></h3>
-            <p>Layered shape editor &mdash; stack, drag, and save your own custom reticles as reusable presets.</p>
+            <h3>Lightweight Overlay</h3>
+            <p>Reticon features an always-on-top overlay that stays separate from the game window and doesn't alter game files. All the functionality, with a lightweight collapsible interface. Visible when you need it, invisible when you don't.</p>
           </div>
         </div>
 
@@ -617,7 +617,7 @@ main{position:relative;z-index:1}
               </div>
             </div>
           </div>
-          <button id="checkoutButton" class="btn primary" type="submit" disabled>Pay <span id="buttonAmount">$2.99</span></button>
+          <button id="checkoutButton" class="btn primary" type="submit" disabled>Pay Now</button>
           <div class="card-badges" aria-label="Accepted Card Types">
             <span class="card-badge">Visa</span><span class="card-badge">Mastercard</span><span class="card-badge">Amex</span><span class="card-badge">Discover</span>
           </div>
@@ -627,9 +627,9 @@ main{position:relative;z-index:1}
       </div>
 
         <div class="card sys">
-          <div class="row"><span class="k">Version</span><span class="v">v2.0.0-rc</span></div>
+          <div class="row"><span class="k">Version</span><span class="v">v2.0.0</span></div>
           <div class="row"><span class="k">Platform</span><span class="v">Windows</span></div>
-          <div class="row"><span class="k">Release Date</span><span class="v">8/15/2026</span></div>
+          <div class="row"><span class="k">Release Date</span><span class="v">8/21/2026</span></div>
           <div class="row"><span class="k">Installer</span><a class="v" href="https://downloads.theneurofoundry.com/SetupReticon.exe">ReticonSetup.exe</a></div>
         </div>
       <a class="btn ghost" href="../../downloads/">Back to Downloads</a>
@@ -694,7 +694,6 @@ document.addEventListener('keydown',event=>{if(event.key==='Escape'&&imageLightb
     const form = document.getElementById('checkoutForm');
     const button = document.getElementById('checkoutButton');
     const priceLabel = document.getElementById('priceLabel');
-    const buttonAmount = document.getElementById('buttonAmount');
     const productName = document.getElementById('productName');
     const productDescription = document.getElementById('productDescription');
     const email = document.getElementById('email');
@@ -756,7 +755,7 @@ document.addEventListener('keydown',event=>{if(event.key==='Escape'&&imageLightb
       priceLabel.textContent = ownsProduct ? 'Owned' : (formattedPrice || 'Loading');
       button.innerHTML = ownsProduct
         ? `Donate <span id="buttonAmount">${formatMoney(donationAmount, 'USD')}</span>`
-        : `Pay <span id="buttonAmount">${formattedPrice || '$2.99'}</span>`;
+        : 'Pay Now';
       if (ownsProduct) {
         setStatus('You Already Own Reticon. If You Would Like to Support Future Development, Choose a Donation Amount Below.', 'good');
       }
