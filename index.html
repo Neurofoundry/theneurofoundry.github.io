@@ -363,8 +363,25 @@ header {
   font-size:13px;
   color: var(--muted-text);
 }
+.lab-image {
+  position:relative;
+  aspect-ratio:2/3;
+}
+.lab-image-slide {
+  position:absolute;
+  inset:0;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .8s ease;
+}
+.lab-image-slide.is-active {
+  opacity:1;
+  pointer-events:auto;
+}
 .lab-image img {
-  max-width:100%;
+  width:100%;
+  height:100%;
+  object-fit:cover;
   border-radius:12px;
 }
 .lab-span {
@@ -1086,7 +1103,9 @@ header {
           <a href="downloads/">Downloads</a>
         </div>
         <div class="lab-image">
-          <img src="thskey.png" alt="Aegis Skeleton Key">
+          <a class="lab-image-slide is-active" href="checkout/skeleton-key/"><img src="thskey.png" alt="Aegis Skeleton Key"></a>
+          <a class="lab-image-slide" href="downloads/"><img src="sieve-showcase.png" alt="Neurofoundry Sieve"></a>
+          <a class="lab-image-slide" href="checkout/reticon-v2/"><img src="reticon-showcase.png" alt="Reticon"></a>
         </div>
       </div>
       <div style="margin-top:20px;">
@@ -1246,6 +1265,16 @@ header {
   }
 
   window.addEventListener('load', scheduleEmbers);
+
+  const labSlides = document.querySelectorAll('.lab-image-slide');
+  let activeLabSlide = 0;
+  if (labSlides.length > 1) {
+    setInterval(() => {
+      labSlides[activeLabSlide].classList.remove('is-active');
+      activeLabSlide = (activeLabSlide + 1) % labSlides.length;
+      labSlides[activeLabSlide].classList.add('is-active');
+    }, 5 * 60 * 1000);
+  }
 </script>
 </body>
 </html>
