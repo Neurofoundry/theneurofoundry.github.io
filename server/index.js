@@ -256,6 +256,45 @@ app.post('/api/skeleton-key/download-notification', async (req, res, next) => {
   }
 });
 
+app.post('/api/reticon/download-notification', async (req, res, next) => {
+  try {
+    const expectedSecret = process.env.RETICON_DOWNLOAD_WEBHOOK_SECRET;
+    const providedSecret = String(req.get('authorization') || '').replace(/^Bearer\s+/i, '');
+    if (!secretsMatch(providedSecret, expectedSecret)) {
+      return res.status(401).json({ success: false, message: 'Unauthorized' });
+    }
+
+    const timestamp = cleanContactField(req.body.timestamp, 64) || new Date().toISOString();
+    const country = cleanContactField(req.body.country, 8) || 'unknown';
+    const uniqueCount = Number.isFinite(Number(req.body.uniqueCount)) ? Number(req.body.uniqueCount) : 0;
+    const count = Number.isFinite(Number(req.body.count)) ? Number(req.body.count) : 0;
+    const result = await sendDevConsoleEmail({
+      type: 'reticon_unique_download',
+      to: process.env.RETICON_DOWNLOAD_NOTIFICATION_TO || 'info@theneurofoundry.com',
+      subject: 'New unique Reticon download',
+      text: [
+        'A new unique user downloaded Reticon.',
+        '',
+        `Time: ${timestamp}`,
+        `Country: ${country}`,
+        `Unique downloads tracked: ${uniqueCount}`,
+        `Total download clicks tracked: ${count}`
+      ].join('\n')
+    });
+
+    if (!result.sent) {
+      return res.status(503).json({
+        success: false,
+        message: result.reason || 'Email notification was not sent'
+      });
+    }
+
+    return res.json({ success: true });
+  } catch (error) {
+    return next(error);
+  }
+});
+
 function cleanContactField(value, maxLength) {
   return String(value || '').trim().slice(0, maxLength);
 }
