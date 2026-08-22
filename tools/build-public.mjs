@@ -17,6 +17,8 @@ const publicFiles = [
   'index.html',
   'openapi.yaml',
   'robots.txt',
+  'reticon-showcase.png',
+  'sieve-showcase.png',
   'site.webmanifest',
   'thskey.png'
 ];
