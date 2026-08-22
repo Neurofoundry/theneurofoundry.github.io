@@ -73,6 +73,12 @@ export default {
       return new Response(null, { status: 204, headers: corsHeaders() });
     }
 
+    if ((request.method === 'GET' || request.method === 'HEAD') && url.pathname === '/') {
+      const checkoutUrl = new URL('https://www.theneurofoundry.com/checkout/reticon-v2/');
+      checkoutUrl.search = url.search;
+      return Response.redirect(checkoutUrl, 301);
+    }
+
     if ((request.method === 'GET' || request.method === 'HEAD') && url.pathname === '/count') {
       const response = await getCounter(env).fetch('https://counter/count');
       return json(await response.json());

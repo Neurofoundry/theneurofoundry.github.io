@@ -3,6 +3,13 @@
   "name": "reticon-download-counter",
   "main": "src/index.js",
   "compatibility_date": "2026-06-12",
+  "workers_dev": true,
+  "routes": [
+    {
+      "pattern": "reticon.theneurofoundry.com",
+      "custom_domain": true
+    }
+  ],
   "vars": {
     "INSTALLER_URL": "https://downloads.theneurofoundry.com/SetupReticon.exe",
     "DOWNLOAD_NOTIFICATION_URL": "https://api.theneurofoundry.com/api/reticon/download-notification"
