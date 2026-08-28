@@ -31,6 +31,7 @@ const publicDirectories = [
   'checkout',
   'common',
   'docs',
+  'jgt',
   'resume-builder',
   'services',
   'shared'
