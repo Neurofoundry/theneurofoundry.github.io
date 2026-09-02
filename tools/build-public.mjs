@@ -46,6 +46,15 @@ const publicDirectoryFiles = {
     'signup',
     'verify-email'
   ],
+  reticon: [
+    'index.html',
+    'assets/reticon-app-builder.png',
+    'assets/reticon-app-color.png',
+    'assets/reticon-app-main.png',
+    'assets/reticon-hero-parallax.png',
+    'assets/reticon-shooter-1.png',
+    'assets/reticon-shooter-2.png'
+  ],
   workshop: ['index.html', 'assets']
 };
 

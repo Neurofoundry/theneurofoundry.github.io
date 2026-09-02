@@ -74,9 +74,12 @@ export default {
     }
 
     if ((request.method === 'GET' || request.method === 'HEAD') && url.pathname === '/') {
-      const checkoutUrl = new URL('https://www.theneurofoundry.com/checkout/reticon-v2/');
-      checkoutUrl.search = url.search;
-      return Response.redirect(checkoutUrl, 301);
+      const pageUrl = new URL('https://www.theneurofoundry.com/reticon/');
+      pageUrl.search = url.search;
+      return fetch(new Request(pageUrl, {
+        method: request.method,
+        headers: request.headers
+      }));
     }
 
     if ((request.method === 'GET' || request.method === 'HEAD') && url.pathname === '/count') {
