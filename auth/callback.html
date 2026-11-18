@@ -15,6 +15,8 @@
       justify-content: center;
       min-height: 100vh;
       margin: 0;
+      padding: 24px;
+      box-sizing: border-box;
     }
     .loading {
       text-align: center;
@@ -31,6 +33,75 @@
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
+
+    /* Shown when there is no opener to hand the token to, e.g. the popup was
+       opened in a browser that severed window.opener, or this page was loaded
+       as a tab. The sign-in still succeeded, so the user needs a way out. */
+    .card {
+      width: min(420px, 100%);
+      border: 1px solid rgba(224, 71, 60, 0.28);
+      background: rgba(16, 12, 12, 0.92);
+      padding: 26px 24px;
+      border-radius: 14px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+    }
+    .card h1 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #ffb5ad;
+    }
+    .card p {
+      margin: 0 0 18px;
+      font-size: 13.5px;
+      line-height: 1.55;
+      color: #c9d0d8;
+    }
+    .card a.button, .card button {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      padding: 13px 14px;
+      border-radius: 10px;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .card a.button {
+      background: #e0473c;
+      border: 1px solid #e0473c;
+      color: #fff;
+    }
+    .card a.button:hover { background: #ef5749; border-color: #ef5749; }
+    .card button {
+      margin-top: 10px;
+      background: transparent;
+      border: 1px solid #33373d;
+      color: #e6e9ee;
+    }
+    .card button:hover { border-color: #4a4f57; }
+    .card .hint {
+      margin: 16px 0 0;
+      font-size: 12px;
+      color: #8b939c;
+    }
+    .card .hint code {
+      display: block;
+      margin-top: 8px;
+      padding: 10px;
+      border-radius: 8px;
+      background: #0a0b0d;
+      border: 1px solid #24272b;
+      color: #9aa3ad;
+      font-size: 11px;
+      word-break: break-all;
+      user-select: all;
+    }
+    .failed h1 { color: #ff9c8f; }
   </style>
 </head>
 <body>
@@ -40,8 +111,133 @@
   </div>
 
   <script>
-    // Handle OAuth callback
+    /**
+     * Apps on this domain that may be handed the token directly.
+     *
+     * The API validates `redirect` down to `https://*.theneurofoundry.com`
+     * before putting it in the signed state, so anything reaching here is
+     * already from this domain. This list narrows it further: only apps we
+     * publish get the credential, never an arbitrary page on the site.
+     */
+    const TOKEN_APPS = ['cam.theneurofoundry.com'];
+    const SITE_ORIGIN = 'https://www.theneurofoundry.com';
+    const DEFAULT_PATH = '/members/profile/';
+
+    /**
+     * Where "continue" should land, with the token attached for another app.
+     *
+     * Same-site destinations keep the token out of the address bar; a separate
+     * app needs it to establish its own session, which is the whole point of
+     * this page existing in a no-opener context.
+     */
+    function continueUrl(token) {
+      const params = new URLSearchParams(window.location.search);
+      const raw = params.get('redirect') || DEFAULT_PATH;
+      let url;
+      try {
+        url = new URL(raw, SITE_ORIGIN);
+      } catch (_) {
+        url = new URL(DEFAULT_PATH, SITE_ORIGIN);
+      }
+      const sameDomain = url.protocol === 'https:' && url.hostname.endsWith('theneurofoundry.com');
+      if (!sameDomain) url = new URL(DEFAULT_PATH, SITE_ORIGIN);
+      if (TOKEN_APPS.includes(url.hostname)) url.searchParams.set('token', token);
+      return url.toString();
+    }
+
+    /**
+     * Render the "you are signed in, but nothing is listening" state.
+     *
+     * Previously this branch closed the window ~100ms after writing to
+     * localStorage. In a popup whose opener had been severed that is
+     * indistinguishable from a crash: the app never hears back and the user has
+     * nothing to copy. Now the page stays put and hands over a link instead.
+     */
+    function renderSignedIn(token) {
+      const target = continueUrl(token);
+      const label = new URL(target).hostname;
+
+      document.title = 'Signed in – Neurofoundry';
+      document.body.innerHTML = '';
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <h1>Signed in</h1>
+        <p>Authentication finished, but the app that opened this window is not listening for the result.
+           Continue below to finish the sign-in there.</p>
+        <a class="button" href="#" id="continue">Continue to ${label}</a>
+        <button type="button" id="copy">Copy sign-in link</button>
+        <p class="hint" id="hint">If a separate Ember window is still waiting, copy this link and paste it
+           into its &ldquo;Trouble signing in?&rdquo; box.</p>
+        <code id="link"></code>
+      `;
+      document.body.appendChild(card);
+
+      const link = card.querySelector('#link');
+      link.textContent = target;
+
+      card.querySelector('#continue').addEventListener('click', (event) => {
+        event.preventDefault();
+        window.location.replace(target);
+      });
+
+      card.querySelector('#copy').addEventListener('click', async () => {
+        const button = card.querySelector('#copy');
+        try {
+          await navigator.clipboard.writeText(target);
+          button.textContent = 'Copied';
+        } catch (_) {
+          // Clipboard permission is often denied here; select the text instead
+          // so a manual copy is one keystroke away.
+          const range = document.createRange();
+          range.selectNodeContents(link);
+          const selection = window.getSelection();
+          selection.removeAllRanges();
+          selection.addRange(range);
+          button.textContent = 'Selected — press Ctrl+C';
+        }
+        setTimeout(() => { button.textContent = 'Copy sign-in link'; }, 2600);
+      });
+    }
+
+    function renderFailure(message) {
+      document.title = 'Sign-in failed – Neurofoundry';
+      document.body.innerHTML = '';
+      const card = document.createElement('div');
+      card.className = 'card failed';
+      card.innerHTML = `
+        <h1>Sign-in failed</h1>
+        <p></p>
+        <a class="button" href="${SITE_ORIGIN}/members/login/">Back to sign in</a>
+      `;
+      card.querySelector('p').textContent = message || 'The sign-in could not be completed.';
+      document.body.appendChild(card);
+    }
+
     (async () => {
+      const params = new URLSearchParams(window.location.search);
+      const token = params.get('token');
+      const error = params.get('error');
+
+      if (error) {
+        renderFailure(params.get('error_description') || error);
+        return;
+      }
+
+      /**
+       * No opener means there is nobody to postMessage to. Google sends
+       * Cross-Origin-Opener-Policy on its sign-in pages, which severs the
+       * opener across the hop, so this is the common case for a popup rather
+       * than an edge case.
+       *
+       * The shared handler below would post into the void and close, so the
+       * hand-off is completed here instead, before it runs.
+       */
+      if (token && !window.opener) {
+        renderSignedIn(token);
+        return;
+      }
+
       try {
         const auth = new window.NeurofoundryAuth({
           apiUrl: 'https://api.theneurofoundry.com/api'
@@ -49,11 +245,7 @@
         await auth.handleOAuthCallback();
       } catch (error) {
         console.error('OAuth callback error:', error);
-        // Show error and redirect
-        document.querySelector('.loading p').textContent = 'Authentication failed. Redirecting...';
-        setTimeout(() => {
-          window.location.href = '/members/login/?error=' + encodeURIComponent(error.message);
-        }, 2000);
+        renderFailure(error && error.message);
       }
     })();
   </script>
