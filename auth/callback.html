@@ -124,13 +124,12 @@
     const DEFAULT_PATH = '/members/profile/';
 
     /**
-     * Where "continue" should land, with the token attached for another app.
+     * Where the sign-in should land, and whether that is another app.
      *
      * Same-site destinations keep the token out of the address bar; a separate
-     * app needs it to establish its own session, which is the whole point of
-     * this page existing in a no-opener context.
+     * app needs it to establish its own session.
      */
-    function continueUrl(token) {
+    function resolveTarget(token) {
       const params = new URLSearchParams(window.location.search);
       const raw = params.get('redirect') || DEFAULT_PATH;
       let url;
@@ -141,8 +140,14 @@
       }
       const sameDomain = url.protocol === 'https:' && url.hostname.endsWith('theneurofoundry.com');
       if (!sameDomain) url = new URL(DEFAULT_PATH, SITE_ORIGIN);
-      if (TOKEN_APPS.includes(url.hostname)) url.searchParams.set('token', token);
-      return url.toString();
+      const app = TOKEN_APPS.includes(url.hostname);
+      if (app) url.searchParams.set('token', token);
+      return { url: url.toString(), app };
+    }
+
+    /** Backwards-compatible shorthand used by the card below. */
+    function continueUrl(token) {
+      return resolveTarget(token).url;
     }
 
     /**
@@ -225,15 +230,25 @@
       }
 
       /**
-       * No opener means there is nobody to postMessage to. Google sends
-       * Cross-Origin-Opener-Policy on its sign-in pages, which severs the
-       * opener across the hop, so this is the common case for a popup rather
-       * than an edge case.
+       * No opener: nobody to postMessage to.
        *
-       * The shared handler below would post into the void and close, so the
-       * hand-off is completed here instead, before it runs.
+       * Why this happens at all is not Google's doing — the Neurofoundry API
+       * answers every request, including the 302 that starts OAuth, with
+       * `Cross-Origin-Opener-Policy: same-origin` (a Helmet default). Chrome
+       * acts on that during the navigation, puts the window in its own browsing
+       * context group, and `window.opener` is null from the first hop onwards.
+       *
+       * A full-page round trip has no opener to lose, so when the app told us
+       * where to return, go straight there instead of asking the user to click.
+       * The card below remains for the case where there is nowhere sensible to
+       * send them — a LAN address the API will not accept, for instance.
        */
       if (token && !window.opener) {
+        const { url, app } = resolveTarget(token);
+        if (app) {
+          window.location.replace(url);
+          return;
+        }
         renderSignedIn(token);
         return;
       }
